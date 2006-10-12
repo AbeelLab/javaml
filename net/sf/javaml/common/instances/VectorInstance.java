@@ -30,10 +30,11 @@ import java.util.Vector;
 import net.sf.javaml.common.Instance;
 import net.sf.javaml.common.Value;
 
-public class VectorInstance<T> extends AbstractInstance {
+public class VectorInstance extends AbstractInstance {
 
-	private Vector<T> values = new Vector<T>();
+	private Vector<Value> values = new Vector<Value>();
 
+    
 	public boolean isCompatible(Instance instance) {
 		boolean out = true;
 		if (values.size() != instance.getValues().size())
@@ -45,39 +46,29 @@ public class VectorInstance<T> extends AbstractInstance {
 		return out;
 	}
 
-	public Value getClassValue() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 
 	public Value getValue(int index) {
-		// TODO Auto-generated method stub
-		return null;
+		return values.get(index);
 	}
 
+    public void setValue(int index, Value a) {
+      values.set(index,a);
+
+    }
+    
 	public Vector<Value> getValues() {
-		// TODO Auto-generated method stub
-		return null;
+		return values;
 	}
+    
+    public void setValues(Vector<Value> vec){
+        values=vec;
+    }
 
-	public boolean isClassMissing() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+	
 
-	public void setClassMissing() {
-		// TODO Auto-generated method stub
+	
 
-	}
-
-	public void setClassValue(Value a) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void setValue(int index, Value a) {
-		// TODO Auto-generated method stub
-
-	}
+	
 
 }

@@ -38,43 +38,43 @@ public abstract class AbstractInstance implements Instance{
 	public AbstractInstance(Value classValue){
 		this.classValue=classValue;
 	}
-	/* (non-Javadoc)
-	 * @see net.sf.javaml.common.Instance#getClassValue()
-	 */
-	public Value getClassValue() {
-		return classValue;
-	}
-	/* (non-Javadoc)
-	 * @see net.sf.javaml.common.Instance#getWeight()
-	 */
-	public double getWeight() {
-		return weight;
-	}
-	/* (non-Javadoc)
-	 * @see net.sf.javaml.common.Instance#isClassValueMissing()
-	 */
-	public boolean isClassMissing() {
-		return classValue==null;
-	}
-	/* (non-Javadoc)
-	 * @see net.sf.javaml.common.Instance#setClassValue(net.sf.javaml.common.Attribute)
-	 */
-	public void setClass(Value a) {
-		this.classValue=a;
-		
-	}
-	/* (non-Javadoc)
-	 * @see net.sf.javaml.common.Instance#setClassValueMissing()
-	 */
-	public void setClassMissing() {
-		setClassValue(null);
-	}
-	/* (non-Javadoc)
-	 * @see net.sf.javaml.common.Instance#setWeight(double)
-	 */
-	public void setWeight(double d) {
-		this.weight=d;
-		
-	}
+    /* (non-Javadoc)
+     * @see net.sf.javaml.common.Instance#getClassValue()
+     */
+    public Value getClassValue() {
+        return classValue;
+    }
+    /* (non-Javadoc)
+     * @see net.sf.javaml.common.Instance#getWeight()
+     */
+    public double getWeight() {
+        return weight;
+    }
+    /* (non-Javadoc)
+     * @see net.sf.javaml.common.Instance#isClassValueMissing()
+     */
+    public boolean isClassMissing() {
+        return classValue==null;
+    }
+    /* (non-Javadoc)
+     * @see net.sf.javaml.common.Instance#setClassValue(net.sf.javaml.common.Attribute)
+     */
+    public void setClassValue(Value a) {
+        this.classValue=a;
+        
+    }
+    /* (non-Javadoc)
+     * @see net.sf.javaml.common.Instance#setClassValueMissing()
+     */
+    public void setClassMissing() {
+        setClassValue(null);
+    }
+    /* (non-Javadoc)
+     * @see net.sf.javaml.common.Instance#setWeight(double)
+     */
+    public void setWeight(double d) {
+        this.weight=d;
+        
+    }
 
 }

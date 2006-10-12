@@ -25,7 +25,6 @@
 
 package net.sf.javaml.common;
 
-import java.util.Vector;
 
 public interface Dataset {
 

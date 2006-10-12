@@ -34,7 +34,7 @@ public interface Instance {
 	public void setValue(int index,Value a);
 	
 	public Value getClassValue();
-	public void setClassValue(Value a);
+	public  void  setClassValue(Value a);
 	
 	public void setClassMissing();
 	public boolean isClassMissing();
