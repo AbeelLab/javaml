@@ -28,42 +28,42 @@ package net.sf.javaml.core;
 import java.util.Vector;
 
 public class SimpleDataset implements Dataset {
-	private Vector<Instance>instances=new Vector<Instance>();
+	private Vector<Instance> instances = new Vector<Instance>();
 
-    public void addInstance(Instance i) {
-        instances.add(i);
-        
-    }
+	public boolean addInstance(Instance i) {
+		if (instances.size() >0 && !i.isCompatible(instances.get(0)))
+			return false;
+		else{
+			instances.add(i);
+			return true;
+		}
 
-    public boolean checkCompatibility() {
-        // TODO Auto-generated method stub
-        return false;
-    }
+	}
 
-    public int getIndex(Instance i) {
-       return instances.indexOf(i);
-    }
+	public int getIndex(Instance i) {
+		return instances.indexOf(i);
+	}
 
-    public Instance getInstance(int index) {
-        return instances.get(index);
-    }
+	public Instance getInstance(int index) {
+		return instances.get(index);
+	}
 
-    public void removeInstance(Instance i) {
-       instances.remove(i);
-        
-    }
+	public void removeInstance(Instance i) {
+		instances.remove(i);
 
-    public void removeInstance(int index) {
-       instances.remove(index);
-        
-    }
+	}
 
-    public void clear() {
-       instances.removeAllElements();
-        
-    }
+	public void removeInstance(int index) {
+		instances.remove(index);
 
-    public int size() {
-        return instances.size();
-    }
+	}
+
+	public void clear() {
+		instances.removeAllElements();
+
+	}
+
+	public int size() {
+		return instances.size();
+	}
 }
