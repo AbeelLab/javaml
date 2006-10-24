@@ -25,8 +25,6 @@
 
 package net.sf.javaml.clustering;
 
-import java.util.Map;
-
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 
@@ -44,7 +42,7 @@ public interface Clusterer {
      * 
      * @param instance
      *            the instance to be clustered
-     * @return the predicted class value (cluster) of the instance
+     * @return the index of the cluster to which the instance belongs
      */
     public Number predictCluster(Instance instance);
 
@@ -53,10 +51,9 @@ public interface Clusterer {
      * in the clusterer.
      * 
      * @param instance
-     * @return a map with the class value (cluster) as key and a double denoting
-     *         the membership as value for each key.
+     * @return the distribution for the membership for all clusters
      */
-    public Map<Number, Double> predictMembershipDistribution(Instance instance);
+    public double[] predictMembershipDistribution(Instance instance);
 
     /**
      * Gives the number of clusters in the clusterer.
