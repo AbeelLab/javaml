@@ -84,4 +84,22 @@ public interface Dataset {
 	 * @return the number of instances in the dataset.
 	 */
 	public int size();
+
+	/**
+	 * Get the 'minimum instance' this is a virtual instance with for each index
+	 * the lowest value found in the dataset.
+	 * 
+	 * @return an instance with for every index it's lowest value, null if the
+	 *         dataset is empty
+	 */
+	public Instance getMinimumInstance();
+
+	/**
+	 * Get the 'maximum instance' this is a virtual instance with for each index
+	 * the highest value found in the dataset.
+	 * 
+	 * @return an instance with for every index it's highest value, null if the
+	 *         dataset is empty
+	 */
+	public Instance getMaximumInstance();
 }

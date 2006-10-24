@@ -36,15 +36,34 @@ public class SimpleInstance implements Instance {
 
     private double weigth = 1;
 
-    public SimpleInstance() {
-        this(1);
+    public SimpleInstance(Number[] values) {
+        this(values,1.0);
     }
 
-    public SimpleInstance(double weight) {
-        this.weigth = weight;
+    public SimpleInstance(Number[] values,double weight) {
+        this(weight);
+        for(int i=0;i<values.length;i++){
+        	this.values.add(values[i]);
+        }
     }
 
-    public Vector<Number> getVectorForm() {
+    private SimpleInstance(double weight){
+    	this.weigth = weight;
+    }
+    /**
+     * Copy constructor, this makes a deep copy of the Instance
+     * @param instance
+     */
+    public SimpleInstance(Instance instance) {
+		this(instance.getWeight());
+		for(int i=0;i<instance.size();i++){
+			values.add(instance.getValue(i));
+		}
+		this.setClassSet(instance.isClassSet());
+		this.setClassValue(instance.getClassValue());
+	}
+
+	public Vector<Number> getVectorForm() {
         return new Vector<Number>(values);
     }
 
@@ -54,6 +73,7 @@ public class SimpleInstance implements Instance {
         return tmp;
     }
 
+    
     public Number getValue(int index) {
         return values.get(index);
     }
