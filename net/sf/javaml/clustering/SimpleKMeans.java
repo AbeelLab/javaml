@@ -178,14 +178,16 @@ public class SimpleKMeans implements Clusterer {
             }
             centroidsChanged = false;
             for (int i = 0; i < this.numberOfClusters; i++) {
-                double[] tmp = new double[instanceLength];
-                for (int j = 0; j < instanceLength; j++) {
-                    tmp[j] = sumPosition[i][j] / countPosition[i];
-                }
-                Instance newCentroid = new SimpleInstance(tmp);
-                if (dm.calculateDistance(newCentroid, centroids[i]) > 0.0001) {
-                    centroidsChanged = true;
-                    centroids[i] = newCentroid;
+                if (countPosition[i] > 0) {
+                    double[] tmp = new double[instanceLength];
+                    for (int j = 0; j < instanceLength; j++) {
+                        tmp[j] = sumPosition[i][j] / countPosition[i];
+                    }
+                    Instance newCentroid = new SimpleInstance(tmp);
+                    if (dm.calculateDistance(newCentroid, centroids[i]) > 0.0001) {
+                        centroidsChanged = true;
+                        centroids[i] = newCentroid;
+                    }
                 }
 
             }
@@ -204,10 +206,10 @@ public class SimpleKMeans implements Clusterer {
         int tmpCluster = -1;
         double minDistance = Double.MAX_VALUE;
         for (int i = 0; i < this.numberOfClusters; i++) {
-            double dist=dm.calculateDistance(centroids[i],instance);
-            if(dist<minDistance){
-                minDistance=dist;
-                tmpCluster=i;
+            double dist = dm.calculateDistance(centroids[i], instance);
+            if (dist < minDistance) {
+                minDistance = dist;
+                tmpCluster = i;
             }
         }
         return tmpCluster;
