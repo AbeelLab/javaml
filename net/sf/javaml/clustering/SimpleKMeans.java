@@ -25,256 +25,183 @@
 
 package net.sf.javaml.clustering;
 
-import java.util.Map;
+import java.util.Random;
 
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.tools.ArrayFactory;
+import net.sf.javaml.core.SimpleInstance;
+import net.sf.javaml.distance.DistanceMeasure;
+import net.sf.javaml.distance.DistanceMeasureFactory;
 
 public class SimpleKMeans implements Clusterer {
-	/**
-	 * The number of clusters.
-	 */
-	private int numberOfClusters = 2;
+    /**
+     * The number of clusters.
+     */
+    private int numberOfClusters;
 
-	/**
-	 * The number of iterations the algorithm should make. If this value is
-	 * Integer.INFINITY, then the algorithm runs until the centroids no longer
-	 * change.
-	 * 
-	 */
-	private int numberOfIterations = 100;
+    /**
+     * The number of iterations the algorithm should make. If this value is
+     * Integer.INFINITY, then the algorithm runs until the centroids no longer
+     * change.
+     * 
+     */
+    private int numberOfIterations;
 
-	public SimpleKMeans(){
-		
-	}
-	public SimpleKMeans(int clusters,int iterations){
-		this.numberOfClusters=clusters;
-		this.numberOfIterations=iterations;
-	}
-	
-	
-	public void buildClusterer(Dataset data) {
-		if(data.size()==0)
-			throw new RuntimeException("The dataset should not be empty");
-		// Place K points into the space represented by the objects that are
-		// being clustered. These points represent initial group centroids.
-		
-		int instanceLength=data.getInstance(0).size();
-		for(int i=0;i<data.size();i++){
-			//TODO busy here....
-			
-		}
-		
-		Instance[]centroids=new Instance[numberOfClusters];
-		
-		// Assign each object to the group that has the closest centroid.
-		
-		// When all objects have been assigned, recalculate the positions of the
-		// K centroids and start over.
-		
-		
-	}
+    /**
+     * Random generator for this clusterer.
+     */
+    private Random rg;
 
-	public int getNumberOfClusters() {
-		return this.numberOfClusters;
-	}
+    /**
+     * The distance measure used in the algorithm, defaults to Euclidean
+     * distance.
+     */
+    private DistanceMeasure dm;
 
-	public Number predictCluster(Instance instance) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    /**
+     * Constuct a default Simple K-means clusterer with 100 iterations, 2
+     * clusters, a default random generator and using the Euclidean distance.
+     */
+    public SimpleKMeans() {
+        this(2, 100);
+    }
 
-	public Map<Number, Double> predictMembershipDistribution(Instance instance) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    /**
+     * Create a new Simple K-means clusterer with the given number of clusters
+     * and iterations. The internal random generator is a new one based upon the
+     * current system time. For the distance we use the Euclidean n-space
+     * distance.
+     * 
+     * @param clusters
+     *            the number of clustesr
+     * @param iterations
+     *            the number of iterations
+     */
+    public SimpleKMeans(int clusters, int iterations) {
+        this(clusters, iterations, new Random(System.currentTimeMillis()));
+    }
 
-}
+    /**
+     * Create a new K-means clusterer with the given number of clusters and
+     * iterations. Also the Random Generator for the clusterer is given as
+     * parameter.
+     * 
+     * @param clusters
+     *            the number of clustesr
+     * @param iterations
+     *            the number of iterations
+     * @param rg
+     *            the random generator for the clusterer
+     */
+    public SimpleKMeans(int clusters, int iterations, Random rg) {
+        this(clusters, iterations, rg, DistanceMeasureFactory.getEuclideanDistanceMeasure());
 
+    }
 
+    /**
+     * Create a new K-means clusterer with the given number of clusters and
+     * iterations. Also the Random Generator for the clusterer is given as
+     * parameter.
+     * 
+     * @param clusters
+     *            the number of clustesr
+     * @param iterations
+     *            the number of iterations
+     * @param rg
+     *            the random generator for the clusterer
+     * @param dm
+     *            the distance measure to use
+     */
+    public SimpleKMeans(int clusters, int iterations, Random rg, DistanceMeasure dm) {
+        this.numberOfClusters = clusters;
+        this.numberOfIterations = iterations;
+        this.rg = rg;
+        this.dm = dm;
 
-	/**
-	 * Runs clustering algorithm.
-	 * 
-	 * @exception MiningException
-	 *                cannot run algorithm
-	 */
-	protected void runAlgorithm() throws MiningException {
+    }
 
-		int numbAtt = metaData.getAttributesNumber();
-		int numbVec = 0;
+    public void buildClusterer(Dataset data) {
+        if (data.size() == 0)
+            throw new RuntimeException("The dataset should not be empty");
+        // Place K points into the space represented by the objects that are
+        // being clustered. These points represent the initial group of
+        // centroids.
+        Instance min = data.getMinimumInstance();
+        Instance max = data.getMaximumInstance();
+        Instance[] centroids = new Instance[numberOfClusters];
+        int instanceLength = data.getInstance(0).size();
+        for (int j = 0; j < numberOfClusters; j++) {
+            double[] randomInstance = new double[instanceLength];
+            for (int i = 0; i < data.size(); i++) {
+                double dist = Math.abs(max.getValue(i) - min.getValue(i));
+                randomInstance[i] = (min.getValue(i) + rg.nextDouble() * dist);
 
-		// Get minimum and maximum of attributes:
-		double[] minArr = new double[numbAtt];
-		double[] maxArr = new double[numbAtt];
-		for (int i = 0; i < numbAtt; i++) {
-			minArr[i] = 0.0;
-			maxArr[i] = 0.0;
-		}
-		;
-		while (miningInputStream.next()) {
-			MiningVector vec = miningInputStream.read();
-			for (int i = 0; i < numbAtt; i++) {
-				if (vec.getValue(i) < minArr[i])
-					minArr[i] = vec.getValue(i);
-				if (vec.getValue(i) > maxArr[i])
-					maxArr[i] = vec.getValue(i);
-			}
-			;
-			numbVec = numbVec + 1;
-		}
-		;
-		distance.setMinAtt(minArr);
-		distance.setMaxAtt(maxArr);
+            }
+            centroids[j] = new SimpleInstance(randomInstance);
+        }
 
-		// Create array of clusters:
-		clusters = new Cluster[numberOfClusters];
-		for (int i = 0; i < numberOfClusters; i++) {
-			clusters[i] = new Cluster();
-			clusters[i].setName("clust" + String.valueOf(i));
-		}
-		;
+        int iterationCount = 0;
+        boolean centroidsChanged = true;
+        while (iterationCount < this.numberOfIterations && centroidsChanged) {
+            iterationCount++;
+            // Assign each object to the group that has the closest centroid.
+            int[] assignment = new int[data.size()];
+            for (int i = 0; i < data.size(); i++) {
+                int tmpCluster = -1;
+                double minDistance = Double.MAX_VALUE;
+                for (int j = 0; j < centroids.length; j++) {
+                    double dist = dm.calculateDistance(centroids[j], data.getInstance(i));
+                    if (dist < minDistance) {
+                        minDistance = dist;
+                        tmpCluster = j;
+                    }
+                }
+                assignment[i] = tmpCluster;
 
-		// Find numbOfClusters random vectors:
-		clusterAssignments = new int[numbVec];
-		boolean selected[] = new boolean[numbVec];
-		Random rand = new Random(10);
-		for (int i = 0; i < numberOfClusters; i++) {
-			int index = 0;
-			do {
-				index = Math.abs(rand.nextInt()) % numbVec;
-			} while (selected[index]);
+            }
+            // When all objects have been assigned, recalculate the positions of
+            // the K centroids and start over.
+            // The new position of the centroid is the middle of the current
+            // cluster.
+            double[][] sumPosition = new double[this.numberOfClusters][instanceLength];
+            int[] countPosition = new int[this.numberOfClusters];
+            for (int i = 0; i < data.size(); i++) {
+                for (int j = 0; j < instanceLength; j++) {
+                    sumPosition[assignment[i]][j] += data.getInstance(i).getValue(j);
+                    countPosition[assignment[i]]++;
+                }
+            }
+            centroidsChanged=false;
+            for(int i=0;i<this.numberOfClusters;i++){
+                double []tmp=new double[instanceLength];
+                for(int j=0;j<instanceLength;j++){
+                    tmp[j]=sumPosition[i][j]/countPosition[i];
+                }
+                Instance newCentroid=new SimpleInstance(tmp);
+                if(dm.calculateDistance(newCentroid,centroids[i])>0.0001){
+                    centroidsChanged=true;
+                    centroids[i]=newCentroid;
+                }
+                    
+            }
+            
+        }
 
-			// Add center vector to cluster array:
-			MiningVector vec = miningInputStream.read(index);
-			clusters[i].setCenterVec(vec);
+    }
 
-			selected[index] = true;
-		}
-		;
+    public int getNumberOfClusters() {
+        return this.numberOfClusters;
+    }
 
-		// Iterations:
-		numberOfIterations = 0;
-		boolean converged = false;
-		while (!converged && numberOfIterations < maxNumberOfIterations) {
-			System.out.println("iter: " + (numberOfIterations + 1));
-			converged = true;
+    public int predictCluster(Instance instance) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 
-			// Find nearest cluster for all vectors:
-			for (int i = 0; i < numbVec; i++) {
-				int nC = clusterVector(miningInputStream.read(i));
-				if (nC != clusterAssignments[i]) {
-					clusterAssignments[i] = nC;
-					converged = false;
-				}
-				;
-			}
-			;
+    public double[] predictMembershipDistribution(Instance instance) {
+        double[] tmp = new double[this.getNumberOfClusters()];
+        tmp[this.predictCluster(instance)] = 1;
+        return tmp;
+    }
 
-			// Find new center vectors:
-			for (int i = 0; i < numberOfClusters; i++) {
-				double[] nullVal = new double[numbAtt];
-				MiningVector nullVec = new MiningVector(nullVal);
-				nullVec.setMetaData(metaData);
-				clusters[i].setCenterVec(nullVec);
-			}
-			;
-			int[] cardClusters = new int[numberOfClusters];
-			for (int i = 0; i < numbVec; i++) {
-				MiningVector vec = miningInputStream.read(i);
-				int index = clusterAssignments[i];
-				for (int j = 0; j < numbAtt; j++) {
-					double val = clusters[index].getCenterVec().getValue(j);
-					val = val + vec.getValue(j);
-					clusters[index].getCenterVec().setValue(j, val);
-				}
-				;
-				cardClusters[index] = cardClusters[index] + 1;
-			}
-			;
-			for (int i = 0; i < numberOfClusters; i++) {
-				for (int j = 0; j < numbAtt; j++) {
-					double val = clusters[i].getCenterVec().getValue(j);
-					int card = cardClusters[i];
-					if (card == 0)
-						card = 1;
-					val = val / card;
-					clusters[i].getCenterVec().setValue(j, val);
-				}
-				;
-			}
-			;
-			numberOfIterations = numberOfIterations + 1;
-		}
-		;
-
-	}
-
-	/**
-	 * Assign vector to nearest cluster.
-	 * 
-	 * @param vec
-	 *            mining vector to be assigned to nearest cluster
-	 * @return number of the nearest cluster, -1 if no cluster exist
-	 * @exception MiningException
-	 *                cannot cluster vector
-	 */
-	private int clusterVector(MiningVector vec) throws MiningException {
-
-		if (clusters == null || clusters.length == 0)
-			return -1;
-
-		int nearestClust = 0;
-		double minDist = distance.distance(vec, clusters[0].getCenterVec());
-		for (int i = 1; i < numberOfClusters; i++) {
-			double dist = distance.distance(vec, clusters[i].getCenterVec());
-			if (dist < minDist) {
-				minDist = dist;
-				nearestClust = i;
-			}
-			;
-		}
-		;
-
-		return nearestClust;
-	}
-
-	/**
-	 * Sets number of clusters.
-	 * 
-	 * @param numberOfClusters
-	 *            new number of clusters
-	 */
-	public void setNumberOfClusters(int numberOfClusters) {
-		this.numberOfClusters = numberOfClusters;
-	}
-
-	/**
-	 * Returns number of clusters.
-	 * 
-	 * @return number of clusters
-	 */
-	public int getNumberOfClusters() {
-		return numberOfClusters;
-	}
-
-	/**
-	 * Sets maximum number of iterations.
-	 * 
-	 * @param maxNumberOfIterations
-	 *            new maximum number of iterations
-	 */
-	public void setMaxNumberOfIterations(int maxNumberOfIterations) {
-		this.maxNumberOfIterations = maxNumberOfIterations;
-	}
-
-	/**
-	 * Returns maximum number of iterations.
-	 * 
-	 * @return maximum number of iteartions
-	 */
-	public int getMaxNumberOfIterations() {
-		return maxNumberOfIterations;
-	}
 }
