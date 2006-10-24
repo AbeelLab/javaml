@@ -44,7 +44,7 @@ public interface Clusterer {
      *            the instance to be clustered
      * @return the index of the cluster to which the instance belongs
      */
-    public Number predictCluster(Instance instance);
+    public int predictCluster(Instance instance);
 
     /**
      * Predict the memberschip distribution of the instance for all the clusters
