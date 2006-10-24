@@ -29,13 +29,13 @@ import java.util.Vector;
 
 public interface Instance {
 
-    public Vector<Number> getVectorForm();
+    public Vector<Double> getVectorForm();
 
-    public Number[] getArrayForm();
+    public double[] getArrayForm();
 
-    public Number getValue(int index);
+    public double getValue(int index);
 
-    public void setValue(int index, Number a);
+    public void setValue(int index, double a);
 
     /**
      * This method return the class value of this instance. If the method
@@ -44,7 +44,7 @@ public interface Instance {
      * 
      * @return the class value of this instance
      */
-    public Number getClassValue();
+    public int getClassValue();
 
     /**
      * Set the class value of this instance. This will also set the status of the class of this instance (set,
@@ -52,7 +52,7 @@ public interface Instance {
      * 
      * @param a the actual value for the classvalue
      */
-    public void setClassValue(Number a);
+    public void setClassValue(int a);
 
     /**
      * Set whether the class value of this instance is known or not. 

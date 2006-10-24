@@ -44,10 +44,10 @@ public class SimpleDataset implements Dataset {
         } else {
             instances.add(instance);
             for (int i = 0; i < instance.size(); i++) {
-                if (instance.getValue(i).doubleValue() < low.getValue(i).doubleValue()) {
+                if (instance.getValue(i) < low.getValue(i)) {
                     low.setValue(i, instance.getValue(i));
                 }
-                if (instance.getValue(i).doubleValue() > high.getValue(i).doubleValue()) {
+                if (instance.getValue(i) > high.getValue(i)) {
                     high.setValue(i, instance.getValue(i));
                 }
             }
@@ -90,10 +90,10 @@ public class SimpleDataset implements Dataset {
             for (int j = 1; j < instances.size(); j++) {
                 Instance instance = instances.get(j);
                 for (int i = 0; i < instance.size(); i++) {
-                    if (instance.getValue(i).doubleValue() < low.getValue(i).doubleValue()) {
+                    if (instance.getValue(i) < low.getValue(i)) {
                         low.setValue(i, instance.getValue(i));
                     }
-                    if (instance.getValue(i).doubleValue() > high.getValue(i).doubleValue()) {
+                    if (instance.getValue(i) > high.getValue(i)) {
                         high.setValue(i, instance.getValue(i));
                     }
                 }

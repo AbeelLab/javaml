@@ -28,24 +28,15 @@ import java.util.Vector;
 
 public class SimpleInstance implements Instance {
 
-    private Vector<Number> values = new Vector<Number>();
+    private Vector<Double> values = new Vector<Double>();
 
     private boolean classSet = false;
 
-    private Number classValue = new Integer(0);
+    private int classValue = 0;
 
     private double weigth = 1;
 
-    public SimpleInstance(Number[] values) {
-        this(values,1.0);
-    }
-
-    public SimpleInstance(Number[] values,double weight) {
-        this(weight);
-        for(int i=0;i<values.length;i++){
-        	this.values.add(values[i]);
-        }
-    }
+    
 
     private SimpleInstance(double weight){
     	this.weigth = weight;
@@ -63,31 +54,45 @@ public class SimpleInstance implements Instance {
 		this.setClassValue(instance.getClassValue());
 	}
 
-	public Vector<Number> getVectorForm() {
-        return new Vector<Number>(values);
+	public SimpleInstance(double[] values) {
+        this(values,1.0);
     }
 
-    public Number[] getArrayForm() {
-        Number[] tmp = new Number[values.size()];
-        values.toArray(tmp);
+    public SimpleInstance(double[] values, double weight) {
+       this.values=new Vector<Double>();
+        for(int i=0;i<values.length;i++){
+            this.values.add(values[i]);
+        }
+        this.weigth=weight;
+    }
+
+    public Vector<Double> getVectorForm() {
+        return new Vector<Double>(values);
+    }
+
+    public double[] getArrayForm() {
+        double[] tmp = new double[values.size()];
+        for(int i=0;i<tmp.length;i++){
+            tmp[i]=values.get(i);
+        }
         return tmp;
     }
 
     
-    public Number getValue(int index) {
+    public double getValue(int index) {
         return values.get(index);
     }
 
-    public void setValue(int index, Number a) {
+    public void setValue(int index, double a) {
         values.set(index, a);
 
     }
 
-    public Number getClassValue() {
+    public int getClassValue() {
         return classValue;
     }
 
-    public void setClassValue(Number a) {
+    public void setClassValue(int a) {
         classValue = a;
         classSet = true;
 
@@ -103,12 +108,8 @@ public class SimpleInstance implements Instance {
     }
 
     public boolean isCompatible(Instance instance) {
-        boolean tmp=true;
-        tmp=instance.size()==this.size();
-        for(int i=0;tmp&&i<this.size();i++){
-            tmp=this.getValue(i).getClass().equals(instance.getValue(i).getClass());
-        }
-        return tmp;
+        return instance.size()==this.size();
+        
         
     }
 
