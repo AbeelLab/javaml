@@ -178,7 +178,9 @@ public class SimpleKMeans implements Clusterer {
             }
             centroidsChanged = false;
             for (int i = 0; i < this.numberOfClusters; i++) {
-                if (countPosition[i] > 0) {
+                if (countPosition[i] > 0) {// when there are no instances
+                                            // associated with this centroid, it
+                                            // remains the same.
                     double[] tmp = new double[instanceLength];
                     for (int j = 0; j < instanceLength; j++) {
                         tmp[j] = sumPosition[i][j] / countPosition[i];
