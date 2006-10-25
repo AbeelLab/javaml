@@ -35,8 +35,6 @@ public interface Instance {
 
     public double getValue(int index);
 
-    public void setValue(int index, double a);
-
     /**
      * This method return the class value of this instance. If the method
      * <code>isClassMissing</code> returns true, the output of this method is
@@ -46,30 +44,12 @@ public interface Instance {
      */
     public int getClassValue();
 
-    /**
-     * Set the class value of this instance. This will also set the status of the class of this instance (set,
-     * unset) to <code>set</code>.
-     * 
-     * @param a the actual value for the classvalue
-     */
-    public void setClassValue(int a);
-
-    /**
-     * Set whether the class value of this instance is known or not. 
-     * 
-     * @param b
-     *            When b is true than the class value is known, if b is false,
-     *            the class value is unknown.
-     */
-    public void setClassSet(boolean b);
-
     public boolean isClassSet();
 
     public boolean isCompatible(Instance i);
 
     public double getWeight();
 
-    public void setWeight(double d);
     /**
      * This method return the number of values (attributes) this instance has.
      * @return the number of values

@@ -30,25 +30,24 @@ import java.util.Vector;
 public class SimpleDataset implements Dataset {
     private Vector<Instance> instances = new Vector<Instance>();
 
-    private Instance low = null;
-
-    private Instance high = null;
+    double[] lowArray,highArray;
 
     public boolean addInstance(Instance instance) {
+        
         if (instances.size() == 0) {
-            low = new SimpleInstance(instance);
-            high = new SimpleInstance(instance);
+            lowArray = instance.getArrayForm();
+            highArray = instance.getArrayForm();
         }
         if (instances.size() > 0 && !instance.isCompatible(instances.get(0))) {
             return false;
         } else {
             instances.add(instance);
             for (int i = 0; i < instance.size(); i++) {
-                if (instance.getValue(i) < low.getValue(i)) {
-                    low.setValue(i, instance.getValue(i));
+                if (instance.getValue(i) < lowArray[i]) {
+                    lowArray[i]=instance.getValue(i);
                 }
-                if (instance.getValue(i) > high.getValue(i)) {
-                    high.setValue(i, instance.getValue(i));
+                if (instance.getValue(i) > highArray[i]) {
+                    highArray[i]=instance.getValue(i);
                 }
             }
             return true;
@@ -76,25 +75,25 @@ public class SimpleDataset implements Dataset {
 
     public void clear() {
         instances.removeAllElements();
-        low = null;
-        high = null;
+        lowArray = null;
+        highArray = null;
     }
 
     private void recalculate() {
         if (instances.size() == 0) {
-            low = null;
-            high = null;
+            lowArray = null;
+            highArray = null;
         } else {
-            low = new SimpleInstance(instances.get(0));
-            high = new SimpleInstance(instances.get(0));
+            lowArray = instances.get(0).getArrayForm();
+            highArray = instances.get(0).getArrayForm();
             for (int j = 1; j < instances.size(); j++) {
                 Instance instance = instances.get(j);
                 for (int i = 0; i < instance.size(); i++) {
-                    if (instance.getValue(i) < low.getValue(i)) {
-                        low.setValue(i, instance.getValue(i));
+                    if (instance.getValue(i) < lowArray[i]) {
+                        lowArray[i]=instance.getValue(i);
                     }
-                    if (instance.getValue(i) > high.getValue(i)) {
-                        high.setValue(i, instance.getValue(i));
+                    if (instance.getValue(i) > highArray[i]) {
+                        highArray[i]=instance.getValue(i);
                     }
                 }
             }
@@ -107,10 +106,10 @@ public class SimpleDataset implements Dataset {
     }
 
     public Instance getMaximumInstance() {
-        return high;
+        return new SimpleInstance(highArray);
     }
 
     public Instance getMinimumInstance() {
-        return low;
+        return new SimpleInstance(lowArray);
     }
 }

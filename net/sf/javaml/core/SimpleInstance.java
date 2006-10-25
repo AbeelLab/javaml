@@ -34,24 +34,15 @@ public class SimpleInstance implements Instance {
 
     private int classValue = 0;
 
-    private double weigth = 1;
+    private double weight = 1;
 
-    
-
-    private SimpleInstance(double weight){
-    	this.weigth = weight;
-    }
     /**
      * Copy constructor, this makes a deep copy of the Instance
      * @param instance
      */
     public SimpleInstance(Instance instance) {
-		this(instance.getWeight());
-		for(int i=0;i<instance.size();i++){
-			values.add(instance.getValue(i));
-		}
-		this.setClassSet(instance.isClassSet());
-		this.setClassValue(instance.getClassValue());
+        this(instance.getArrayForm(),instance.getWeight(),instance.isClassSet(),instance.getClassValue());
+		
 	}
 
 	public SimpleInstance(double[] values) {
@@ -59,11 +50,17 @@ public class SimpleInstance implements Instance {
     }
 
     public SimpleInstance(double[] values, double weight) {
-       this.values=new Vector<Double>();
+       this(values,weight,false,0);
+    }
+    
+    public SimpleInstance(double [] values,double weight,boolean classSet,int classValue){
+        this.values=new Vector<Double>();
         for(int i=0;i<values.length;i++){
             this.values.add(values[i]);
         }
-        this.weigth=weight;
+        this.weight=weight;
+        this.classSet=classSet;
+        this.classValue=classValue;
     }
 
     public Vector<Double> getVectorForm() {
@@ -83,25 +80,13 @@ public class SimpleInstance implements Instance {
         return values.get(index);
     }
 
-    public void setValue(int index, double a) {
-        values.set(index, a);
-
-    }
+   
 
     public int getClassValue() {
         return classValue;
     }
 
-    public void setClassValue(int a) {
-        classValue = a;
-        classSet = true;
-
-    }
-
-    public void setClassSet(boolean b) {
-        classSet = b;
-
-    }
+  
 
     public boolean isClassSet() {
         return classSet;
@@ -114,11 +99,11 @@ public class SimpleInstance implements Instance {
     }
 
     public double getWeight() {
-        return this.weigth;
+        return this.weight;
     }
 
     public void setWeight(double d) {
-        this.weigth = d;
+        this.weight = d;
 
     }
 
