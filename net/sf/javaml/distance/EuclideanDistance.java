@@ -49,7 +49,7 @@ public class EuclideanDistance implements DistanceMeasure {
         }
         double sum = 0;
         for (int i = 0; i < x.size(); i++) {
-            sum+=(y.getValue(i)*y.getValue(i)-x.getValue(i)*x.getValue(i));
+            sum+=(y.getValue(i)-x.getValue(i))*(y.getValue(i)-x.getValue(i));
         }
         return Math.sqrt(sum);
     }

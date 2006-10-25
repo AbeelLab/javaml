@@ -37,7 +37,7 @@ public class SimpleKMeans implements Clusterer {
     /**
      * The number of clusters.
      */
-    private int numberOfClusters;
+    private int numberOfClusters=-1;
 
     /**
      * The number of iterations the algorithm should make. If this value is
@@ -45,7 +45,7 @@ public class SimpleKMeans implements Clusterer {
      * change.
      * 
      */
-    private int numberOfIterations;
+    private int numberOfIterations=-1;
 
     /**
      * Random generator for this clusterer.
@@ -128,21 +128,23 @@ public class SimpleKMeans implements Clusterer {
     public void buildClusterer(Dataset data) {
         if (data.size() == 0)
             throw new RuntimeException("The dataset should not be empty");
+        if(numberOfClusters==0)
+            throw new RuntimeException("There should be at least one cluster");
         // Place K points into the space represented by the objects that are
         // being clustered. These points represent the initial group of
         // centroids.
         Instance min = data.getMinimumInstance();
         Instance max = data.getMaximumInstance();
-        centroids = new Instance[numberOfClusters];
+        this.centroids = new Instance[numberOfClusters];
         int instanceLength = data.getInstance(0).size();
         for (int j = 0; j < numberOfClusters; j++) {
             double[] randomInstance = new double[instanceLength];
-            for (int i = 0; i < data.size(); i++) {
+            for (int i = 0; i < instanceLength; i++) {
                 double dist = Math.abs(max.getValue(i) - min.getValue(i));
                 randomInstance[i] = (min.getValue(i) + rg.nextDouble() * dist);
 
             }
-            centroids[j] = new SimpleInstance(randomInstance);
+            this.centroids[j] = new SimpleInstance(randomInstance);
         }
 
         int iterationCount = 0;
@@ -172,7 +174,8 @@ public class SimpleKMeans implements Clusterer {
             int[] countPosition = new int[this.numberOfClusters];
             for (int i = 0; i < data.size(); i++) {
                 for (int j = 0; j < instanceLength; j++) {
-                    sumPosition[assignment[i]][j] += data.getInstance(i).getValue(j);
+                    double value=data.getInstance(i).getValue(j);
+                    sumPosition[assignment[i]][j] += value;
                     countPosition[assignment[i]]++;
                 }
             }
