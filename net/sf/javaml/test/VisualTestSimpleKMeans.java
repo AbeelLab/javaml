@@ -25,9 +25,12 @@
 package net.sf.javaml.test;
 
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.util.Random;
 
+import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -59,9 +62,11 @@ public class VisualTestSimpleKMeans extends JPanel{
     }
     
     public VisualTestSimpleKMeans(){
+        this.setLayout(new GridLayout(0,4));
+       
         Dataset data = new SimpleDataset();
-        this.setLayout(new GridLayout(0,2));
-        this.add(createLabel(data,Color.BLACK));
+        
+        this.add(createLabel(data,Color.BLACK,150,150));
         Random rg = new Random(1);
         for (int i = 0; i < 3; i++) {
             int x = rg.nextInt(100) - 50;
@@ -72,7 +77,8 @@ public class VisualTestSimpleKMeans extends JPanel{
                 data.addInstance(instance);
             }
         }
-        Clusterer km=new SimpleKMeans(3,100);
+        for(int k=0;k<5;k++){
+        Clusterer km=new SimpleKMeans(2,100);
         km.buildClusterer(data);
         
         Dataset[]datas=new Dataset[3];
@@ -85,14 +91,47 @@ public class VisualTestSimpleKMeans extends JPanel{
         }
         Color[]colors={Color.RED,Color.GREEN,Color.BLUE};
         for(int i=0;i<3;i++){
-            this.add(createLabel(datas[i],colors[i]));
-        }
+            this.add(createLabel(datas[i],colors[i],150,150));
+        }}
         
     }
     
-    private JLabel createLabel(Dataset data,Color color){
-        return null;
-        //TODO
+    private JLabel createLabel(Dataset data,Color color,int width,int height){
+        return new ClusterLabel(data,color,width,height);
+    }
+    class ClusterLabel extends JLabel{
+        
+        private static final long serialVersionUID = -5642750374875570050L;
+
+        private Dataset data;
+        private Color color;
+        private int width,height;
+        public ClusterLabel(Dataset data, Color color, int width, int height) {
+            this.setPreferredSize(new Dimension(width,height));
+             this.data = data;
+            this.color = color;
+            this.width = width;
+            this.height = height;
+            this.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        }
+        
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            g.setColor(color);
+            for(int i=0;i<data.size();i++){
+                Instance in=data.getInstance(i);
+                g.fillOval((int)in.getValue(0)+(width/2)-1,(int)in.getValue(1)+(height/2)-1,2,2);
+                
+            }
+            
+            
+            
+        }
+        
+        
+       
+        
     }
 
 }
