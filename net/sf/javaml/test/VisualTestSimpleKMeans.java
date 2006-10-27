@@ -28,7 +28,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridLayout;
-import java.util.Random;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
@@ -40,7 +39,7 @@ import net.sf.javaml.clustering.SimpleKMeans;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.SimpleDataset;
-import net.sf.javaml.core.SimpleInstance;
+import net.sf.javaml.tools.DatasetGenerator;
 
 public class VisualTestSimpleKMeans extends JPanel{
 
@@ -62,23 +61,12 @@ public class VisualTestSimpleKMeans extends JPanel{
     }
     
     public VisualTestSimpleKMeans(){
-        this.setLayout(new GridLayout(0,4));
-       
-        Dataset data = new SimpleDataset();
+        this.setLayout(new GridLayout(0,2));
+        int space=300;
+        Dataset data =DatasetGenerator.createClusterDataset(3,100,space,20);
         
-        this.add(createLabel(data,Color.BLACK,150,150));
-        Random rg = new Random(1);
-        for (int i = 0; i < 3; i++) {
-            int x = rg.nextInt(100) - 50;
-            int y = rg.nextInt(100) - 50;
-            for (int j = 0; j < 10; j++) {
-                double[] vec = { rg.nextGaussian() * 10 + x, rg.nextGaussian() * 10 + y };
-                Instance instance = new SimpleInstance(vec);
-                data.addInstance(instance);
-            }
-        }
-        for(int k=0;k<5;k++){
-        Clusterer km=new SimpleKMeans(2,100);
+        this.add(createLabel(data,Color.BLACK,space,space));
+        Clusterer km=new SimpleKMeans(3,100);
         km.buildClusterer(data);
         
         Dataset[]datas=new Dataset[3];
@@ -91,8 +79,8 @@ public class VisualTestSimpleKMeans extends JPanel{
         }
         Color[]colors={Color.RED,Color.GREEN,Color.BLUE};
         for(int i=0;i<3;i++){
-            this.add(createLabel(datas[i],colors[i],150,150));
-        }}
+            this.add(createLabel(datas[i],colors[i],space,space));
+        }
         
     }
     
@@ -101,6 +89,9 @@ public class VisualTestSimpleKMeans extends JPanel{
     }
     class ClusterLabel extends JLabel{
         
+        public void setData(Dataset x){
+            this.data=x;
+        }
         private static final long serialVersionUID = -5642750374875570050L;
 
         private Dataset data;
