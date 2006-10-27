@@ -168,14 +168,14 @@ public class SimpleKMeans implements Clusterer {
             }
             // When all objects have been assigned, recalculate the positions of
             // the K centroids and start over.
-            // The new position of the centroid is the middle of the current
-            // cluster.
+            // The new position of the centroid is the weighted center of the 
+            // current cluster.
             double[][] sumPosition = new double[this.numberOfClusters][instanceLength];
             int[] countPosition = new int[this.numberOfClusters];
             for (int i = 0; i < data.size(); i++) {
                 for (int j = 0; j < instanceLength; j++) {
-                    double value=data.getInstance(i).getValue(j);
-                    sumPosition[assignment[i]][j] += value;
+                    Instance in=data.getInstance(i);
+                    sumPosition[assignment[i]][j] += in.getWeight()*in.getValue(j);
                     countPosition[assignment[i]]++;
                 }
             }
