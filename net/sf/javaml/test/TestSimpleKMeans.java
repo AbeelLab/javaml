@@ -88,7 +88,7 @@ public class TestSimpleKMeans extends TestCase {
             int x = rg.nextInt(100) - 50;
             int y = rg.nextInt(100) - 50;
             for (int j = 0; j < 10; j++) {
-                double[] vec = { rg.nextGaussian() * 10 + x, rg.nextGaussian() * 10 + y };
+                float[] vec = {(float) rg.nextGaussian() * 10 + x,(float) rg.nextGaussian() * 10 + y };
                 Instance instance = new SimpleInstance(vec);
                 data.addInstance(instance);
             }

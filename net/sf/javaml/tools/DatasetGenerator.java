@@ -40,7 +40,7 @@ public class DatasetGenerator {
             int x = rg.nextInt(spaceWidth) - (spaceWidth/2);
             int y = rg.nextInt(spaceWidth) - (spaceWidth/2);
             for (int j = 0; j < itemsInCluster; j++) {
-                double[] vec = { rg.nextGaussian() * clusterWidth + x, rg.nextGaussian() * clusterWidth + y };
+                float[] vec = { (float)rg.nextGaussian() * clusterWidth + x,(float) rg.nextGaussian() * clusterWidth + y };
                 Instance instance = new SimpleInstance(vec);
                 out.addInstance(instance);
             }

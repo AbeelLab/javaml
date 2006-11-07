@@ -29,11 +29,11 @@ import java.util.Vector;
 
 public interface Instance {
 
-    public Vector<Double> getVectorForm();
+    public Vector<Float> getVectorForm();
 
-    public double[] getArrayForm();
+    public float[] getArrayForm();
 
-    public double getValue(int index);
+    public float getValue(int index);
 
     /**
      * This method return the class value of this instance. If the method
@@ -48,7 +48,7 @@ public interface Instance {
 
     public boolean isCompatible(Instance i);
 
-    public double getWeight();
+    public float getWeight();
 
     /**
      * This method return the number of values (attributes) this instance has.

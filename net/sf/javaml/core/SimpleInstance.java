@@ -28,13 +28,13 @@ import java.util.Vector;
 
 public class SimpleInstance implements Instance {
 
-    private Vector<Double> values = new Vector<Double>();
+    private Vector<Float> values = new Vector<Float>();
 
     private boolean classSet = false;
 
     private int classValue = 0;
 
-    private double weight = 1;
+    private float weight = 1;
 
     /**
      * Copy constructor, this makes a deep copy of the Instance
@@ -45,16 +45,16 @@ public class SimpleInstance implements Instance {
 		
 	}
 
-	public SimpleInstance(double[] values) {
-        this(values,1.0);
+	public SimpleInstance(float[] values) {
+        this(values,1.0f);
     }
 
-    public SimpleInstance(double[] values, double weight) {
+    public SimpleInstance(float[] values, float weight) {
        this(values,weight,false,0);
     }
     
-    public SimpleInstance(double [] values,double weight,boolean classSet,int classValue){
-        this.values=new Vector<Double>();
+    public SimpleInstance(float [] values,float weight,boolean classSet,int classValue){
+        this.values=new Vector<Float>();
         for(int i=0;i<values.length;i++){
             this.values.add(values[i]);
         }
@@ -63,12 +63,12 @@ public class SimpleInstance implements Instance {
         this.classValue=classValue;
     }
 
-    public Vector<Double> getVectorForm() {
-        return new Vector<Double>(values);
+    public Vector<Float> getVectorForm() {
+        return new Vector<Float>(values);
     }
 
-    public double[] getArrayForm() {
-        double[] tmp = new double[values.size()];
+    public float[] getArrayForm() {
+        float[] tmp = new float[values.size()];
         for(int i=0;i<tmp.length;i++){
             tmp[i]=values.get(i);
         }
@@ -76,7 +76,7 @@ public class SimpleInstance implements Instance {
     }
 
     
-    public double getValue(int index) {
+    public float getValue(int index) {
         return values.get(index);
     }
 
@@ -98,11 +98,11 @@ public class SimpleInstance implements Instance {
         
     }
 
-    public double getWeight() {
+    public float getWeight() {
         return this.weight;
     }
 
-    public void setWeight(double d) {
+    public void setWeight(float d) {
         this.weight = d;
 
     }

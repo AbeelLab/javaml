@@ -30,7 +30,7 @@ import java.util.Vector;
 public class SimpleDataset implements Dataset {
     private Vector<Instance> instances = new Vector<Instance>();
 
-    double[] lowArray,highArray;
+    float[] lowArray,highArray;
 
     public boolean addInstance(Instance instance) {
         
