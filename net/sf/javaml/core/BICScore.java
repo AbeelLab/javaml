@@ -31,54 +31,43 @@ import net.sf.javaml.distance.DistanceMeasureFactory;
 
 public class BICScore {
 	
-	public double varianceEstimate (Dataset data,Instance centroid,int number,int assignment[],int numberOfClusters ){
-		int k = numberOfClusters;
-		int r = data.size();
+	public static double varianceEstimate (Dataset data,Instance centroid,int numberOfClusters, int initialDataSetSize ){
 		double variance;
+		int l = data.size();
+		int k = numberOfClusters;
+		int r = initialDataSetSize;
 		double sum = 0;
 		DistanceMeasure dm=DistanceMeasureFactory.getEuclideanDistanceMeasure();
-		for (int i = 0; i < assignment.length; i++) {
-			if (assignment[i] == number){
-				sum += dm.calculateDistance(data.getInstance(i), centroid);
-			}
+		for (int i = 0; i < l; i++) {
+			sum += dm.calculateDistance(data.getInstance(i), centroid);
 		}
 		variance = 1/(r-k)*sum;
 		return variance;
 	}
 	
 	
-	public double logLikeliHood (Dataset data, double variance, int numberOfClusters,  int clusterSize, int dataDimension){
+	public static double logLikeliHood (Dataset data, double variance, int numberOfClusters, int initialDataSetSize, int dataDimension){
 		double loglike;
+		int c = data.size();
 		double v = variance;
 		int k = numberOfClusters;
-		int r = data.size();
-		int c = clusterSize;
+		int r = initialDataSetSize;
 		int d = dataDimension;
 		loglike = (-c/2)*(Math.log(2*Math.PI)+d*Math.log(v)) + c*(Math.log(c/r))-(c-k)/2;
 		return loglike;
 	}
 	
 	
-	public double bicScore (Dataset data, double loglike, double variance, int numberOfClusters, int dataDimension){
+	public static double bicScore (Dataset data, double loglike, double variance, int numberOfClusters, int dataDimension){
 		double bic;
 		int r = data.size();
-		int k = numberOfClusters;
-		int d = dataDimension;
 		double l = loglike;
 		double v = variance;
+		int k = numberOfClusters;
+		int d = dataDimension;
 		double p = (k-1)+d*k+v;
 		bic = l-(p/2)*Math.log(r);
 		return bic;
-	}
-	
-	public int localClusterSize (int assignment[],int clusternumber){
-		int clusterSize = 0;
-		for (int i = 0; i < assignment.length; i++) {
-			if (assignment[i] == clusternumber){
-				clusterSize++;
-			}
-		}
-	return clusterSize;
 	}
 
 }
