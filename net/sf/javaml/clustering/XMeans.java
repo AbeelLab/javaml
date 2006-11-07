@@ -58,7 +58,7 @@ public class XMeans extends SimpleKMeans implements Clusterer  {
 	// vector, which temporary holds all centroids belonging to a certain k.
 	private Vector<Instance> tempCentroids = new Vector<Instance>();
 	// vector, which temporary holds all tempCentroids belonging to all k values.
-	private Vector<Vector> allTempCentroids = new Vector<Vector>();
+	private Vector<Vector<Instance>> allTempCentroids = new Vector<Vector<Instance>>();
 	// vector, which holds the final centroids belonging to the final clustering result.
 	private Vector<Instance> finalCentroids = new Vector<Instance>();
 	// number of clusters in step 1., value between kMin and kMax.
