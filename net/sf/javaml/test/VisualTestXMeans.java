@@ -63,10 +63,10 @@ public class VisualTestXMeans extends JPanel{
     public VisualTestXMeans(){
         this.setLayout(new GridLayout(0,3));
         int space=300;
-        Dataset data =DatasetGenerator.createClusterDataset(3,100,space,10);
+        Dataset data =DatasetGenerator.createClusterDataset(4,100,space/2,5);
         
         this.add(createLabel(data,Color.BLACK,space,space));
-        Clusterer km=new XMeans(5,5);
+        Clusterer km=new XMeans(2,3);
         km.buildClusterer(data);
         
         Dataset[]datas=new Dataset[5*2];
