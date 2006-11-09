@@ -52,25 +52,12 @@ public class XMeans extends SimpleKMeans implements Clusterer {
 
     // max value for k.
     private int kMax;
-
-    // vector of the different variance values, belonging to the local clusters
-    // in step2, according to a certain k.
-    private Vector<Double> localVariances = new Vector<Double>();
-
-    // vector, which temporary holds all total BIC scores belonging to all k
-    // values.
-    private Vector<Double> allTotalBicScores = new Vector<Double>();
+    private double finalBICScore = Double.MIN_VALUE;
+    //private double finalBICScore = -10000;
 
     // vector, which temporary holds all centroids belonging to a certain k.
     private Vector<Instance> tempCentroids = new Vector<Instance>();
-
-    // vector, which temporary holds all tempCentroids belonging to all k
-    // values.
-    private Vector<Vector<Instance>> allTempCentroids = new Vector<Vector<Instance>>();    
-
-    // vector, wich holds all tempClusters for each k value.
-    private Vector<Integer> totalTempClusters = new Vector<Integer>();
-    
+   
     // vector, which holds the final centroids belonging to the final clustering
     // result.
     private Vector<Instance> finalCentroids = new Vector<Instance>();
@@ -102,13 +89,14 @@ public class XMeans extends SimpleKMeans implements Clusterer {
         	// sum of all local loglikes, according to a certain k.
         	double totalLoglike = 0;
         	System.out.println("totalLoglike = "+totalLoglike);
+        	// sum of all local variances for a certain k.
+        	double localVariances = 0;
         	// total variance of all data, mean value of all local variance values
             // according to a certain k.
         	double totalVariance = 0;
         	System.out.println("totalVariance = "+totalVariance);
         	// total BIC score calculated over all data, according to a certain k.
         	double totalBICScore = 0;
-        	localVariances.clear();
         	tempCentroids.clear();
         	        	
             // Clusterer km=new super(k,100);
@@ -198,22 +186,24 @@ public class XMeans extends SimpleKMeans implements Clusterer {
                             // add loglike to overAllLoglike.
                             totalLoglike += loglikeP;
                             // save variance.
-                            localVariances.add(varianceP);
+                            localVariances += varianceP;
                             // save parent centroid as partial result for current k.
                             tempCentroids.add(centroidP);
                             tempClusters++;
+                            System.out.println("parent cluster saved");
                         }
                         else if (scoreP < scoreC){
                             // add loglike to overAllLoglike.
                             totalLoglike += loglikeC;
                             // save variance.
-                            localVariances.add(varianceC);
+                            localVariances += varianceC;
                             // keep child centroids as partial result for current k.
                             tempCentroids.add(centroidC1);
                             tempCentroids.add(centroidC2);
                             tempClusters += 2;
+                            System.out.println("child clusters 1 and 2 saved");
                         }
-                        System.out.println("this was option1");
+                        
                     }
                     if (datasLocal[0].size()==0){
                     	varianceC = BICScore.varianceEstimate(datasLocal[1], centroidC2, k, parentDataSetSize);
@@ -226,21 +216,23 @@ public class XMeans extends SimpleKMeans implements Clusterer {
                              // add loglike to overAllLoglike.
                              totalLoglike += loglikeP;
                              // save variance.
-                             localVariances.add(varianceP);
+                             localVariances += varianceP;
                              // save parent centroid as partial result for current k.
                              tempCentroids.add(centroidP);
                              tempClusters++;
+                             System.out.println("parent cluster saved");
                          }
                          else if (scoreP < scoreC){
                              // add loglike to overAllLoglike.
                              totalLoglike += loglikeC;
                              // save variance.
-                             localVariances.add(varianceC);
+                             localVariances += varianceC;
                              // keep child centroids as partial result for current k.
                              tempCentroids.add(centroidC2);
                              tempClusters++;
+                             System.out.println("child cluster 2 saved ");
                          }
-                         System.out.println("this was option2");
+                         
                     }
                     if (datasLocal[1].size()==0){
                     	varianceC = BICScore.varianceEstimate(datasLocal[0], centroidC1, k, parentDataSetSize);
@@ -253,70 +245,47 @@ public class XMeans extends SimpleKMeans implements Clusterer {
                              // add loglike to overAllLoglike.
                              totalLoglike += loglikeP;
                              // save variance.
-                             localVariances.add(varianceP);
+                             localVariances += varianceP;
                              // save parent centroid as partial result for current k.
                              tempCentroids.add(centroidP);
                              tempClusters++;
+                             System.out.println("parent cluster saved");
                         }
                         else if (scoreP < scoreC){
                              // add loglike to overAllLoglike.
                              totalLoglike += loglikeC;
                              // save variance.
-                             localVariances.add(varianceC);
+                             localVariances += varianceC;
                              // keep child centroids as partial result for current k.
                              tempCentroids.add(centroidC1);
                              tempClusters++;
+                             System.out.println("child cluster 1 saved");
                         }
-                        System.out.println("this was option3");
+                        
                     }
-                }
-            	System.out.println("tempClusters = "+tempClusters);
-                System.out.println(" ");
+                    System.out.println("tempClusters = "+tempClusters);
+                    System.out.println(" ");
+                } 
             }
-            // save final number of clusters for current k.
-            totalTempClusters.add(tempClusters);
-            // save final resulting centroids for current k.
-            allTempCentroids.add(tempCentroids);
-            // calculate over-all variance for the whole data set as mean of
-            // sub-variances for current k.
-            int lvs = localVariances.size();
-            for (int i = 0; i < lvs; i++) {
-                totalVariance += localVariances.get(i);
-            }
-            totalVariance /= lvs;
+            System.out.println("tempClusters = "+tempClusters);
+            System.out.println(" ");
+            System.out.println("localVariances = "+localVariances);
+            totalVariance = localVariances / tempClusters;
             System.out.println("totalVariance = "+totalVariance);
-            // calculate over-all BIC score for current k add save.
             totalBICScore = BICScore.bicScore(data, totalLoglike, totalVariance, k, dataDimension);
             System.out.println("totalBICScore = "+totalBICScore);
-            System.out.println(" ");
-            System.out.println(" ");
-            allTotalBicScores.add(totalBICScore);
-
-        }
-        // for k with kMin < k < kMax:
-        // find highest overallBICScore.
-        int atbss = allTotalBicScores.size();
-        int index = 0;
-        for (int i = 0; i < atbss; i++) {
-            double largest = allTotalBicScores.get(0);
-            if (allTotalBicScores.get(i) > largest) {
-                largest = (allTotalBicScores.get(i));
-                index = i;
+            
+            if (totalBICScore > finalBICScore) {
+            	finalBICScore = totalBICScore;
+            	System.out.println("finalBICScore = "+finalBICScore);
+            	resultingNumberOfClusters = tempClusters;
+            	System.out.println("resultingNumberOfClusters = "+resultingNumberOfClusters);
+            	finalCentroids = tempCentroids;
+            	System.out.println("finalCentroids = "+finalCentroids.size());
             }
+            System.out.println(" ");
+            System.out.println(" ");
         }
-        double finalBICScore = allTotalBicScores.get(index);
-        System.out.println("finalBICScore = "+finalBICScore);
-        // find the belonging/ appropriate centroids.
-        finalCentroids = allTempCentroids.get(index);
-        System.out.println("Centroids count: "+finalCentroids.size());
-        resultingNumberOfClusters = totalTempClusters.get(index);
-        System.out.println("resultingNumberOfClusters = "+resultingNumberOfClusters);
-        for (int i = 0; i <finalCentroids.size(); i++){
-        	Instance resultCentroid = finalCentroids.get(i);
-        	System.out.println("finalCentroids are :"+resultCentroid);
-        }
-        
-
     }
 
     public int getNumberOfClusters() {
