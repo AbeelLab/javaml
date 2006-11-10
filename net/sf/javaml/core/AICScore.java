@@ -1,5 +1,5 @@
 /**
- * BICScore.java, 31-okt-06
+ * AICScore.java, 31-okt-06
  *
  * This file is part of the Java Machine Learning API
  * 
@@ -29,18 +29,20 @@ package net.sf.javaml.core;
 import net.sf.javaml.distance.DistanceMeasure;
 import net.sf.javaml.distance.DistanceMeasureFactory;
 
-public class BICScore {
+public class AICScore {
 	
-	public static double varianceEstimate (Dataset data,Instance centroid, int numberOfClusters){
+	public static double varianceEstimate (Dataset data,Instance centroid,int numberOfClusters, int initialDataSetSize ){
 		double variance;
-		double s = data.size();
+		int s = data.size();
 		double k = numberOfClusters;
+		double r = initialDataSetSize;
 		double sum = 0;
 		DistanceMeasure dm=DistanceMeasureFactory.getEuclideanDistanceMeasure();
 		for (int i = 0; i < s; i++) {
 			sum += dm.calculateDistance(data.getInstance(i), centroid);
 		}
-		variance = (1/(s-k))*sum;
+		variance = (1/(r-k))*sum;
+
 		return variance;
 	}
 	
@@ -57,17 +59,15 @@ public class BICScore {
 	}
 	
 	
-	public static double bicScore (Dataset data, double loglike, double variance, int numberOfClusters, double dataDimension){
-		double bic;
-		double r = data.size();
+	public static double aicScore (double loglike, double variance, int numberOfClusters, double dataDimension){
+		double aic;
 		double l = loglike;
 		double v = variance;
 		double k = numberOfClusters;
 		double d = dataDimension;
 		double p = (k-1)+d*k+v;
-		System.out.println("p = "+p);
-		bic = l - (p/2)*Math.log(r);
-		return bic;
+		aic = -2*Math.log(l)+2*p;
+		return aic;
 	}
 
 }

@@ -46,14 +46,13 @@ import net.sf.javaml.core.SimpleDataset;
 public class XMeans extends SimpleKMeans implements Clusterer {
     // TODO delete following remark:
     // code not yet complete!
+	// BICScore calculation not yet correct.
 
     // min value for k.
     private int kMin;
 
     // max value for k.
     private int kMax;
-    private double finalBICScore = Double.MIN_VALUE;
-    //private double finalBICScore = -10000;
 
     // vector, which temporary holds all centroids belonging to a certain k.
     private Vector<Instance> tempCentroids = new Vector<Instance>();
@@ -71,6 +70,9 @@ public class XMeans extends SimpleKMeans implements Clusterer {
     }
 
     public void buildClusterer(Dataset data) {
+    	 double finalBICScore = Double.NEGATIVE_INFINITY;
+    	 //double finalBICScore = Double.MIN_VALUE;
+    	   
         if (data.size() == 0)
             throw new RuntimeException("The dataset should not be empty");
         if (kMin == 0)
@@ -127,11 +129,11 @@ public class XMeans extends SimpleKMeans implements Clusterer {
             		System.out.println("clusterSize = "+clusterSize);
             		Instance centroidP = super.centroids[i];          		
             		// 1.1 calculate variance estimate.
-            		double varianceP = BICScore.varianceEstimate(data, centroidP, k, initialDataSetSize);
+            		double varianceP = BICScore.varianceEstimate(datas[i], centroidP, k);
             		// 1.2 calculate loglikelihood.
-            		double loglikeP = BICScore.logLikeliHood(data, varianceP, k, initialDataSetSize, dataDimension);
+            		double loglikeP = BICScore.logLikeliHood(datas[i], varianceP, k, initialDataSetSize, dataDimension);
             		// 1.3 calculate bic score.
-            		double scoreP = BICScore.bicScore(data, loglikeP, varianceP, k, dataDimension);
+            		double scoreP = BICScore.bicScore(datas[i], loglikeP, varianceP, k, dataDimension);
             		System.out.println("variance parent = "+varianceP);
             		System.out.println("loglike parent = "+loglikeP);
             		System.out.println("BIC parent = "+scoreP);
@@ -160,8 +162,8 @@ public class XMeans extends SimpleKMeans implements Clusterer {
                     	//3.1 calculate variance estimate for both child clusters + 
                         // calculate over-all variance for both child clusters =
                         // mean both variances.
-                    	double variance1 = BICScore.varianceEstimate(datasLocal[0], centroidC1, k, parentDataSetSize);
-                        double variance2 = BICScore.varianceEstimate(datasLocal[1], centroidC2, k, parentDataSetSize);
+                    	double variance1 = BICScore.varianceEstimate(datasLocal[0], centroidC1, 2);
+                        double variance2 = BICScore.varianceEstimate(datasLocal[1], centroidC2, 2);
                         varianceC = (variance1 + variance2)/2;
                         System.out.println("variance child1 = "+variance1);
                         System.out.println("variance child2 = "+variance2);
@@ -206,7 +208,7 @@ public class XMeans extends SimpleKMeans implements Clusterer {
                         
                     }
                     if (datasLocal[0].size()==0){
-                    	varianceC = BICScore.varianceEstimate(datasLocal[1], centroidC2, k, parentDataSetSize);
+                    	varianceC = BICScore.varianceEstimate(datasLocal[1], centroidC2, 2);
                     	System.out.println("variance child2 = "+varianceC);
                     	loglikeC = BICScore.logLikeliHood(datasLocal[1], varianceC, k, parentDataSetSize,dataDimension);
                     	System.out.println("loglike child2 = "+loglikeC);
@@ -235,7 +237,7 @@ public class XMeans extends SimpleKMeans implements Clusterer {
                          
                     }
                     if (datasLocal[1].size()==0){
-                    	varianceC = BICScore.varianceEstimate(datasLocal[0], centroidC1, k, parentDataSetSize);
+                    	varianceC = BICScore.varianceEstimate(datasLocal[0], centroidC1, 2);
                     	System.out.println("variance child1 = "+varianceC);
                     	loglikeC = BICScore.logLikeliHood(datasLocal[0], varianceC, k, parentDataSetSize,dataDimension);
                     	System.out.println("loglike child1 = "+loglikeC);
@@ -272,16 +274,22 @@ public class XMeans extends SimpleKMeans implements Clusterer {
             System.out.println("localVariances = "+localVariances);
             totalVariance = localVariances / tempClusters;
             System.out.println("totalVariance = "+totalVariance);
+            System.out.println("totalLoglike = "+totalLoglike);
             totalBICScore = BICScore.bicScore(data, totalLoglike, totalVariance, k, dataDimension);
             System.out.println("totalBICScore = "+totalBICScore);
+            System.out.println(" ");
+            System.out.println(" ");
             
-            if (totalBICScore > finalBICScore) {
+            if (totalBICScore >= finalBICScore) {
             	finalBICScore = totalBICScore;
             	System.out.println("finalBICScore = "+finalBICScore);
             	resultingNumberOfClusters = tempClusters;
             	System.out.println("resultingNumberOfClusters = "+resultingNumberOfClusters);
             	finalCentroids = tempCentroids;
             	System.out.println("finalCentroids = "+finalCentroids.size());
+            }
+            else{
+            	System.out.println(" fault has occured");
             }
             System.out.println(" ");
             System.out.println(" ");
