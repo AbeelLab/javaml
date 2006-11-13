@@ -33,16 +33,16 @@ public class CosineSimilarity implements DistanceMeasure {
             if (x.size() != y.size()) {
                 throw new RuntimeException("Both instances should contain the same number of values.");
             }
-            double prodX = 1;
-            double prodY=1;
-            double prodSq=1;
+            double sumTop = 0;
+            double sumOne=0;
+            double sumTwo=0;
             
             for (int i = 0; i < x.size(); i++) {
-               prodX*=x.getValue(i);
-               prodY*=y.getValue(i);
-               prodSq*=Math.sqrt(x.getValue(i)*x.getValue(i)+y.getValue(i)*y.getValue(i));
+               sumTop+=x.getValue(i)*y.getValue(i);
+               sumOne+=x.getValue(i)*x.getValue(i);
+               sumTwo+=y.getValue(i)*y.getValue(i);
             }
-            return (prodX+prodY)/prodSq;
+            return sumTop/(Math.sqrt(sumOne)*Math.sqrt(sumTwo));
         
     }
 
