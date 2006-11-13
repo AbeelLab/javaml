@@ -37,8 +37,8 @@ public class DatasetGenerator {
         Dataset out=new SimpleDataset();
         Random rg = new Random(System.currentTimeMillis());
         for (int i = 0; i < clusters; i++) {
-            int x = rg.nextInt(spaceWidth) - (spaceWidth/2);
-            int y = rg.nextInt(spaceWidth) - (spaceWidth/2);
+            int x = rg.nextInt(spaceWidth);
+            int y = rg.nextInt(spaceWidth);
             for (int j = 0; j < itemsInCluster; j++) {
                 float[] vec = { (float)rg.nextGaussian() * clusterWidth + x,(float) rg.nextGaussian() * clusterWidth + y };
                 Instance instance = new SimpleInstance(vec);
