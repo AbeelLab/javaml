@@ -1,5 +1,5 @@
 /**
- * DistanceMeasureFactory.java, 24-okt-2006
+ * CosineSimilarity.java, 13-nov-2006
  *
  * This file is part of the Java Machine Learning API
  * 
@@ -23,18 +23,27 @@
  * 
  */
 package net.sf.javaml.distance;
-/**
- * TODO explanation
- * 
- * @author Thomas Abeel
- *
- */
-public class DistanceMeasureFactory {
 
-    public static DistanceMeasure getEuclideanDistanceMeasure(){
-        return new EuclideanDistance();
+import net.sf.javaml.core.Instance;
+
+public class CosineSimilarity implements DistanceMeasure {
+
+    protected CosineSimilarity(){}
+    public double calculateDistance(Instance x, Instance y) {
+            if (x.size() != y.size()) {
+                throw new RuntimeException("Both instances should contain the same number of values.");
+            }
+            double prodX = 1;
+            double prodY=1;
+            double prodSq=1;
+            
+            for (int i = 0; i < x.size(); i++) {
+               prodX*=x.getValue(i);
+               prodY*=y.getValue(i);
+               prodSq*=Math.sqrt(x.getValue(i)*x.getValue(i)+y.getValue(i)*y.getValue(i));
+            }
+            return (prodX+prodY)/prodSq;
+        
     }
-    public static DistanceMeasure getCosineSimilarity(){
-        return new CosineSimilarity();
-    }
+
 }
