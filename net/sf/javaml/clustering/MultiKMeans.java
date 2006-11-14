@@ -38,7 +38,7 @@ import net.sf.javaml.distance.DistanceMeasureFactory;
  * 
  */
 
-public class MultiKMeans extends SimpleKMeans implements Clusterer {
+public class MultiKMeans extends SimpleKMeans {
 	private int k;
 	private int repeats;
 	private double bestCosSim;
@@ -48,12 +48,13 @@ public class MultiKMeans extends SimpleKMeans implements Clusterer {
 		this.k = k;
 		this.repeats = repeats;
 	}
-	
-	public void buildcluster (Dataset data){
+	@Override 
+	public void buildClusterer (Dataset data){
+        System.out.println("Build MultiKMeans clusterer");
 		 super.dm=DistanceMeasureFactory.getCosineSimilarity();
-	    
+         bestCosSim=0;
 	    System.out.println("old bestCosSim  = "+bestCosSim);
-	    	bestCosSim=0;
+	    	
 	    for (int i = 0; i < repeats; i++){
 	    	//Clusterer km=new super(k,100);
 	    	super.numberOfClusters = k;

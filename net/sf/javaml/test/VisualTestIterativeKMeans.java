@@ -1,5 +1,4 @@
-/**
- * VisualTestSimpleKMeans.java, 25-okt-2006
+/** VisualTestMultiKMeans.java, 25-okt-2006
  *
  * This file is part of the Java Machine Learning API
  * 
@@ -17,7 +16,7 @@
  * along with the Java Machine Learning API; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * 
- * Copyright (c) 2006, Thomas Abeel
+ * Copyright (c) 2006, Thomas Abeel, Andreas De Rijcke
  * 
  * Project: http://sourceforge.net/projects/java-ml/
  * 
@@ -34,18 +33,19 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import net.sf.javaml.clustering.IterativeKMeans;
 import net.sf.javaml.clustering.SimpleKMeans;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.SimpleDataset;
 import net.sf.javaml.tools.DatasetGenerator;
 
-public class VisualTestSimpleKMeans extends JPanel {
+public class VisualTestIterativeKMeans extends JPanel {
 
     /**
      * 
      */
-    private static final long serialVersionUID = 7732700118221667424L;
+    private static final long serialVersionUID = 5608683822417234316L;
 
     /**
      * @param args
@@ -53,32 +53,32 @@ public class VisualTestSimpleKMeans extends JPanel {
     public static void main(String[] args) {
         JFrame window = new JFrame("Simple K-means test");
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.setContentPane(new VisualTestSimpleKMeans());
+        window.setContentPane(new VisualTestIterativeKMeans());
         window.pack();
         window.setVisible(true);
 
     }
 
-    public VisualTestSimpleKMeans() {
-        this.setLayout(new GridLayout(0, 3));
-        int space = 300;
-        Dataset data = DatasetGenerator.createClusterSquareDataset(space, 10);
+    public VisualTestIterativeKMeans() {
+        this.setLayout(new GridLayout(0, 5));
+        int space = 200;
+        Dataset data = DatasetGenerator.createClusterSquareDataset(space, 8);
 
         this.add(createLabel(data, Color.BLACK, space, space, null, null, 0));
-        SimpleKMeans km = new SimpleKMeans(4, 500);
+        IterativeKMeans km = new IterativeKMeans(1, 10);
         km.buildClusterer(data);
 
-        Dataset[] datas = new Dataset[4];
-        for (int i = 0; i < 4; i++) {
+        Dataset[] datas = new Dataset[10];
+        for (int i = 0; i < 10; i++) {
             datas[i] = new SimpleDataset();
         }
         for (int i = 0; i < data.size(); i++) {
             Instance in = data.getInstance(i);
             datas[km.predictCluster(in)].addInstance(in);
         }
-        Color[] colors = { Color.RED, Color.GREEN, Color.BLUE, Color.MAGENTA };
-        for (int i = 0; i < 4; i++) {
-            this.add(createLabel(datas[i], colors[i], space, space, km, colors, i));
+        Color[] colors = { Color.RED, Color.GREEN, Color.BLUE, Color.MAGENTA,Color.CYAN };
+        for (int i = 0; i < 10; i++) {
+            this.add(createLabel(datas[i], colors[i/2], space, space, km, colors, i));
         }
 
     }
@@ -101,15 +101,14 @@ public class VisualTestSimpleKMeans extends JPanel {
 
         private SimpleKMeans km;
 
-       
-        private int tmpI;
+       private int tmpI;
 
         public ClusterLabel(Dataset data, Color color, int width, int height, SimpleKMeans km, Color[] colors, int i) {
             this.setPreferredSize(new Dimension(width, height));
             this.data = data;
             this.color = color;
             this.km = km;
-            this.tmpI = i;
+             this.tmpI = i;
             this.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         }
 
@@ -137,5 +136,4 @@ public class VisualTestSimpleKMeans extends JPanel {
         }
 
     }
-
 }

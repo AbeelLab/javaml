@@ -134,7 +134,9 @@ public class SimpleKMeans implements Clusterer {
         // being clustered. These points represent the initial group of
         // centroids.
         Instance min = data.getMinimumInstance();
+        System.out.println("Minimum instance: "+min);
         Instance max = data.getMaximumInstance();
+        System.out.println("Maximum instance: "+max);
         this.centroids = new Instance[numberOfClusters];
         int instanceLength = data.getInstance(0).size();
         for (int j = 0; j < numberOfClusters; j++) {
@@ -145,6 +147,7 @@ public class SimpleKMeans implements Clusterer {
 
             }
             this.centroids[j] = new SimpleInstance(randomInstance);
+            System.out.println("Random centroid: "+centroids[j]);
         }
 
         int iterationCount = 0;
@@ -176,9 +179,17 @@ public class SimpleKMeans implements Clusterer {
                 for (int j = 0; j < instanceLength; j++) {
                     Instance in=data.getInstance(i);
                     sumPosition[assignment[i]][j] += in.getWeight()*in.getValue(j);
-                    countPosition[assignment[i]]++;
+                    
                 }
+                countPosition[assignment[i]]++;
             }
+            System.out.println();
+            System.out.println("Assignment statistics for iteration "+iterationCount);
+            System.out.println("Cluster ID\t#elements");
+            for(int i=0;i<this.numberOfClusters;i++){
+                System.out.println("Cluster "+i+"\t"+countPosition[i]);
+            }
+            
             centroidsChanged = false;
             for (int i = 0; i < this.numberOfClusters; i++) {
                 if (countPosition[i] > 0) {// when there are no instances
@@ -189,6 +200,7 @@ public class SimpleKMeans implements Clusterer {
                         tmp[j] =(float) sumPosition[i][j] / countPosition[i];
                     }
                     Instance newCentroid = new SimpleInstance(tmp);
+                    System.out.println("New centroid: "+newCentroid);
                     if (dm.calculateDistance(newCentroid, centroids[i]) > 0.0001) {
                         centroidsChanged = true;
                         centroids[i] = newCentroid;
@@ -197,6 +209,11 @@ public class SimpleKMeans implements Clusterer {
 
             }
 
+        }
+        System.out.println();
+        System.out.println("Final result after: "+iterationCount+" iterations.");
+        for(int i=0;i<this.centroids.length;i++){
+            System.out.println("Final centroid: "+centroids[i]);
         }
 
     }
@@ -224,6 +241,14 @@ public class SimpleKMeans implements Clusterer {
         double[] tmp = new double[this.getNumberOfClusters()];
         tmp[this.predictCluster(instance)] = 1;
         return tmp;
+    }
+    
+    /**
+     * This method is only intended for testing purposes.
+     *
+     */
+    public Instance[] getCentroids(){
+        return this.centroids;
     }
 
 

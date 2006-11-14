@@ -33,8 +33,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import net.sf.javaml.clustering.Clusterer;
 import net.sf.javaml.clustering.MultiKMeans;
+import net.sf.javaml.clustering.SimpleKMeans;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.SimpleDataset;
@@ -42,85 +42,98 @@ import net.sf.javaml.tools.DatasetGenerator;
 
 public class VisualTestMultiKMeans extends JPanel {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 7732700118221667424L;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 5608683822417234316L;
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		JFrame window = new JFrame("MultiK-means test");
-		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		window.setContentPane(new VisualTestMultiKMeans());
-		window.pack();
-		window.setVisible(true);
+    /**
+     * @param args
+     */
+    public static void main(String[] args) {
+        JFrame window = new JFrame("Simple K-means test");
+        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        window.setContentPane(new VisualTestMultiKMeans());
+        window.pack();
+        window.setVisible(true);
 
-	}
+    }
 
-	public VisualTestMultiKMeans() {
-		this.setLayout(new GridLayout(0, 3));
-		int space = 300;
-		Dataset data = DatasetGenerator.createClusterDataset(4, 100, space, 5);
+    public VisualTestMultiKMeans() {
+        this.setLayout(new GridLayout(0, 3));
+        int space = 300;
+        Dataset data = DatasetGenerator.createClusterSquareDataset(space, 10);
 
-		this.add(createLabel(data, Color.BLACK, space, space));
-		Clusterer km = new MultiKMeans(4, 20);
-		km.buildClusterer(data);
+        this.add(createLabel(data, Color.BLACK, space, space, null, null, 0));
+        MultiKMeans km = new MultiKMeans(4, 10);
+        km.buildClusterer(data);
 
-		Dataset[] datas = new Dataset[5];
-		for (int i = 0; i < 5; i++) {
-			datas[i] = new SimpleDataset();
-		}
-		for (int i = 0; i < data.size(); i++) {
-			Instance in = data.getInstance(i);
-			datas[km.predictCluster(in)].addInstance(in);
-		}
-		Color[] colors = { Color.RED, Color.GREEN, Color.BLUE, Color.CYAN,
-				Color.MAGENTA };
-		for (int i = 0; i < 5; i++) {
-			this.add(createLabel(datas[i], colors[i % 5], space, space));
-		}
+        Dataset[] datas = new Dataset[4];
+        for (int i = 0; i < 4; i++) {
+            datas[i] = new SimpleDataset();
+        }
+        for (int i = 0; i < data.size(); i++) {
+            Instance in = data.getInstance(i);
+            datas[km.predictCluster(in)].addInstance(in);
+        }
+        Color[] colors = { Color.RED, Color.GREEN, Color.BLUE, Color.MAGENTA };
+        for (int i = 0; i < 4; i++) {
+            this.add(createLabel(datas[i], colors[i], space, space, km, colors, i));
+        }
 
-	}
+    }
 
-	private JLabel createLabel(Dataset data, Color color, int width, int height) {
-		return new ClusterLabel(data, color, width, height);
-	}
+    private JLabel createLabel(Dataset data, Color color, int width, int height, SimpleKMeans km, Color[] colors, int i) {
+        return new ClusterLabel(data, color, width, height, km, colors, i);
+    }
 
-	class ClusterLabel extends JLabel {
+    class ClusterLabel extends JLabel {
 
-		public void setData(Dataset x) {
-			this.data = x;
-		}
+        public void setData(Dataset x) {
+            this.data = x;
+        }
 
-		private static final long serialVersionUID = -5642750374875570050L;
+        private static final long serialVersionUID = -5642750374875570050L;
 
-		private Dataset data;
+        private Dataset data;
 
-		private Color color;
+        private Color color;
 
-		private int width, height;
+        private SimpleKMeans km;
 
-		public ClusterLabel(Dataset data, Color color, int width, int height) {
-			this.setPreferredSize(new Dimension(width, height));
-			this.data = data;
-			this.color = color;
-			this.width = width;
-			this.height = height;
-			this.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-		}
+       private int tmpI;
 
-		@Override
-		protected void paintComponent(Graphics g) {
-			super.paintComponent(g);
-			g.setColor(color);
-			for (int i = 0; i < data.size(); i++) {
-				Instance in = data.getInstance(i);
-				g.fillOval((int) in.getValue(0) - 1, (int) in.getValue(1) - 1,
-						2, 2);
+        public ClusterLabel(Dataset data, Color color, int width, int height, SimpleKMeans km, Color[] colors, int i) {
+            this.setPreferredSize(new Dimension(width, height));
+            this.data = data;
+            this.color = color;
+            this.km = km;
+             this.tmpI = i;
+            this.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        }
 
-			}
-		}
-	}
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            g.setColor(color);
+            for (int i = 0; i < data.size(); i++) {
+                Instance in = data.getInstance(i);
+                g.fillOval((int) in.getValue(0) - 1, (int) in.getValue(1) - 1, 2, 2);
+
+            }
+            if (km != null) {
+                Instance[] centroids = km.getCentroids();
+                for (int i = 0; i < centroids.length; i++) {
+                    g.setColor(Color.GRAY);
+                    g.fillRect((int) centroids[i].getValue(0) - 4, (int) centroids[i].getValue(1) - 4, 8, 8);
+
+                }
+                g.setColor(Color.BLACK);
+                g.fillRect((int) centroids[tmpI].getValue(0) - 4, (int) centroids[tmpI].getValue(1) - 4, 8, 8);
+
+            }
+
+        }
+
+    }
 }

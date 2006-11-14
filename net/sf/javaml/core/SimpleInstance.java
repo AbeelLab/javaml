@@ -45,6 +45,12 @@ public class SimpleInstance implements Instance {
 		
 	}
 
+    public String toString(){
+        String out=values.get(0).toString();
+        for(int i=1;i<values.size();i++)
+            out+=";"+values.get(i);
+        return out;
+    }
 	public SimpleInstance(float[] values) {
         this(values,1.0f);
     }

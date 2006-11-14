@@ -41,7 +41,7 @@ import net.sf.javaml.distance.DistanceMeasureFactory;
  */
 
 
-public class IterativeKMeans extends SimpleKMeans implements Clusterer {
+public class IterativeKMeans extends SimpleKMeans {
 	private int kMin;
 	private int kMax;
 	private int bestNumberOfClusters;
@@ -52,8 +52,9 @@ public class IterativeKMeans extends SimpleKMeans implements Clusterer {
 		this.kMax = kMax;
 		this.kMin = kMin;
 	}
-	
+	@Override
     public void buildClusterer(Dataset data){
+        System.out.println("Build Iterative clusterer");
         super.dm=DistanceMeasureFactory.getCosineSimilarity();
     	if (data.size() == 0)
 			throw new RuntimeException("The dataset should not be empty");
@@ -63,7 +64,7 @@ public class IterativeKMeans extends SimpleKMeans implements Clusterer {
     	bestCosSim=0;
     	    	
     	for (int k = kMin; k <= kMax; k++){
-    		System.out.println("k = "+k);
+    		System.out.println("iterative k = "+k);
     		// Clusterer km=new super(k,100);
     		super.numberOfClusters = k;
     		super.numberOfIterations = 100;
