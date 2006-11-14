@@ -83,6 +83,9 @@ public class MultiKMeans extends SimpleKMeans implements Clusterer {
     		System.out.println();
 	    }
 	    super.centroids=bestCentroids;
+	    super.numberOfClusters=k;
+	    System.out.println("Final centroid count: "+super.centroids.length);
+        System.out.println("Final number of Clusters: "+super.numberOfClusters);
 	    
 	}
 	
