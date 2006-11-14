@@ -24,10 +24,13 @@
  */
 package net.sf.javaml.clustering;
 
+import java.util.Vector;
+
 import net.sf.javaml.clustering.evaluation.CosSim;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.SimpleDataset;
+import net.sf.javaml.distance.DistanceMeasureFactory;
 /**
  * This variant of the SimpleKMeans algorithm will run the Simple KMeans
  * algorithm multiple times and will only return the best centroids as the final
@@ -38,19 +41,20 @@ import net.sf.javaml.core.SimpleDataset;
  */
 
 
-public class MultiKMeans extends SimpleKMeans implements Clusterer {
+public class IterativeKMeans extends SimpleKMeans implements Clusterer {
 	private int kMin;
 	private int kMax;
 	private int bestNumberOfClusters;
 	private double bestCosSim;
 	private Instance[] bestCentroids;
 	
-	public MultiKMeans(int kMin, int kMax) {
+	public IterativeKMeans(int kMin, int kMax) {
 		this.kMax = kMax;
 		this.kMin = kMin;
 	}
 	
     public void buildClusterer(Dataset data){
+        super.dm=DistanceMeasureFactory.getCosineSimilarity();
     	if (data.size() == 0)
 			throw new RuntimeException("The dataset should not be empty");
     	if (kMin == 0)
@@ -61,8 +65,8 @@ public class MultiKMeans extends SimpleKMeans implements Clusterer {
     	for (int k = kMin; k <= kMax; k++){
     		System.out.println("k = "+k);
     		// Clusterer km=new super(k,100);
-    		this.numberOfClusters = k;
-    		this.numberOfIterations = 100;
+    		super.numberOfClusters = k;
+    		super.numberOfIterations = 100;
     		super.buildClusterer(data);
     		Dataset[] datas = new Dataset[k];
     		for (int i = 0; i < k; i++) {
@@ -86,33 +90,54 @@ public class MultiKMeans extends SimpleKMeans implements Clusterer {
     		System.out.println("bestNumberOfClusters = "+bestNumberOfClusters);
     		System.out.println();
     	}
-        
-    }
 
-
-    public int getNumberOfClusters() {
-        return this.bestNumberOfClusters;
-    }
-
-    public int predictCluster(Instance instance) {
-        if (this.centroids == null)
-            throw new RuntimeException("The cluster should first be constructed");
-        int tmpCluster = -1;
-        double minDistance = Double.MAX_VALUE;
-        for (int i = 0; i < this.bestNumberOfClusters; i++) {
-            double dist = dm.calculateDistance(bestCentroids[i], instance);
-            if (dist < minDistance) {
-                minDistance = dist;
-                tmpCluster = i;
+        //copy centroids
+    	super.centroids=bestCentroids;
+        super.numberOfClusters=bestNumberOfClusters;
+        //FILTER BESTCENTROIDS
+        int[] freqTable=new int[bestNumberOfClusters];
+    	for (int i = 0; i < data.size(); i++) {
+            freqTable[super.predictCluster(data.getInstance(i))]++;
+        }
+        Vector<Instance>tmpCentroids=new Vector<Instance>();
+        int nonEmptyClusterCount=0;
+        for(int i=0;i<freqTable.length;i++){
+            if(freqTable[i]>0){
+                tmpCentroids.add(bestCentroids[i]);
+                nonEmptyClusterCount++;
             }
         }
-        return tmpCluster;
+        super.centroids=new Instance[tmpCentroids.size()];
+        super.centroids=tmpCentroids.toArray(super.centroids);
+        super.numberOfClusters=nonEmptyClusterCount;
+        System.out.println("Final centroid count: "+super.centroids.length);
+        System.out.println("Final number of Clusters: "+super.numberOfClusters);
     }
 
-    public double[] predictMembershipDistribution(Instance instance) {
-        double[] tmp = new double[this.getNumberOfClusters()];
-        tmp[this.predictCluster(instance)] = 1;
-        return tmp;
-    }
+
+//    public int getNumberOfClusters() {
+//        return this.bestNumberOfClusters;
+//    }
+
+//    public int predictCluster(Instance instance) {
+//        if (this.centroids == null)
+//            throw new RuntimeException("The cluster should first be constructed");
+//        int tmpCluster = -1;
+//        double minDistance = Double.MAX_VALUE;
+//        for (int i = 0; i < this.bestNumberOfClusters; i++) {
+//            double dist = dm.calculateDistance(bestCentroids[i], instance);
+//            if (dist < minDistance) {
+//                minDistance = dist;
+//                tmpCluster = i;
+//            }
+//        }
+//        return tmpCluster;
+//    }
+//
+//    public double[] predictMembershipDistribution(Instance instance) {
+//        double[] tmp = new double[this.getNumberOfClusters()];
+//        tmp[this.predictCluster(instance)] = 1;
+//        return tmp;
+//    }
 
 }

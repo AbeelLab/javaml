@@ -34,7 +34,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import net.sf.javaml.clustering.Clusterer;
-import net.sf.javaml.clustering.MultiKMeans;
+import net.sf.javaml.clustering.IterativeKMeans;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.SimpleDataset;
@@ -62,14 +62,14 @@ public class VisualTestMultiKMeans extends JPanel{
    public VisualTestMultiKMeans(){
        this.setLayout(new GridLayout(0,3));
        int space=300;
-       Dataset data =DatasetGenerator.createClusterDataset(4,100,space/2,5);
+       Dataset data =DatasetGenerator.createClusterDataset(5,300,space,5);
        
        this.add(createLabel(data,Color.BLACK,space,space));
-       Clusterer km=new MultiKMeans(2,5);
+       Clusterer km=new IterativeKMeans(2,5);
        km.buildClusterer(data);
        
-       Dataset[]datas=new Dataset[5*2];
-       for(int i=0;i<5*2;i++){
+       Dataset[]datas=new Dataset[5];
+       for(int i=0;i<5;i++){
            datas[i]=new SimpleDataset();
        }
        for(int i=0;i<data.size();i++){
@@ -77,7 +77,7 @@ public class VisualTestMultiKMeans extends JPanel{
            datas[km.predictCluster(in)].addInstance(in);
        }
        Color[]colors={Color.RED,Color.GREEN,Color.BLUE,Color.CYAN,Color.MAGENTA};
-       for(int i=0;i<5*2;i++){
+       for(int i=0;i<5;i++){
            this.add(createLabel(datas[i],colors[i%5],space,space));
        }
        

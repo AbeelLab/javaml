@@ -63,7 +63,7 @@ public class VisualTestSimpleKMeans extends JPanel{
     public VisualTestSimpleKMeans(){
         this.setLayout(new GridLayout(0,2));
         int space=300;
-        Dataset data =DatasetGenerator.createClusterDataset(3,100,space,20);
+        Dataset data =DatasetGenerator.createClusterDataset(3,300,space,5);
         
         this.add(createLabel(data,Color.BLACK,space,space));
         Clusterer km=new SimpleKMeans(3,100);
@@ -112,7 +112,7 @@ public class VisualTestSimpleKMeans extends JPanel{
             g.setColor(color);
             for(int i=0;i<data.size();i++){
                 Instance in=data.getInstance(i);
-                g.fillOval((int)in.getValue(0)+(width/2)-1,(int)in.getValue(1)+(height/2)-1,2,2);
+                g.fillOval((int)in.getValue(0)-1,(int)in.getValue(1)-1,2,2);
                 
             }
             
