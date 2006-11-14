@@ -65,7 +65,7 @@ public class VisualTestMultiKMeans extends JPanel{
        Dataset data =DatasetGenerator.createClusterDataset(4,100,space/2,5);
        
        this.add(createLabel(data,Color.BLACK,space,space));
-       Clusterer km=new MultiKMeans(2,10);
+       Clusterer km=new MultiKMeans(2,5);
        km.buildClusterer(data);
        
        Dataset[]datas=new Dataset[5*2];

@@ -58,7 +58,8 @@ public class MultiKMeans extends SimpleKMeans implements Clusterer {
     	
     	bestCosSim=0;
     	    	
-    	for (int k = kMin; k <= kMax; k++){ 
+    	for (int k = kMin; k <= kMax; k++){
+    		System.out.println("k = "+k);
     		// Clusterer km=new super(k,100);
     		this.numberOfClusters = k;
     		this.numberOfIterations = 100;
@@ -73,7 +74,7 @@ public class MultiKMeans extends SimpleKMeans implements Clusterer {
     		}
     		double cosSim = 0;
     		cosSim = CosSim.cosSim(datas,super.centroids, k);
-    		System.out.println("k = "+k);
+    		
     		System.out.println("cosSim = "+cosSim);
     		System.out.println("old bestCosSim  = "+bestCosSim);
     		if (cosSim > bestCosSim){
