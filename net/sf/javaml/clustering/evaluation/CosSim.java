@@ -32,13 +32,15 @@ import net.sf.javaml.core.Instance;
 import net.sf.javaml.distance.DistanceMeasure;
 import net.sf.javaml.distance.DistanceMeasureFactory;
 
-public class ClusterEvaluationCriterion  {
+public class CosSim  {
 	
-	public static double cosSim (Dataset data, Instance centroid){
+	public static double cosSim (Dataset data[], Instance centroids[], int k){
 		double cosSim = 0;
 		DistanceMeasure dm=DistanceMeasureFactory.getCosineSimilarity();
-			for (int j=0; j< data.size(); j++){
-				cosSim += dm.calculateDistance(data.getInstance(j), centroid);
+		for (int i =0; i<k; i++ ){
+			for (int j=0; j< data[i].size(); j++){
+				cosSim += dm.calculateDistance(data[i].getInstance(j), centroids[i]);
+			}
 		}
 		return cosSim;
 	}

@@ -37,7 +37,7 @@ package net.sf.javaml.clustering;
 
 import java.util.Vector;
 
-import net.sf.javaml.clustering.evaluation.ClusterEvaluationCriterion;
+import net.sf.javaml.clustering.evaluation.CosSim;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.SimpleDataset;
@@ -128,7 +128,7 @@ public class XMeans extends SimpleKMeans implements Clusterer {
 			for (int i = 0; i < k; i++) {
 				System.out.println("//variables of parent cluster"+i+":");
 				double cosSimP = 0;
-				cosSimP += ClusterEvaluationCriterion.cosSim(datas[i],
+				cosSimP += CosSim.cosSim(datas[i],
 						super.centroids[i]);
 				System.out.println("cosSimP cluster"+i+"= " + cosSimP);
 
@@ -179,7 +179,7 @@ public class XMeans extends SimpleKMeans implements Clusterer {
 					double cosSimC = 0;
 					if (datasLocal[0].size() != 0 && datasLocal[1].size() != 0) {
 						for (int j = 0; j < 2; j++) {
-							cosSimC += ClusterEvaluationCriterion.cosSim(
+							cosSimC += CosSim.cosSim(
 									datasLocal[j], kmLocal.centroids[j]);
 						}
 						System.out.println("cosSimC = " + cosSimC);
@@ -241,7 +241,7 @@ public class XMeans extends SimpleKMeans implements Clusterer {
 
 					}
 					if (datasLocal[0].size() == 0) {
-						cosSimC += ClusterEvaluationCriterion.cosSim(
+						cosSimC += CosSim.cosSim(
 								datasLocal[1], kmLocal.centroids[1]);
 						System.out.println("cosSimC = " + cosSimC);
 						if (cosSimP > cosSimC) {
@@ -281,7 +281,7 @@ public class XMeans extends SimpleKMeans implements Clusterer {
 
 					}
 					if (datasLocal[1].size() == 0) {
-						cosSimC += ClusterEvaluationCriterion.cosSim(
+						cosSimC += CosSim.cosSim(
 								datasLocal[0], kmLocal.centroids[0]);
 						System.out.println("cosSimC = " + cosSimC);
 						if (cosSimP > cosSimC) {
