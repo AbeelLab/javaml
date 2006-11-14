@@ -37,11 +37,10 @@ package net.sf.javaml.clustering;
 
 import java.util.Vector;
 
-import net.sf.javaml.core.BICScore;
+import net.sf.javaml.clustering.evaluation.ClusterEvaluationCriterion;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.SimpleDataset;
-import net.sf.javaml.core.ClusterEvaluationCriterion;
 
 public class XMeans extends SimpleKMeans implements Clusterer {
 	// TODO delete following remark:

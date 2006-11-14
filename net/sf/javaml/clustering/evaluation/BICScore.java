@@ -24,8 +24,10 @@
  */
 
 
-package net.sf.javaml.core;
+package net.sf.javaml.clustering.evaluation;
 
+import net.sf.javaml.core.Dataset;
+import net.sf.javaml.core.Instance;
 import net.sf.javaml.distance.DistanceMeasure;
 import net.sf.javaml.distance.DistanceMeasureFactory;
 
