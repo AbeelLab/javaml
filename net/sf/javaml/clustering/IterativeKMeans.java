@@ -1,5 +1,5 @@
 /**
- * MultiKMeans.java, 10-nov-2006
+ * IterativeKMeans.java, 10-nov-2006
  *
  * This file is part of the Java Machine Learning API
  * 
@@ -113,31 +113,4 @@ public class IterativeKMeans extends SimpleKMeans implements Clusterer {
         System.out.println("Final centroid count: "+super.centroids.length);
         System.out.println("Final number of Clusters: "+super.numberOfClusters);
     }
-
-
-//    public int getNumberOfClusters() {
-//        return this.bestNumberOfClusters;
-//    }
-
-//    public int predictCluster(Instance instance) {
-//        if (this.centroids == null)
-//            throw new RuntimeException("The cluster should first be constructed");
-//        int tmpCluster = -1;
-//        double minDistance = Double.MAX_VALUE;
-//        for (int i = 0; i < this.bestNumberOfClusters; i++) {
-//            double dist = dm.calculateDistance(bestCentroids[i], instance);
-//            if (dist < minDistance) {
-//                minDistance = dist;
-//                tmpCluster = i;
-//            }
-//        }
-//        return tmpCluster;
-//    }
-//
-//    public double[] predictMembershipDistribution(Instance instance) {
-//        double[] tmp = new double[this.getNumberOfClusters()];
-//        tmp[this.predictCluster(instance)] = 1;
-//        return tmp;
-//    }
-
 }

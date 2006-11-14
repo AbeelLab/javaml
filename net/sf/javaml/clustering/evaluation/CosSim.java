@@ -39,7 +39,7 @@ public class CosSim  {
 		DistanceMeasure dm=DistanceMeasureFactory.getCosineSimilarity();
 		for (int i =0; i<k; i++ ){
 			System.out.println("i = "+i);
-			System.out.println("data["+i+"].size() = "+data[i].size());
+			System.out.println("data["+i+"]size = "+data[i].size());
 			for (int j=0; j< data[i].size(); j++){
 				cosSim += dm.calculateDistance(data[i].getInstance(j), centroids[i]);
 			}

@@ -34,7 +34,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import net.sf.javaml.clustering.Clusterer;
-import net.sf.javaml.clustering.IterativeKMeans;
+import net.sf.javaml.clustering.MultiKMeans;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.SimpleDataset;
@@ -62,10 +62,10 @@ public class VisualTestMultiKMeans extends JPanel{
    public VisualTestMultiKMeans(){
        this.setLayout(new GridLayout(0,3));
        int space=300;
-       Dataset data =DatasetGenerator.createClusterDataset(5,300,space,5);
+       Dataset data =DatasetGenerator.createClusterDataset(4,100,space,5);
        
        this.add(createLabel(data,Color.BLACK,space,space));
-       Clusterer km=new IterativeKMeans(2,5);
+       Clusterer km=new MultiKMeans(4,10);
        km.buildClusterer(data);
        
        Dataset[]datas=new Dataset[5];
