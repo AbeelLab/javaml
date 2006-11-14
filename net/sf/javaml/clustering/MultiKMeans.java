@@ -51,11 +51,8 @@ public class MultiKMeans extends SimpleKMeans implements Clusterer {
 	
 	public void buildcluster (Dataset data){
 		 super.dm=DistanceMeasureFactory.getCosineSimilarity();
-	    if (data.size() == 0)
-			throw new RuntimeException("The dataset should not be empty");
-	    if (k == 0)
-			throw new RuntimeException("There should be at least one cluster");
-	    	
+	    
+	    System.out.println("old bestCosSim  = "+bestCosSim);
 	    	bestCosSim=0;
 	    for (int i = 0; i < repeats; i++){
 	    	//Clusterer km=new super(k,100);
