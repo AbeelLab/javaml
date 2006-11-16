@@ -37,11 +37,18 @@ package net.sf.javaml.clustering;
 
 import java.util.Vector;
 
-import net.sf.javaml.clustering.evaluation.CosSim;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.SimpleDataset;
 
+
+/**
+ * TODO marked for deletion
+ * 
+ * @author Thomas Abeel
+ *
+ */
+@Deprecated
 public class XMeans extends SimpleKMeans implements Clusterer {
 	// TODO delete following remark:
 	// code not yet complete!
@@ -76,7 +83,7 @@ public class XMeans extends SimpleKMeans implements Clusterer {
 			throw new RuntimeException("The dataset should not be empty");
 		if (kMin == 0)
 			throw new RuntimeException("There should be at least one cluster");
-		double dataDimension = data.getInstance(0).size();
+		//double dataDimension = data.getInstance(0).size();
 
 		// step 1. Improve parameters: Apply k-means to initial dataset with
 		// k alternating from kMin to kMax
@@ -127,10 +134,10 @@ public class XMeans extends SimpleKMeans implements Clusterer {
 
 			for (int i = 0; i < k; i++) {
 				System.out.println("//variables of parent cluster"+i+":");
-				double cosSimP = 0;
-				cosSimP += CosSim.cosSim(datas[i],
-						super.centroids[i]);
-				System.out.println("cosSimP cluster"+i+"= " + cosSimP);
+//		/*		double cosSimP = 0;
+//				cosSimP += CosSim.cosSim(datas[i],
+//						super.centroids[i]);
+//			*/	System.out.println("cosSimP cluster"+i+"= " + cosSimP);
 
 				if (datas[i].size() != 0) {
 
@@ -178,10 +185,10 @@ public class XMeans extends SimpleKMeans implements Clusterer {
 					// kmLocal.centroids[1];
 					double cosSimC = 0;
 					if (datasLocal[0].size() != 0 && datasLocal[1].size() != 0) {
-						for (int j = 0; j < 2; j++) {
-							cosSimC += CosSim.cosSim(
-									datasLocal[j], kmLocal.centroids[j]);
-						}
+//						for (int j = 0; j < 2; j++) {
+//							cosSimC += CosSim.cosSim(
+//									datasLocal[j], kmLocal.centroids[j]);
+//						}
 						System.out.println("cosSimC = " + cosSimC);
 
 						/**
@@ -226,104 +233,104 @@ public class XMeans extends SimpleKMeans implements Clusterer {
 						 * tempCentroids.add(centroidC2); tempClusters += 2;
 						 * System.out.println("child clusters 1 and 2 saved"); }
 						 */
-						if (cosSimP > cosSimC) {
-							tempCentroids.add(super.centroids[i]);
-							tempClusters++;
-							System.out.println("parent cluster saved");
-							cosSimTotal += cosSimP;
-						} else if (cosSimP <= cosSimC) {
-							tempCentroids.add(kmLocal.centroids[0]);
-							tempCentroids.add(kmLocal.centroids[1]);
-							tempClusters += 2;
-							System.out.println("child clusters 1 and 2 saved");
-							cosSimTotal += cosSimC;
-						}
+//						if (cosSimP > cosSimC) {
+//							tempCentroids.add(super.centroids[i]);
+//							tempClusters++;
+//							System.out.println("parent cluster saved");
+//							cosSimTotal += cosSimP;
+//						} else if (cosSimP <= cosSimC) {
+//							tempCentroids.add(kmLocal.centroids[0]);
+//							tempCentroids.add(kmLocal.centroids[1]);
+//							tempClusters += 2;
+//							System.out.println("child clusters 1 and 2 saved");
+//							cosSimTotal += cosSimC;
+//						}
 
 					}
-					if (datasLocal[0].size() == 0) {
-						cosSimC += CosSim.cosSim(
-								datasLocal[1], kmLocal.centroids[1]);
-						System.out.println("cosSimC = " + cosSimC);
-						if (cosSimP > cosSimC) {
-							tempCentroids.add(super.centroids[i]);
-							tempClusters++;
-							System.out.println("parent cluster saved");
-							cosSimTotal += cosSimP;
-						} else if (cosSimP <= cosSimC) {
-							tempCentroids.add(kmLocal.centroids[1]);
-							tempClusters++;
-							System.out.println("child cluster 2 saved");
-							cosSimTotal += cosSimC;
-						}
-
-						/**
-						 * varianceC = BICScore.varianceEstimate(datasLocal[1],
-						 * centroidC2, 2); System.out.println("variance child2 =
-						 * "+varianceC); loglikeC =
-						 * BICScore.logLikeliHood(datasLocal[1], varianceC, k,
-						 * parentDataSetSize,dataDimension);
-						 * System.out.println("loglike child2 = "+loglikeC);
-						 * double scoreC = BICScore.bicScore(datas[i], loglikeC,
-						 * varianceC, k, dataDimension); System.out.println("BIC
-						 * child2 = "+scoreC); if (scoreP > scoreC) { // add
-						 * loglike to overAllLoglike. totalLoglike += loglikeP; //
-						 * save variance. localVariances += varianceP; // save
-						 * parent centroid as partial result for current k.
-						 * tempCentroids.add(centroidP); tempClusters++;
-						 * System.out.println("parent cluster saved"); } else if
-						 * (scoreP < scoreC){ // add loglike to overAllLoglike.
-						 * totalLoglike += loglikeC; // save variance.
-						 * localVariances += varianceC; // keep child centroids
-						 * as partial result for current k.
-						 * tempCentroids.add(centroidC2); tempClusters++;
-						 * System.out.println("child cluster 2 saved "); }
-						 */
-
-					}
-					if (datasLocal[1].size() == 0) {
-						cosSimC += CosSim.cosSim(
-								datasLocal[0], kmLocal.centroids[0]);
-						System.out.println("cosSimC = " + cosSimC);
-						if (cosSimP > cosSimC) {
-							tempCentroids.add(super.centroids[i]);
-							tempClusters++;
-							System.out.println("parent cluster saved");
-							cosSimTotal += cosSimP;
-						} else if (cosSimP <= cosSimC) {
-							tempCentroids.add(kmLocal.centroids[0]);
-							tempClusters++;
-							System.out.println("child cluster 1 saved");
-							cosSimTotal += cosSimC;
-						}
-						/**
-						 * varianceC = BICScore.varianceEstimate(datasLocal[0],
-						 * centroidC1, 2); System.out.println("variance child1 =
-						 * "+varianceC); loglikeC =
-						 * BICScore.logLikeliHood(datasLocal[0], varianceC, k,
-						 * parentDataSetSize,dataDimension);
-						 * System.out.println("loglike child1 = "+loglikeC);
-						 * double scoreC = BICScore.bicScore(datas[i], loglikeC,
-						 * varianceC, k, dataDimension); System.out.println("BIC
-						 * child1 = "+scoreC); if (scoreP > scoreC) { // add
-						 * loglike to overAllLoglike. totalLoglike += loglikeP; //
-						 * save variance. localVariances += varianceP; // save
-						 * parent centroid as partial result for current k.
-						 * tempCentroids.add(centroidP); tempClusters++;
-						 * System.out.println("parent cluster saved"); } else if
-						 * (scoreP < scoreC){ // add loglike to overAllLoglike.
-						 * totalLoglike += loglikeC; // save variance.
-						 * localVariances += varianceC; // keep child centroids
-						 * as partial result for current k.
-						 * tempCentroids.add(centroidC1); tempClusters++;
-						 * System.out.println("child cluster 1 saved"); }
-						 */
-
-					}
-					System.out.println("cosSimTotal = " + cosSimTotal);
-				}
-				else {
-					System.out.println("cluster"+i+" is leeg");
-				}
+//					if (datasLocal[0].size() == 0) {
+//						cosSimC += CosSim.cosSim(
+//								datasLocal[1], kmLocal.centroids[1]);
+//						System.out.println("cosSimC = " + cosSimC);
+//						if (cosSimP > cosSimC) {
+//							tempCentroids.add(super.centroids[i]);
+//							tempClusters++;
+//							System.out.println("parent cluster saved");
+//							cosSimTotal += cosSimP;
+//						} else if (cosSimP <= cosSimC) {
+//							tempCentroids.add(kmLocal.centroids[1]);
+//							tempClusters++;
+//							System.out.println("child cluster 2 saved");
+//							cosSimTotal += cosSimC;
+//						}
+//
+//						/**
+//						 * varianceC = BICScore.varianceEstimate(datasLocal[1],
+//						 * centroidC2, 2); System.out.println("variance child2 =
+//						 * "+varianceC); loglikeC =
+//						 * BICScore.logLikeliHood(datasLocal[1], varianceC, k,
+//						 * parentDataSetSize,dataDimension);
+//						 * System.out.println("loglike child2 = "+loglikeC);
+//						 * double scoreC = BICScore.bicScore(datas[i], loglikeC,
+//						 * varianceC, k, dataDimension); System.out.println("BIC
+//						 * child2 = "+scoreC); if (scoreP > scoreC) { // add
+//						 * loglike to overAllLoglike. totalLoglike += loglikeP; //
+//						 * save variance. localVariances += varianceP; // save
+//						 * parent centroid as partial result for current k.
+//						 * tempCentroids.add(centroidP); tempClusters++;
+//						 * System.out.println("parent cluster saved"); } else if
+//						 * (scoreP < scoreC){ // add loglike to overAllLoglike.
+//						 * totalLoglike += loglikeC; // save variance.
+//						 * localVariances += varianceC; // keep child centroids
+//						 * as partial result for current k.
+//						 * tempCentroids.add(centroidC2); tempClusters++;
+//						 * System.out.println("child cluster 2 saved "); }
+//						 */
+//
+//					}
+//					if (datasLocal[1].size() == 0) {
+//						cosSimC += CosSim.cosSim(
+//								datasLocal[0], kmLocal.centroids[0]);
+//						System.out.println("cosSimC = " + cosSimC);
+//						if (cosSimP > cosSimC) {
+//							tempCentroids.add(super.centroids[i]);
+//							tempClusters++;
+//							System.out.println("parent cluster saved");
+//							cosSimTotal += cosSimP;
+//						} else if (cosSimP <= cosSimC) {
+//							tempCentroids.add(kmLocal.centroids[0]);
+//							tempClusters++;
+//							System.out.println("child cluster 1 saved");
+//							cosSimTotal += cosSimC;
+//						}
+//						/**
+//						 * varianceC = BICScore.varianceEstimate(datasLocal[0],
+//						 * centroidC1, 2); System.out.println("variance child1 =
+//						 * "+varianceC); loglikeC =
+//						 * BICScore.logLikeliHood(datasLocal[0], varianceC, k,
+//						 * parentDataSetSize,dataDimension);
+//						 * System.out.println("loglike child1 = "+loglikeC);
+//						 * double scoreC = BICScore.bicScore(datas[i], loglikeC,
+//						 * varianceC, k, dataDimension); System.out.println("BIC
+//						 * child1 = "+scoreC); if (scoreP > scoreC) { // add
+//						 * loglike to overAllLoglike. totalLoglike += loglikeP; //
+//						 * save variance. localVariances += varianceP; // save
+//						 * parent centroid as partial result for current k.
+//						 * tempCentroids.add(centroidP); tempClusters++;
+//						 * System.out.println("parent cluster saved"); } else if
+//						 * (scoreP < scoreC){ // add loglike to overAllLoglike.
+//						 * totalLoglike += loglikeC; // save variance.
+//						 * localVariances += varianceC; // keep child centroids
+//						 * as partial result for current k.
+//						 * tempCentroids.add(centroidC1); tempClusters++;
+//						 * System.out.println("child cluster 1 saved"); }
+//						 */
+//
+//					}
+//					System.out.println("cosSimTotal = " + cosSimTotal);
+//				}
+//				else {
+//					System.out.println("cluster"+i+" is leeg");
+//				}
 				
 			}
 			System.out.println("tempClusters = " + tempClusters);
@@ -342,8 +349,8 @@ public class XMeans extends SimpleKMeans implements Clusterer {
 						+ resultingNumberOfClusters);
 				System.out.println("finalCentroids = " + finalCentroids.size());
 				System.out.println(" ");
-				System.out.println(" ");
-			}
+				System.out.println(" ");}}}
+//			}
 
 			/**
 			 * System.out.println("localVariances = "+localVariances);
@@ -367,7 +374,7 @@ public class XMeans extends SimpleKMeans implements Clusterer {
 			 * "+finalCentroids.size()); } System.out.println(" ");
 			 * System.out.println(" ");
 			 */
-		}
+//		}
 	}
 
 	public int getNumberOfClusters() {
