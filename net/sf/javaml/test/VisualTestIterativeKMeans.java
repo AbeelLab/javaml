@@ -42,16 +42,13 @@ import net.sf.javaml.tools.DatasetGenerator;
 
 public class VisualTestIterativeKMeans extends JPanel {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 5608683822417234316L;
+     private static final long serialVersionUID = 5608683822417234316L;
 
     /**
      * @param args
      */
     public static void main(String[] args) {
-        JFrame window = new JFrame("Simple K-means test");
+        JFrame window = new JFrame("Iterative K-means test");
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setContentPane(new VisualTestIterativeKMeans());
         window.pack();
@@ -128,8 +125,12 @@ public class VisualTestIterativeKMeans extends JPanel {
                     g.fillRect((int) centroids[i].getValue(0) - 4, (int) centroids[i].getValue(1) - 4, 8, 8);
 
                 }
+                try{
                 g.setColor(Color.BLACK);
                 g.fillRect((int) centroids[tmpI].getValue(0) - 4, (int) centroids[tmpI].getValue(1) - 4, 8, 8);
+                }catch(Exception e){
+                    System.err.println("Error with tmpI: "+tmpI);
+                }
 
             }
 

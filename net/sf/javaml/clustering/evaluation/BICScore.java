@@ -30,7 +30,12 @@ import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.distance.DistanceMeasure;
 import net.sf.javaml.distance.DistanceMeasureFactory;
-
+/**
+ * Check code
+ * @author Thomas Abeel
+ * 
+ */
+@Deprecated
 public class BICScore {
 	
 	public static double varianceEstimate (Dataset data,Instance centroid, int numberOfClusters){

@@ -1,5 +1,5 @@
 /**
- * ClusterEvaluationCriterion.java, 31-okt-06
+ * ClusterEvaluation.java, 16-nov-2006
  *
  * This file is part of the Java Machine Learning API
  * 
@@ -17,36 +17,31 @@
  * along with the Java Machine Learning API; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * 
- * Copyright (c) 2006, Andreas De Rijcke
+ * Copyright (c) 2006, Thomas Abeel
  * 
  * Project: http://sourceforge.net/projects/java-ml/
  * 
  */
-
-
-
 package net.sf.javaml.clustering.evaluation;
 
+import net.sf.javaml.clustering.Clusterer;
 import net.sf.javaml.core.Dataset;
-import net.sf.javaml.core.Instance;
-import net.sf.javaml.distance.DistanceMeasure;
-import net.sf.javaml.distance.DistanceMeasureFactory;
 
-@Deprecated
-public class CosSim  {
-	
-	public static double cosSim (Dataset data[], Instance centroids[]){
-		double cosSim = 0;
-		DistanceMeasure dm=DistanceMeasureFactory.getCosineSimilarity();
-		for (int i =0; i<data.length; i++ ){
-//			System.out.println("i = "+i);
-//			System.out.println("data["+i+"]size = "+data[i].size());
-			for (int j=0; j< data[i].size(); j++){
-				cosSim += dm.calculateDistance(data[i].getInstance(j), centroids[i]);
-			}
-		}
-		return cosSim;
-	}
-    
-    
+public interface ClusterEvaluation {
+
+    public double score(Clusterer c, Dataset d);
+
+    /**
+     * Compares the two scores according to the criterion in the implementation.
+     * Some score should be maxed, others should be minimized. This method
+     * returns true if the second score is 'better' than the first score.
+     * 
+     * @param score1
+     *            the first score
+     * @param score2
+     *            the second score
+     * @return true if the second score is better than the first, false in all
+     *         other cases
+     */
+    public boolean compareScore(double score1, double score2);
 }

@@ -26,92 +26,85 @@ package net.sf.javaml.clustering;
 
 import java.util.Vector;
 
-import net.sf.javaml.clustering.evaluation.CosSim;
+import net.sf.javaml.clustering.evaluation.ClusterEvaluation;
+import net.sf.javaml.clustering.evaluation.ClusterEvaluationFactory;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.core.SimpleDataset;
-import net.sf.javaml.distance.DistanceMeasureFactory;
+
 /**
- * This variant of the SimpleKMeans algorithm will run the Simple KMeans
- * algorithm multiple times and will only return the best centroids as the final
- * result.
+ * TODO: uitleg
  * 
  * @author Thomas Abeel, Andreas De Rijcke
  * 
  */
 
-
 public class IterativeKMeans extends SimpleKMeans {
-	private int kMin;
-	private int kMax;
-	private int bestNumberOfClusters;
-	private double bestCosSim;
-	private Instance[] bestCentroids;
-	
-	public IterativeKMeans(int kMin, int kMax) {
-		this.kMax = kMax;
-		this.kMin = kMin;
-	}
-	@Override
-    public void buildClusterer(Dataset data){
-        System.out.println("Build Iterative clusterer");
-        super.dm=DistanceMeasureFactory.getCosineSimilarity();
-    	if (data.size() == 0)
-			throw new RuntimeException("The dataset should not be empty");
-    	if (kMin == 0)
-			throw new RuntimeException("There should be at least one cluster");
-    	
-    	bestCosSim=0;
-    	    	
-    	for (int k = kMin; k <= kMax; k++){
-    		System.out.println("iterative k = "+k);
-    		// Clusterer km=new super(k,100);
-    		super.numberOfClusters = k;
-    		super.numberOfIterations = 100;
-    		super.buildClusterer(data);
-    		Dataset[] datas = new Dataset[k];
-    		for (int i = 0; i < k; i++) {
-    			datas[i] = new SimpleDataset();
-    		}
-    		for (int i = 0; i < data.size(); i++) {
-    			Instance in = data.getInstance(i);
-    			datas[super.predictCluster(in)].addInstance(in);
-    		}
-    		double cosSim = 0;
-    		cosSim = CosSim.cosSim(datas,super.centroids, k);
-    		
-    		System.out.println("cosSim = "+cosSim);
-    		System.out.println("old bestCosSim  = "+bestCosSim);
-    		if (cosSim > bestCosSim){
-    			bestCosSim = cosSim;
-    			bestCentroids  = super.centroids;
-    			bestNumberOfClusters = k;
-    		}
-    		System.out.println("new bestCosSim  = "+bestCosSim);
-    		System.out.println("bestNumberOfClusters = "+bestNumberOfClusters);
-    		System.out.println();
-    	}
+    private int kMin;
 
-        //copy centroids
-    	super.centroids=bestCentroids;
-        super.numberOfClusters=bestNumberOfClusters;
-        //FILTER BESTCENTROIDS
-        int[] freqTable=new int[bestNumberOfClusters];
-    	for (int i = 0; i < data.size(); i++) {
+    private int kMax;
+
+    public IterativeKMeans(int kMin, int kMax) {
+        this.kMax = kMax;
+        this.kMin = kMin;
+    }
+
+    @Override
+    public void buildClusterer(Dataset data) {
+        System.out.println("Build Iterative clusterer");
+        if (data.size() == 0)
+            throw new RuntimeException("The dataset should not be empty");
+        if (kMin == 0)
+            throw new RuntimeException("There should be at least one cluster");
+
+        int bestNumberOfClusters=0;
+        double bestScore=0;
+        Instance[] bestCentroids=null;
+
+        for (int k = kMin; k <= kMax; k++) {
+            super.numberOfClusters = k;
+            super.numberOfIterations = 100;
+            super.buildClusterer(data);
+            
+            ClusterEvaluation ce=ClusterEvaluationFactory.getSumOfCentroidSimilarities();//.getSumOfAveragePairWiseSimilarities();//ClusterEvaluationFactory.getSumOfSquaredErrors();
+            double newScore=ce.score(this,data);
+            if(k==kMin){
+                bestScore=newScore;
+                bestNumberOfClusters = k;
+            }
+            System.out.println("k = " + k);
+            System.out.println("score = " + newScore);
+            // System.out.println("old bestCosSim = "+bestCosSim);
+            if (ce.compareScore(bestScore,newScore)) {
+                bestScore = newScore;
+                bestCentroids = super.centroids;
+                bestNumberOfClusters = k;
+            }
+            System.out.println("new bestCosSim  = " + bestScore);
+            System.out.println("bestNumberOfClusters = " + bestNumberOfClusters);
+            System.out.println();
+        }
+
+        // copy centroids
+        super.centroids = bestCentroids;
+        super.numberOfClusters = bestNumberOfClusters;
+        // FILTER BESTCENTROIDS
+        int[] freqTable = new int[bestNumberOfClusters];
+        for (int i = 0; i < data.size(); i++) {
             freqTable[super.predictCluster(data.getInstance(i))]++;
         }
-        Vector<Instance>tmpCentroids=new Vector<Instance>();
-        int nonEmptyClusterCount=0;
-        for(int i=0;i<freqTable.length;i++){
-            if(freqTable[i]>0){
+        Vector<Instance> tmpCentroids = new Vector<Instance>();
+        int nonEmptyClusterCount = 0;
+        for (int i = 0; i < freqTable.length; i++) {
+            if (freqTable[i] > 0) {
                 tmpCentroids.add(bestCentroids[i]);
                 nonEmptyClusterCount++;
             }
         }
-        super.centroids=new Instance[tmpCentroids.size()];
-        super.centroids=tmpCentroids.toArray(super.centroids);
-        super.numberOfClusters=nonEmptyClusterCount;
-        System.out.println("Final centroid count: "+super.centroids.length);
-        System.out.println("Final number of Clusters: "+super.numberOfClusters);
+        super.centroids = new Instance[tmpCentroids.size()];
+        super.centroids = tmpCentroids.toArray(super.centroids);
+        super.numberOfClusters = nonEmptyClusterCount;
+        // System.out.println("Final centroid count: "+super.centroids.length);
+        // System.out.println("Final number of Clusters:
+        // "+super.numberOfClusters);
     }
 }

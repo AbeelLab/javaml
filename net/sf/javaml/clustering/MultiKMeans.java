@@ -24,10 +24,10 @@
  */
 package net.sf.javaml.clustering;
 
-import net.sf.javaml.clustering.evaluation.CosSim;
+import net.sf.javaml.clustering.evaluation.ClusterEvaluation;
+import net.sf.javaml.clustering.evaluation.SumOfCentroidSimilarities;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.core.SimpleDataset;
 import net.sf.javaml.distance.DistanceMeasure;
 import net.sf.javaml.distance.DistanceMeasureFactory;
 
@@ -60,16 +60,8 @@ public class MultiKMeans extends SimpleKMeans {
         Instance[] bestCentroids = null;
         for (int i = 0; i < repeats; i++) {
             super.buildClusterer(data);
-            Dataset[] datas = new Dataset[super.numberOfClusters];
-            for (int j = 0; j < super.numberOfClusters; j++) {
-                datas[j] = new SimpleDataset();
-            }
-            for (int j = 0; j < data.size(); j++) {
-                Instance in = data.getInstance(j);
-                datas[super.predictCluster(in)].addInstance(in);
-            }
-
-            double cosSim = CosSim.cosSim(datas, super.centroids, super.numberOfClusters);
+            ClusterEvaluation ce=new SumOfCentroidSimilarities();//I_2
+            double cosSim = ce.score(this,data);
             if (cosSim > bestCosSim) {
                 bestCosSim = cosSim;
                 bestCentroids = super.centroids;

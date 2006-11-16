@@ -31,6 +31,13 @@ import net.sf.javaml.core.Instance;
 import net.sf.javaml.distance.DistanceMeasure;
 import net.sf.javaml.distance.DistanceMeasureFactory;
 
+/**
+ * TODO check code
+ * 
+ * @author Thomas Abeel
+ *
+ */
+@Deprecated
 public class AICScore {
 	
 	public static double varianceEstimate (Dataset data,Instance centroid,int numberOfClusters, int initialDataSetSize ){
