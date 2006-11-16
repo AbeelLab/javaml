@@ -28,7 +28,6 @@ import net.sf.javaml.core.Instance;
 
 public class CosineSimilarity implements DistanceMeasure {
 
-    protected CosineSimilarity(){}
     public double calculateDistance(Instance x, Instance y) {
             if (x.size() != y.size()) {
                 throw new RuntimeException("Both instances should contain the same number of values.");

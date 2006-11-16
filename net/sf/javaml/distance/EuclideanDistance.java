@@ -40,9 +40,7 @@ import net.sf.javaml.core.Instance;
  */
 public class EuclideanDistance implements DistanceMeasure {
 
-    protected EuclideanDistance() {
-    };
-
+   
     public double calculateDistance(Instance x, Instance y) {
         if (x.size() != y.size()) {
             throw new RuntimeException("Both instances should contain the same number of values.");
