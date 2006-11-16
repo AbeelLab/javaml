@@ -28,7 +28,9 @@ import net.sf.javaml.clustering.evaluation.CosSim;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.SimpleDataset;
+import net.sf.javaml.distance.DistanceMeasure;
 import net.sf.javaml.distance.DistanceMeasureFactory;
+
 /**
  * This variant of the SimpleKMeans algorithm will run the Simple KMeans
  * algorithm multiple times and will only return the best centroids as the final
@@ -39,53 +41,43 @@ import net.sf.javaml.distance.DistanceMeasureFactory;
  */
 
 public class MultiKMeans extends SimpleKMeans {
-	private int k;
-	private int repeats;
-	private double bestCosSim;
-	private Instance[] bestCentroids;
-	
-	public MultiKMeans (int k, int repeats){
-		this.k = k;
-		this.repeats = repeats;
-	}
-	@Override 
-	public void buildClusterer (Dataset data){
-        System.out.println("Build MultiKMeans clusterer");
-		 super.dm=DistanceMeasureFactory.getCosineSimilarity();
-         bestCosSim=0;
-	    System.out.println("old bestCosSim  = "+bestCosSim);
-	    	
-	    for (int i = 0; i < repeats; i++){
-	    	//Clusterer km=new super(k,100);
-	    	super.numberOfClusters = k;
-	    	super.numberOfIterations = 100;
-	    	super.buildClusterer(data);
-	    	Dataset[] datas = new Dataset[k];
-	    	for (int j = 0; j < k; j++) {
-	    		datas[j] = new SimpleDataset();
-	    	}
-	    	for (int j = 0; j < data.size(); j++) {
-	    		Instance in = data.getInstance(j);
-	    		datas[super.predictCluster(in)].addInstance(in);
-	    	}
-	    	
-	    	double cosSim = 0;
-    		cosSim = CosSim.cosSim(datas,super.centroids, k);
-    		System.out.println("cosSim = "+cosSim);
-    		System.out.println("old bestCosSim  = "+bestCosSim);
-    		if (cosSim > bestCosSim){
-    			bestCosSim = cosSim;
-    			bestCentroids  = super.centroids;
-    		}
-    		System.out.println("new bestCosSim  = "+bestCosSim);
-    		System.out.println();
-	    }
-	    super.centroids=bestCentroids;
-	    super.numberOfClusters=k;
-	    System.out.println("Final centroid count: "+super.centroids.length);
-        System.out.println("Final number of Clusters: "+super.numberOfClusters);
-	    
-	}
-	
-	
+    private int repeats;
+
+   
+    public MultiKMeans() {
+        this(2,10);
+    }
+    public MultiKMeans(int clusters, int repeats) {
+        this(clusters,100,DistanceMeasureFactory.getEuclideanDistanceMeasure(),repeats);
+    }
+    public MultiKMeans(int clusters, int iterations, DistanceMeasure dm,int repeats) {
+        super(clusters, iterations, dm);
+        this.repeats=repeats;
+    }
+    @Override
+    public void buildClusterer(Dataset data) {
+        double bestCosSim = 0;
+        Instance[] bestCentroids = null;
+        for (int i = 0; i < repeats; i++) {
+            super.buildClusterer(data);
+            Dataset[] datas = new Dataset[super.numberOfClusters];
+            for (int j = 0; j < super.numberOfClusters; j++) {
+                datas[j] = new SimpleDataset();
+            }
+            for (int j = 0; j < data.size(); j++) {
+                Instance in = data.getInstance(j);
+                datas[super.predictCluster(in)].addInstance(in);
+            }
+
+            double cosSim = CosSim.cosSim(datas, super.centroids, super.numberOfClusters);
+            if (cosSim > bestCosSim) {
+                bestCosSim = cosSim;
+                bestCentroids = super.centroids;
+            }
+        }
+        super.centroids = bestCentroids;
+    }
+
+   
+
 }
