@@ -154,8 +154,9 @@ public class SimpleKMeans implements Clusterer {
             double[][] sumPosition = new double[this.numberOfClusters][instanceLength];
             int[] countPosition = new int[this.numberOfClusters];
             for (int i = 0; i < data.size(); i++) {
+                Instance in = data.getInstance(i);
                 for (int j = 0; j < instanceLength; j++) {
-                    Instance in = data.getInstance(i);
+                    
                     sumPosition[assignment[i]][j] += in.getWeight() * in.getValue(j);
 
                 }
