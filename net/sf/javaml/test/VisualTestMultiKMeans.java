@@ -51,7 +51,7 @@ public class VisualTestMultiKMeans extends JPanel {
      * @param args
      */
     public static void main(String[] args) {
-        JFrame window = new JFrame("Simple K-means test");
+        JFrame window = new JFrame("Multi K-means test");
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setContentPane(new VisualTestMultiKMeans());
         window.pack();
@@ -65,7 +65,7 @@ public class VisualTestMultiKMeans extends JPanel {
         Dataset data = DatasetGenerator.createClusterSquareDataset(space, 10);
 
         this.add(createLabel(data, Color.BLACK, space, space, null, null, 0));
-        MultiKMeans km = new MultiKMeans(4, 10);
+        MultiKMeans km = new MultiKMeans(4, 20);
         km.buildClusterer(data);
 
         Dataset[] datas = new Dataset[4];
