@@ -41,6 +41,12 @@ import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.SimpleDataset;
 import net.sf.javaml.tools.DatasetGenerator;
 
+/**
+ * TODO marked for deletion
+ * @author Thomas Abeel
+ *
+ */
+@Deprecated
 public class VisualTestXMeans extends JPanel{
 
     /**
