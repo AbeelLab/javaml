@@ -27,7 +27,7 @@ package net.sf.javaml.clustering;
 import java.util.Vector;
 
 import net.sf.javaml.clustering.evaluation.ClusterEvaluation;
-import net.sf.javaml.clustering.evaluation.SumOfSquaredErrors;
+import net.sf.javaml.clustering.evaluation.HybridCentroidSimilarity;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 /**
@@ -67,7 +67,7 @@ public class IterativeMultiKMeans extends SimpleKMeans {
 
             for (int i = 0; i < repeats; i++) {
                 super.buildClusterer(data);
-                ClusterEvaluation ce = new SumOfSquaredErrors();//new SumOfCentroidSimilarities();// I_2
+                ClusterEvaluation ce = new HybridCentroidSimilarity();//new SumOfCentroidSimilarities();// I_2
                 double newScore = ce.score(this, data);
                 if (k == kMin && i==0) {
                     bestScore = newScore;

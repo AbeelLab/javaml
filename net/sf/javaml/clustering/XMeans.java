@@ -45,7 +45,7 @@ import net.sf.javaml.core.SimpleDataset;
 /**
  * TODO marked for deletion
  * 
- * @author Thomas Abeel
+ * @author Thomas Abeel, Andreas De Rijcke
  *
  */
 @Deprecated

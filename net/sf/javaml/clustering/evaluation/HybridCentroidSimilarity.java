@@ -1,5 +1,5 @@
 /**
- * CosSim.java, 31-okt-06
+ * HybridCentroidSimilarity.java, 16-nov-2006
  *
  * This file is part of the Java Machine Learning API
  * 
@@ -17,36 +17,40 @@
  * along with the Java Machine Learning API; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * 
- * Copyright (c) 2006, Andreas De Rijcke
+ * Copyright (c) 2006, Thomas Abeel, Andreas De Rijcke
  * 
  * Project: http://sourceforge.net/projects/java-ml/
  * 
  */
 
-
-
 package net.sf.javaml.clustering.evaluation;
 
+import net.sf.javaml.clustering.Clusterer;
+import net.sf.javaml.clustering.evaluation.TraceScatterMatrix;
+import net.sf.javaml.clustering.evaluation.SumOfCentroidSimilarities;
 import net.sf.javaml.core.Dataset;
-import net.sf.javaml.core.Instance;
-import net.sf.javaml.distance.DistanceMeasure;
-import net.sf.javaml.distance.DistanceMeasureFactory;
 
-@Deprecated
-public class CosSim  {
+/**
+ * H_2 from the Zhao 2001 paper
+ * 
+ * TODO uitleg
+ * @author Andreas De Rijcke
+ *
+ */
+
+public class HybridCentroidSimilarity implements ClusterEvaluation{
+		
+	public double score (Clusterer c, Dataset data) {
+		ClusterEvaluation ceTop = new SumOfCentroidSimilarities();//I_2
+		double sum = ceTop.score(c, data);
+		ClusterEvaluation ce = new TraceScatterMatrix();//E_1
+		sum /= ce.score(c, data);
 	
-	public static double cosSim (Dataset data[], Instance centroids[]){
-		double cosSim = 0;
-		DistanceMeasure dm=DistanceMeasureFactory.getCosineSimilarity();
-		for (int i =0; i<data.length; i++ ){
-//			System.out.println("i = "+i);
-//			System.out.println("data["+i+"]size = "+data[i].size());
-			for (int j=0; j< data[i].size(); j++){
-				cosSim += dm.calculateDistance(data[i].getInstance(j), centroids[i]);
-			}
-		}
-		return cosSim;
+	return sum;
 	}
-    
-    
+	
+	public boolean compareScore(double score1, double score2) {
+        //should be maxed
+        return score2>score1;
+	}
 }
