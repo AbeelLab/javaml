@@ -27,8 +27,24 @@ package net.sf.javaml.clustering.evaluation;
 import net.sf.javaml.clustering.Clusterer;
 import net.sf.javaml.core.Dataset;
 
+/**
+ * This interface provides a frame for all measure that can be used to evaluate
+ * the quality of a clusterer.
+ * 
+ * @author Thomas Abeel
+ * 
+ */
 public interface ClusterEvaluation {
 
+    /**
+     * Returns the score the current clusterer obtains on the dataset.
+     * 
+     * @param c
+     *            the clusterer (the call to buildClusterer should be made)
+     * @param d
+     *            the dataset to test the clusterer on.
+     * @return the score the clusterer obtains on this particular dataset
+     */
     public double score(Clusterer c, Dataset d);
 
     /**
