@@ -47,4 +47,7 @@ public class ClusterEvaluationFactory {
     public static ClusterEvaluation getMinMaxCut(){
         return new MinMaxCut();
     }
+    public static ClusterEvaluation getBICScore(){
+        return new BICScore();
+    }
 }
