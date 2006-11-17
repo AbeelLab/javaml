@@ -35,4 +35,16 @@ public class ClusterEvaluationFactory {
     public static ClusterEvaluation getSumOfCentroidSimilarities(){
         return new SumOfCentroidSimilarities();
     }
+    public static ClusterEvaluation getHybridPairwiseSimilarities(){
+        return new HybridPairwiseSimilarities();
+    }
+    public static ClusterEvaluation getHybridCentroidSimilarity(){
+        return new HybridCentroidSimilarity();
+    }
+    public static ClusterEvaluation getTraceScatterMatrix(){
+        return new TraceScatterMatrix();
+    }
+    public static ClusterEvaluation getMinMaxCut(){
+        return new MinMaxCut();
+    }
 }
