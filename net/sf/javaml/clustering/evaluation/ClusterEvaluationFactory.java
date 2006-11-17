@@ -50,4 +50,7 @@ public class ClusterEvaluationFactory {
     public static ClusterEvaluation getBICScore(){
         return new BICScore();
     }
+    public static ClusterEvaluation getAICScore(){
+        return new AICScore();
+    }
 }

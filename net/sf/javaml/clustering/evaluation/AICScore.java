@@ -26,8 +26,11 @@
 
 package net.sf.javaml.clustering.evaluation;
 
+import net.sf.javaml.clustering.Clusterer;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
+import net.sf.javaml.core.SimpleDataset;
+import net.sf.javaml.core.SimpleInstance;
 import net.sf.javaml.distance.DistanceMeasure;
 import net.sf.javaml.distance.DistanceMeasureFactory;
 
@@ -37,46 +40,72 @@ import net.sf.javaml.distance.DistanceMeasureFactory;
  * @author Thomas Abeel
  *
  */
-@Deprecated
-public class AICScore {
+public class AICScore implements ClusterEvaluation {
 	
-	public static double varianceEstimate (Dataset data,Instance centroid,int numberOfClusters, int initialDataSetSize ){
-		double variance;
-		int s = data.size();
-		double k = numberOfClusters;
-		double r = initialDataSetSize;
-		double sum = 0;
-		DistanceMeasure dm=DistanceMeasureFactory.getEuclideanDistanceMeasure();
-		for (int i = 0; i < s; i++) {
-			sum += dm.calculateDistance(data.getInstance(i), centroid);
+	public double score(Clusterer c, Dataset data) {
+		Dataset[] datas = new Dataset[c.getNumberOfClusters()];
+		for (int i = 0; i < c.getNumberOfClusters(); i++) {
+			datas[i] = new SimpleDataset();
 		}
-		variance = (1/(r-k))*sum;
+		for (int i = 0; i < data.size(); i++) {
+			Instance in = data.getInstance(i);
+			datas[c.predictCluster(in)].addInstance(in);
+		}
 
-		return variance;
-	}
-	
-	
-	public static double logLikeliHood (Dataset data, double variance, int numberOfClusters, int initialDataSetSize, double dataDimension){
-		double loglike;
-		double c = data.size();
-		double v = variance;
-		double k = numberOfClusters;
-		double r = initialDataSetSize;
-		double d = dataDimension;
-		loglike = (-c/2)*(Math.log(2*Math.PI)) - ((c*d)/2)*(Math.log(v)) + c*(Math.log(c)) - c*(Math.log(r))-(c-k)/2;
-		return loglike;
-	}
-	
-	
-	public static double aicScore (double loglike, double variance, int numberOfClusters, double dataDimension){
-		double aic;
-		double l = loglike;
-		double v = variance;
-		double k = numberOfClusters;
-		double d = dataDimension;
-		double p = (k-1)+d*k+v;
-		aic = -2*Math.log(l)+2*p;
+		// calculate centroids
+		int instanceLength = data.getInstance(0).size();
+		double[][] sumPosition = new double[c.getNumberOfClusters()][instanceLength];
+		int[] countPosition = new int[c.getNumberOfClusters()];
+		for (int i = 0; i < data.size(); i++) {
+			Instance in = data.getInstance(i);
+			int predictedIndex = c.predictCluster(in);
+			for (int j = 0; j < instanceLength; j++) {
+
+				sumPosition[predictedIndex][j] += in.getWeight()
+						* in.getValue(j);
+
+			}
+			countPosition[predictedIndex]++;
+		}
+		// DistanceMeasure
+		Instance[] centroids = new Instance[c.getNumberOfClusters()];
+		for (int i = 0; i < c.getNumberOfClusters(); i++) {
+			float[] tmp = new float[instanceLength];
+			for (int j = 0; j < instanceLength; j++) {
+				tmp[j] = (float) sumPosition[i][j] / countPosition[i];
+			}
+			centroids[i] = new SimpleInstance(tmp);
+		}
+
+		// calculate bic
+		double k = c.getNumberOfClusters();
+		double overAllVariance = 0, overAllLoglike = 0, aic = 0;
+		for (int i = 0; i < k; i++) {
+			// calculate cluster variances
+			double s = datas[i].size(), sum = 0;
+			DistanceMeasure dm = DistanceMeasureFactory
+					.getEuclideanDistanceMeasure();
+			for (int j = 0; j < s; j++) {
+				sum = 0;
+				sum += dm.calculateDistance(datas[i].getInstance(j),
+						centroids[i]);
+			}
+			double variance = sum / s;
+			overAllVariance += variance;
+			// calculate cluster loglikes
+			double loglike = (-s / 2) * (Math.log(2 * Math.PI))
+					- ((s * instanceLength) / 2) * (Math.log(variance)) + s
+					* (Math.log(s)) - s * (Math.log(data.size())) - (s - k) / 2;
+			overAllLoglike += Math.abs(loglike);
+		}
+		overAllVariance /= k;
+		double p = (k - 1) + instanceLength * k + overAllVariance;
+		aic = -2*overAllLoglike+2*p;;
 		return aic;
 	}
 
+	public boolean compareScore(double score1, double score2) {
+		// should be minimalized
+		return score2 < score1;
+	}
 }
