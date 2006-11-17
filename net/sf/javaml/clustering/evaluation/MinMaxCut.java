@@ -35,51 +35,50 @@ import net.sf.javaml.distance.DistanceMeasureFactory;
  * G_1 from the Zhao 2001 paper
  * 
  * TODO uitleg
+ * 
  * @author Andreas De Rijcke
- *
+ * 
  */
 
-public class MinMaxCut implements ClusterEvaluation{
-	
-	public double score (Clusterer c, Dataset data){
-		Dataset[] datas = new Dataset[c.getNumberOfClusters()];
-        for (int i = 0; i < c.getNumberOfClusters(); i++) {
-            datas[i] = new SimpleDataset();
-        }
-        for (int i = 0; i < data.size(); i++) {
-            Instance in = data.getInstance(i);
-            datas[c.predictCluster(in)].addInstance(in);
-        }
+public class MinMaxCut implements ClusterEvaluation {
 
-        DistanceMeasure dm=DistanceMeasureFactory.getCosineSimilarity();
-        double sum=0;
-        for(int i=0;i<c.getNumberOfClusters();i++){
-        	double tmpTop=0;
-        	for(int j=0;j<datas[i].size();j++){
-                for(int k=0;k<data.size();k++){
-                    // TODO
-                	// voorwaarde niet correct
-                	if ( j != k){
-                    	double error=dm.calculateDistance(datas[i].getInstance(j),data.getInstance(k));
-                        tmpTop += error;  
-                    }
-                }  
-            }
-            double tmp=0;
-                for(int j=0;j<datas[i].size();j++){
-                    for(int k=0;k<datas[i].size();k++){
-                        double error=dm.calculateDistance(datas[i].getInstance(j),datas[i].getInstance(k));
-                        tmp += error; 
-                    }   
-                }
-          double tmpSum = tmpTop/tmp;
-          sum += tmpSum;
-        }
-	return sum;
+	public double score(Clusterer c, Dataset data) {
+		Dataset[] datas = new Dataset[c.getNumberOfClusters()];
+		for (int i = 0; i < c.getNumberOfClusters(); i++) {
+			datas[i] = new SimpleDataset();
+		}
+		for (int i = 0; i < data.size(); i++) {
+			Instance in = data.getInstance(i);
+			datas[c.predictCluster(in)].addInstance(in);
+		}
+
+		DistanceMeasure dm = DistanceMeasureFactory.getCosineSimilarity();
+		double sum = 0;
+		for (int i = 0; i < c.getNumberOfClusters(); i++) {
+			double tmpTop = 0;
+			double tmp = 0;
+			for (int j = 0; j < datas[i].size(); j++) {
+				for (int k = 0; k < data.size(); k++) {
+					if (datas[i].getInstance(j) != data.getInstance(k)) {
+						double error = dm.calculateDistance(datas[i]
+								.getInstance(j), data.getInstance(k));
+						tmpTop += error;
+					}
+				}
+				for (int k = 0; k < datas[i].size(); k++) {
+					double error = dm.calculateDistance(
+							datas[i].getInstance(j), datas[i].getInstance(k));
+					tmp += error;
+				}
+			}
+			double tmpSum = tmpTop / tmp;
+			sum += tmpSum;
+		}
+		return sum;
 	}
-	
+
 	public boolean compareScore(double score1, double score2) {
-        //should be minimized
-        return score2<score1;
+		// should be minimized
+		return score2 < score1;
 	}
 }
