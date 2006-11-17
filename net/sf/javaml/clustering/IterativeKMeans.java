@@ -65,7 +65,7 @@ public class IterativeKMeans extends SimpleKMeans {
             super.numberOfIterations = 100;
             super.buildClusterer(data);
             
-            ClusterEvaluation ce=ClusterEvaluationFactory.getSumOfCentroidSimilarities();//.getSumOfAveragePairWiseSimilarities();//ClusterEvaluationFactory.getSumOfSquaredErrors();
+            ClusterEvaluation ce=ClusterEvaluationFactory.getMinMaxCut(); //getSumOfSquaredErrors();//getSumOfAveragePairWiseSimilarities();//getSumOfCentroidSimilarities();//ClusterEvaluationFactory.getSumOfSquaredErrors();
             double newScore=ce.score(this,data);
             if(k==kMin){
                 bestScore=newScore;
@@ -73,13 +73,12 @@ public class IterativeKMeans extends SimpleKMeans {
             }
             System.out.println("k = " + k);
             System.out.println("score = " + newScore);
-            // System.out.println("old bestCosSim = "+bestCosSim);
             if (ce.compareScore(bestScore,newScore)) {
                 bestScore = newScore;
                 bestCentroids = super.centroids;
                 bestNumberOfClusters = k;
             }
-            System.out.println("new bestCosSim  = " + bestScore);
+            System.out.println("new bestScore  = " + bestScore);
             System.out.println("bestNumberOfClusters = " + bestNumberOfClusters);
             System.out.println();
         }

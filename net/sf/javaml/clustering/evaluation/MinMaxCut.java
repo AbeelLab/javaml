@@ -73,6 +73,10 @@ public class MinMaxCut implements ClusterEvaluation {
 			}
 			double tmpSum = tmpTop / tmp;
 			sum += tmpSum;
+			System.out.println(tmpTop);
+			System.out.println(tmp);
+			System.out.println(tmpSum);
+			System.out.println(sum);
 		}
 		return sum;
 	}
