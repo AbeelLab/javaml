@@ -106,6 +106,6 @@ public class AICScore implements ClusterEvaluation {
 
 	public boolean compareScore(double score1, double score2) {
 		// should be minimalized
-		return score2 < score1;
+		return score2 > score1;
 	}
 }
