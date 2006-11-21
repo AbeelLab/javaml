@@ -56,40 +56,46 @@ public class IterativeKMeans extends SimpleKMeans {
         if (kMin == 0)
             throw new RuntimeException("There should be at least one cluster");
 
-        int bestNumberOfClusters=0;
-        double bestScore=0;
-        Instance[] bestCentroids=null;
+        int bestNumberOfClusters = 0;
+        double bestScore = 0;
+        Instance[] bestCentroids = null;
 
         for (int k = kMin; k <= kMax; k++) {
             super.numberOfClusters = k;
             super.numberOfIterations = 100;
             super.buildClusterer(data);
-            
-            ClusterEvaluation ce=ClusterEvaluationFactory.getAICScore(); //getSumOfSquaredErrors();//getSumOfAveragePairWiseSimilarities();//getSumOfCentroidSimilarities();//ClusterEvaluationFactory.getSumOfSquaredErrors();
-            double newScore=ce.score(this,data);
-            if(k==kMin){
-                bestScore=newScore;
-                bestNumberOfClusters = k;
-            }
-            System.out.println("k = " + k);
-            System.out.println("score = " + newScore);
-            if (ce.compareScore(bestScore,newScore)) {
+
+            ClusterEvaluation ce = ClusterEvaluationFactory.getBICScore(); // getSumOfSquaredErrors();//getSumOfAveragePairWiseSimilarities();//getSumOfCentroidSimilarities();//ClusterEvaluationFactory.getSumOfSquaredErrors();
+            double newScore = ce.score(this, data);
+            if (k == kMin) {// for the first value, copy results
                 bestScore = newScore;
                 bestCentroids = super.centroids;
                 bestNumberOfClusters = k;
             }
+            if (ce.compareScore(bestScore, newScore)) {// if new results are
+                                                        // better, copy them
+                                                        // over the old ones
+                bestScore = newScore;
+                bestCentroids = super.centroids;
+                bestNumberOfClusters = k;
+            }
+            System.out.println("k = " + k);
+            System.out.println("score = " + newScore);
+
+            System.out.println("Best centroids: " + bestCentroids);
             System.out.println("new bestScore  = " + bestScore);
             System.out.println("bestNumberOfClusters = " + bestNumberOfClusters);
             System.out.println();
         }
 
         // copy centroids
+        System.out.println("Centroids: " + bestCentroids);
         super.centroids = bestCentroids;
         super.numberOfClusters = bestNumberOfClusters;
         // FILTER BESTCENTROIDS
         int[] freqTable = new int[bestNumberOfClusters];
         for (int i = 0; i < data.size(); i++) {
-            freqTable[super.predictCluster(data.getInstance(i))]++;
+            freqTable[predictCluster(data.getInstance(i))]++;
         }
         Vector<Instance> tmpCentroids = new Vector<Instance>();
         int nonEmptyClusterCount = 0;
