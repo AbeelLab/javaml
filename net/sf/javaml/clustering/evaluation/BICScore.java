@@ -103,9 +103,9 @@ public class BICScore implements ClusterEvaluation {
 		bic = overAllLoglike - (p / 2) * Math.log(data.size());
 		return bic;
 	}
-
+	
 	public boolean compareScore(double score1, double score2) {
-		// should be maxed
+        //should be maxed in this implementation.
 		return score2 > score1;
 	}
 }
