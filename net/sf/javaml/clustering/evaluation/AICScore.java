@@ -1,5 +1,5 @@
 /**
- * AICScore.java, 31-okt-06
+ * AICScore.java, 17-nov-06
  *
  * This file is part of the Java Machine Learning API
  * 

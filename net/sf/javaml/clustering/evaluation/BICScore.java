@@ -1,5 +1,5 @@
 /**
- * BICScore.java, 31-okt-06
+ * BICScore.java, 17-nov-06
  *
  * This file is part of the Java Machine Learning API
  * 

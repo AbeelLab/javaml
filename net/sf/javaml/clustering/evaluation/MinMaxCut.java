@@ -1,5 +1,5 @@
 /**
- * MinMaxCut.java, 16-nov-2006
+ * MinMaxCut.java, 17-nov-2006
  *
  * This file is part of the Java Machine Learning API
  * 
