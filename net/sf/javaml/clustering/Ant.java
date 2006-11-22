@@ -98,6 +98,7 @@ public class Ant implements Clusterer {
 				leastSimIndex = i;
 			}
 		}
+		System.out.println("leastSimIndex: "+leastSimIndex);
 		return tower.get(leastSimIndex);
 	}
 
@@ -149,11 +150,14 @@ public class Ant implements Clusterer {
 			throw new RuntimeException("The dataset should not be empty");
 
 		// add all instances to a tower, add all towers to clusters.
+		System.out.println("dataSize: " + data.size());
+		Vector<Instance> tmpTower = new Vector<Instance>();
 		for (int i = 0; i < data.size(); i++) {
-			tower.clear();
 			Instance in = data.getInstance(i);
-			tower.add(in);
-			clusters.add(tower);
+			tmpTower.add(in);
+			clusters.add(tmpTower);
+			System.out.println("torens in clusters: " + clusters.size());
+			tmpTower.clear();
 		}
 		int numberOfTowers = clusters.size();
 		System.out.println("torens in clusters: " + numberOfTowers);
@@ -168,6 +172,7 @@ public class Ant implements Clusterer {
 
 		// first, pick least similar instance from a random tower
 		randomTower = rg.nextInt(numberOfTowers);
+		System.out.println("randomTower: " + randomTower);
 		tower = clusters.get(randomTower);
 		carried = pickLeastSim(tower);
 		if (tower.size() == 0) {
@@ -189,6 +194,7 @@ public class Ant implements Clusterer {
 
 			actMoves++;
 			randomTower = rg.nextInt(numberOfTowers);
+			System.out.println("randomTower: " + randomTower);
 			tower = clusters.get(randomTower);
 			nFunction = nFunction(alfa, carried, tower);
 			probDrop = probPick(carried, nFunction);
