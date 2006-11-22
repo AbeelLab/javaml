@@ -26,6 +26,15 @@ package net.sf.javaml.distance;
 
 import net.sf.javaml.core.Instance;
 
+/**
+ * A distance measure is an algorithm to calculate the distance between to
+ * instances. Objects that are close together or are very similar should have
+ * low distance values, while object that are far apart or are not similar
+ * should have high distance values.
+ * 
+ * @author Thomas Abeel
+ * 
+ */
 public interface DistanceMeasure {
     public double calculateDistance(Instance i, Instance j);
 
