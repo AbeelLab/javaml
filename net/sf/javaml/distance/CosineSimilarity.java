@@ -29,20 +29,23 @@ import net.sf.javaml.core.Instance;
 public class CosineSimilarity implements DistanceMeasure {
 
     public double calculateDistance(Instance x, Instance y) {
-            if (x.size() != y.size()) {
-                throw new RuntimeException("Both instances should contain the same number of values.");
-            }
-            double sumTop = 0;
-            double sumOne=0;
-            double sumTwo=0;
-            
-            for (int i = 0; i < x.size(); i++) {
-               sumTop+=x.getValue(i)*y.getValue(i);
-               sumOne+=x.getValue(i)*x.getValue(i);
-               sumTwo+=y.getValue(i)*y.getValue(i);
-            }
-            return sumTop/(Math.sqrt(sumOne)*Math.sqrt(sumTwo));
-        
+        if (x.size() != y.size()) {
+            throw new RuntimeException("Both instances should contain the same number of values.");
+        }
+        double sumTop = 0;
+        double sumOne = 0;
+        double sumTwo = 0;
+
+        for (int i = 0; i < x.size(); i++) {
+            sumTop += x.getValue(i) * y.getValue(i);
+            sumOne += x.getValue(i) * x.getValue(i);
+            sumTwo += y.getValue(i) * y.getValue(i);
+        }
+        // CosineSimilarity is actually a similarity measure. To return a
+        // distance the distance
+        // we need to substract it from its maximum value.
+        return 1 - (sumTop / (Math.sqrt(sumOne) * Math.sqrt(sumTwo)));
+
     }
 
 }
