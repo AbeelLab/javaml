@@ -34,9 +34,9 @@ import net.sf.javaml.distance.DistanceMeasure;
 import net.sf.javaml.distance.DistanceMeasureFactory;
 
 public class Ant implements Clusterer {
-	private Vector<Instance> tower = new Vector<Instance>();
-
-	private Vector<Vector<Instance>> clusters = new Vector<Vector<Instance>>();
+	Vector<Instance> tower = new Vector<Instance>();
+	Vector<Instance> tower1 = new Vector<Instance>();
+	Vector<Vector<Instance>> clusters = new Vector<Vector<Instance>>();
 
 	private Instance leastSim;
 
@@ -82,24 +82,31 @@ public class Ant implements Clusterer {
 	// methode: search for least similar instance in tower
 	public Instance pickLeastSim(Vector<Instance> tower) {
 		double leastSim = 0;
+		System.out.println("leastSim: "+leastSim);
 		int leastSimIndex = 0;
+		System.out.println("leastSimIndex: "+leastSimIndex);
+		System.out.println("towersize: "+tower.size());
 		int i;
 		for (i = 0; i < tower.size(); i++) {
 			Instance x = tower.get(i);
 			double error = 0;
+			System.out.println("error: "+error);
 			for (int j = 0; j < tower.size(); j++) {
 				Instance tmp = tower.get(j);
 				DistanceMeasure dm = DistanceMeasureFactory
 						.getEuclideanDistanceMeasure();
 				error += dm.calculateDistance(x, tmp);
+				System.out.println("error: "+error);
 			}
 			if (error > leastSim) {
 				leastSim = error;
 				leastSimIndex = i;
+				System.out.println("leastSimIndex: "+leastSimIndex);
 			}
 		}
 		System.out.println("leastSimIndex: "+leastSimIndex);
-		return tower.get(leastSimIndex);
+		Instance pickLeastSim = tower.get(leastSimIndex);
+		return pickLeastSim;
 	}
 
 	// methode: calculate alfa (scaling param)
@@ -152,15 +159,12 @@ public class Ant implements Clusterer {
 		// add all instances to a tower, add all towers to clusters.
 		System.out.println("dataSize: " + data.size());
 		Vector<Instance> tmpTower = new Vector<Instance>();
-		for (int i = 0; i < data.size(); i++) {
+		for (int i = 0; i < data.size(); i ++) {
 			Instance in = data.getInstance(i);
 			tmpTower.add(in);
 			clusters.add(tmpTower);
-			System.out.println("torens in clusters: " + clusters.size());
 			tmpTower.clear();
 		}
-		int numberOfTowers = clusters.size();
-		System.out.println("torens in clusters: " + numberOfTowers);
 
 		// set initial parameters
 		// set alfa to random value between 0 and 1.
@@ -171,10 +175,16 @@ public class Ant implements Clusterer {
 		tower.clear();
 
 		// first, pick least similar instance from a random tower
+		int numberOfTowers = clusters.size();
+		System.out.println("torens in clusters: " + numberOfTowers);
+		
 		randomTower = rg.nextInt(numberOfTowers);
 		System.out.println("randomTower: " + randomTower);
+		
 		tower = clusters.get(randomTower);
+		System.out.println("tower: " + tower);
 		carried = pickLeastSim(tower);
+		System.out.println("carried: " + carried);
 		if (tower.size() == 0) {
 			clusters.remove(randomTower);
 		}
