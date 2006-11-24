@@ -38,6 +38,7 @@ import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.SimpleDataset;
 import net.sf.javaml.tools.DatasetGenerator;
+//import net.sf.javaml.tools.DatasetLoader;
 
 public class VisualTestAnt extends JPanel {
 
@@ -59,14 +60,14 @@ public class VisualTestAnt extends JPanel {
         this.setLayout(new GridLayout(0, 5));
         int space = 200;
         Dataset data = DatasetGenerator.createClusterSquareDataset(space, 8);
-
+        //Dataset data=DatasetLoader.loadDataset(new File("naam"));
         this.add(createLabel(data, Color.BLACK, space, space, null, null, 0));
-        Ant km = new Ant(10, 10);
+        Ant km = new Ant(20000, 200);
         km.buildClusterer(data);
 
         
-        Dataset[] datas = new Dataset[1000];
-        for (int i = 0; i < 1000; i++) {
+        Dataset[] datas = new Dataset[102];
+        for (int i = 0; i < 102; i++) {
             datas[i] = new SimpleDataset();
         }
         for (int i = 0; i < data.size(); i++) {
