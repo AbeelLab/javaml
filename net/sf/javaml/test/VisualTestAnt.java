@@ -64,6 +64,7 @@ public class VisualTestAnt extends JPanel {
         Ant km = new Ant(10, 10);
         km.buildClusterer(data);
 
+        
         Dataset[] datas = new Dataset[1000];
         for (int i = 0; i < 1000; i++) {
             datas[i] = new SimpleDataset();
@@ -72,6 +73,7 @@ public class VisualTestAnt extends JPanel {
             Instance in = data.getInstance(i);
             datas[km.predictCluster(in)].addInstance(in);
         }
+        System.out.println("Generated clusters: "+km.getNumberOfClusters());
         Color[] colors = { Color.RED, Color.GREEN, Color.BLUE, Color.MAGENTA,Color.CYAN };
         for (int i = 0; i < 10; i++) {
             this.add(createLabel(datas[i], colors[i/2], space, space, km, colors, i));

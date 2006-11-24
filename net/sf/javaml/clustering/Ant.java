@@ -108,6 +108,7 @@ public class Ant implements Clusterer {
         }
         System.out.println("leastSimIndex: " + leastSimIndex);
         Instance pickLeastSim = tower.get(leastSimIndex);
+        tower.remove(leastSimIndex);
         return pickLeastSim;
     }
 
@@ -276,9 +277,9 @@ public class Ant implements Clusterer {
         int tmpCluster = -1;
         double minDistance = Double.MAX_VALUE;
         for (int i = 0; i < this.numberOfClusters; i++) {
-            System.out.println("INSTANCE:" +instance);
-            System.out.println("CENTROID: " +centroids[i]);
-            System.out.println("DM: "+dm);
+//            System.out.println("INSTANCE:" +instance);
+//            System.out.println("CENTROID: " +centroids[i]);
+//            System.out.println("DM: "+dm);
             
             double dist = dm.calculateDistance(centroids[i], instance);
             if (dist < minDistance) {
