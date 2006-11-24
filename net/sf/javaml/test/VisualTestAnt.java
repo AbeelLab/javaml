@@ -64,8 +64,8 @@ public class VisualTestAnt extends JPanel {
         Ant km = new Ant(10, 10);
         km.buildClusterer(data);
 
-        Dataset[] datas = new Dataset[10];
-        for (int i = 0; i < 10; i++) {
+        Dataset[] datas = new Dataset[1000];
+        for (int i = 0; i < 1000; i++) {
             datas[i] = new SimpleDataset();
         }
         for (int i = 0; i < data.size(); i++) {
