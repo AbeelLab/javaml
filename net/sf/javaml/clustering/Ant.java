@@ -157,9 +157,8 @@ public class Ant implements Clusterer {
 
         // add all instances to a tower, add all towers to clusters.
         System.out.println("dataSize: " + data.size());
-        Vector<Instance> tmpTower = new Vector<Instance>();
-        for (int i = 0; i < data.size(); i++) {
-            tmpTower = new Vector<Instance>();
+         for (int i = 0; i < data.size(); i++) {
+            Vector<Instance> tmpTower = new Vector<Instance>();
             Instance in = data.getInstance(i);
             tmpTower.add(in);
             clusters.add(tmpTower);
