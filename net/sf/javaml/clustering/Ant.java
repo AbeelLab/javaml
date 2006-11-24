@@ -32,270 +32,276 @@ import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.SimpleInstance;
 import net.sf.javaml.distance.DistanceMeasure;
 import net.sf.javaml.distance.DistanceMeasureFactory;
+import net.sf.javaml.distance.EuclideanDistance;
 
 public class Ant implements Clusterer {
-	Vector<Instance> tower = new Vector<Instance>();
-	Vector<Instance> tower1 = new Vector<Instance>();
-	Vector<Vector<Instance>> clusters = new Vector<Vector<Instance>>();
+    Vector<Instance> tower = new Vector<Instance>();
 
-	private Instance leastSim;
+    Vector<Instance> tower1 = new Vector<Instance>();
 
-	private Instance carried;
+    Vector<Vector<Instance>> clusters = new Vector<Vector<Instance>>();
 
-	private Instance[] centroids;
+    private Instance leastSim;
 
-	private Random rg = new Random(System.currentTimeMillis());
+    private Instance carried;
 
-	private int numberOfClusters;
+    private Instance[] centroids;
 
-	private int iterations;
+    private Random rg = new Random(System.currentTimeMillis());
 
-	private int actMoves;
+    private int numberOfClusters;
 
-	private int failMoves;
+    private int iterations;
 
-	private int maxFailMoves;
+    private int actMoves;
 
-	private int randomTower;
+    private int failMoves;
 
-	private double alfa;
+    private int maxFailMoves;
 
-	private double nFunction;
+    private int randomTower;
 
-	private double probPick;
+    private double alfa;
 
-	private double probDrop;
+    private double nFunction;
 
-	private double randomProb;
+    private double probPick;
 
-	private DistanceMeasure dm;
+    private double probDrop;
 
-	public Ant() {
-		this(100, 10);
-	}
+    private double randomProb;
 
-	public Ant(int iterations, int maxFailMoves) {
-		this.iterations = iterations;
-		this.maxFailMoves = maxFailMoves;
-	}
+    private DistanceMeasure dm =new EuclideanDistance();
 
-	// methode: search for least similar instance in tower
-	public Instance pickLeastSim(Vector<Instance> tower) {
-		double leastSim = 0;
-		System.out.println("leastSim: "+leastSim);
-		int leastSimIndex = 0;
-		System.out.println("leastSimIndex: "+leastSimIndex);
-		System.out.println("towersize: "+tower.size());
-		int i;
-		for (i = 0; i < tower.size(); i++) {
-			Instance x = tower.get(i);
-			double error = 0;
-			System.out.println("error: "+error);
-			for (int j = 0; j < tower.size(); j++) {
-				Instance tmp = tower.get(j);
-				DistanceMeasure dm = DistanceMeasureFactory
-						.getEuclideanDistanceMeasure();
-				error += dm.calculateDistance(x, tmp);
-				System.out.println("error: "+error);
-			}
-			if (error > leastSim) {
-				leastSim = error;
-				leastSimIndex = i;
-				System.out.println("leastSimIndex: "+leastSimIndex);
-			}
-		}
-		System.out.println("leastSimIndex: "+leastSimIndex);
-		Instance pickLeastSim = tower.get(leastSimIndex);
-		return pickLeastSim;
-	}
+    public Ant() {
+        this(100, 10);
+    }
 
-	// methode: calculate alfa (scaling param)
-	public double alfa(double alfa, int failMoves, int actMoves) {
-		double rateFail = failMoves / actMoves;
-		if (rateFail > 0.99) {
-			alfa += 0.01;
-		}
-		if (rateFail <= 0.99) {
-			alfa -= 0.01;
-		}
-		return alfa;
-	}
+    public Ant(int iterations, int maxFailMoves) {
+        this.iterations = iterations;
+        this.maxFailMoves = maxFailMoves;
+    }
 
-	// methode: calculate neighborhood function
-	public double nFunction(double alfa, Instance x, Vector<Instance> tower) {
-		double nFunction = 0;
-		for (int j = 0; j < tower.size(); j++) {
-			Instance tmp = tower.get(j);
-			DistanceMeasure dm = DistanceMeasureFactory
-					.getEuclideanDistanceMeasure();
-			double delta = dm.calculateDistance(x, tmp);
-			nFunction += 1 - (delta / alfa);
-		}
-		nFunction = Math.max(0.0, nFunction);
-		return nFunction;
-	}
+    // methode: search for least similar instance in tower
+    public Instance pickLeastSim(Vector<Instance> tower) {
+        double leastSim = 0;
+        System.out.println("leastSim: " + leastSim);
+        int leastSimIndex = 0;
+        System.out.println("leastSimIndex: " + leastSimIndex);
+        System.out.println("towersize: " + tower.size());
+        int i;
+        for (i = 0; i < tower.size(); i++) {
+            Instance x = tower.get(i);
+            double error = 0;
+            System.out.println("error: " + error);
+            for (int j = 0; j < tower.size(); j++) {
+                Instance tmp = tower.get(j);
+                DistanceMeasure dm = DistanceMeasureFactory.getEuclideanDistanceMeasure();
+                error += dm.calculateDistance(x, tmp);
+                System.out.println("error: " + error);
+            }
+            if (error > leastSim) {
+                leastSim = error;
+                leastSimIndex = i;
+                System.out.println("leastSimIndex: " + leastSimIndex);
+            }
+        }
+        System.out.println("leastSimIndex: " + leastSimIndex);
+        Instance pickLeastSim = tower.get(leastSimIndex);
+        return pickLeastSim;
+    }
 
-	// methode: calculate probility for picking-up an instance
-	public double probPick(Instance instance, double nFunction) {
-		double kPlus = 0.1;
-		double probPick = (kPlus / (kPlus + nFunction))
-				* (kPlus / (kPlus + nFunction));
-		return probPick;
-	}
+    // methode: calculate alfa (scaling param)
+    public double alfa(double alfa, int failMoves, int actMoves) {
+        double rateFail = failMoves / actMoves;
+        if (rateFail > 0.99) {
+            alfa += 0.01;
+        }
+        if (rateFail <= 0.99) {
+            alfa -= 0.01;
+        }
+        return alfa;
+    }
 
-	// methode: calculate probility for dropping an instance
-	public double probDrop(Instance instance, double nFunction) {
-		double kMin = 0.3;
-		double probDrop = (nFunction / (kMin + nFunction))
-				* (nFunction / (kMin + nFunction));
-		return probDrop;
-	}
+    // methode: calculate neighborhood function
+    public double nFunction(double alfa, Instance x, Vector<Instance> tower) {
+        double nFunction = 0;
+        for (int j = 0; j < tower.size(); j++) {
+            Instance tmp = tower.get(j);
+            DistanceMeasure dm = DistanceMeasureFactory.getEuclideanDistanceMeasure();
+            double delta = dm.calculateDistance(x, tmp);
+            nFunction += 1 - (delta / alfa);
+        }
+        nFunction = Math.max(0.0, nFunction);
+        return nFunction;
+    }
 
-	// main
-	public void buildClusterer(Dataset data) {
-		if (data.size() == 0)
-			throw new RuntimeException("The dataset should not be empty");
+    // methode: calculate probility for picking-up an instance
+    public double probPick(Instance instance, double nFunction) {
+        double kPlus = 0.1;
+        double probPick = (kPlus / (kPlus + nFunction)) * (kPlus / (kPlus + nFunction));
+        return probPick;
+    }
 
-		// add all instances to a tower, add all towers to clusters.
-		System.out.println("dataSize: " + data.size());
-		Vector<Instance> tmpTower = new Vector<Instance>();
-		for (int i = 0; i < data.size(); i ++) {
-			Instance in = data.getInstance(i);
-			tmpTower.add(in);
-			clusters.add(tmpTower);
-			tmpTower.clear();
-		}
+    // methode: calculate probility for dropping an instance
+    public double probDrop(Instance instance, double nFunction) {
+        double kMin = 0.3;
+        double probDrop = (nFunction / (kMin + nFunction)) * (nFunction / (kMin + nFunction));
+        return probDrop;
+    }
 
-		// set initial parameters
-		// set alfa to random value between 0 and 1.
-		alfa = rg.nextDouble();
-		System.out.println("alfa: " + alfa);
-		actMoves = 0;
-		failMoves = 0;
-		tower.clear();
+    // main
+    public void buildClusterer(Dataset data) {
+        if (data.size() == 0)
+            throw new RuntimeException("The dataset should not be empty");
 
-		// first, pick least similar instance from a random tower
-		int numberOfTowers = clusters.size();
-		System.out.println("torens in clusters: " + numberOfTowers);
-		
-		randomTower = rg.nextInt(numberOfTowers);
-		System.out.println("randomTower: " + randomTower);
-		
-		tower = clusters.get(randomTower);
-		System.out.println("tower: " + tower);
-		carried = pickLeastSim(tower);
-		System.out.println("carried: " + carried);
-		if (tower.size() == 0) {
-			clusters.remove(randomTower);
-		}
-		numberOfTowers = clusters.size();
-		System.out.println("torens in clusters: " + numberOfTowers);
+        // add all instances to a tower, add all towers to clusters.
+        System.out.println("dataSize: " + data.size());
+        Vector<Instance> tmpTower = new Vector<Instance>();
+        for (int i = 0; i < data.size(); i++) {
+            tmpTower = new Vector<Instance>();
+            Instance in = data.getInstance(i);
+            tmpTower.add(in);
+            clusters.add(tmpTower);
+            // tmpTower.clear();
+        }
 
-		// main loop
-		for (int i = 0; i < iterations; i++) {
-			System.out.println("iterations: " + i);
-			// move to random tower with carried instance
-			// if number of moves reaches 100, recalculate alfa.
-			if (actMoves == 100) {
-				alfa = alfa(alfa, failMoves, actMoves);
-				actMoves = 0;
-				System.out.println("alfa: " + alfa);
-			}
+        // set initial parameters
+        // set alfa to random value between 0 and 1.
+        alfa = rg.nextDouble();
+        System.out.println("alfa: " + alfa);
+        actMoves = 0;
+        failMoves = 0;
+        tower.clear();
 
-			actMoves++;
-			randomTower = rg.nextInt(numberOfTowers);
-			System.out.println("randomTower: " + randomTower);
-			tower = clusters.get(randomTower);
-			nFunction = nFunction(alfa, carried, tower);
-			probDrop = probPick(carried, nFunction);
-			randomProb = rg.nextDouble();
-			// drop instance if random prob > probDrop
-			if (randomProb >= probDrop) {
-				tower.add(carried);
-				carried = null;
-				while (carried == null) {
-					// move to other random tower
-					randomTower = rg.nextInt(numberOfTowers);
-					tower = clusters.get(randomTower);
-					leastSim = pickLeastSim(tower);
-					nFunction = nFunction(alfa, leastSim, tower);
-					probPick = probPick(carried, nFunction);
-					randomProb = rg.nextDouble();
-					// pick instance if random prob > probPick
-					if (randomProb >= probPick) {
-						carried = leastSim;
-					}
-					if (tower.size() == 0) {
-						clusters.remove(randomTower);
-					}
-				}
-			} else {
-				failMoves++;
-			}
-			int tmpFailMoves = failMoves;
-			if (tmpFailMoves == maxFailMoves) {
-				Vector<Instance> newTower = new Vector<Instance>();
-				newTower.add(carried);
-				clusters.add(newTower);
-				tmpFailMoves = 0;
-				numberOfTowers = clusters.size();
-				System.out.println("torens in clusters: " + numberOfTowers);
-			}
-		}
-		// calculate centriods of each tower/cluster
-		numberOfClusters = clusters.size();
-		System.out.println("numberOfClusters: " + numberOfClusters);
-		this.centroids = new Instance[numberOfClusters];
-		for (int i = 0; i < numberOfClusters; i++) {
-			tower = clusters.get(i);
-			int instanceLength = data.getInstance(0).size();
-			float sum[] = new float[instanceLength];
-			for (int j = 0; j < tower.size(); j++) {
-				float tmp[] = tower.get(j).getArrayForm();
-				for (int k = 0; k < instanceLength; k++) {
-					sum[k] += tmp[k];
-				}
-			}
-			for (int j = 0; j < instanceLength; j++) {
-				sum[j] /= tower.size();
-			}
-			this.centroids[i] = new SimpleInstance(sum);
-		}
+        // first, pick least similar instance from a random tower
+        int numberOfTowers = clusters.size();
+        System.out.println("torens in clusters: " + numberOfTowers);
 
-	}
+        randomTower = rg.nextInt(numberOfTowers);
+        System.out.println("randomTower: " + randomTower);
+        System.out.println("size of random tower: " + clusters.get(randomTower).size());
+        tower = clusters.get(randomTower);
+        System.out.println("tower: " + tower);
+        carried = pickLeastSim(tower);
+        System.out.println("carried: " + carried);
+        if (tower.size() == 0) {
+            clusters.remove(randomTower);
+        }
+        numberOfTowers = clusters.size();
+        System.out.println("torens in clusters: " + numberOfTowers);
 
-	public int getNumberOfClusters() {
-		return this.numberOfClusters;
-	}
+        // main loop
+        for (int i = 0; i < iterations; i++) {
+            System.out.println("iterations: " + i);
+            // move to random tower with carried instance
+            // if number of moves reaches 100, recalculate alfa.
+            if (actMoves == 100) {
+                alfa = alfa(alfa, failMoves, actMoves);
+                actMoves = 0;
+                System.out.println("alfa: " + alfa);
+            }
 
-	public int predictCluster(Instance instance) {
-		if (this.centroids == null)
-			throw new RuntimeException(
-					"The cluster should first be constructed");
-		int tmpCluster = -1;
-		double minDistance = Double.MAX_VALUE;
-		for (int i = 0; i < this.numberOfClusters; i++) {
-			double dist = dm.calculateDistance(centroids[i], instance);
-			if (dist < minDistance) {
-				minDistance = dist;
-				tmpCluster = i;
-			}
-		}
-		return tmpCluster;
-	}
+            actMoves++;
+            randomTower = rg.nextInt(numberOfTowers);
+            System.out.println("randomTower: " + randomTower);
+            tower = clusters.get(randomTower);
+            nFunction = nFunction(alfa, carried, tower);
+            probDrop = probPick(carried, nFunction);
+            randomProb = rg.nextDouble();
+            // drop instance if random prob > probDrop
+            if (randomProb >= probDrop) {
+                tower.add(carried);
+                carried = null;
+                failMoves = 0;
+            } else {
+                failMoves++;
+            }
+            if (failMoves >= maxFailMoves) {
+                System.out.println("max fail moves: creating new tower");
+                Vector<Instance> newTower = new Vector<Instance>();
+                newTower.add(carried);
+                clusters.add(newTower);
+                numberOfTowers = clusters.size();
+                System.out.println("after max fail > torens in clusters: " + numberOfTowers);
+                failMoves = 0;
+                carried = null;
+            }
+            while (carried == null) {
+                // move to other random tower
+                randomTower = rg.nextInt(numberOfTowers);
+                tower = clusters.get(randomTower);
+                leastSim = pickLeastSim(tower);
+                nFunction = nFunction(alfa, leastSim, tower);
+                probPick = probPick(carried, nFunction);
+                randomProb = rg.nextDouble();
+                // pick instance if random prob > probPick
+                if (randomProb >= probPick) {
+                    carried = leastSim;
+                }
+                if (tower.size() == 0) {
+                    clusters.remove(randomTower);
+                }
+            }
 
-	public double[] predictMembershipDistribution(Instance instance) {
-		double[] tmp = new double[this.getNumberOfClusters()];
-		tmp[this.predictCluster(instance)] = 1;
-		return tmp;
-	}
+        }
+        // calculate centriods of each tower/cluster
+        numberOfClusters = clusters.size();
+        System.out.println("numberOfClusters: " + numberOfClusters);
+        this.centroids = new Instance[numberOfClusters];
+        for (int i = 0; i < numberOfClusters; i++) {
+            tower = clusters.get(i);
+            int instanceLength = data.getInstance(0).size();
+            float sum[] = new float[instanceLength];
+            for (int j = 0; j < tower.size(); j++) {
+                float tmp[] = tower.get(j).getArrayForm();
+                for (int k = 0; k < instanceLength; k++) {
+                    sum[k] += tmp[k];
+                }
+            }
+            for (int j = 0; j < instanceLength; j++) {
+                sum[j] /= tower.size();
+            }
+            this.centroids[i] = new SimpleInstance(sum);
+        }
 
-	/**
-	 * This method is only intended for testing purposes.
-	 * 
-	 */
-	public Instance[] getCentroids() {
-		return this.centroids;
-	}
+    }
+
+    public int getNumberOfClusters() {
+        return this.numberOfClusters;
+    }
+
+    public int predictCluster(Instance instance) {
+        if (this.centroids == null)
+            throw new RuntimeException("The cluster should first be constructed");
+        int tmpCluster = -1;
+        double minDistance = Double.MAX_VALUE;
+        for (int i = 0; i < this.numberOfClusters; i++) {
+            System.out.println("INSTANCE:" +instance);
+            System.out.println("CENTROID: " +centroids[i]);
+            System.out.println("DM: "+dm);
+            
+            double dist = dm.calculateDistance(centroids[i], instance);
+            if (dist < minDistance) {
+                minDistance = dist;
+                tmpCluster = i;
+            }
+        }
+        return tmpCluster;
+    }
+
+    public double[] predictMembershipDistribution(Instance instance) {
+        double[] tmp = new double[this.getNumberOfClusters()];
+        tmp[this.predictCluster(instance)] = 1;
+        return tmp;
+    }
+
+    /**
+     * This method is only intended for testing purposes.
+     * 
+     */
+    public Instance[] getCentroids() {
+        return this.centroids;
+    }
 
 }
