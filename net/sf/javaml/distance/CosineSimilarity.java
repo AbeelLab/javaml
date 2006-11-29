@@ -44,7 +44,12 @@ public class CosineSimilarity implements DistanceMeasure {
         // CosineSimilarity is actually a similarity measure. To return a
         // distance the distance
         // we need to substract it from its maximum value.
-        return 1 - (sumTop / (Math.sqrt(sumOne) * Math.sqrt(sumTwo)));
+        double division = sumTop / (Math.sqrt(sumOne) * Math.sqrt(sumTwo));
+        if ( division>1){
+        	division = 1;
+        }
+        double cosSim = 1 - division;
+        return cosSim;
 
     }
 

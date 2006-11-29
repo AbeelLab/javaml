@@ -96,7 +96,7 @@ public class BICScore implements ClusterEvaluation {
 			double loglike = (-s / 2) * (Math.log(2 * Math.PI))
 					- ((s * instanceLength) / 2) * (Math.log(variance)) + s
 					* (Math.log(s)) - s * (Math.log(data.size())) - (s - k) / 2;
-			overAllLoglike += Math.abs(loglike);
+			overAllLoglike += loglike;
 		}
 		overAllVariance /= k;
 		double p = (k - 1) + instanceLength * k + overAllVariance;

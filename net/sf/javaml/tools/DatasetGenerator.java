@@ -69,7 +69,7 @@ public class DatasetGenerator {
         System.out.println(space * large+"\t"+space * large);
         
         Random rg = new Random(System.currentTimeMillis());
-        for (int i = 0; i < 12; i++) {
+        for (int i = 0; i < 20; i++) {
             // lower left
             float[] vec1 = { (float) ((rg.nextGaussian() * clusterSpread)  + space * small),
                     (float) ((rg.nextGaussian() * clusterSpread)  + space * small) };

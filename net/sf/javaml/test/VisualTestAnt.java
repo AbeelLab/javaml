@@ -33,12 +33,14 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import java.io.File;
+
 import net.sf.javaml.clustering.Ant;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.SimpleDataset;
 import net.sf.javaml.tools.DatasetGenerator;
-//import net.sf.javaml.tools.DatasetLoader;
+import net.sf.javaml.tools.DatasetLoader;
 
 public class VisualTestAnt extends JPanel {
 
@@ -60,9 +62,9 @@ public class VisualTestAnt extends JPanel {
         this.setLayout(new GridLayout(0, 5));
         int space = 200;
         Dataset data = DatasetGenerator.createClusterSquareDataset(space, 8);
-        //Dataset data=DatasetLoader.loadDataset(new File("naam"));
+        //Dataset data=DatasetLoader.loadDataset(new File("cmc.data"));
         this.add(createLabel(data, Color.BLACK, space, space, null, null, 0));
-        Ant km = new Ant(20000, 200);
+        Ant km = new Ant(25000, 50);
         km.buildClusterer(data);
 
         
