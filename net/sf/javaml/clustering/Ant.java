@@ -123,7 +123,7 @@ public class Ant implements Clusterer {
 				alfa = 0.01;
 			}
 		}
-		System.out.println("alfa: " + alfa);
+		// System.out.println("alfa: " + alfa);
 		return alfa;
 	}
 
@@ -132,14 +132,14 @@ public class Ant implements Clusterer {
 		Instance min = data.getMinimumInstance();
 		Instance max = data.getMaximumInstance();
 		double maxDis = dm.calculateDistance(min, max);
-		System.out.println("max dist: " + maxDis);
+		// System.out.println("max dist: " + maxDis);
 		return maxDis;
 	}
 
 	// methode: calculate neighborhood function
 	public double nFunction(double alfa, double maxDis, Instance x,
 			Vector<Instance> tower) {
-		System.out.println("alfa: " + alfa);
+		// System.out.println("alfa: " + alfa);
 		double nFunction = 0;
 		for (int j = 0; j < tower.size(); j++) {
 			Instance tmp = tower.get(j);
@@ -149,8 +149,8 @@ public class Ant implements Clusterer {
 		}
 		nFunction = Math.max(nFunction, 0);
 		double towerSize = tower.size();
-		System.out.println("towerSize: " + towerSize);
-		//nFunction /= 9;
+		// System.out.println("towerSize: " + towerSize);
+		// nFunction /= towerSize;
 		return nFunction;
 	}
 
@@ -158,8 +158,12 @@ public class Ant implements Clusterer {
 	public double probPick(Instance instance, double nFunction) {
 		double kPlus = 0.1;
 		double probPick;
+		/**
+		 * if (nFunction<=1){ probPick=1.0; } else{ probPick = 1 /
+		 * (nFunction*nFunction); }
+		 */
 		probPick = (kPlus / (kPlus + nFunction))
-				* (kPlus / (kPlus + nFunction));// 1 / (nFunction*nFunction);
+				* (kPlus / (kPlus + nFunction));
 		return probPick;
 	}
 
@@ -167,6 +171,10 @@ public class Ant implements Clusterer {
 	public double probDrop(Instance instance, double nFunction) {
 		double kMin = 0.3;
 		double probDrop;
+		/**
+		 * if (nFunction>=1){ probDrop=1.0; } else{ probDrop =
+		 * nFunction*nFunction*nFunction*nFunction; }
+		 */
 		probDrop = (nFunction / (kMin + nFunction))
 				* (nFunction / (kMin + nFunction));
 		return probDrop;
@@ -217,7 +225,8 @@ public class Ant implements Clusterer {
 					failMovesGlobal = 0;
 				}
 				actMoves++;
-				System.out.println("actMoves while try to drop: " + actMoves);
+				// System.out.println("actMoves while try to drop: " +
+				// actMoves);
 				randomTower = rg.nextInt(clusters.size());
 				tower = clusters.get(randomTower);
 				nFunction = nFunction(alfa, maxDis, carried, tower);
@@ -247,20 +256,20 @@ public class Ant implements Clusterer {
 			while (carried == null) {
 				// if number of moves reaches 100, recalculate alfa.
 				if (actMoves >= 100) {
-					System.out.println("old alfa: " + alfa);
+					// System.out.println("old alfa: " + alfa);
 					alfa = alfa(alfa, failMovesGlobal, actMoves);
-					System.out.println("new alfa: " + alfa);
+					// System.out.println("new alfa: " + alfa);
 					actMoves = 0;
 					failMovesGlobal = 0;
 				}
 				actMoves++;
-				System.out.println("actMoves while try to  pick: " + actMoves);
-				System.out
-						.println("ClusterSize voor random:" + clusters.size());
+				// System.out.println("actMoves while try to pick: " +
+				// actMoves);
+				// System.out.println("ClusterSize voor random:" +
+				// clusters.size());
 				randomTower = rg.nextInt(clusters.size());
 				tower = clusters.get(randomTower);
-				System.out
-				.println("towerSize:" + tower.size());
+				// System.out.println("towerSize:" + tower.size());
 				if (tower.size() == 1) {
 					carried = tower.get(0);
 					clusters.remove(randomTower);
@@ -270,11 +279,11 @@ public class Ant implements Clusterer {
 					nFunction = nFunction(alfa, maxDis, leastSim, tower);
 					probPick = probPick(leastSim, nFunction);
 					randomProb = rg.nextDouble();
-					System.out.println("nFunction to pick: " + nFunction);
-					System.out.println("prob to pick: " + probPick);
+					// System.out.println("nFunction to pick: " + nFunction);
+					// System.out.println("prob to pick: " + probPick);
 					// pick instance if random prob <= probPick
 					if (randomProb <= probPick) {
-						System.out.println("indexLS: " + indexLS);
+						// System.out.println("indexLS: " + indexLS);
 						carried = leastSim;
 						tower.remove(indexLS);
 					}
@@ -283,7 +292,8 @@ public class Ant implements Clusterer {
 					}
 				}
 			}
-			System.out.println("-------instance picked, carried: " + carried);
+			// System.out.println("-------instance picked, carried: " +
+			// carried);
 		}
 		// calculate centriods of each tower/cluster
 		numberOfClusters = clusters.size();
@@ -294,16 +304,41 @@ public class Ant implements Clusterer {
 			System.out.println("towerSize: " + tower.size());
 			int instanceLength = data.getInstance(0).size();
 			float sum[] = new float[instanceLength];
+			Instance previousCentroid=null;
+			Instance thisCentroid;
+			numberOfClusters = 0;
 			for (int j = 0; j < tower.size(); j++) {
 				float tmp[] = tower.get(j).getArrayForm();
 				for (int k = 0; k < instanceLength; k++) {
+					// System.out.println("sum["+k+"]: " + sum[k]);
 					sum[k] += tmp[k];
+					// System.out.println("sum["+k+"]: " + sum[k]);
 				}
 			}
 			for (int j = 0; j < instanceLength; j++) {
 				sum[j] /= tower.size();
+				// System.out.println("mean sum[k]: " + sum[j]);
 			}
-			this.centroids[i] = new SimpleInstance(sum);
+			thisCentroid = new SimpleInstance(sum);
+			double distance = dm.calculateDistance(thisCentroid, previousCentroid);
+			if (distance <= (maxDis/10)){
+				float pC[] = previousCentroid.getArrayForm();
+				float tC[] = thisCentroid.getArrayForm();
+				for (int k = 0; k < instanceLength; k++) {
+					sum[k] = (pC[k]+tC[k])/2;
+					// System.out.println("sum["+k+"]: " + sum[k]);
+				}
+				thisCentroid = new SimpleInstance(sum);
+				this.centroids[i-1] = thisCentroid;
+				numberOfClusters--;
+			}
+			else{
+				this.centroids[i] = thisCentroid;
+				previousCentroid = thisCentroid;
+				numberOfClusters++;
+			}
+			this.numberOfClusters = numberOfClusters;
+			// System.out.println("centroids["+i+"]: " + centroids[i]);
 		}
 
 	}
