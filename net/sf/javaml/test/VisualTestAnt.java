@@ -64,7 +64,7 @@ public class VisualTestAnt extends JPanel {
         Dataset data = DatasetGenerator.createClusterSquareDataset(space, 8);
         //Dataset data=DatasetLoader.loadDataset(new File("cmc.data"));
         this.add(createLabel(data, Color.BLACK, space, space, null, null, 0));
-        Ant km = new Ant(25000, 50);
+        Ant km = new Ant(200, 10);
         km.buildClusterer(data);
 
         
