@@ -148,7 +148,7 @@ public class Ant implements Clusterer {
 			nFunction += 1 - (delta / alfa);
 		}
 		nFunction = Math.max(nFunction, 0);
-		double towerSize = tower.size();
+		//double towerSize = tower.size();
 		// System.out.println("towerSize: " + towerSize);
 		// nFunction /= towerSize;
 		return nFunction;
@@ -186,7 +186,7 @@ public class Ant implements Clusterer {
 			throw new RuntimeException("The dataset should not be empty");
 		}
 		// add all instances to a tower, add all towers to clusters.
-		// System.out.println("dataSize: " + data.size());
+		System.out.println("dataSize: " + data.size());
 		for (int i = 0; i < data.size(); i++) {
 			Vector<Instance> tmpTower = new Vector<Instance>();
 			Instance in = data.getInstance(i);
@@ -251,7 +251,7 @@ public class Ant implements Clusterer {
 					carried = null;
 				}
 			}
-			System.out.println("-------instance dropped, carried: "+carried);
+			//System.out.println("-------instance dropped, carried: "+carried);
 			// move to other random tower when no instance carried
 			while (carried == null) {
 				// if number of moves reaches 100, recalculate alfa.
@@ -292,55 +292,29 @@ public class Ant implements Clusterer {
 					}
 				}
 			}
-			// System.out.println("-------instance picked, carried: " +
-			// carried);
+			//System.out.println("-------instance picked, carried: " +carried);
 		}
 		// calculate centriods of each tower/cluster
 		numberOfClusters = clusters.size();
 		System.out.println("numberOfClusters: " + numberOfClusters);
 		this.centroids = new Instance[numberOfClusters];
-		for (int i = 0; i < numberOfClusters; i++) {
+		for (int i = 0; i < clusters.size(); i++) {
 			tower = clusters.get(i);
 			System.out.println("towerSize: " + tower.size());
 			int instanceLength = data.getInstance(0).size();
 			float sum[] = new float[instanceLength];
-			Instance previousCentroid=null;
-			Instance thisCentroid;
-			numberOfClusters = 0;
 			for (int j = 0; j < tower.size(); j++) {
 				float tmp[] = tower.get(j).getArrayForm();
 				for (int k = 0; k < instanceLength; k++) {
-					// System.out.println("sum["+k+"]: " + sum[k]);
 					sum[k] += tmp[k];
-					// System.out.println("sum["+k+"]: " + sum[k]);
 				}
 			}
 			for (int j = 0; j < instanceLength; j++) {
 				sum[j] /= tower.size();
-				// System.out.println("mean sum[k]: " + sum[j]);
 			}
-			thisCentroid = new SimpleInstance(sum);
-			double distance = dm.calculateDistance(thisCentroid, previousCentroid);
-			if (distance <= (maxDis/10)){
-				float pC[] = previousCentroid.getArrayForm();
-				float tC[] = thisCentroid.getArrayForm();
-				for (int k = 0; k < instanceLength; k++) {
-					sum[k] = (pC[k]+tC[k])/2;
-					// System.out.println("sum["+k+"]: " + sum[k]);
-				}
-				thisCentroid = new SimpleInstance(sum);
-				this.centroids[i-1] = thisCentroid;
-				numberOfClusters--;
-			}
-			else{
-				this.centroids[i] = thisCentroid;
-				previousCentroid = thisCentroid;
-				numberOfClusters++;
-			}
-			this.numberOfClusters = numberOfClusters;
-			// System.out.println("centroids["+i+"]: " + centroids[i]);
+			this.centroids[i] = new SimpleInstance(sum);
 		}
-
+		// System.out.println("centroids["+i+"]: " + centroids[i]);
 	}
 
 	public int getNumberOfClusters() {
