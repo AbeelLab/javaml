@@ -50,6 +50,9 @@ public class DatasetGenerator {
         return out;
     }
 
+    public static Dataset createClusterSquareDataset(float space, float clusterSpread){
+        return createClusterSquareDataset(space,clusterSpread,20);
+    }
     /**
      * Create a dataset with four clusters in the first quadrant with the max X
      * value = space
@@ -58,7 +61,7 @@ public class DatasetGenerator {
      * @param clusterSpread
      * @return
      */
-    public static Dataset createClusterSquareDataset(float space, float clusterSpread) {
+    public static Dataset createClusterSquareDataset(float space, float clusterSpread,int itemsPerCluster) {
         Dataset out = new SimpleDataset();
         System.out.println("Centers for space="+space+":");
         float small=1.0f/4.0f;
@@ -69,7 +72,8 @@ public class DatasetGenerator {
         System.out.println(space * large+"\t"+space * large);
         
         Random rg = new Random(System.currentTimeMillis());
-        for (int i = 0; i < 40; i++) {
+        for (int i = 0; i < itemsPerCluster; i++) {
+
             // lower left
             float[] vec1 = { (float) ((rg.nextGaussian() * clusterSpread)  + space * small),
                     (float) ((rg.nextGaussian() * clusterSpread)  + space * small) };
