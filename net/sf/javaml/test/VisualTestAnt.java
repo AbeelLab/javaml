@@ -49,7 +49,7 @@ public class VisualTestAnt extends JPanel {
     /**
      * @param args
      */
-    public static void main(String[] args) {
+    public static void main(String[] args)throws Exception {
         JFrame window = new JFrame("Ant test");
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setContentPane(new VisualTestAnt());
@@ -58,13 +58,13 @@ public class VisualTestAnt extends JPanel {
 
     }
 
-    public VisualTestAnt() {
+    public VisualTestAnt()throws Exception {
         this.setLayout(new GridLayout(0, 5));
         int space = 200;
         Dataset data = DatasetGenerator.createClusterSquareDataset(space, 8);
-        //Dataset data=DatasetLoader.loadDataset(new File("cmc.data"));
+        //Dataset data=DatasetLoader.loadDataset(new File("machine.data"));
         this.add(createLabel(data, Color.BLACK, space, space, null, null, 0));
-        Ant km = new Ant(500, 10);
+        Ant km = new Ant(400, 10);
         km.buildClusterer(data);
 
         
