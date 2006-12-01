@@ -37,7 +37,7 @@ import net.sf.javaml.distance.DistanceMeasureFactory;
 /**
  * TODO check code
  * 
- * @author Thomas Abeel
+ * @author Andreas De Rijcke
  *
  */
 public class AICScore implements ClusterEvaluation {
