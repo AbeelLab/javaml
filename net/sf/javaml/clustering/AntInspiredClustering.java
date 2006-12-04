@@ -39,6 +39,7 @@ import net.sf.javaml.distance.EuclideanDistance;
  * TODO The distance scaling is only suitable for Euclidean distance. THIS
  * SHOULD BE CHECKED
  * 
+ * TODO clustering still does not work properly
  * @author Thomas Abeel
  * 
  */
