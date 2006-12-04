@@ -1,5 +1,5 @@
 /**
- * SigmoidKernel.java, 4-dec-2006
+ * RBFKernel.java, 4-dec-2006
  *
  * This file is part of the Java Machine Learning API
  * 
@@ -26,14 +26,14 @@ package net.sf.javaml.distance;
 
 import net.sf.javaml.core.Instance;
 
-public class SigmoidKernel implements DistanceMeasure {
+public class RBFKernel implements DistanceMeasure {
 
     private float variance=1;
     private NormDistance nd=new EuclideanDistance();
-    public SigmoidKernel(){
+    public RBFKernel(){
         this(1);
     }
-    public SigmoidKernel(float variance){
+    public RBFKernel(float variance){
         this.variance=variance;
     }
     public double calculateDistance(Instance x, Instance y) {
