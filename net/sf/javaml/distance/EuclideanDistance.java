@@ -33,21 +33,23 @@ import net.sf.javaml.core.Instance;
  * Q=(q1,q2,...,qn) in the Euclidean n-space is defined as: sqrt((p1-q1)^2 +
  * (p2-q2)^2 + ... + (pn-qn)^2)
  * 
+ * The Euclidean distance is a special instance of the NormDistance. The
+ * Euclidean distance corresponds to the 2-norm distance.
+ * 
  * @linkplain http://en.wikipedia.org/wiki/Euclidean_distance
  * @linkplain http://en.wikipedia.org/wiki/Euclidean_space
  * @author Thomas Abeel
  * 
  */
-public class EuclideanDistance implements DistanceMeasure {
+public class EuclideanDistance extends NormDistance {
 
-   
     public double calculateDistance(Instance x, Instance y) {
         if (x.size() != y.size()) {
             throw new RuntimeException("Both instances should contain the same number of values.");
         }
         double sum = 0;
         for (int i = 0; i < x.size(); i++) {
-            sum+=(y.getValue(i)-x.getValue(i))*(y.getValue(i)-x.getValue(i));
+            sum += (y.getValue(i) - x.getValue(i)) * (y.getValue(i) - x.getValue(i));
         }
         return Math.sqrt(sum);
     }
