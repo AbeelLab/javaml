@@ -77,7 +77,7 @@ public class VisualTestAntInspiredClustering extends JPanel {
         }
         System.out.println("Generated clusters: "+km.getNumberOfClusters());
         Color[] colors = { Color.RED, Color.GREEN, Color.BLUE, Color.MAGENTA,Color.CYAN };
-        for (int i = 0; i < datas.length; i++) {
+        for (int i = 0; i < datas.length&&i<15; i++) {
             this.add(createLabel(datas[i], colors[i%5], space, space, km, colors, i));
         }
 
