@@ -65,7 +65,7 @@ public class AntInspiredClustering implements Clusterer {
 	}
 
 	public void buildClusterer(Dataset data) {
-		this.iterations = data.size() * 10;
+		this.iterations = data.size() * 3;
 		double max = data.getMaximumInstance().getValue(0);
 		double min = data.getMinimumInstance().getValue(0);
 		for (int i = 0; i < data.getMaximumInstance().size(); i++) {
@@ -112,9 +112,12 @@ public class AntInspiredClustering implements Clusterer {
 		double moves = 0;
 
 		for (int i = 0; i < this.iterations; i++) {
-			System.out.println("Iteration: " + i);
+			if(i%100==0){
+				System.out.println("Iteration: " + i+"/"+this.iterations);
+				System.out.println("\tNumber of clusters: "+clusters.size());
+			}
 			// pickItem
-			System.out.println("\tPicking item");
+			//System.out.println("\tPicking item");
 			Instance pickedItem = null;
 			moves++;
 			while (pickedItem == null) {
@@ -125,13 +128,13 @@ public class AntInspiredClustering implements Clusterer {
 				double pickChance = this.pickProbability(clusters.get(
 						randomIndex).get(leastSimilarIndex), clusters
 						.get(randomIndex), alfa);
-				if (pickChance > 0) {
-					System.out.println("\t\tPicking chance [" + randomIndex
-							+ "," + leastSimilarIndex + ","
-							+ clusters.get(randomIndex).size() + ";"
-							+ nf.format(alfa) + "]: " + pickChance);
-
-				}
+//				if (pickChance > 0) {
+//					System.out.println("\t\tPicking chance [" + randomIndex
+//							+ "," + leastSimilarIndex + ","
+//							+ clusters.get(randomIndex).size() + ";"
+//							+ nf.format(alfa) + "]: " + pickChance);
+//
+//				}
 				if (rg.nextDouble() <= pickChance) {// pick up item and move on
 					pickedItem = clusters.get(randomIndex).remove(
 							leastSimilarIndex);
@@ -151,20 +154,20 @@ public class AntInspiredClustering implements Clusterer {
 
 			}
 			// dropItem
-			System.out.println("\tDropping item");
+			//System.out.println("\tDropping item");
 			boolean itemDropped = false;
 			// int dropCount = 0;
 			while (pickedItem != null && !itemDropped) {
 				int randomIndex = rg.nextInt(clusters.size());
 				double dropChance = this.dropProbability(pickedItem, clusters
 						.get(randomIndex), alfa);
-				System.out.println("\t\tDropping chance [" + randomIndex + ","
-						+ clusters.get(randomIndex).size() + ";"
-						+ nf.format(alfa) + "]=" + dropChance);
+//				System.out.println("\t\tDropping chance [" + randomIndex + ","
+//						+ clusters.get(randomIndex).size() + ";"
+//						+ nf.format(alfa) + "]=" + dropChance);
 				if (rg.nextDouble() <= dropChance) {
 					// drop item and move on
 					clusters.get(randomIndex).add(pickedItem);
-					System.out.println("\t\tDropping in existing cluster");
+//					System.out.println("\t\tDropping in existing cluster");
 					itemDropped = true;
 					alfa -= 0.01;
 					if (alfa <= 0) {
@@ -274,7 +277,7 @@ public class AntInspiredClustering implements Clusterer {
 
 	private double neighborhoodFunction(Instance i,
 			Vector<Instance> neighborhood, double alfa) {
-		double neighborhoodSize = 10;
+		//double neighborhoodSize = 10;
 		double sum = 0;
 		// System.out.println("Alfa: "+alfa);
 		for (Instance x : neighborhood) {
@@ -283,7 +286,7 @@ public class AntInspiredClustering implements Clusterer {
 			sum += (1 - dist / alfa);
 		}
 
-		sum /= neighborhood.size();
+		sum /=16;// neighborhood.size()*15;
 		// System.out.println("Total sum: "+sum);
 		// System.out.println("f(i)= " + Math.max(0.0, sum ));
 		return Math.max(0.0, sum);
