@@ -25,18 +25,64 @@
 package net.sf.javaml.filter;
 
 import net.sf.javaml.core.Dataset;
+import net.sf.javaml.core.Instance;
+import net.sf.javaml.core.SimpleDataset;
+import net.sf.javaml.core.SimpleInstance;
 
 /**
  * This filter will normalize the dataset with mean 0 and standard deviation 1
+ * 
+ * @linkplain http://www.faqs.org/faqs/ai-faq/neural-nets/part2/section-16.html
  * 
  * @author Thomas Abeel
  * 
  */
 public class NormalizeMean implements Filter {
 
-    public void filterDataset(Dataset data) {
-        // TODO Auto-generated method stub
-        http://www.faqs.org/faqs/ai-faq/neural-nets/part2/section-16.html
-    }
+	private float[] mean=null;
+
+	private float[] std= null;
+
+	public Dataset filterDataset(Dataset data) {
+		if (data.size() == 0)
+			return data;
+		int instanceLength = data.getInstance(0).size();
+		mean = new float[instanceLength];
+		std = new float[instanceLength];
+		for (int i = 0; i < instanceLength; i++) {
+			for (int j = 0; j < data.size(); j++) {
+				mean[i] += data.getInstance(j).getValue(i) / data.size();
+			}
+		}
+		for (int i = 0; i < instanceLength; i++) {
+			for (int j = 0; j < data.size(); j++) {
+				std[i] += (data.getInstance(j).getValue(i) - mean[i])
+						* (data.getInstance(j).getValue(i) - mean[i]);
+			}
+		}
+		for (int i = 0; i < instanceLength; i++) {
+			std[i] = (float) Math.sqrt(std[i] / (data.size() - 1));
+		}
+		Dataset out=new SimpleDataset();
+		for(int i=0;i<data.size();i++){
+			out.addInstance(filterInstance(data.getInstance(i)));
+		}
+		return out;
+	}
+
+	
+	
+	
+	public Instance filterInstance(Instance instance) {
+		if(mean==null||std==null)
+			throw new RuntimeException("You should first call filterDataset for this filter, some parameters are not yet set.");
+		float[] out=new float[instance.size()];
+		for(int i=0;i<out.length;i++){
+			out[i]=(instance.getValue(i)-mean[i])/std[i];
+		}
+		return new SimpleInstance(out, instance.getWeight(), instance.isClassSet(), instance
+                .getClassValue());
+		
+	}
 
 }
