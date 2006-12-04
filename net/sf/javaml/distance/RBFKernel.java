@@ -38,7 +38,7 @@ public class RBFKernel implements DistanceMeasure {
     }
     public double calculateDistance(Instance x, Instance y) {
        double norm=nd.calculateDistance(x,y);
-       return Math.pow(Math.E,-(norm/this.variance));
+       return 1- Math.pow(Math.E,-(norm/this.variance));
      
     }
 
