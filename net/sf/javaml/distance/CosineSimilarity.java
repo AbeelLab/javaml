@@ -26,6 +26,13 @@ package net.sf.javaml.distance;
 
 import net.sf.javaml.core.Instance;
 
+/**
+ * This similarity based distance measure actually measures the angle between
+ * two vectors.
+ * 
+ * @author Thomas Abeel
+ * 
+ */
 public class CosineSimilarity implements DistanceMeasure {
 
     public double calculateDistance(Instance x, Instance y) {
@@ -44,11 +51,9 @@ public class CosineSimilarity implements DistanceMeasure {
         // CosineSimilarity is actually a similarity measure. To return a
         // distance the distance
         // we need to substract it from its maximum value.
-        double division = sumTop / (Math.sqrt(sumOne) * Math.sqrt(sumTwo));
-        if ( division>1){
-        	division = 1;
-        }
-        double cosSim = 1 - division;
+        double cosSim = 1 - (sumTop / (Math.sqrt(sumOne) * Math.sqrt(sumTwo)));
+        if (cosSim < 0)
+            cosSim = 0;
         return cosSim;
 
     }

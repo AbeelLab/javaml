@@ -32,6 +32,8 @@ import net.sf.javaml.core.Instance;
  * low distance values, while object that are far apart or are not similar
  * should have high distance values.
  * 
+ * Some distance measure may be normalized, i.e. in the interval [0,1], but this
+ * 
  * @author Thomas Abeel
  * 
  */
