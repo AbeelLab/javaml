@@ -112,4 +112,15 @@ public class SimpleDataset implements Dataset {
     public Instance getMinimumInstance() {
         return new SimpleInstance(lowArray);
     }
+    @Override
+    public String toString(){
+        //TODO optimize using stringbuffer;
+        if(this.size()==0)
+            return "";
+        String out=this.getInstance(0).toString();
+        for(int i=1;i<this.size();i++){
+            out+=";"+this.getInstance(i).toString();
+        }
+        return out;
+    }
 }
