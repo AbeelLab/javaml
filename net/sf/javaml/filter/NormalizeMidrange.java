@@ -49,11 +49,11 @@ import net.sf.javaml.core.SimpleInstance;
 public class NormalizeMidrange implements Filter {
 
     /**
-     * A normalization filter to the interval [0,1]
+     * A normalization filter to the interval [-1,1]
      * 
      */
     public NormalizeMidrange() {
-        this(0.5, 1);
+        this(0, 2);
     }
 
     private float normalMiddle, normalRange;
