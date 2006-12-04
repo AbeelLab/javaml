@@ -28,7 +28,9 @@ import net.sf.javaml.core.Instance;
 
 /**
  * This similarity based distance measure actually measures the angle between
- * two vectors.
+ * two vectors. 
+ * 
+ * The value returned lies in the interval [0,1].
  * 
  * @author Thomas Abeel
  * 
