@@ -38,6 +38,9 @@ import net.sf.javaml.clustering.AntInspiredClustering;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.SimpleDataset;
+import net.sf.javaml.distance.EuclideanDistance;
+import net.sf.javaml.distance.NormalizedDistance;
+import net.sf.javaml.distance.RBFKernel;
 import net.sf.javaml.tools.DatasetGenerator;
 
 
@@ -60,7 +63,7 @@ public class VisualTestAntInspiredClustering extends JPanel {
     public VisualTestAntInspiredClustering() {
         this.setLayout(new GridLayout(0, 5));
         int space = 200;
-        Dataset data = DatasetGenerator.createClusterSquareDataset(space, 4,100);
+        Dataset data = DatasetGenerator.createClusterSquareDataset(space, 8,100);
         //Dataset data=DatasetLoader.loadDataset(new File("cmc.data"));
         this.add(createLabel(data, Color.BLACK, space, space, null, null, 0));
         AntInspiredClustering km=new AntInspiredClustering();

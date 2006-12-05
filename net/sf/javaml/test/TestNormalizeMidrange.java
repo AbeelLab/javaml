@@ -33,26 +33,25 @@ import net.sf.javaml.filter.NormalizeMidrange;
 
 public class TestNormalizeMidrange {
 
-    /**
-     * @param args
-     */
-    public static void main(String[] args) {
-        Dataset data=new SimpleDataset();
-        Instance i=new SimpleInstance(new float[]{0.0f});
-        data.addInstance(i);
-        i=new SimpleInstance(new float[]{1.0f});
-        data.addInstance(i);
-        i=new SimpleInstance(new float[]{-1.0f});
-        data.addInstance(i);
-        i=new SimpleInstance(new float[]{2.0f});
-        data.addInstance(i);
-        i=new SimpleInstance(new float[]{-2.0f});
-        data.addInstance(i);
-        
-        Filter norm=new NormalizeMidrange(0,10.0);
-        System.out.println(norm.filterDataset(data));
-        
-        
-         }
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		Dataset data = new SimpleDataset();
+		Instance i = new SimpleInstance(new float[] { 0.0f });
+		data.addInstance(i);
+		i = new SimpleInstance(new float[] { 1.0f });
+		data.addInstance(i);
+		i = new SimpleInstance(new float[] { -1.0f });
+		data.addInstance(i);
+		i = new SimpleInstance(new float[] { 2.0f });
+		data.addInstance(i);
+		i = new SimpleInstance(new float[] { -2.0f });
+		data.addInstance(i);
+
+		Filter norm = new NormalizeMidrange();
+		System.out.println(norm.filterDataset(data));
+
+	}
 
 }

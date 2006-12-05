@@ -32,7 +32,11 @@ import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.SimpleInstance;
 import net.sf.javaml.distance.DistanceMeasure;
+import net.sf.javaml.distance.EuclideanDistance;
+import net.sf.javaml.distance.NormalizedDistance;
 import net.sf.javaml.distance.RBFKernel;
+import net.sf.javaml.test.VisualizeClustering;
+import net.sf.javaml.tools.DatasetGenerator;
 
 /**
  * 
@@ -40,8 +44,7 @@ import net.sf.javaml.distance.RBFKernel;
  * from papers by Handl et al. and Schockaert et al.
  * 
  * The distance measure should be normalized in the interval [0,1].
- *  
- * TODO clustering still does not work properly
+ * 
  * 
  * @author Thomas Abeel
  * 
@@ -56,16 +59,84 @@ public class AntInspiredClustering implements Clusterer {
 
 	private Vector<Instance> centroids = null;
 
+	private Vector<Vector<Instance>> tmpClusters = null;
+
 	public AntInspiredClustering() {
-		this(new RBFKernel());
+		this(new RBFKernel(5));
 	}
 
 	public AntInspiredClustering(DistanceMeasure dm) {
 		this.dm = dm;
 	}
 
+	class AntMemory {
+		/*
+		 * Short term ant memory, this contains last 5 instances that have been
+		 * carried by the ant.
+		 */
+		// Instance[] memory = new Instance[5];
+		/*
+		 * The index of the tower were the item was dropped
+		 */
+		int[] memoryIndex;
+
+		int currentMemoryIndex = 0;
+
+		private boolean canUseMemory = false;
+
+		public AntMemory() {
+			memoryIndex = new int[] { -1, -1, -1, -1, -1 };
+		}
+
+		public void drop(int randomIndex) {
+			// memory[currentMemoryIndex] = pickedItem;
+			memoryIndex[currentMemoryIndex] = randomIndex;
+			currentMemoryIndex++;
+			currentMemoryIndex %= 5;
+			canUseMemory = true;
+		}
+
+		private int lastIndex = -1;
+
+		public boolean memoryDrop(Instance pickedItem,
+				Vector<Vector<Instance>> clusters, double alfa) {
+			if (!canUseMemory)
+				return false;
+			else {
+				int bestIndex = -1;
+				double bestFN = -1;
+
+				for (int i = 0; i < memoryIndex.length; i++) {
+					if (memoryIndex[i] != -1
+							&& memoryIndex[i] < clusters.size()) {
+						double fn = neighborhoodFunction(pickedItem, clusters
+								.get(memoryIndex[i]), alfa);
+						if (fn > bestFN)
+							bestIndex = i;
+					}
+				}
+				if (bestIndex != -1) {
+					lastIndex = memoryIndex[bestIndex];
+
+					double jumpProbability = dropProbability(pickedItem,
+							clusters.get(lastIndex), alfa);
+					boolean local = rg.nextDouble() < jumpProbability;
+					return local;
+				} else {
+					return false;
+				}
+			}
+		}
+
+		public int getIndex() {
+			return lastIndex;
+		}
+	}
+
 	public void buildClusterer(Dataset data) {
-		this.iterations = data.size() * 3;
+		// PrintWriter tmpOut=new PrintWriter("ant.log");
+		System.out.println("Distance function: " + dm.getClass().getName());
+
 		double max = data.getMaximumInstance().getValue(0);
 		double min = data.getMinimumInstance().getValue(0);
 		for (int i = 0; i < data.getMaximumInstance().size(); i++) {
@@ -97,6 +168,7 @@ public class AntInspiredClustering implements Clusterer {
 		 * 
 		 */
 		Vector<Vector<Instance>> clusters = new Vector<Vector<Instance>>();
+
 		for (int i = 0; i < data.size(); i++) {
 			Vector<Instance> tmp = new Vector<Instance>();
 			tmp.add(data.getInstance(i));
@@ -111,13 +183,22 @@ public class AntInspiredClustering implements Clusterer {
 		double alfa = rg.nextDouble();
 		double moves = 0;
 
-		for (int i = 0; i < this.iterations; i++) {
-			if(i%100==0){
-				System.out.println("Iteration: " + i+"/"+this.iterations);
-				System.out.println("\tNumber of clusters: "+clusters.size());
+		AntMemory memory = new AntMemory();
+		int fails = 0;
+		// i < this.iterations&&
+		this.iterations = data.size();
+		for (int i = 0; i < this.iterations || fails < this.iterations; i++) {
+
+			if (i % 100 == 0) {
+				System.out.println("Iteration: " + i + "/" + this.iterations);
+				System.out.println("\tNumber of clusters: " + clusters.size());
+				System.out.println("\tFails in last iteration: " + fails);
+				VisualizeClustering.visual(clusters);
 			}
+			fails = 0;
+
 			// pickItem
-			//System.out.println("\tPicking item");
+			// System.out.println("\tPicking item");
 			Instance pickedItem = null;
 			moves++;
 			while (pickedItem == null) {
@@ -128,13 +209,13 @@ public class AntInspiredClustering implements Clusterer {
 				double pickChance = this.pickProbability(clusters.get(
 						randomIndex).get(leastSimilarIndex), clusters
 						.get(randomIndex), alfa);
-//				if (pickChance > 0) {
-//					System.out.println("\t\tPicking chance [" + randomIndex
-//							+ "," + leastSimilarIndex + ","
-//							+ clusters.get(randomIndex).size() + ";"
-//							+ nf.format(alfa) + "]: " + pickChance);
-//
-//				}
+				// if (pickChance > 0) {
+				// System.out.println("\t\tPicking chance [" + randomIndex
+				// + "," + leastSimilarIndex + ","
+				// + clusters.get(randomIndex).size() + ";"
+				// + nf.format(alfa) + "]: " + pickChance);
+				//
+				// }
 				if (rg.nextDouble() <= pickChance) {// pick up item and move on
 					pickedItem = clusters.get(randomIndex).remove(
 							leastSimilarIndex);
@@ -149,26 +230,27 @@ public class AntInspiredClustering implements Clusterer {
 					if (alfa <= 0) {
 						alfa = 0.01;
 					}
+					fails++;
 					// System.out.println("\t\t\tPick failed");
 				}
 
 			}
 			// dropItem
-			//System.out.println("\tDropping item");
 			boolean itemDropped = false;
-			// int dropCount = 0;
 			while (pickedItem != null && !itemDropped) {
 				int randomIndex = rg.nextInt(clusters.size());
+				// if (memory.memoryDrop(pickedItem, clusters, alfa)) {
+				// randomIndex = memory.getIndex();
+				// }
+
 				double dropChance = this.dropProbability(pickedItem, clusters
 						.get(randomIndex), alfa);
-//				System.out.println("\t\tDropping chance [" + randomIndex + ","
-//						+ clusters.get(randomIndex).size() + ";"
-//						+ nf.format(alfa) + "]=" + dropChance);
 				if (rg.nextDouble() <= dropChance) {
 					// drop item and move on
 					clusters.get(randomIndex).add(pickedItem);
-//					System.out.println("\t\tDropping in existing cluster");
+					// System.out.println("\t\tDropping in existing cluster");
 					itemDropped = true;
+					// memory.drop(randomIndex);
 					alfa -= 0.01;
 					if (alfa <= 0) {
 						alfa = 0.01;
@@ -177,36 +259,17 @@ public class AntInspiredClustering implements Clusterer {
 					alfa += 0.0001;
 					if (alfa > 1)
 						alfa = 1;
-					// failedMoves++;
 
-					// dropCount++;
-					// if (dropCount >= maxDropCount) {
-					// // create new cluster and force drop
-					// System.out.println("\t\tCreating new cluster");
-					// Vector<Instance> tmp = new Vector<Instance>();
-					// tmp.add(pickedItem);
-					// clusters.add(tmp);
-					// itemDropped = true;
-					// }
+					fails++;
+
 				}
-				// moves++;
-				// if (moves >= 100) {
-				// if (failedMoves / moves > 0.99)
-				// alfa -= 0.01;
-				// else
-				// alfa += 0.01;
-				// moves = 0;
-				// if (alfa < 0.01) {
-				// alfa = 0.01;
-				// }
-				// if (alfa > 1) {
-				// alfa = 1;
-				// }
-				// failedMoves = 0;
-				// System.out.println("\t\tAlfaDrop update: " + alfa);
-				// }
 
 			}
+			// chance merge two clusters
+			if(rg.nextDouble()>0.1){
+				//TODO implement merger
+			}
+			
 		}
 		// Clean up, create centroids and set number of clusters
 		this.centroids = new Vector<Instance>();
@@ -231,9 +294,12 @@ public class AntInspiredClustering implements Clusterer {
 
 		}
 		System.out.println("Generated clusters: " + clusters.size());
+		System.out.println("Final fails: " + fails);
 		for (int i = 0; i < clusters.size(); i++) {
 			System.out.println("cluster " + i + ": " + clusters.get(i).size());
 		}
+		tmpClusters = clusters;
+		// tmpOut.close();
 
 	}
 
@@ -277,7 +343,7 @@ public class AntInspiredClustering implements Clusterer {
 
 	private double neighborhoodFunction(Instance i,
 			Vector<Instance> neighborhood, double alfa) {
-		//double neighborhoodSize = 10;
+		// double neighborhoodSize = 10;
 		double sum = 0;
 		// System.out.println("Alfa: "+alfa);
 		for (Instance x : neighborhood) {
@@ -286,7 +352,7 @@ public class AntInspiredClustering implements Clusterer {
 			sum += (1 - dist / alfa);
 		}
 
-		sum /=16;// neighborhood.size()*15;
+		sum /= 25;// neighborhood.size()*15;
 		// System.out.println("Total sum: "+sum);
 		// System.out.println("f(i)= " + Math.max(0.0, sum ));
 		return Math.max(0.0, sum);
@@ -325,4 +391,10 @@ public class AntInspiredClustering implements Clusterer {
 		return tmp;
 	}
 
+	public static void main(String[] args) {
+		Dataset data = DatasetGenerator.createClusterSquareDataset(200, 8, 100);
+		AntInspiredClustering ac = new AntInspiredClustering(new RBFKernel(100));
+		ac.buildClusterer(data);
+		VisualizeClustering.visual(ac.tmpClusters);
+	}
 }
