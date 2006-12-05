@@ -23,7 +23,6 @@
  * 
  */
 
-
 package net.sf.javaml.clustering.evaluation;
 
 import net.sf.javaml.clustering.Clusterer;
@@ -31,16 +30,24 @@ import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.SimpleDataset;
 import net.sf.javaml.distance.DistanceMeasure;
-import net.sf.javaml.distance.DistanceMeasureFactory;
+import net.sf.javaml.distance.EuclideanDistance;
+
 /**
- * TODO complete code
+ * TODO uitleg
  * 
  * @author Andreas De Rijcke
- *
+ * 
  */
-public class Gamma implements ClusterEvaluation{
-	public double score(Clusterer c, Dataset data){
+public class Gamma implements ClusterEvaluation {
+
+	private DistanceMeasure dm = new EuclideanDistance();
+
+	public double score(Clusterer c, Dataset data) {
 		Dataset[] datas = new Dataset[c.getNumberOfClusters()];
+		double maxIntraDist[] = new double[c.getNumberOfClusters()];
+		double sPlus = 0;
+		double sMin = 0;
+		// build clusters
 		for (int i = 0; i < c.getNumberOfClusters(); i++) {
 			datas[i] = new SimpleDataset();
 		}
@@ -48,35 +55,47 @@ public class Gamma implements ClusterEvaluation{
 			Instance in = data.getInstance(i);
 			datas[c.predictCluster(in)].addInstance(in);
 		}
-		// search for min inter cluster distance
-		double minInterClustDist= Double.MAX_VALUE;
-		for (int i=0; i<c.getNumberOfClusters(); i++){
-			for (int j=0; j< datas[i].size();j++){
+		// calculate max intra cluster distance
+		for (int i = 0; i < c.getNumberOfClusters(); i++) {
+			maxIntraDist[i] = Double.MIN_VALUE;
+			for (int j = 0; j < datas[i].size(); j++) {
 				Instance x = datas[i].getInstance(j);
-				int nextClusterSize;
-				int nextClusterIndex;
-				if ( i == (c.getNumberOfClusters()-1)){
-					nextClusterSize = datas[0].size();
-					nextClusterIndex = 0;
-				}else{
-					nextClusterSize = datas[i+1].size();
-					nextClusterIndex = i+1;
-				}
-				for (int k=0; k< nextClusterSize ;k++){
-					Instance y = datas[nextClusterIndex].getInstance(k);
-					DistanceMeasure dm = DistanceMeasureFactory.getEuclideanDistanceMeasure();
+				for (int k = j + 1; k < datas[i].size(); k++) {
+					Instance y = datas[i].getInstance(k);
 					double distance = dm.calculateDistance(x, y);
-					if ( distance<minInterClustDist){
-						minInterClustDist = distance;
+					if (maxIntraDist[i] < distance) {
+						maxIntraDist[i] = distance;
 					}
 				}
-			}		
+			}
 		}
-
+		// search for min inter cluster distance
+		// count sPlus and sMin
+		for (int i = 0; i < c.getNumberOfClusters(); i++) {
+			for (int j = 0; j < datas[i].size(); j++) {
+				Instance x = datas[i].getInstance(j);
+				for (int k = i + 1; k < c.getNumberOfClusters(); k++) {
+					for (int l = 0; l < datas[k].size(); j++) {
+						Instance y = datas[k].getInstance(k);
+						double distance = dm.calculateDistance(x, y);
+						if (distance < maxIntraDist[i]) {
+							sMin++;
+						}
+						if (distance > maxIntraDist[i]) {
+							sPlus++;
+						}
+					}
+				}
+			}
+		}
+		// calculate gamma
+		double gamma = (sPlus - sMin) / (sPlus + sMin);
+		System.out.println("gamma: "+gamma);
 		return gamma;
 	}
 
-    
-    public boolean compareScore(double score1, double score2);
-    return;
+	public boolean compareScore(double score1, double score2) {
+		// TODO check condition for best score
+		return score1 > score2;
+	}
 }
