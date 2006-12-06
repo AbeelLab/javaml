@@ -1,5 +1,5 @@
 /**
- * CIndex.java, 5-dec-06
+ * GPlus.java, 6-dec-06
  *
  * This file is part of the Java Machine Learning API
  * 
@@ -39,14 +39,15 @@ import net.sf.javaml.distance.EuclideanDistance;
  * 
  */
 
-public class CIndex implements ClusterEvaluation {
+public class GPlus implements ClusterEvaluation {
 	private DistanceMeasure dm = new EuclideanDistance();
 
 	public double score(Clusterer c, Dataset data) {
 		Dataset[] datas = new Dataset[c.getNumberOfClusters()];
-		double minDw = Double.MAX_VALUE;
-		double maxDw = Double.MIN_VALUE;
-		double sumDw = 0;
+		double maxIntraDist[] = new double[c.getNumberOfClusters()];
+		double sMin = 0;
+		double fw = 0, fb = 0;
+		double nd;
 		// get clusters
 		for (int i = 0; i < c.getNumberOfClusters(); i++) {
 			datas[i] = new SimpleDataset();
@@ -55,26 +56,36 @@ public class CIndex implements ClusterEvaluation {
 			Instance in = data.getInstance(i);
 			datas[c.predictCluster(in)].addInstance(in);
 		}
-		// calculate intra cluster distances and sum of all.
 		for (int i = 0; i < c.getNumberOfClusters(); i++) {
+			maxIntraDist[i] = Double.MIN_VALUE;
 			for (int j = 0; j < datas[i].size(); j++) {
 				Instance x = datas[i].getInstance(j);
+				// calculate max intra cluster distance
 				for (int k = j + 1; k < datas[i].size(); k++) {
+					fw++;
 					Instance y = datas[i].getInstance(k);
 					double distance = dm.calculateDistance(x, y);
-					sumDw += distance;
-					if (maxDw < distance) {
-						maxDw = distance;
+					if (maxIntraDist[i] < distance) {
+						maxIntraDist[i] = distance;
 					}
-					if (minDw > distance) {
-						minDw = distance;
+				}
+				// search for min inter cluster distance
+				// count sMin
+				for (int k = i + 1; k < c.getNumberOfClusters(); k++) {
+					for (int l = 0; l < datas[k].size(); l++) {
+						Instance y = datas[k].getInstance(l);
+						fb++;
+						double distance = dm.calculateDistance(x, y);
+						if (distance < maxIntraDist[i]) {
+							sMin++;
+						}
 					}
 				}
 			}
 		}
-		// calculate C Index
-		double cIndex = (sumDw - minDw) / (maxDw - minDw);
-		return cIndex;
+		nd = fw + fb;
+		double gPlus = (2 * sMin) / (nd * (nd - 1));
+		return gPlus;
 	}
 
 	public boolean compareScore(double score1, double score2) {

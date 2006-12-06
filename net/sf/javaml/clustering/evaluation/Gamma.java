@@ -45,8 +45,7 @@ public class Gamma implements ClusterEvaluation {
 	public double score(Clusterer c, Dataset data) {
 		Dataset[] datas = new Dataset[c.getNumberOfClusters()];
 		double maxIntraDist[] = new double[c.getNumberOfClusters()];
-		double sPlus = 0;
-		double sMin = 0;
+		double sPlus = 0,sMin = 0;
 		// get clusters
 		for (int i = 0; i < c.getNumberOfClusters(); i++) {
 			datas[i] = new SimpleDataset();
@@ -69,7 +68,6 @@ public class Gamma implements ClusterEvaluation {
 				}
 			}
 		}
-		System.out.println("---step2");
 		// search for min inter cluster distance
 		// count sPlus and sMin
 		for (int i = 0; i < c.getNumberOfClusters(); i++) {

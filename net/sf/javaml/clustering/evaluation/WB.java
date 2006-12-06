@@ -1,5 +1,5 @@
 /**
- * CIndex.java, 5-dec-06
+ * WB.java, 6-dec-06
  *
  * This file is part of the Java Machine Learning API
  * 
@@ -38,15 +38,13 @@ import net.sf.javaml.distance.EuclideanDistance;
  * @author Andreas De Rijcke
  * 
  */
-
-public class CIndex implements ClusterEvaluation {
+public class WB implements ClusterEvaluation {
 	private DistanceMeasure dm = new EuclideanDistance();
 
 	public double score(Clusterer c, Dataset data) {
 		Dataset[] datas = new Dataset[c.getNumberOfClusters()];
-		double minDw = Double.MAX_VALUE;
-		double maxDw = Double.MIN_VALUE;
-		double sumDw = 0;
+		double dw = 0, fw = 0;
+		double db = 0, fb = 0;
 		// get clusters
 		for (int i = 0; i < c.getNumberOfClusters(); i++) {
 			datas[i] = new SimpleDataset();
@@ -55,26 +53,32 @@ public class CIndex implements ClusterEvaluation {
 			Instance in = data.getInstance(i);
 			datas[c.predictCluster(in)].addInstance(in);
 		}
-		// calculate intra cluster distances and sum of all.
+		// calculate sum of intra cluster distances dw and count their number.
 		for (int i = 0; i < c.getNumberOfClusters(); i++) {
 			for (int j = 0; j < datas[i].size(); j++) {
 				Instance x = datas[i].getInstance(j);
+				// calculate sum of intra cluster distances dw and count their
+				// number.
 				for (int k = j + 1; k < datas[i].size(); k++) {
 					Instance y = datas[i].getInstance(k);
 					double distance = dm.calculateDistance(x, y);
-					sumDw += distance;
-					if (maxDw < distance) {
-						maxDw = distance;
-					}
-					if (minDw > distance) {
-						minDw = distance;
+					dw += distance;
+					fw++;
+				}
+				// calculate sum of inter cluster distances dw and count their
+				// number.
+				for (int k = i + 1; k < c.getNumberOfClusters(); k++) {
+					for (int l = 0; l < datas[k].size(); l++) {
+						Instance y = datas[k].getInstance(l);
+						double distance = dm.calculateDistance(x, y);
+						db += distance;
+						fb++;
 					}
 				}
 			}
 		}
-		// calculate C Index
-		double cIndex = (sumDw - minDw) / (maxDw - minDw);
-		return cIndex;
+		double wb = (dw / fw) / (db / fb);
+		return wb;
 	}
 
 	public boolean compareScore(double score1, double score2) {
