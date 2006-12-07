@@ -77,24 +77,30 @@ public class Tau implements ClusterEvaluation {
 						Instance y = datas[k].getInstance(l);
 						double distance = dm.calculateDistance(x, y);
 						fb++;
-						t++;
+						
 						if (distance < maxIntraDist[i]) {
 							sMin++;
 						}
+						t++;
 						if (distance > maxIntraDist[i]) {
 							sPlus++;
 						}
+						t++;
 					}
 				}
 			}
 		}
 		nd = fw + fb;
-		double tau = (sPlus-sMin)/Math.sqrt((nd*(nd-1)/2-t)*(nd*(nd-...)/2));
+		System.out.println("s(+): "+sPlus+",s(-): "+sMin);
+		System.out.println("Nd: "+nd+",t: "+t);
+		double tau = (sPlus-sMin)/Math.sqrt((nd*(nd-1)/2-t)*(nd*(nd-1)/2));
+		System.out.println("tau: "+tau);
+		return tau;
 	}
 
 	public boolean compareScore(double score1, double score2) {
-		// TODO check condition for best score
-		return score1 > score2;
+		// TODO check condition for best score: should be maxed??
+		return score2 > score1;
 	}
 
 }
