@@ -88,12 +88,13 @@ public class Gamma implements ClusterEvaluation {
 			}
 		}
 		// calculate gamma
+		System.out.println("s(+): "+sPlus+",s(-): "+sMin);
 		double gamma = (sPlus - sMin) / (sPlus + sMin);
 		return gamma;
 	}
 
 	public boolean compareScore(double score1, double score2) {
-		// TODO check condition for best score
-		return score1 > score2;
+		// should be maxed. range = [0,1]
+		return score2 > score1;
 	}
 }
