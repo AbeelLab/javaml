@@ -44,9 +44,9 @@ public class Tau implements ClusterEvaluation {
 	public double score(Clusterer c, Dataset data) {
 		Dataset[] datas = new Dataset[c.getNumberOfClusters()];
 		double maxIntraDist[] = new double[c.getNumberOfClusters()];
-		double sPlus = 0,sMin = 0;
+		double sPlus = 0, sMin = 0;
 		double fw = 0, fb = 0;
-		double t = 0, nd;	
+		double t = 0, nd;
 		// get clusters
 		for (int i = 0; i < c.getNumberOfClusters(); i++) {
 			datas[i] = new SimpleDataset();
@@ -56,50 +56,58 @@ public class Tau implements ClusterEvaluation {
 			datas[c.predictCluster(in)].addInstance(in);
 		}
 		for (int i = 0; i < c.getNumberOfClusters(); i++) {
+			System.out.println("cluster: " + i + ": size: " + datas[i].size());
 			maxIntraDist[i] = Double.MIN_VALUE;
 			for (int j = 0; j < datas[i].size(); j++) {
 				Instance x = datas[i].getInstance(j);
-				// calculate intra cluster distances, count their number and find max.
+				// calculate intra cluster distances, count their number and
+				// find max.
 				// count t.
 				for (int k = j + 1; k < datas[i].size(); k++) {
 					Instance y = datas[i].getInstance(k);
 					double distance = dm.calculateDistance(x, y);
 					fw++;
-					t++;
 					if (maxIntraDist[i] < distance) {
 						maxIntraDist[i] = distance;
 					}
+					// 2 distances (2 pairs of points) compaired (2 pairs of
+					// points): t+1
+					t++;
 				}
-				// calculate inter cluster distances, count their number and find min.
+				// calculate inter cluster distances, count their number and
+				// find min.
 				// count sPlus, sMin and t.
 				for (int k = i + 1; k < c.getNumberOfClusters(); k++) {
 					for (int l = 0; l < datas[k].size(); l++) {
 						Instance y = datas[k].getInstance(l);
 						double distance = dm.calculateDistance(x, y);
 						fb++;
-						
 						if (distance < maxIntraDist[i]) {
 							sMin++;
 						}
+						// 2 distances (2 pairs of points) compaired (2 pairs of
+						// points): t+1
 						t++;
 						if (distance > maxIntraDist[i]) {
 							sPlus++;
 						}
+						// 2 distances (2 pairs of points) compaired (2 pairs of
+						// points): t+1
 						t++;
 					}
 				}
 			}
 		}
 		nd = fw + fb;
-		System.out.println("s(+): "+sPlus+",s(-): "+sMin);
-		System.out.println("Nd: "+nd+",t: "+t);
-		double tau = (sPlus-sMin)/Math.sqrt((nd*(nd-1)/2-t)*(nd*(nd-1)/2));
-		System.out.println("tau: "+tau);
+		System.out.println("(nd(nd-1))/2:" + (nd * (nd - 1)) / 2);
+		System.out.println("fw: " + fw + ",fb: " + fb);
+		System.out.println("t: " + t + ",n: " + nd+",s+: " + sPlus);
+		double tau = (sPlus - sMin)/ Math.sqrt((nd * (nd - 1) / 2 - t) * (nd * (nd - 1) / 2));
 		return tau;
 	}
 
 	public boolean compareScore(double score1, double score2) {
-		// TODO check condition for best score: should be maxed??
+		// TODO should be maxed??
 		return score2 > score1;
 	}
 

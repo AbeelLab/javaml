@@ -25,8 +25,6 @@
 
 package net.sf.javaml.clustering.evaluation;
 
-import java.util.Vector;
-
 import net.sf.javaml.clustering.Clusterer;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
@@ -46,12 +44,9 @@ public class PointBiserial implements ClusterEvaluation {
 
 	public double score(Clusterer c, Dataset data) {
 		Dataset[] datas = new Dataset[c.getNumberOfClusters()];
-		Vector<Double> allDistances = new Vector<Double>();
 		double dw = 0, fw = 0;
 		double db = 0, fb = 0;
 		double nd, sd, pb;
-		double meanDistance = 0;
-		double maxInterDis = Double.MIN_VALUE, maxIntraDis = Double.MIN_VALUE;
 		// get clusters
 		for (int i = 0; i < c.getNumberOfClusters(); i++) {
 			datas[i] = new SimpleDataset();
@@ -68,12 +63,8 @@ public class PointBiserial implements ClusterEvaluation {
 				for (int k = j + 1; k < datas[i].size(); k++) {
 					Instance y = datas[i].getInstance(k);
 					double distance = dm.calculateDistance(x, y);
-					System.out.println("maxIntraDis: "+maxIntraDis);
-					System.out.println("distance: "+distance);
-					if (maxIntraDis < distance) {
-						maxIntraDis = distance;
-						System.out.println("new maxIntraDis: "+maxIntraDis);
-					}	
+					dw += distance;
+					fw++;
 				}
 				// calculate sum of inter cluster distances dw and count their
 				// number.
@@ -81,39 +72,38 @@ public class PointBiserial implements ClusterEvaluation {
 					for (int l = 0; l < datas[k].size(); l++) {
 						Instance y = datas[k].getInstance(l);
 						double distance = dm.calculateDistance(x, y);
-						System.out.println("maxInterDis: "+maxInterDis);
-						System.out.println("distance: "+distance);
-						if (maxInterDis < distance) {
-							maxInterDis = distance;
-							System.out.println("new maxInterDis: "+maxInterDis);
-						}
+						db += distance;
+						fb++;
 					}
 				}
 			}
-			allDistances.add(maxIntraDis);
-			dw += maxIntraDis;
-			fw++;
-			allDistances.add(maxInterDis);
-			db += maxInterDis;
-			fb++;
-			maxInterDis = Double.MIN_VALUE;
-			maxIntraDis = Double.MIN_VALUE;
 		}
-		// calculate standard deviation of all distances (inter and intra)
-		for (int i = 0; i < allDistances.size(); i++) {
-			meanDistance += allDistances.get(i);
-		}
-		meanDistance /= allDistances.size();
-		double tmpS = 0;
-		for (int i = 0; i < allDistances.size(); i++) {
-			tmpS += (allDistances.get(i) - meanDistance)
-					* (allDistances.get(i) - meanDistance);
-		}
-		sd = Math.sqrt(tmpS / allDistances.size());
-		// calculate point biserial score
+		// calculate total number of distances
 		nd = fw + fb;
+		// calculate mean dw and db
 		double meanDw = dw / fw;
 		double meanDb = db / fb;
+		// calculate standard deviation of all distances (sum inter and intra)
+		double tmpSdw = 0, tmpSdb = 0;
+		for (int i = 0; i < c.getNumberOfClusters(); i++) {
+			for (int j = 0; j < datas[i].size(); j++) {
+				Instance x = datas[i].getInstance(j);
+				for (int k = j + 1; k < datas[i].size(); k++) {
+					Instance y = datas[i].getInstance(k);
+					double distance = dm.calculateDistance(x, y);
+					tmpSdw += (distance - meanDw)*(distance - meanDw);
+				}
+				for (int k = i + 1; k < c.getNumberOfClusters(); k++) {
+					for (int l = 0; l < datas[k].size(); l++) {
+						Instance y = datas[k].getInstance(l);
+						double distance = dm.calculateDistance(x, y);
+						tmpSdb += (distance - meanDb)*(distance - meanDb);
+					}
+				}
+			}
+		}
+		sd = Math.sqrt((tmpSdw+tmpSdb) / nd);
+		// calculate point biserial score		
 		pb = (meanDb - meanDw) * Math.sqrt(((fw * fb) / (nd * nd))) / sd;
 		return pb;
 	}

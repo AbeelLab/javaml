@@ -84,19 +84,13 @@ public class GPlus implements ClusterEvaluation {
 			}
 		}
 		nd = fw + fb;
-		double t=0, n = data.size();
-		for (int i=0; i<n-1;i++){
-			t+= n;
-		}
-		System.out.println("s(-): "+sMin);
-		System.out.println("Nd: "+nd+", t: "+t);
-		double gPlus = (2 * sMin) / (nd * (nd - 1));
-		System.out.println("gPlus: "+gPlus);
+		sMin = fb;
+		double gPlus = sMin / nd;//(2 * sMin) / (nd * (nd - 1));
 		return gPlus;
 	}
 
 	public boolean compareScore(double score1, double score2) {
-		// should be minimalized. range = [0,...]
+		// should be minimalized. range = [0,x] with x= fb/nd
 		return score2 < score1;
 	}
 }

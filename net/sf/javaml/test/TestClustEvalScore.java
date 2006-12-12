@@ -26,7 +26,7 @@ public class TestClustEvalScore {
 		}
 		SimpleKMeans km = new SimpleKMeans(4, 500);
         km.buildClusterer(data);
-		ClusterEvaluation ce=new GPlus();
+		ClusterEvaluation ce=new Tau();
 		double score = ce.score(km,data);
 		System.out.println("score: "+score);
 	}

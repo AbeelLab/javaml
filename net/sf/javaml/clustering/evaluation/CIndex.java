@@ -56,36 +56,28 @@ public class CIndex implements ClusterEvaluation {
 		}
 		// calculate intra cluster distances and sum of all.
 		for (int i = 0; i < c.getNumberOfClusters(); i++) {
-			System.out.println("---------------------------cluster: "+i+", size: "+datas[i].size());
 			for (int j = 0; j < datas[i].size(); j++) {
 				Instance x = datas[i].getInstance(j);
 				for (int k = j + 1; k < datas[i].size(); k++) {
 					Instance y = datas[i].getInstance(k);
 					double distance = dm.calculateDistance(x, y);
-					System.out.println("distance: "+distance);
-					System.out.println("dw: "+dw);
 					dw += distance;
-					System.out.println("new dw: "+dw);
 					if (maxDw < distance) {
 						maxDw = distance;
-						System.out.println("new maxDw: "+maxDw);
 					}
 					if (minDw > distance) {
 						minDw = distance;
-						System.out.println("new minDw: "+minDw);
 					}
 				}
 			}			
 		}
 		// calculate C Index
-		System.out.println("dw: "+dw);
-		System.out.println("minDw: "+minDw+",maxDw: "+maxDw);
 		double cIndex = (dw - minDw) / (maxDw - minDw);
 		return cIndex;
 	}
 
 	public boolean compareScore(double score1, double score2) {
-		// TODO check condition for best score???
-		return score2 > score1;
+		// should be minimalized ( smallest intra cluster distances)
+		return score2 < score1;
 	}
 }
