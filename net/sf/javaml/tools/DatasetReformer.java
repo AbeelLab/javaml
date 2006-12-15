@@ -47,19 +47,19 @@ public class DatasetReformer {
 
 	public static void main(String[] args) throws IOException {
 
-		BufferedReader in = new BufferedReader(new FileReader("housing.txt"));
+		BufferedReader in = new BufferedReader(new FileReader("spectf-train.txt"));
 		String line = in.readLine();
 		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(
 				"out.data")));
 		while (line != null) {
 			//
-			String[] arr = line.split("  ");
-			// int[] values = new int[arr.length];
-			double[] values = new double[arr.length];
+			String[] arr = line.split(",");
+			int[] values = new int[arr.length];
+			//double[] values = new double[arr.length];
 			for (int i = 0; i < arr.length; i++) {
 				try {
-					// values[i] = Integer.parseInt(arr[i]);
-					values[i] = Double.parseDouble(arr[i]);
+					values[i] = Integer.parseInt(arr[i]);
+					//values[i] = Double.parseDouble(arr[i]);
 				} catch (NumberFormatException e) {
 					values[i] = 666;
 				}
