@@ -41,7 +41,7 @@ import net.sf.javaml.core.SimpleInstance;
  * you have three instances {-1;10}, {1,15} and {0,20} and you normalize with
  * midrange 0 and range 2, you would get {-1,-1}, {1,0} and {0,1}. 
  * 
- * The default is normalization in the interval [0,1].
+ * The default is normalization in the interval [-1,1].
  * 
  * @author Thomas Abeel
  * 
@@ -77,14 +77,10 @@ public class NormalizeMidrange implements Filter {
         int instanceLength = data.getInstance(0).size();
         this.midrange = new float[instanceLength];
         this.range = new float[instanceLength];
-        // System.out.println("Max: "+max);
-        // System.out.println("Min: "+min);
         for (int i = 0; i < instanceLength; i++) {
             range[i] = max.getValue(i) - min.getValue(i);
             midrange[i] = (max.getValue(i) + min.getValue(i)) / 2;
-            // System.out.println("Range: "+range[i]+"\tMidrange:
-            // "+midrange[i]);
-        }
+         }
         for (int i = 0; i < data.size(); i++) {
             Instance tmpInstance = data.getInstance(i);
             out.addInstance(this.filter(tmpInstance));
