@@ -100,8 +100,6 @@ public class SimpleInstance implements Instance {
 
     public boolean isCompatible(Instance instance) {
         return instance.size()==this.size();
-        
-        
     }
 
     public float getWeight() {
