@@ -50,6 +50,14 @@ import net.sf.javaml.core.SimpleInstance;
  */
 public class DatasetLoader {
 
+    public static Dataset loadDataset(String f) throws IOException {
+        return loadDataset(new File(f));
+    }
+
+    public static Dataset loadDataset(String f, int classIndex) throws IOException {
+        return loadDataset(new File(f), classIndex);
+    }
+
     /**
      * Load the data from a file without class labels.
      * <p>
@@ -161,7 +169,7 @@ public class DatasetLoader {
                 }
             }
 
-            out.addInstance(new SimpleInstance(values, 1.0f,true,classValue));
+            out.addInstance(new SimpleInstance(values, 1.0f, true, classValue));
             lineCount++;
             line = in.readLine();
             while (line != null && line.length() == 0) {
