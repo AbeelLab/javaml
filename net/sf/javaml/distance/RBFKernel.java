@@ -17,7 +17,7 @@
  * along with the Java Machine Learning API; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * 
- * Copyright (c) 2006, Thomas Abeel
+ * Copyright (c) 2006-2007, Thomas Abeel
  * 
  * Project: http://sourceforge.net/projects/java-ml/
  * 
@@ -28,18 +28,44 @@ import net.sf.javaml.core.Instance;
 
 public class RBFKernel implements DistanceMeasure {
 
-    private float variance=1;
-    private NormDistance nd=new EuclideanDistance();
-    public RBFKernel(){
-        this(1);
+    private double gamma = 0.01;
+
+    public RBFKernel() {
+        this(0.01f);
     }
-    public RBFKernel(float variance){
-        this.variance=variance;
+
+    /**
+     * Create a new RBF kernel with gamma as a parameter
+     * 
+     * @param gamma
+     */
+    public RBFKernel(float gamma) {
+        this.gamma = gamma;
     }
+
+    /**
+     * Calculates a dot product between two instances
+     * 
+     * @param x
+     *            the first instance
+     * @param y
+     *            the second instance
+     * @return the dot product of the two instances.
+     */
+    private final double dotProduct(Instance x, Instance y) {
+        double result = 0;
+        for (int i = 0; i < x.size(); i++) {
+            result += x.getValue(i) * y.getValue(i);
+        }
+        return result;
+    }
+
     public double calculateDistance(Instance x, Instance y) {
-       double norm=nd.calculateDistance(x,y);
-       return 1- Math.pow(Math.E,-(norm/this.variance));
-     
+        if (x.equals(y))
+            return 1.0;
+        double result = Math.exp(gamma * (2.0 * dotProduct(x, y) - dotProduct(x, x) - dotProduct(y, y)));
+        return result;
+
     }
 
 }

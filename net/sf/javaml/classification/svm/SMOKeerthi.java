@@ -26,12 +26,13 @@ package net.sf.javaml.classification.svm;
 
 import java.util.HashSet;
 
+import net.sf.javaml.classification.Classifier;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.MathUtils;
 import net.sf.javaml.distance.DistanceMeasure;
 
-public class SMOKeerthi {
+public class SMOKeerthi implements Classifier {
 
     /** The Lagrange multipliers. */
     protected double[] m_alpha;
@@ -45,17 +46,8 @@ public class SMOKeerthi {
     /** The training data. */
     protected Dataset m_data;
 
-    /** Weight vector for linear machine. */
-    protected double[] m_weights;
-
-    /**
-     * Variables to hold weight vector in sparse form. (To reduce storage
-     * requirements.)
-     */
-    protected double[] m_sparseWeights;
-
-    protected int[] m_sparseIndices;
-
+  
+   
     /** Kernel to use * */
     protected DistanceMeasure m_kernel;
 
@@ -83,12 +75,6 @@ public class SMOKeerthi {
 
     /** The set of support vectors */
     protected HashSet<Integer> m_supportVectors; // {i: 0 < m_alpha[i]}
-
-    // /** Stores logistic regression model for probability estimate */
-    // protected Logistic m_logistic = null;
-
-    /** Stores the weight of the training instances */
-    protected double m_sumOfWeights = 0;
 
     /** Epsilon for rounding. */
     protected double m_eps = 1.0e-12;
@@ -174,26 +160,39 @@ public class SMOKeerthi {
 
     private double m_tol = 0.001;
 
+    private int classValue;
+
+    private DistanceMeasure kernel;
+
     /**
-     * Method for building a SVM from a dataset.
+     * Construct a new SVM according to the optimized SMO training algorithm by
+     * Keerthi.
      * 
-     * @param data
-     *            the dataset
-     * @param cl1
+     * @param classValue
      *            the classValue for the positive samples.
      * @param kernel
      *            the distance measure used to calculate the similarity of data
      *            samples
      */
-    public void buildClassifier(Dataset data, int cl1, DistanceMeasure kernel) {
-        this.m_data = data;
-        // Initialize some variables
+    public SMOKeerthi(int classValue, DistanceMeasure kernel) {
+        this.classValue = classValue;
+        this.kernel = kernel;
+    }
+
+    /**
+     * Method for building a SVM from a dataset.
+     * 
+     * @param data
+     *            the dataset
+     * 
+     */
+    public void buildClassifier(Dataset data) {
+        this.m_data=data;
+       // Initialize some variables
         m_bUp = -1;
         m_bLow = 1;
         m_b = 0;
         m_alpha = null;
-        m_data = null;
-        m_weights = null;
         m_errors = null;
         // m_logistic = null;
         m_I0 = null;
@@ -201,19 +200,15 @@ public class SMOKeerthi {
         m_I2 = null;
         m_I3 = null;
         m_I4 = null;
-        m_sparseWeights = null;
-        m_sparseIndices = null;
-
-        // Store the sum of weights
-        // m_sumOfWeights = insts.sumOfWeights();
-
+       
+      
         // Set class values
         m_class = new double[this.m_data.size()];
         m_iUp = -1;
         m_iLow = -1;
         for (int i = 0; i < m_class.length; i++) {
             Instance tmp = m_data.getInstance(i);
-            if (tmp.isClassSet() && tmp.getClassValue() == cl1) {
+            if (tmp.isClassSet() && tmp.getClassValue() == classValue) {
                 m_class[i] = 1;
                 m_iUp = i;
 
@@ -238,15 +233,10 @@ public class SMOKeerthi {
             m_alpha = new double[0];
             m_class = new double[0];
 
-            // // Fit sigmoid if requested
-            // if (fitLogistic) {
-            // fitLogistic(insts, cl1, cl2, numFolds, new Random(randomSeed));
-            // }
-            // return;
+           
         }
 
-        // Set the reference to the data
-
+       
         // Initialize alpha array to zero
         m_alpha = new double[m_data.size()];
 
@@ -258,10 +248,7 @@ public class SMOKeerthi {
         m_I3 = new HashSet<Integer>();
         m_I4 = new HashSet<Integer>();
 
-        // Clean out some instance variables
-        m_sparseWeights = null;
-        m_sparseIndices = null;
-
+       
         // init kernel
         this.m_kernel = kernel;
 
@@ -283,6 +270,7 @@ public class SMOKeerthi {
         int numChanged = 0;
         boolean examineAll = true;
         while ((numChanged > 0) || examineAll) {
+            //System.out.println("Numchanged: "+numChanged);
             numChanged = 0;
             if (examineAll) {
                 for (int i = 0; i < m_alpha.length; i++) {
@@ -327,75 +315,26 @@ public class SMOKeerthi {
         // Set threshold
         m_b = (m_bLow + m_bUp) / 2.0;
 
-        // Save memory
-        // m_kernel.clean();
-
         m_errors = null;
         m_I0 = m_I1 = m_I2 = m_I3 = m_I4 = null;
 
-        // If machine is linear, delete training data
-        // and store weight vector in sparse format
-        // if (m_KernelIsLinear) {
-        //
-        // // We don't need to store the set of support vectors
-        // m_supportVectors = null;
-        //
-        // // We don't need to store the class values either
-        // m_class = null;
-        //
-        // // Clean out training data
-        // if (!m_checksTurnedOff) {
-        // m_data = new Instances(m_data, 0);
-        // } else {
-        // m_data = null;
-        // }
-        //
-        // // Convert weight vector
-        // double[] sparseWeights = new double[m_weights.length];
-        // int[] sparseIndices = new int[m_weights.length];
-        // int counter = 0;
-        // for (int i = 0; i < m_weights.length; i++) {
-        // if (m_weights[i] != 0.0) {
-        // sparseWeights[counter] = m_weights[i];
-        // sparseIndices[counter] = i;
-        // counter++;
-        // }
-        // }
-        // m_sparseWeights = new double[counter];
-        // m_sparseIndices = new int[counter];
-        // System.arraycopy(sparseWeights, 0, m_sparseWeights, 0, counter);
-        // System.arraycopy(sparseIndices, 0, m_sparseIndices, 0, counter);
-        //
-        // // Clean out weight vector
-        // m_weights = null;
-        //
-        // // We don't need the alphas in the linear case
-        // m_alpha = null;
-        // }
-
-//        // Fit sigmoid if requested
-//        if (fitLogistic) {
-//            fitLogistic(insts, cl1, cl2, numFolds, new Random(randomSeed));
-//        }
+        
 
     }
 
     /**
      * Computes SVM output for given instance.
      * 
-     * @param index
-     *            the instance for which output is to be computed
      * @param inst
      *            the instance
      * @return the output of the SVM for the given instance
      * @throws Exception
      *             in case of an error
      */
-    public double SVMOutput(Instance inst)  {
+    public double SVMOutput(Instance inst) {
 
         double result = 0;
 
-        // Is the machine linear?
         for (Integer i : m_supportVectors) {
             result += m_class[i] * m_alpha[i] * m_kernel.calculateDistance(m_data.getInstance(i), inst);
         }
@@ -415,7 +354,7 @@ public class SMOKeerthi {
         StringBuffer text = new StringBuffer();
         int printed = 0;
 
-        if ((m_alpha == null) && (m_sparseWeights == null)) {
+        if ((m_alpha == null)) {
             return "BinarySMO: No model built yet.\n";
         }
         try {
@@ -449,20 +388,7 @@ public class SMOKeerthi {
             }
 
             text.append("\n\nNumber of support vectors: " + m_supportVectors.size());
-            // Kernels do not support evaluation of number of evaluations
-            // int numEval = 0;
-            // int numCacheHits = -1;
-            // if (m_kernel != null) {
-            // numEval = m_kernel.numEvals();
-            // numCacheHits = m_kernel.numCacheHits();
-            // }
-            // text.append("\n\nNumber of kernel evaluations: " + numEval);
-            // if (numCacheHits >= 0 && numEval > 0) {
-            // double hitRatio = 1 - numEval * 1.0 / (numCacheHits + numEval);
-            // text.append(" (" + Utils.doubleToString(hitRatio * 100, 7,
-            // 3).trim() + "%
-            // cached)");
-            // }
+            
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -557,6 +483,7 @@ public class SMOKeerthi {
      */
     protected boolean takeStep(int i1, int i2, double F2) {
 
+       
         double alph1, alph2, y1, y2, F1, s, L, H, k11, k12, k22, eta, a1, a2, f1, f2, v1, v2, Lobj, Hobj;
         double C1 = m_C * m_data.getInstance(i1).getWeight();
         double C2 = m_C * m_data.getInstance(i2).getWeight();
@@ -565,7 +492,7 @@ public class SMOKeerthi {
         if (i1 == i2) {
             return false;
         }
-
+        
         // Initialize variables
         alph1 = m_alpha[i1];
         alph2 = m_alpha[i2];
@@ -585,7 +512,6 @@ public class SMOKeerthi {
         if (L >= H) {
             return false;
         }
-
         // Compute second derivative of objective function
         k11 = m_kernel.calculateDistance(m_data.getInstance(i1), m_data.getInstance(i1));
         k12 = m_kernel.calculateDistance(m_data.getInstance(i1), m_data.getInstance(i2));
@@ -647,8 +573,10 @@ public class SMOKeerthi {
 
         // Update sets
         if (a1 > 0) {
+            System.err.println("Adding "+i1);
             m_supportVectors.add(i1);
         } else {
+            System.err.println("Removing "+i1);
             m_supportVectors.remove(i1);
         }
         if ((a1 > 0) && (a1 < C1)) {
@@ -826,5 +754,15 @@ public class SMOKeerthi {
                 }
             }
         }
+    }
+
+    public int classifyInstance(Instance instance) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    public double[] distributionForInstance(Instance instance) {
+        // TODO Auto-generated method stub
+        return null;
     }
 }
