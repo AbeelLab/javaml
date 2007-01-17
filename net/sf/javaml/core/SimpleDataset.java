@@ -121,6 +121,7 @@ public class SimpleDataset implements Dataset {
         for(int i=1;i<this.size();i++){
             out+=";"+this.getInstance(i).toString();
         }
+        
         return out;
     }
 }

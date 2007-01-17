@@ -44,11 +44,17 @@ public class SimpleInstance implements Instance {
         this(instance.getArrayForm(),instance.getWeight(),instance.isClassSet(),instance.getClassValue());
 		
 	}
-
+    @Override
     public String toString(){
+        //TODO optimize using StringBuffer;
         String out="["+values.get(0).toString();
-        for(int i=1;i<values.size();i++)
+        for(int i=1;i<values.size();i++){
             out+=";"+values.get(i);
+        }
+        out+=";w:"+this.weight;
+        if(this.classSet){
+            out+=";C:"+this.classValue;
+        }
         return out+"]";
     }
 	public SimpleInstance(float[] values) {
