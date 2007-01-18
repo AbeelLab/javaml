@@ -88,6 +88,14 @@ public class PerformanceMeasure {
         return falsePositives / truePositives;
     }
 
+    /**
+     * Constructs a new performance measure using the supplied arguments.
+     * 
+     * @param tp the number of true positives
+     * @param tn the number of true negatives
+     * @param fp the number of false positives
+     * @param fn the number of false negatives
+     */
     public PerformanceMeasure(double tp, double tn, double fp, double fn) {
         this.truePositives = tp;
         this.trueNegatives = tn;
