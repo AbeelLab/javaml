@@ -20,6 +20,8 @@ import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.MathUtils;
 import net.sf.javaml.distance.DistanceMeasure;
+import net.sf.javaml.filter.Filter;
+import net.sf.javaml.filter.NormalizeMidrange;
 
 /**
  * An implementation of the SMO algorithm for SVM training from "Sequential
@@ -102,6 +104,11 @@ public class SMOPlatt implements Classifier {
     private double[] alpha = null;
 
     /**
+     * Filter to normalize all data.
+     */
+    private Filter filter = new NormalizeMidrange();
+
+    /**
      * Building the classification model from a dataset. The pseudocode and full
      * explanation to this technique can be founds in two papers:
      * <p>
@@ -117,8 +124,9 @@ public class SMOPlatt implements Classifier {
     public void buildClassifier(Dataset data) {
 
         // a local reference to the dataset
-        this.data = data;
-        this.notBound = new HashSet<Integer>();
+        Dataset filtered = filter.filterDataset(data);
+        this.data = filtered;
+        
         // number of samples that have been changed during the last iteration.
         int numChanged = 0;
         // indicates whether all samples in the dataset should be checked or not
@@ -403,9 +411,10 @@ public class SMOPlatt implements Classifier {
      * ones.
      */
     public int classifyInstance(Instance instance) {
+        Instance filtered=filter.filterInstance(instance);
         double result = 0;
         for (Integer i : supportVectors) {
-            result += classValues[i] * alpha[i] * kernel.calculateDistance(instance, data.getInstance(i));
+            result += classValues[i] * alpha[i] * kernel.calculateDistance(filtered, data.getInstance(i));
         }
 
         if (result > 0)
