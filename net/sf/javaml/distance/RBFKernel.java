@@ -31,7 +31,7 @@ public class RBFKernel implements DistanceMeasure {
     private double gamma = 0.01;
 
     public RBFKernel() {
-        this(0.01f);
+        this(0.01);
     }
 
     /**
@@ -39,7 +39,7 @@ public class RBFKernel implements DistanceMeasure {
      * 
      * @param gamma
      */
-    public RBFKernel(float gamma) {
+    public RBFKernel(double gamma) {
         this.gamma = gamma;
     }
 

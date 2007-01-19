@@ -12,8 +12,10 @@
  */
 package net.sf.javaml.classification.svm;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 import net.sf.javaml.classification.Classifier;
 import net.sf.javaml.core.Dataset;
@@ -34,6 +36,9 @@ import net.sf.javaml.filter.NormalizeMidrange;
  */
 
 public class SMOPlatt implements Classifier {
+    /** Precision constant for updating sets */
+    protected static double m_Del = 1000 * Double.MIN_VALUE;
+
     /**
      * A local reference to the dataset used for training, this is only used for
      * training and will be <code>null</code> afterwards.
@@ -90,7 +95,7 @@ public class SMOPlatt implements Classifier {
      * The set of unbound samples. This set contains the indices of the data
      * samples.
      */
-    private HashSet<Integer> notBound = null;
+    private Set<Integer> notBound = null;
 
     /**
      * The error cache
@@ -106,7 +111,7 @@ public class SMOPlatt implements Classifier {
     /**
      * Filter to normalize all data.
      */
-    private Filter filter = new NormalizeMidrange();
+    private Filter filter = new NormalizeMidrange(0.5, 1);
 
     /**
      * Building the classification model from a dataset. The pseudocode and full
@@ -126,7 +131,7 @@ public class SMOPlatt implements Classifier {
         // a local reference to the dataset
         Dataset filtered = filter.filterDataset(data);
         this.data = filtered;
-        
+
         // number of samples that have been changed during the last iteration.
         int numChanged = 0;
         // indicates whether all samples in the dataset should be checked or not
@@ -161,10 +166,11 @@ public class SMOPlatt implements Classifier {
         int count = 0;
         while (numChanged > 0 || examineAll) {
             count++;
-            System.out.println("Iterations " + count + "\t: " + supportVectors.size());
+            // System.out.println("Iterations " + count + "\t: " +
+            // supportVectors.size());
             numChanged = 0;
             if (examineAll) {
-                System.out.println("\t Checking all samples");
+                // System.out.println("\t Checking all samples");
                 for (int i = 0; i < data.size(); i++) {
                     // System.out.println("\tall-"+i+"\tchanged: "+numChanged);
                     if (examineExample(i)) {
@@ -173,8 +179,11 @@ public class SMOPlatt implements Classifier {
                 }
 
             } else {
-                System.out.println("\t Checking not bound samples");
-                for (Integer i : notBound) {
+                // System.out.println("\t Checking not bound samples " +
+                // notBound.size());
+                Set<Integer> tmpNotBound = new HashSet<Integer>();
+                tmpNotBound.addAll(notBound);
+                for (Integer i : tmpNotBound) {
                     // System.out.println("\tnotBound-"+i);
                     if (examineExample(i)) {
                         numChanged++;
@@ -190,7 +199,7 @@ public class SMOPlatt implements Classifier {
             }
 
         }
-        System.out.println("Total number of iterations: " + count);
+        // System.out.println("Total number of iterations: " + count);
 
     }
 
@@ -317,9 +326,19 @@ public class SMOPlatt implements Classifier {
         if (Math.abs(a2 - alph2) < EPSILON * (a2 + alph2 + EPSILON)) {
             return false;
         }
-        // TODO insert code for rounding error mistakes from SMO from weka
+        // To prevent precision problems
+        if (a2 > c - m_Del * c) {
+            a2 = c;
+        } else if (a2 <= m_Del * c) {
+            a2 = 0;
+        }
         a1 = alph1 + s * (alph2 - a2);
-
+        // To prevent precision problems
+        if (a1 > c - m_Del * c) {
+            a1 = c;
+        } else if (a1 <= m_Del * c) {
+            a1 = 0;
+        }
         // ****************
         // | update stuff |
         // ****************
@@ -411,7 +430,7 @@ public class SMOPlatt implements Classifier {
      * ones.
      */
     public int classifyInstance(Instance instance) {
-        Instance filtered=filter.filterInstance(instance);
+        Instance filtered = filter.filterInstance(instance);
         double result = 0;
         for (Integer i : supportVectors) {
             result += classValues[i] * alpha[i] * kernel.calculateDistance(filtered, data.getInstance(i));
@@ -432,5 +451,13 @@ public class SMOPlatt implements Classifier {
         double[] out = new double[2];
         out[classifyInstance(instance)]++;
         return out;
+    }
+
+    public double getThreshold() {
+        return this.threshold;
+    }
+
+    public int getNumSupportVectors() {
+        return supportVectors.size();
     }
 }
