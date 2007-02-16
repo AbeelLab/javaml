@@ -65,7 +65,7 @@ public class IterativeKMeans extends SimpleKMeans {
             super.numberOfIterations = 100;
             super.buildClusterer(data);
 
-            ClusterEvaluation ce = ClusterEvaluationFactory.getBICScore(); // getSumOfSquaredErrors();//getSumOfAveragePairWiseSimilarities();//getSumOfCentroidSimilarities();//ClusterEvaluationFactory.getSumOfSquaredErrors();
+            ClusterEvaluation ce = ClusterEvaluationFactory.getTau(); // getSumOfSquaredErrors();//getSumOfAveragePairWiseSimilarities();//getSumOfCentroidSimilarities();//ClusterEvaluationFactory.getSumOfSquaredErrors();
             double newScore = ce.score(this, data);
             if (k == kMin) {// for the first value, copy results
                 bestScore = newScore;
