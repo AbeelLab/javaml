@@ -44,7 +44,7 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
 
 	private DistanceMeasure dm = new EuclideanDistance();
 
-	private NormalizeMean normMean = new filterDataset();
+	private NormalizeMean normMean = new NormalizeMean();
 
 	// user defined parameters
 	private int minInstances = 2;
