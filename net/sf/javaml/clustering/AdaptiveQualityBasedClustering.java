@@ -137,61 +137,63 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
 			cluster.add(in);
 		}
 
-		while(3 stop criteria){
-					
-		// step1: locate cluster center
-		ck = mean(cluster);
-		rad = maxDist(cluster, ck);
-		deltarad = (rad - rk_prelim) * div;
-		rad = rad - deltarad;
-		cluster = newCluster(cluster, ck, rad);
-		Instance newMean = mean(cluster);
-		int iter = 0;
-		while (iter <= maxIter && newMean != ck || rad > rk_prelim) {
-			iter++;
-			ck = newMean;
-			if (rad > rk_prelim){
-				rad = rad - deltarad;
-			}
+		while(3 stop criteria){			
+			// step1: locate cluster center
+			ck = mean(cluster);
+			rad = maxDist(cluster, ck);
+			deltarad = (rad - rk_prelim) * div;
+			rad = rad - deltarad;
 			cluster = newCluster(cluster, ck, rad);
-			newMean = mean(cluster);
-		}
-		/**
-		 * if(newMean != ck){ ck = null; }
-		 */
+			Instance newMean = mean(cluster);
+			int iter = 0;
+			while ((iter < maxIter && newMean != ck) || rad > rk_prelim) {
+				iter++;
+				ck = newMean;
+				if (rad > rk_prelim){
+					rad = rad - deltarad;
+				}
+				cluster = newCluster(cluster, ck, rad);
+				newMean = mean(cluster);
+			}
 		
-		// step 2:recalculate radius
-		// calculation of sigma and a prior prob pc or pb
-		if( ck != null){
+			if(iter >= maxIter && newMean != ck){ 
+				ck = null;
+				// and stop algorithm
+			}
+		 
+			// step 2:recalculate radius
+			// calculation of sigma and a prior prob pc or pb
 			double pc, pb;
+			// calculate pc via EM
+			
 			pb = 1-pc;
+			// calculate sigma via EM
+		
+			if(/* if EM for pc, sigma estimation do not convert*/){
+			// stop algortihm
+			}
 			double d = dimension - 2;
 			double gamma = ;
 			double sd = Math.pow(2*Math.PI, d/2)/ gamma;
 			rk = ;
-		}
-		else{
-			rk = 0;			
-		}
-		
-		if(Math.abs(rk - rk_prelim)/rk_prelim < accurRad){
-			cluster = newCluster(cluster,ck, rk);
-			// remove cluster from data if valid cluster and calculate centroid
-			if( cluster.size()>= minInstances){
-				Instance centroid = mean(cluster);
-				centroids.add(centroid);
-				all.removeAll(cluster);
+			if(Math.abs(rk - rk_prelim)/rk_prelim < accurRad){
+				cluster = newCluster(cluster,ck, rk);
+				// remove cluster from data if valid cluster and calculate centroid
+			
+				if( cluster.size()>= minInstances){
+					Instance centroid = mean(cluster);
+					centroids.add(centroid);
+					all.removeAll(cluster);
+				}
+				else{
+					// stop algorithm ( stop condition3)?
+				}
 			}
-			else{
-				
-				//????
-			}
-		}
 		// update preliminary radius estimate with new estimate
 		rk_prelim = rk;
 		}
-		
 	}
+
 	public int getNumberOfClusters() {
 		return this.numberOfClusters;
 	}
