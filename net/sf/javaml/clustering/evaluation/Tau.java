@@ -70,8 +70,7 @@ public class Tau implements ClusterEvaluation {
 					if (maxIntraDist[i] < distance) {
 						maxIntraDist[i] = distance;
 					}
-					// 2 distances (2 pairs of points) compaired (2 pairs of
-					// points): t+1
+					// 2 distances (2 pairs of points): t+1
 					t++;
 				}
 				// calculate inter cluster distances, count their number and
@@ -85,14 +84,12 @@ public class Tau implements ClusterEvaluation {
 						if (distance < maxIntraDist[i]) {
 							sMin++;
 						}
-						// 2 distances (2 pairs of points) compaired (2 pairs of
-						// points): t+1
+						// 2 distances (2 pairs of points) compaired: t+1
 						t++;
 						if (distance > maxIntraDist[i]) {
 							sPlus++;
 						}
-						// 2 distances (2 pairs of points) compaired (2 pairs of
-						// points): t+1
+						// 2 distances (2 pairs of points) compaired: t+1
 						t++;
 					}
 				}
@@ -101,13 +98,13 @@ public class Tau implements ClusterEvaluation {
 		nd = fw + fb;
 		System.out.println("(nd(nd-1))/2:" + (nd * (nd - 1)) / 2);
 		System.out.println("fw: " + fw + ",fb: " + fb);
-		System.out.println("t: " + t + ",n: " + nd+",s+: " + sPlus);
+		System.out.println("t: " + t + ",n: " + nd+",s+: " + sPlus+",s-: " + sMin);
 		double tau = (sPlus - sMin)/ Math.sqrt((nd * (nd - 1) / 2 - t) * (nd * (nd - 1) / 2));
 		return tau;
 	}
 
 	public boolean compareScore(double score1, double score2) {
-		// TODO should be maxed??
+		// should be maxed
 		return score2 > score1;
 	}
 

@@ -109,7 +109,7 @@ public class PointBiserial implements ClusterEvaluation {
 	}
 
 	public boolean compareScore(double score1, double score2) {
-		// TODO check condition for best score???
+		// should be maxed
 		return score2 > score1;
 	}
 }

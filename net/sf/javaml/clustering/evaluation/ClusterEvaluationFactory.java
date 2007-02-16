@@ -53,4 +53,7 @@ public class ClusterEvaluationFactory {
     public static ClusterEvaluation getAICScore(){
         return new AICScore();
     }
+    public static ClusterEvaluation getTau(){
+        return new Tau();
+    }
 }
