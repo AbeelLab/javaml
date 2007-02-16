@@ -25,9 +25,33 @@
 package net.sf.javaml.clustering.evaluation;
 
 public class ClusterEvaluationFactory {
-
-    public static ClusterEvaluation getSumOfSquaredErrors(){
-        return new SumOfSquaredErrors();
+	
+	public static ClusterEvaluation getAICScore(){
+        return new AICScore();
+    }
+	public static ClusterEvaluation getBICScore(){
+        return new BICScore();
+    }
+	public static ClusterEvaluation getCIndex(){
+        return new CIndex();
+    }
+	public static ClusterEvaluation getGamma(){
+        return new Gamma();
+    }
+	public static ClusterEvaluation getGPlus(){
+        return new GPlus();
+    }
+	public static ClusterEvaluation getHybridCentroidSimilarity(){
+        return new HybridCentroidSimilarity();
+    }
+	public static ClusterEvaluation getHybridPairwiseSimilarities(){
+        return new HybridPairwiseSimilarities();
+    }
+	public static ClusterEvaluation getMinMaxCut(){
+        return new MinMaxCut();
+    }
+	public static ClusterEvaluation getPointBiserial(){
+        return new PointBiserial();
     }
     public static ClusterEvaluation getSumOfAveragePairWiseSimilarities(){
         return new SumOfAveragePairwiseSimilarities();
@@ -35,25 +59,19 @@ public class ClusterEvaluationFactory {
     public static ClusterEvaluation getSumOfCentroidSimilarities(){
         return new SumOfCentroidSimilarities();
     }
-    public static ClusterEvaluation getHybridPairwiseSimilarities(){
-        return new HybridPairwiseSimilarities();
-    }
-    public static ClusterEvaluation getHybridCentroidSimilarity(){
-        return new HybridCentroidSimilarity();
-    }
-    public static ClusterEvaluation getTraceScatterMatrix(){
-        return new TraceScatterMatrix();
-    }
-    public static ClusterEvaluation getMinMaxCut(){
-        return new MinMaxCut();
-    }
-    public static ClusterEvaluation getBICScore(){
-        return new BICScore();
-    }
-    public static ClusterEvaluation getAICScore(){
-        return new AICScore();
+    public static ClusterEvaluation getSumOfSquaredErrors(){
+        return new SumOfSquaredErrors();
     }
     public static ClusterEvaluation getTau(){
         return new Tau();
     }
+    public static ClusterEvaluation getTraceScatterMatrix(){
+        return new TraceScatterMatrix();
+    }
+    public static ClusterEvaluation getWB(){
+        return new WB();
+    }
+    
+    
+    
 }
