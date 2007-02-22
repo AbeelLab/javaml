@@ -12,15 +12,11 @@ public class PerformanceMeasures {
 
     public double numFalseNegatives;
 
-    //private double numInstances;
-   
+    
     public double getCC(){
         
         return (numTruePositives*numTrueNegatives-numFalsePositives*numFalseNegatives)/ Math.sqrt((numTruePositives+numFalsePositives)*(numTruePositives+numFalseNegatives)*(numTrueNegatives+numFalsePositives)*(numTrueNegatives+numFalseNegatives));
     }
-//    public double getCCBajic(){
-//        return (numTruePositives*numTruePositives-numFalsePositives*numFalseNegatives)/ Math.sqrt((numTruePositives+numFalsePositives)*(numTruePositives+numFalseNegatives)*(numTrueNegatives+numFalsePositives)*(numTrueNegatives+numFalseNegatives));
-//    }
     
     public double getCost(){
         return numFalsePositives/numTruePositives;
