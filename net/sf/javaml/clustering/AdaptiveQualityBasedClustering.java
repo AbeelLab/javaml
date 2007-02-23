@@ -96,7 +96,7 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
 		return mean;
 	}
 
-	// calulate max distance between cluster center ck and instances in the
+	// calculate max distance between cluster center ck and instances in the
 	// cluster
 	public double maxDist(Vector<Instance> data, Instance mean) {
 		double maxDist = Double.MIN_VALUE;
