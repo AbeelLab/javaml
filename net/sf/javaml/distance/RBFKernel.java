@@ -1,5 +1,5 @@
 /**
- * RBFKernel.java, 4-dec-2006
+ * RBFKernel.java
  *
  * This file is part of the Java Machine Learning API
  * 

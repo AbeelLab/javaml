@@ -1,5 +1,5 @@
 /**
- * NormDistance.java, 4-dec-2006
+ * NormDistance.java
  *
  * This file is part of the Java Machine Learning API
  * 
@@ -17,7 +17,7 @@
  * along with the Java Machine Learning API; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * 
- * Copyright (c) 2006, Thomas Abeel
+ * Copyright (c) 2006-2007, Thomas Abeel
  * 
  * Project: http://sourceforge.net/projects/java-ml/
  * 
@@ -31,7 +31,7 @@ import net.sf.javaml.core.Instance;
  * 
  * This class implements the Norm distance. This is a generalization of the
  * Euclidean distance, in this respect that the power we use becomes a parameter
- * instead of fixed to two.
+ * instead of being fixed to two.
  * 
  * The x-Norm distance between two points P=(p1,p2,...,pn) and
  * Q=(q1,q2,...,qn) in the Euclidean n-space is defined as: ((p1-q1)^x +
