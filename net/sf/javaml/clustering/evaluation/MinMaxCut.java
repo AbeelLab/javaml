@@ -17,20 +17,16 @@
  * along with the Java Machine Learning API; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * 
- * Copyright (c) 2006, Andreas De Rijcke
- * Copyright (c) 2006, Thomas Abeel
+ * Copyright (c) 2006-2007, Andreas De Rijcke
+ * Copyright (c) 2006-2007, Thomas Abeel
  * 
  * Project: http://sourceforge.net/projects/java-ml/
  * 
  */
 package net.sf.javaml.clustering.evaluation;
 
-import net.sf.javaml.clustering.Clusterer;
 import net.sf.javaml.core.Dataset;
-import net.sf.javaml.core.Instance;
-import net.sf.javaml.core.SimpleDataset;
 import net.sf.javaml.distance.DistanceMeasure;
-
 
 /**
  * G_1 from the Zhao 2001 paper
@@ -38,39 +34,44 @@ import net.sf.javaml.distance.DistanceMeasure;
  * TODO uitleg
  * 
  * @author Andreas De Rijcke
- * 
+ * @author Thomas Abeel
  */
 
 public class MinMaxCut implements ClusterEvaluation {
+    public MinMaxCut(DistanceMeasure dm) {
+        this.dm = dm;
+    }
 
-	public double score(Dataset[] datas) {
-		
-		double sum = 0;
-		for (int i = 0; i < c.getNumberOfClusters(); i++) {
-			double tmpTop = 0;
-			double tmp = 0;
-			for (int j = 0; j < datas[i].size(); j++) {
-				for (int k = 0; k < data.size(); k++) {
-					if (datas[i].getInstance(j) != data.getInstance(k)) {
-						double error = dm.calculateDistance(datas[i]
-								.getInstance(j), data.getInstance(k));
-						tmpTop += error;
-					}
-				}
-				for (int k = 0; k < datas[i].size(); k++) {
-					double error = dm.calculateDistance(
-							datas[i].getInstance(j), datas[i].getInstance(k));
-					tmp += error;
-				}
-			}
-			double tmpSum = tmpTop / tmp;
-			sum += tmpSum;
-		}
-		return sum;
-	}
+    private DistanceMeasure dm;
 
-	public boolean compareScore(double score1, double score2) {
-		// should be minimized
-		return score2 < score1;
-	}
+    public double score(Dataset[] datas) {
+
+        double sum = 0;
+        for (int i = 0; i < datas.length; i++) {
+            double tmpTop = 0;
+            double tmp = 0;
+            for (int j = 0; j < datas[i].size(); j++) {
+
+                for (int k = 0; k < datas.length; k++) {
+                    for (int p = 0; p < datas[k].size(); p++)
+                        if (datas[i].getInstance(j) != datas[k].getInstance(p)) {
+                            double error = dm.calculateDistance(datas[i].getInstance(j), datas[k].getInstance(p));
+                            tmpTop += error;
+                        }
+                }
+                for (int k = 0; k < datas[i].size(); k++) {
+                    double error = dm.calculateDistance(datas[i].getInstance(j), datas[i].getInstance(k));
+                    tmp += error;
+                }
+            }
+            double tmpSum = tmpTop / tmp;
+            sum += tmpSum;
+        }
+        return sum;
+    }
+
+    public boolean compareScore(double score1, double score2) {
+        // should be minimized
+        return score2 < score1;
+    }
 }
