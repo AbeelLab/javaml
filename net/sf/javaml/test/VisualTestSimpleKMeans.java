@@ -35,9 +35,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import net.sf.javaml.clustering.SimpleKMeans;
+import net.sf.javaml.clustering.evaluation.CIndex;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.core.SimpleDataset;
+import net.sf.javaml.distance.EuclideanDistance;
 import net.sf.javaml.tools.DatasetGenerator;
 
 public class VisualTestSimpleKMeans extends JPanel {
@@ -62,24 +63,20 @@ public class VisualTestSimpleKMeans extends JPanel {
     public VisualTestSimpleKMeans() {
         this.setLayout(new GridLayout(0, 3));
         int space = 300;
-        Dataset data = DatasetGenerator.createClusterSquareDataset(space, 10);
+        Dataset data = DatasetGenerator.createClusterSquareDataset(space, 10,100);
 
         this.add(createLabel(data, Color.BLACK, space, space, null, null, 0));
-        SimpleKMeans km = new SimpleKMeans(4, 500);
-        km.buildClusterer(data);
-
-        Dataset[] datas = new Dataset[4];
-        for (int i = 0; i < 4; i++) {
-            datas[i] = new SimpleDataset();
-        }
-        for (int i = 0; i < data.size(); i++) {
-            Instance in = data.getInstance(i);
-            datas[km.predictCluster(in)].addInstance(in);
-        }
+        SimpleKMeans km = new SimpleKMeans(4, 100);
+        Dataset[] datas = km.executeClustering(data);
+        
         Color[] colors = { Color.RED, Color.GREEN, Color.BLUE, Color.MAGENTA };
         for (int i = 0; i < 4; i++) {
             this.add(createLabel(datas[i], colors[i], space, space, km, colors, i));
         }
+        
+        CIndex cindex=new CIndex(new EuclideanDistance());
+        System.out.println("C-index score: "+cindex.score(datas));
+        
 
     }
 
