@@ -1,5 +1,5 @@
 /**
- * SimpleKMeans.java, 24-okt-06
+ * SimpleKMeans.java
  *
  * This file is part of the Java Machine Learning API
  * 
@@ -17,7 +17,7 @@
  * along with the Java Machine Learning API; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * 
- * Copyright (c) 2006, Thomas Abeel
+ * Copyright (c) 2006-2007, Thomas Abeel
  * 
  * Project: http://sourceforge.net/projects/java-ml/
  * 
@@ -29,6 +29,7 @@ import java.util.Random;
 
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
+import net.sf.javaml.core.SimpleDataset;
 import net.sf.javaml.core.SimpleInstance;
 import net.sf.javaml.distance.DistanceMeasure;
 import net.sf.javaml.distance.DistanceMeasureFactory;
@@ -71,6 +72,10 @@ public class SimpleKMeans implements Clusterer {
      */
     protected Instance[] centroids;
 
+    @Deprecated
+    public Instance[]getCentroids(){
+        return centroids;
+    }
     /**
      * Create a new Simple K-means clusterer with the given number of clusters
      * and iterations. The internal random generator is a new one based upon the
@@ -86,7 +91,7 @@ public class SimpleKMeans implements Clusterer {
         this(clusters, iterations, DistanceMeasureFactory.getEuclideanDistanceMeasure());
     }
 
-      /**
+    /**
      * Create a new K-means clusterer with the given number of clusters and
      * iterations. Also the Random Generator for the clusterer is given as
      * parameter.
@@ -95,7 +100,7 @@ public class SimpleKMeans implements Clusterer {
      *            the number of clustesr
      * @param iterations
      *            the number of iterations
-
+     * 
      * @param dm
      *            the distance measure to use
      */
@@ -103,10 +108,41 @@ public class SimpleKMeans implements Clusterer {
         this.numberOfClusters = clusters;
         this.numberOfIterations = iterations;
         this.dm = dm;
-        rg=new Random(System.currentTimeMillis());
+        rg = new Random(System.currentTimeMillis());
     }
 
-    public void buildClusterer(Dataset data) {
+   
+
+    // public int predictCluster(Instance instance) {
+    // if (this.centroids == null)
+    // throw new RuntimeException("The cluster should first be constructed");
+    // int tmpCluster = -1;
+    // double minDistance = Double.MAX_VALUE;
+    // for (int i = 0; i < this.numberOfClusters; i++) {
+    // double dist = dm.calculateDistance(centroids[i], instance);
+    // if (dist < minDistance) {
+    // minDistance = dist;
+    // tmpCluster = i;
+    // }
+    // }
+    // return tmpCluster;
+    // }
+
+    // public double[] predictMembershipDistribution(Instance instance) {
+    // double[] tmp = new double[this.getNumberOfClusters()];
+    // tmp[this.predictCluster(instance)] = 1;
+    // return tmp;
+    // }
+
+    // /**
+    // * This method is only intended for testing purposes.
+    // *
+    // */
+    // public Instance[] getCentroids() {
+    // return this.centroids;
+    // }
+
+    public Dataset[] executeClustering(Dataset data) {
         if (data.size() == 0)
             throw new RuntimeException("The dataset should not be empty");
         if (numberOfClusters == 0)
@@ -136,7 +172,7 @@ public class SimpleKMeans implements Clusterer {
             int[] assignment = new int[data.size()];
             for (int i = 0; i < data.size(); i++) {
                 int tmpCluster = -1;
-                double minDistance =Double.MAX_VALUE;
+                double minDistance = Double.MAX_VALUE;
                 for (int j = 0; j < centroids.length; j++) {
                     double dist = dm.calculateDistance(centroids[j], data.getInstance(i));
                     if (dist < minDistance) {
@@ -156,7 +192,7 @@ public class SimpleKMeans implements Clusterer {
             for (int i = 0; i < data.size(); i++) {
                 Instance in = data.getInstance(i);
                 for (int j = 0; j < instanceLength; j++) {
-                    
+
                     sumPosition[assignment[i]][j] += in.getWeight() * in.getValue(j);
 
                 }
@@ -164,10 +200,7 @@ public class SimpleKMeans implements Clusterer {
             }
             centroidsChanged = false;
             for (int i = 0; i < this.numberOfClusters; i++) {
-                if (countPosition[i] > 0) {// when there are no instances
-                    // associated with this centroid, it
-                    // remains the same. Another possibility would be to
-                    // reinitialize that centroid with a new random on.
+                if (countPosition[i] > 0) {
                     float[] tmp = new float[instanceLength];
                     for (int j = 0; j < instanceLength; j++) {
                         tmp[j] = (float) sumPosition[i][j] / countPosition[i];
@@ -177,44 +210,36 @@ public class SimpleKMeans implements Clusterer {
                         centroidsChanged = true;
                         centroids[i] = newCentroid;
                     }
+                } else {
+                    float[] randomInstance = new float[instanceLength];
+                    for (int j = 0; j < instanceLength; j++) {
+                        double dist = Math.abs(max.getValue(j) - min.getValue(j));
+                        randomInstance[j] = (float) (min.getValue(j) + rg.nextDouble() * dist);
+
+                    }
+                    this.centroids[i] = new SimpleInstance(randomInstance);
                 }
 
             }
 
         }
-    }
-
-    public int getNumberOfClusters() {
-        return this.numberOfClusters;
-    }
-
-    public int predictCluster(Instance instance) {
-        if (this.centroids == null)
-            throw new RuntimeException("The cluster should first be constructed");
-        int tmpCluster = -1;
-        double minDistance = Double.MAX_VALUE;
-        for (int i = 0; i < this.numberOfClusters; i++) {
-            double dist = dm.calculateDistance(centroids[i], instance);
-            if (dist < minDistance) {
-                minDistance = dist;
-                tmpCluster = i;
+        Dataset[] output = new Dataset[centroids.length];
+        for(int i=0;i<centroids.length;i++)
+            output[i]=new SimpleDataset();
+        for (int i = 0; i < data.size(); i++) {
+            int tmpCluster = -1;
+            double minDistance = Double.MAX_VALUE;
+            for (int j = 0; j < centroids.length; j++) {
+                double dist = dm.calculateDistance(centroids[j], data.getInstance(i));
+                if (dist < minDistance) {
+                    minDistance = dist;
+                    tmpCluster = j;
+                }
             }
+            output[tmpCluster].addInstance(data.getInstance(i));
+
         }
-        return tmpCluster;
-    }
-
-    public double[] predictMembershipDistribution(Instance instance) {
-        double[] tmp = new double[this.getNumberOfClusters()];
-        tmp[this.predictCluster(instance)] = 1;
-        return tmp;
-    }
-
-    /**
-     * This method is only intended for testing purposes.
-     * 
-     */
-    public Instance[] getCentroids() {
-        return this.centroids;
+        return output;
     }
 
 }
