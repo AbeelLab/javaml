@@ -6,8 +6,9 @@
  CERN makes no representations about the suitability of this software for any purpose. 
  It is provided "as is" without expressed or implied warranty.
  */
-//package cern.jet.stat;
-//import cern.jet.math.Polynomial;
+/*package cern.jet.stat;
+import cern.jet.math.Polynomial;*/
+
 /**
  * Gamma and Beta functions.
  * <p>
@@ -25,13 +26,13 @@ package net.sf.javaml.optimization;
 import net.sf.javaml.optimization.Polynomial;
 
 public class GammaFunction {
-	protected static final double SQTPI = 2.50662827463100050242E0;
+	private final double SQTPI = 2.50662827463100050242E0;
 
 	/**
 	 * Returns the Gamma function computed by Stirling's formula; formerly named
 	 * <tt>stirf</tt>. The polynomial STIR is valid for 33 <= x <= 172.
 	 */
-	static double stirlingFormula(double x) throws ArithmeticException {
+	public double stirlingFormula(double x) throws ArithmeticException {
 		double STIR[] = { 7.87311395793093628397E-4,
 				-2.29549961613378126380E-4, -2.68132617805781232825E-3,
 				3.47222221605458667310E-3, 8.33333333333482257126E-2, };
@@ -56,7 +57,7 @@ public class GammaFunction {
 	/**
 	 * Returns the Gamma function of the argument.
 	 */
-	static public double gamma(double x) throws ArithmeticException {
+	public double gamma(double x) throws ArithmeticException {
 
 		double P[] = { 1.60119522476751861407E-4, 1.19135147006586384913E-3,
 				1.04213797561761569935E-2, 4.76367800457137231464E-2,

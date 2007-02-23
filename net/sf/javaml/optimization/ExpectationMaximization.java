@@ -26,28 +26,32 @@
 package net.sf.javaml.optimization;
 
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.core.SimpleInstance;
 import net.sf.javaml.distance.DistanceMeasure;
 import net.sf.javaml.distance.EuclideanDistance;
+import net.sf.javaml.optimization.GammaFunction;
 import java.lang.Math;
 import java.util.Vector;
 
 public class ExpectationMaximization {
 
 	private int maxIter = 200;
+
 	// convergence criterium
 	private double cdif = 0.001;
 
+	// dimension - 2
 	private double dimD;
 
+	// Pc
 	private double pc;
 
-	// optimized pc
+	// optimized Pc
 	private double pcOp;
 
+	// pb
 	private double pb;
 
-	// optimized pb
+	// optimized Pb
 	private double pbOp;
 
 	private double sD;
@@ -56,16 +60,26 @@ public class ExpectationMaximization {
 
 	private double sm;
 
+	private double variance;
+	// optimized variance
+	private double varianceOp;
+
+	// p(r|C)
 	private Vector<Double> prc;
 
+	// p(r|B)
 	private Vector<Double> prb;
 
+	// p(r|C)*Pc
 	private Vector<Double> prcpc;
 
+	// p(r|B)*Pb
 	private Vector<Double> prbpb;
 
+	// p(r)
 	private Vector<Double> pr;
 
+	// p(C|r)
 	private Vector<Double> pcr;
 
 	// all instances in cluster
@@ -74,88 +88,66 @@ public class ExpectationMaximization {
 	// all distances between cluster centroid and Instance < rk_prelim
 	private Vector<Double> clusterDist;
 
-	private Vector<Double> variance;
-
-	private Vector<Double> varianceOp;
-
 	private DistanceMeasure dm = new EuclideanDistance();
 
+	private GammaFunction gammaF = new GammaFunction();
+
 	// calculates first variance esteimate for a number of instances
-	public Vector<Double> var(Vector<Instance> cluster,
-			Vector<Double> clusterDist, double dimD) {
-		Vector<Double> var = new Vector<Double>();
+	public double var(Vector<Instance> cluster, Vector<Double> clusterDist,
+			double dimD) {
+		double var;
 		int instanceLenght = cluster.get(0).size();
-		double sum[] = new double[instanceLenght];
+		double sum = 0;
 		for (int i = 0; i < cluster.size(); i++) {
 			for (int j = 0; j < instanceLenght; j++) {
-				sum[j] += cluster.get(i).getValue(j)
-						* cluster.get(i).getValue(j);
+				sum += cluster.get(i).getValue(j) * cluster.get(i).getValue(j);
 			}
 		}
-		for (int j = 0; j < instanceLenght; j++) {
-			var.add((1 / dimD) * sum[j] / clusterDist.size());
-		}
-		return var;
+		return var = (1 / dimD) * sum / clusterDist.size();
 	}
 
 	// calculates optimized variance
-	public Vector<Double> varOp(Vector<Instance> cluster, Vector<Double> pcr,
+	public double varOp(Vector<Instance> cluster, Vector<Double> pcr,
 			double dimD, double sm) {
-		Vector<Double> varOp = new Vector<Double>();
+		double varOp;
 		int instanceLenght = cluster.get(0).size();
 		if (instanceLenght != pcr.size()) {
 			throw new RuntimeException(
 					"Both vectors should contain the same number of values.");
 		}
-		double sum[] = new double[instanceLenght];
+		double sum = 0;
 		for (int i = 0; i < cluster.size(); i++) {
 			for (int j = 0; j < instanceLenght; j++) {
-				// TODO check if right sum
-				sum[j] += (cluster.get(i).getValue(j) * cluster.get(i)
-						.getValue(j))
+				sum += (cluster.get(i).getValue(j) * cluster.get(i).getValue(j))
 						* pcr.get(j);
 			}
 		}
-		for (int j = 0; j < instanceLenght; j++) {
-			varOp.add((1 / dimD) * sum[j] / sm);
-		}
-		return varOp;
+		return varOp = (1 / dimD) * sum / sm;
 	}
 
 	// calculates p(r|C)
-	public Vector<Double> prc(Vector<Double> var, Vector<Double> clusterDist,
+	public Vector<Double> prc(double var, Vector<Double> clusterDist,
 			double sD, double dimD) {
-		if (var.size() != clusterDist.size()) {
-			throw new RuntimeException(
-					"Both vectors should contain the same number of values.");
-		}
 		Vector<Double> prc = new Vector<Double>();
-		int varLenght = var.size();
-		double sum[] = new double[varLenght];
-		for (int i = 0; i < varLenght; i++) {
-			sum[i] += (sD / Math.pow(2 * Math.PI * var.get(i) * var.get(i),
-					dimD / 2))
+		double sum[] = new double[clusterDist.size()];
+		for (int i = 0; i < clusterDist.size(); i++) {
+			sum[i] += (sD / Math.pow(2 * Math.PI * var * var, dimD / 2))
 					* Math.pow(clusterDist.get(i), dimD - 1)
 					* Math.exp(-(clusterDist.get(i) * clusterDist.get(i))
-							/ (2 * var.get(i) * var.get(i)));
+							/ (2 * var * var));
 			prc.add(sum[i]);
 		}
 		return prc;
 	}
 
 	// calculates p(r|B)
-	public Vector<Double> prb(Vector<Double> var, Vector<Double> clusterDist,
+	public Vector<Double> prb(double var, Vector<Double> clusterDist,
 			double sD, double sD1, double dimD) {
-		if (var.size() != clusterDist.size()) {
-			throw new RuntimeException(
-					"Both vectors should contain the same number of values.");
-		}
 		Vector<Double> prb = new Vector<Double>();
-		int varLenght = var.size();
-		double sum[] = new double[varLenght];
-		for (int i = 0; i < varLenght; i++) {
+		double sum[] = new double[clusterDist.size()];
+		for (int i = 0; i < clusterDist.size(); i++) {
 			sum[i] += (sD / (sD1 * Math.pow(dimD + 1, dimD / 2)))
-					* Math.pow(var.get(i), dimD - 1);
+					* Math.pow(var, dimD - 1);
 			prb.add(sum[i]);
 		}
 		return prb;
@@ -204,8 +196,7 @@ public class ExpectationMaximization {
 
 	// calculates sD
 	public double sD(double dimD) {
-		// TODO add gamma function
-		double sD = Math.pow(2 * Math.PI, dimD / 2) / gamma(dimD / 2);
+		double sD = Math.pow(2 * Math.PI, dimD / 2) / gammaF.gamma(dimD / 2);
 		return sD;
 	}
 
@@ -219,8 +210,8 @@ public class ExpectationMaximization {
 	}
 
 	// main algorithm
-	public void em(Vector<Instance> data, Instance ck, double rk_prelim,
-			double dimension) {
+	public double em(Vector<Instance> data, Instance ck, double rk_prelim,
+			double dimension, Vector<Double> output) {
 		dimD = dimension - 2;
 		int dataSize = data.size();
 		// find instances within pre-estimated radius (rk_prelim) and calculate
@@ -237,8 +228,6 @@ public class ExpectationMaximization {
 		pb = 1 - pc;
 		variance = var(cluster, clusterDist, dimD);
 
-		double conv = 0;
-
 		for (int i = 0; i < maxIter; i++) {
 			sD = sD(dimD);
 			sD1 = sD(dimD + 1);
@@ -249,14 +238,24 @@ public class ExpectationMaximization {
 			pr = pr(prcpc, prbpb);
 			pcr = pcr(prcpc, pr);
 			sm = sm(pcr);
+			if ( sm == 0 || sm == Double.POSITIVE_INFINITY || sm == Double.NEGATIVE_INFINITY){
+				System.out.println("SM value not valid.");
+				output=null;
+				return 0;
+			}
 			varianceOp = varOp(cluster, pcr, dimD, sm);
 			pcOp = sm / cluster.size();
 			pbOp = 1 - pcOp;
-			// TODO add break if...
+			if ( Math.abs(varianceOp - variance) < cdif & Math.abs(pcOp-pc)< cdif){
+				System.out.println("No or incorrect convergence.");
+				output=null;
+				return 0;
+			}
 			pc = pcOp;
 			pb = pbOp;
 			variance = varianceOp;
 		}
-
+		output.add(variance);
+		return pc;
 	}
 }
