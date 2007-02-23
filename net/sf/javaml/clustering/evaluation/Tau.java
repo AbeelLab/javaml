@@ -89,9 +89,6 @@ public class Tau implements ClusterEvaluation {
 			}
 		}
 		nd = fw + fb;
-		System.out.println("(nd(nd-1))/2:" + (nd * (nd - 1)) / 2);
-		System.out.println("fw: " + fw + ",fb: " + fb);
-		System.out.println("t: " + t + ",n: " + nd+",s+: " + sPlus+",s-: " + sMin);
 		double tau = (sPlus - sMin)/ Math.sqrt((nd * (nd - 1) / 2 - t) * (nd * (nd - 1) / 2));
 		return tau;
 	}
