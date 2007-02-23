@@ -1,5 +1,5 @@
 /**
- * HybridCentroidSimilarity.java, 16-nov-2006
+ * HybridCentroidSimilarity.java
  *
  * This file is part of the Java Machine Learning API
  * 
@@ -17,7 +17,8 @@
  * along with the Java Machine Learning API; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * 
- * Copyright (c) 2006, Thomas Abeel, Andreas De Rijcke
+ * Copyright (c) 2006-2007, Thomas Abeel
+ * Copyright (c) 2006-2007, Andreas De Rijcke
  * 
  * Project: http://sourceforge.net/projects/java-ml/
  * 
@@ -25,32 +26,31 @@
 
 package net.sf.javaml.clustering.evaluation;
 
-import net.sf.javaml.clustering.Clusterer;
-import net.sf.javaml.clustering.evaluation.TraceScatterMatrix;
-import net.sf.javaml.clustering.evaluation.SumOfCentroidSimilarities;
 import net.sf.javaml.core.Dataset;
 
 /**
  * H_2 from the Zhao 2001 paper
  * 
  * TODO uitleg
+ * 
  * @author Andreas De Rijcke
- *
+ * @author Thomas Abeel
+ * 
  */
 
-public class HybridCentroidSimilarity implements ClusterEvaluation{
-		
-	public double score (Clusterer c, Dataset data) {
-		ClusterEvaluation ceTop = new SumOfCentroidSimilarities();//I_2
-		double sum = ceTop.score(c, data);
-		ClusterEvaluation ce = new TraceScatterMatrix();//E_1
-		sum /= ce.score(c, data);
-	
-	return sum;
-	}
-	
-	public boolean compareScore(double score1, double score2) {
-        //should be maxed
-        return score2>score1;
-	}
+public class HybridCentroidSimilarity implements ClusterEvaluation {
+
+    public double score(Dataset[] datas) {
+        ClusterEvaluation ceTop = new SumOfCentroidSimilarities();// I_2
+        double sum = ceTop.score(datas);
+        ClusterEvaluation ce = new TraceScatterMatrix();// E_1
+        sum /= ce.score(datas);
+
+        return sum;
+    }
+
+    public boolean compareScore(double score1, double score2) {
+        // should be maxed
+        return score2 > score1;
+    }
 }
