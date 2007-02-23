@@ -1,5 +1,5 @@
 /**
- * Gamma.java, 1-dec-06
+ * Gamma.java
  *
  * This file is part of the Java Machine Learning API
  * 
