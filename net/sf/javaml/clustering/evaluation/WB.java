@@ -1,5 +1,5 @@
 /**
- * WB.java, 6-dec-06
+ * WB.java
  *
  * This file is part of the Java Machine Learning API
  * 
@@ -17,7 +17,8 @@
  * along with the Java Machine Learning API; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * 
- * Copyright (c) 2006, Andreas De Rijcke
+ * Copyright (c) 2006-2007, Andreas De Rijcke
+ * Copyright (c) 2006-2007, Thomas Abeel
  * 
  * Project: http://sourceforge.net/projects/java-ml/
  * 
@@ -25,35 +26,29 @@
 
 package net.sf.javaml.clustering.evaluation;
 
-import net.sf.javaml.clustering.Clusterer;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.core.SimpleDataset;
 import net.sf.javaml.distance.DistanceMeasure;
-import net.sf.javaml.distance.EuclideanDistance;
 
 /**
  * TODO uitleg
  * 
  * @author Andreas De Rijcke
+ * @author Thomas Abeel
  * 
  */
 public class WB implements ClusterEvaluation {
-	private DistanceMeasure dm = new EuclideanDistance();
+    public WB(DistanceMeasure dm) {
+        this.dm = dm;
+    }
 
-	public double score(Clusterer c, Dataset data) {
-		Dataset[] datas = new Dataset[c.getNumberOfClusters()];
+    private DistanceMeasure dm;
+
+	public double score(Dataset[] datas) {
 		double dw = 0, fw = 0;
 		double db = 0, fb = 0;
-		// get clusters
-		for (int i = 0; i < c.getNumberOfClusters(); i++) {
-			datas[i] = new SimpleDataset();
-		}
-		for (int i = 0; i < data.size(); i++) {
-			Instance in = data.getInstance(i);
-			datas[c.predictCluster(in)].addInstance(in);
-		}
-		for (int i = 0; i < c.getNumberOfClusters(); i++) {
+		
+		for (int i = 0; i < datas.length; i++) {
 			for (int j = 0; j < datas[i].size(); j++) {
 				Instance x = datas[i].getInstance(j);
 				// calculate sum of intra cluster distances dw and count their
@@ -66,7 +61,7 @@ public class WB implements ClusterEvaluation {
 				}
 				// calculate sum of inter cluster distances dw and count their
 				// number.
-				for (int k = i + 1; k < c.getNumberOfClusters(); k++) {
+				for (int k = i + 1; k < datas.length; k++) {
 					for (int l = 0; l < datas[k].size(); l++) {
 						Instance y = datas[k].getInstance(l);
 						double distance = dm.calculateDistance(x, y);
