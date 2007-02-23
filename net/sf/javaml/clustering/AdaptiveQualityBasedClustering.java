@@ -55,7 +55,6 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
 	private double accurRad = 0.1;
 
 	// other variables
-	private int numberOfClusters;
 
 	private double dimension;
 
@@ -71,7 +70,7 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
 
 	private Instance ck;
 
-	private Vector<Instance> centroids;
+	private Vector<Vector<Instance>> finalClusters;
 
 	private DistanceMeasure dm = new EuclideanDistance();
 
@@ -126,7 +125,8 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
 	}
 
 	// main
-	public void buildClusterer(Dataset data) {
+	public Dataset[] executeClustering(Dataset data) {
+		
 		// normalize dataset
 		Dataset dataNorm = normMean.filterDataset(data);
 
@@ -145,7 +145,7 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
 		}
 		
 		int iterator = 0;
-		while (iterator <= maxIterMain) {
+		while (iterator <= maxIterMain & all != null) {
 
 			// step1: locate cluster center
 			ck = mean(cluster);
@@ -168,7 +168,7 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
 				ck = null;
 				System.out
 						.println("Undefined cluster center or no convergence.");
-				return;
+				return null;
 			} else {
 				ck = newMean;
 			}
@@ -177,13 +177,13 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
 
 			// calculation of sigma and a prior prob pc and pb via EM
 			// temporarily vector for variance calculation via EM
-			Vector<Double> output = new Vector<Double>();
-			double pc = em.em(cluster, ck, rk_prelim, dimension, output);
+			Vector<Double> varianceEst = new Vector<Double>();
+			double pc = em.em(cluster, ck, rk_prelim, dimension, varianceEst);
 			double pb = 1 - pc;
-			variance = output.get(0);
-			if (pc == 0 & output == null) {
+			variance = varianceEst.get(0);
+			if (pc == 0 & varianceEst == null) {
 				System.out.println("EM algorithm did not converge.");
-				return;
+				return null;
 			}
 			// calculation new radius
 			double dimD = dimension - 2;
@@ -201,18 +201,13 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
 				// remove cluster from data if valid cluster and calculate
 				// centroid
 				if (cluster.size() >= minInstances) {
-					Instance centroid = mean(cluster);
-					centroids.add(centroid);
+					finalClusters.add(cluster);
 					all.removeAll(cluster);
 					cluster.clear();
-					if (all == null) {
-						System.out.println("All data put in clusters.");
-						return;
-					}
 					cluster.addAll(all);
 				} else {
 					System.out.println("Cluster not valid.");
-					return;
+					return null;
 				}
 			} else {
 				iterator++;
@@ -220,32 +215,14 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
 			// update preliminary radius estimate with new estimate
 			rk_prelim = rk;
 		}
-		numberOfClusters = centroids.size();
-	}
-
-	public int getNumberOfClusters() {
-		return this.numberOfClusters;
-	}
-
-	public int predictCluster(Instance instance) {
-		if (this.centroids == null)
-			throw new RuntimeException(
-					"The cluster should first be constructed");
-		int tmpCluster = -1;
-		double minDistance = Double.MAX_VALUE;
-		for (int i = 0; i < this.centroids.size(); i++) {
-			double dist = dm.calculateDistance(centroids.get(i), instance);
-			if (dist < minDistance) {
-				minDistance = dist;
-				tmpCluster = i;
+		Dataset[] output = new Dataset[finalClusters.size()];
+		for(int i=0;i<finalClusters.size();i++){
+			Vector<Instance> getCluster = new Vector<Instance>();
+			getCluster = finalClusters.get(i);
+			for (int j=0; j< getCluster.size();j++){
+				output[i].addInstance(getCluster.get(j));
 			}
 		}
-		return tmpCluster;
-	}
-
-	public double[] predictMembershipDistribution(Instance instance) {
-		double[] tmp = new double[this.getNumberOfClusters()];
-		tmp[this.predictCluster(instance)] = 1;
-		return tmp;
+		return output;
 	}
 }
