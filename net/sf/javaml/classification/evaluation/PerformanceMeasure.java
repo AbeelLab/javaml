@@ -1,5 +1,5 @@
 /**
- * PerformanceMeasure.java, 17-jan-2007
+ * PerformanceMeasure.java
  *
  * This file is part of the Java Machine Learning API
  * 
@@ -150,6 +150,10 @@ public class PerformanceMeasure {
                         * (this.trueNegatives + this.falsePositives) * (this.falseNegatives + this.truePositives));
     }
 
+    public double getFMeasure(){
+        return getFMeasure(1);
+    }
+    
     public double getFMeasure(int beta) {
         return ((beta * beta + 1) * this.getPrecision() * this.getRecall())
                 / (beta * beta * this.getPrecision() + this.getRecall());
