@@ -1,5 +1,5 @@
 /**
- * CIndex.java, 5-dec-06
+ * CIndex.java
  *
  * This file is part of the Java Machine Learning API
  * 
@@ -17,7 +17,8 @@
  * along with the Java Machine Learning API; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * 
- * Copyright (c) 2006, Andreas De Rijcke
+ * Copyright (c) 2006-2007, Andreas De Rijcke
+ * Copyright (c) 2006-2007, Thomas Abeel
  * 
  * Project: http://sourceforge.net/projects/java-ml/
  * 
@@ -25,10 +26,8 @@
 
 package net.sf.javaml.clustering.evaluation;
 
-import net.sf.javaml.clustering.Clusterer;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.core.SimpleDataset;
 import net.sf.javaml.distance.DistanceMeasure;
 import net.sf.javaml.distance.EuclideanDistance;
 
@@ -36,48 +35,46 @@ import net.sf.javaml.distance.EuclideanDistance;
  * TODO uitleg
  * 
  * @author Andreas De Rijcke
+ * @author Thomas Abeel
  * 
  */
 
 public class CIndex implements ClusterEvaluation {
-	private DistanceMeasure dm = new EuclideanDistance();
 
-	public double score(Clusterer c, Dataset data) {
-		Dataset[] datas = new Dataset[c.getNumberOfClusters()];
-		double dw = 0;
-		double minDw = Double.MAX_VALUE, maxDw = Double.MIN_VALUE;
-		// get clusters
-		for (int i = 0; i < c.getNumberOfClusters(); i++) {
-			datas[i] = new SimpleDataset();
-		}
-		for (int i = 0; i < data.size(); i++) {
-			Instance in = data.getInstance(i);
-			datas[c.predictCluster(in)].addInstance(in);
-		}
-		// calculate intra cluster distances and sum of all.
-		for (int i = 0; i < c.getNumberOfClusters(); i++) {
-			for (int j = 0; j < datas[i].size(); j++) {
-				Instance x = datas[i].getInstance(j);
-				for (int k = j + 1; k < datas[i].size(); k++) {
-					Instance y = datas[i].getInstance(k);
-					double distance = dm.calculateDistance(x, y);
-					dw += distance;
-					if (maxDw < distance) {
-						maxDw = distance;
-					}
-					if (minDw > distance) {
-						minDw = distance;
-					}
-				}
-			}			
-		}
-		// calculate C Index
-		double cIndex = (dw - minDw) / (maxDw - minDw);
-		return cIndex;
-	}
+    public CIndex(DistanceMeasure dm) {
+        this.dm = dm;
+    }
 
-	public boolean compareScore(double score1, double score2) {
-		// should be minimalized ( smallest intra cluster distances)
-		return score2 < score1;
-	}
+    private DistanceMeasure dm = new EuclideanDistance();
+
+    public double score(Dataset[]clusters) {
+        double dw = 0;
+        double minDw = Double.MAX_VALUE, maxDw = Double.MIN_VALUE;
+
+        // calculate intra cluster distances and sum of all.
+        for (int i = 0; i < clusters.length; i++) {
+            for (int j = 0; j < clusters[i].size(); j++) {
+                Instance x = clusters[i].getInstance(j);
+                for (int k = j + 1; k < clusters[i].size(); k++) {
+                    Instance y = clusters[i].getInstance(k);
+                    double distance = dm.calculateDistance(x, y);
+                    dw += distance;
+                    if (maxDw < distance) {
+                        maxDw = distance;
+                    }
+                    if (minDw > distance) {
+                        minDw = distance;
+                    }
+                }
+            }
+        }
+        // calculate C Index
+        double cIndex = (dw - minDw) / (maxDw - minDw);
+        return cIndex;
+    }
+
+    public boolean compareScore(double score1, double score2) {
+        // should be minimalized ( smallest intra cluster distances)
+        return score2 < score1;
+    }
 }

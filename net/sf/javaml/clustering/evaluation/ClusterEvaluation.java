@@ -1,5 +1,5 @@
-    /**
- * ClusterEvaluation.java, 16-nov-2006
+/**
+ * ClusterEvaluation.java
  *
  * This file is part of the Java Machine Learning API
  * 
@@ -17,14 +17,13 @@
  * along with the Java Machine Learning API; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * 
- * Copyright (c) 2006, Thomas Abeel
+ * Copyright (c) 2006-2007, Thomas Abeel
  * 
  * Project: http://sourceforge.net/projects/java-ml/
  * 
  */
 package net.sf.javaml.clustering.evaluation;
 
-import net.sf.javaml.clustering.Clusterer;
 import net.sf.javaml.core.Dataset;
 
 /**
@@ -39,13 +38,13 @@ public interface ClusterEvaluation {
     /**
      * Returns the score the current clusterer obtains on the dataset.
      * 
-     * @param c
-     *            the clusterer (the call to buildClusterer should be made)
+     * @param data
+     *            the original data
      * @param d
      *            the dataset to test the clusterer on.
-     * @return the score the clusterer obtains on this particular dataset
+     * @return the score the clusterer obtained on this particular dataset
      */
-    public double score(Clusterer c, Dataset d);
+    public double score(Dataset[] clusters);
 
     /**
      * Compares the two scores according to the criterion in the implementation.
