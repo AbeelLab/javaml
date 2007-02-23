@@ -28,7 +28,6 @@ package net.sf.javaml.clustering.evaluation;
 
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.distance.DistanceMeasure;
-import net.sf.javaml.distance.EuclideanDistance;
 
 /**
  * H_2 from the Zhao 2001 paper
@@ -46,7 +45,7 @@ public class HybridCentroidSimilarity implements ClusterEvaluation {
         this.dm = dm;
     }
 
-    private DistanceMeasure dm = new EuclideanDistance();
+    private DistanceMeasure dm;
     public double score(Dataset[] datas) {
         ClusterEvaluation ceTop = new SumOfCentroidSimilarities(dm);// I_2
         double sum = ceTop.score(datas);
