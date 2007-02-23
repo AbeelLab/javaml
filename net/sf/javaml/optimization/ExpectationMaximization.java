@@ -211,7 +211,7 @@ public class ExpectationMaximization {
 
 	// main algorithm
 	public double em(Vector<Instance> data, Instance ck, double rk_prelim,
-			double dimension, Vector<Double> output) {
+			double dimension, Vector<Double> varianceEst) {
 		dimD = dimension - 2;
 		int dataSize = data.size();
 		// find instances within pre-estimated radius (rk_prelim) and calculate
@@ -240,7 +240,7 @@ public class ExpectationMaximization {
 			sm = sm(pcr);
 			if ( sm == 0 || sm == Double.POSITIVE_INFINITY || sm == Double.NEGATIVE_INFINITY){
 				System.out.println("SM value not valid.");
-				output=null;
+				varianceEst=null;
 				return 0;
 			}
 			varianceOp = varOp(cluster, pcr, dimD, sm);
@@ -248,14 +248,14 @@ public class ExpectationMaximization {
 			pbOp = 1 - pcOp;
 			if ( Math.abs(varianceOp - variance) < cdif & Math.abs(pcOp-pc)< cdif){
 				System.out.println("No or incorrect convergence.");
-				output=null;
+				varianceEst=null;
 				return 0;
 			}
 			pc = pcOp;
 			pb = pbOp;
 			variance = varianceOp;
 		}
-		output.add(variance);
+		varianceEst.add(variance);
 		return pc;
 	}
 }
