@@ -39,7 +39,11 @@ import net.sf.javaml.distance.EuclideanDistance;
  */
 
 public class GPlus implements ClusterEvaluation {
-	private DistanceMeasure dm = new EuclideanDistance();
+    public GPlus(DistanceMeasure dm) {
+        this.dm = dm;
+    }
+
+    private DistanceMeasure dm = new EuclideanDistance();
 
 	public double score(Dataset[] datas) {
 		double maxIntraDist[] = new double[datas.length];

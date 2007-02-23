@@ -32,7 +32,7 @@ import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.SimpleDataset;
 import net.sf.javaml.core.SimpleInstance;
 import net.sf.javaml.distance.DistanceMeasure;
-import net.sf.javaml.distance.DistanceMeasureFactory;
+import net.sf.javaml.distance.EuclideanDistance;
 
 public class SimpleKMeans implements Clusterer {
     /**
@@ -88,7 +88,7 @@ public class SimpleKMeans implements Clusterer {
      *            the number of iterations
      */
     public SimpleKMeans(int clusters, int iterations) {
-        this(clusters, iterations, DistanceMeasureFactory.getEuclideanDistanceMeasure());
+        this(clusters, iterations, new EuclideanDistance());
     }
 
     /**

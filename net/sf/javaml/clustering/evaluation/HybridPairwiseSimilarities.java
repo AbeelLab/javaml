@@ -1,5 +1,5 @@
 /**
- * HybridPairwiseSimilarities.java, 16-nov-2006
+ * HybridPairwiseSimilarities.java
  *
  * This file is part of the Java Machine Learning API
  * 
@@ -17,7 +17,8 @@
  * along with the Java Machine Learning API; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * 
- * Copyright (c) 2006, Thomas Abeel, Andreas De Rijcke
+ * Copyright (c) 2006-2007, Thomas Abeel
+ * Copyright (c) 2006-2007, Andreas De Rijcke
  * 
  * Project: http://sourceforge.net/projects/java-ml/
  * 
@@ -25,32 +26,38 @@
 
 package net.sf.javaml.clustering.evaluation;
 
-import net.sf.javaml.clustering.Clusterer;
-import net.sf.javaml.clustering.evaluation.TraceScatterMatrix;
-import net.sf.javaml.clustering.evaluation.SumOfAveragePairwiseSimilarities;
 import net.sf.javaml.core.Dataset;
+import net.sf.javaml.distance.DistanceMeasure;
+import net.sf.javaml.distance.EuclideanDistance;
 
 /**
  * H_1 from the Zhao 2001 paper
  * 
  * TODO uitleg
+ * 
  * @author Andreas De Rijcke
- *
+ * @author Thomas Abeel
  */
 
-public class HybridPairwiseSimilarities implements ClusterEvaluation{
-		
-	public double score (Clusterer c, Dataset data) {
-		ClusterEvaluation ceTop = new SumOfAveragePairwiseSimilarities();//I_1
-		double sum = ceTop.score(c, data);
-		ClusterEvaluation ce = new TraceScatterMatrix();//E_1
-		sum /= ce.score(c, data);
-	
-	return sum;
-	}
-	
-	public boolean compareScore(double score1, double score2) {
-        //should be maxed
-        return score2>score1;
-	}
+public class HybridPairwiseSimilarities implements ClusterEvaluation {
+
+    public HybridPairwiseSimilarities(DistanceMeasure dm) {
+        this.dm = dm;
+    }
+
+    private DistanceMeasure dm = new EuclideanDistance();
+
+    public double score(Dataset[] data) {
+        ClusterEvaluation ceTop = new SumOfAveragePairwiseSimilarities(dm);// I_1
+        double sum = ceTop.score(data);
+        ClusterEvaluation ce = new TraceScatterMatrix(dm);// E_1
+        sum /= ce.score(data);
+
+        return sum;
+    }
+
+    public boolean compareScore(double score1, double score2) {
+        // should be maxed
+        return score2 > score1;
+    }
 }

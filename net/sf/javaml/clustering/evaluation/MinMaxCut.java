@@ -1,5 +1,5 @@
 /**
- * MinMaxCut.java, 17-nov-2006
+ * MinMaxCut.java
  *
  * This file is part of the Java Machine Learning API
  * 
@@ -18,6 +18,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * 
  * Copyright (c) 2006, Andreas De Rijcke
+ * Copyright (c) 2006, Thomas Abeel
  * 
  * Project: http://sourceforge.net/projects/java-ml/
  * 
@@ -29,7 +30,7 @@ import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.SimpleDataset;
 import net.sf.javaml.distance.DistanceMeasure;
-import net.sf.javaml.distance.DistanceMeasureFactory;
+
 
 /**
  * G_1 from the Zhao 2001 paper
@@ -42,17 +43,8 @@ import net.sf.javaml.distance.DistanceMeasureFactory;
 
 public class MinMaxCut implements ClusterEvaluation {
 
-	public double score(Clusterer c, Dataset data) {
-		Dataset[] datas = new Dataset[c.getNumberOfClusters()];
-		for (int i = 0; i < c.getNumberOfClusters(); i++) {
-			datas[i] = new SimpleDataset();
-		}
-		for (int i = 0; i < data.size(); i++) {
-			Instance in = data.getInstance(i);
-			datas[c.predictCluster(in)].addInstance(in);
-		}
-
-		DistanceMeasure dm = DistanceMeasureFactory.getCosineSimilarity();
+	public double score(Dataset[] datas) {
+		
 		double sum = 0;
 		for (int i = 0; i < c.getNumberOfClusters(); i++) {
 			double tmpTop = 0;

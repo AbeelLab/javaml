@@ -57,6 +57,8 @@ public class SimpleInstance implements Instance {
         }
         return out+"]";
     }
+    
+   
 	public SimpleInstance(float[] values) {
         this(values,1.0f);
     }

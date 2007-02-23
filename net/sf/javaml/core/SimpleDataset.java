@@ -27,13 +27,15 @@ package net.sf.javaml.core;
 
 import java.util.Vector;
 
+import net.sf.javaml.distance.DistanceMeasure;
+
 public class SimpleDataset implements Dataset {
     private Vector<Instance> instances = new Vector<Instance>();
 
-    float[] lowArray,highArray;
+    float[] lowArray, highArray;
 
     public boolean addInstance(Instance instance) {
-        
+
         if (instances.size() == 0) {
             lowArray = instance.getArrayForm();
             highArray = instance.getArrayForm();
@@ -44,10 +46,10 @@ public class SimpleDataset implements Dataset {
             instances.add(instance);
             for (int i = 0; i < instance.size(); i++) {
                 if (instance.getValue(i) < lowArray[i]) {
-                    lowArray[i]=instance.getValue(i);
+                    lowArray[i] = instance.getValue(i);
                 }
                 if (instance.getValue(i) > highArray[i]) {
-                    highArray[i]=instance.getValue(i);
+                    highArray[i] = instance.getValue(i);
                 }
             }
             return true;
@@ -90,10 +92,10 @@ public class SimpleDataset implements Dataset {
                 Instance instance = instances.get(j);
                 for (int i = 0; i < instance.size(); i++) {
                     if (instance.getValue(i) < lowArray[i]) {
-                        lowArray[i]=instance.getValue(i);
+                        lowArray[i] = instance.getValue(i);
                     }
                     if (instance.getValue(i) > highArray[i]) {
-                        highArray[i]=instance.getValue(i);
+                        highArray[i] = instance.getValue(i);
                     }
                 }
             }
@@ -112,16 +114,37 @@ public class SimpleDataset implements Dataset {
     public Instance getMinimumInstance() {
         return new SimpleInstance(lowArray);
     }
+
     @Override
-    public String toString(){
-        //TODO optimize using stringbuffer;
-        if(this.size()==0)
+    public String toString() {
+        // TODO optimize using stringbuffer;
+        if (this.size() == 0)
             return "";
-        String out=this.getInstance(0).toString();
-        for(int i=1;i<this.size();i++){
-            out+=";"+this.getInstance(i).toString();
+        String out = this.getInstance(0).toString();
+        for (int i = 1; i < this.size(); i++) {
+            out += ";" + this.getInstance(i).toString();
         }
-        
+
         return out;
+    }
+
+    public Instance getCentroid(DistanceMeasure dm) {
+        if (this.size() == 0)
+            return null;
+        int instanceLength = this.getInstance(0).size();
+        float[] sumPosition = new float[instanceLength];
+        for (int i = 0; i < this.size(); i++) {
+            Instance in = this.getInstance(i);
+            for (int j = 0; j < instanceLength; j++) {
+
+                sumPosition[j] += in.getWeight() * in.getValue(j);
+
+            }
+
+        }
+        for (int j = 0; j < instanceLength; j++) {
+            sumPosition[j] /= this.size();
+        }
+        return new SimpleInstance(sumPosition);
     }
 }

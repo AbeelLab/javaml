@@ -40,7 +40,11 @@ import net.sf.javaml.distance.EuclideanDistance;
  */
 public class Gamma implements ClusterEvaluation {
 
-	private DistanceMeasure dm = new EuclideanDistance();
+    public Gamma(DistanceMeasure dm) {
+        this.dm = dm;
+    }
+
+    private DistanceMeasure dm = new EuclideanDistance();
 
 	public double score(Dataset[] datas) {
 		double maxIntraDist[] = new double[datas.length];

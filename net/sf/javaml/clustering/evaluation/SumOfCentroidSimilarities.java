@@ -1,5 +1,5 @@
 /**
- * SumOfCentroidSimilarities.java, 16-nov-2006
+ * SumOfCentroidSimilarities.java
  *
  * This file is part of the Java Machine Learning API
  * 
@@ -17,7 +17,7 @@
  * along with the Java Machine Learning API; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * 
- * Copyright (c) 2006, Thomas Abeel
+ * Copyright (c) 2006-2007, Thomas Abeel
  * 
  * Project: http://sourceforge.net/projects/java-ml/
  * 
@@ -39,16 +39,8 @@ import net.sf.javaml.distance.DistanceMeasureFactory;
  * 
  */
 public class SumOfCentroidSimilarities implements ClusterEvaluation {
-    public double score(Clusterer c, Dataset data) {
-        Dataset[] datas = new Dataset[c.getNumberOfClusters()];
-        for (int i = 0; i < c.getNumberOfClusters(); i++) {
-            datas[i] = new SimpleDataset();
-        }
-        for (int i = 0; i < data.size(); i++) {
-            Instance in = data.getInstance(i);
-            datas[c.predictCluster(in)].addInstance(in);
-        }
-
+    public double score(Dataset[] datas) {
+        
         // calculate centroids
         int instanceLength = data.getInstance(0).size();
         double[][] sumPosition = new double[c.getNumberOfClusters()][instanceLength];
