@@ -24,13 +24,9 @@
  */
 package net.sf.javaml.clustering.evaluation;
 
-import net.sf.javaml.clustering.Clusterer;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.core.SimpleDataset;
-import net.sf.javaml.core.SimpleInstance;
 import net.sf.javaml.distance.DistanceMeasure;
-import net.sf.javaml.distance.DistanceMeasureFactory;
 
 /**
  * TODO uitleg I_2 from Zhao 2001
@@ -39,37 +35,23 @@ import net.sf.javaml.distance.DistanceMeasureFactory;
  * 
  */
 public class SumOfCentroidSimilarities implements ClusterEvaluation {
+
+    public SumOfCentroidSimilarities(DistanceMeasure dm) {
+        this.dm = dm;
+    }
+
+    private DistanceMeasure dm;
+
     public double score(Dataset[] datas) {
-        
-        // calculate centroids
-        int instanceLength = data.getInstance(0).size();
-        double[][] sumPosition = new double[c.getNumberOfClusters()][instanceLength];
-        int[] countPosition = new int[c.getNumberOfClusters()];
-        for (int i = 0; i < data.size(); i++) {
-            Instance in = data.getInstance(i);
-            int predictedIndex = c.predictCluster(in);
-            for (int j = 0; j < instanceLength; j++) {
 
-                sumPosition[predictedIndex][j] += in.getWeight() * in.getValue(j);
-
-            }
-            countPosition[predictedIndex]++;
-        }
-        // DistanceMeasure
         // cdm=DistanceMeasureFactory.getEuclideanDistanceMeasure();
-        Instance[] centroids = new Instance[c.getNumberOfClusters()];
-        for (int i = 0; i < c.getNumberOfClusters(); i++) {
-            float[] tmp = new float[instanceLength];
-            for (int j = 0; j < instanceLength; j++) {
-                tmp[j] = (float) sumPosition[i][j] / countPosition[i];
-            }
-            centroids[i] = new SimpleInstance(tmp);
+        Instance[] centroids = new Instance[datas.length];
+        for (int i = 0; i < datas.length; i++) {
+            centroids[i] = datas[i].getCentroid(dm);
 
         }
-        // calculate sum of centroid similarities.
-        DistanceMeasure dm = DistanceMeasureFactory.getCosineSimilarity();
         double sum = 0;
-        for (int i = 0; i < c.getNumberOfClusters(); i++) {
+        for (int i = 0; i < datas.length; i++) {
             for (int j = 0; j < datas[i].size(); j++) {
                 double error = dm.calculateDistance(datas[i].getInstance(j), centroids[i]);
                 sum += error;
