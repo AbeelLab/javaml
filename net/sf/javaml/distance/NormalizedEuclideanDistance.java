@@ -1,5 +1,5 @@
 /**
- * NormalizedDistance.java
+ * NormalizedEuclideanDistance.java
  *
  * This file is part of the Java Machine Learning API
  * 
@@ -24,40 +24,35 @@
  */
 package net.sf.javaml.distance;
 
+import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
+import net.sf.javaml.core.InstanceTools;
 
 /**
  * This class provides a generic way to obtain a normalized version of any
  * distance measure.
  * 
  * It will convert any distance measure to the interval [0,1].
- * 
- * Alfa should be typically somewhere near the value of the variance for the
- * dataset.
- * 
- * This method is based on work from
- * http://people.revoledu.com/kardi/tutorial/Similarity/Normalization.html.
+ *  
  * 
  * @author Thomas Abeel
  * 
  */
-public class NormalizedDistance implements DistanceMeasure {
+public class NormalizedEuclideanDistance implements DistanceMeasure {
 
-	private DistanceMeasure dm;
-
-	private double alfa;
-
-	public NormalizedDistance(DistanceMeasure dm) {
-		this(dm, 5);
+    private DistanceMeasure dm=new EuclideanDistance();
+	private Dataset data;
+    
+	public NormalizedEuclideanDistance(Dataset data) {
+	    this.data=data;
 	}
 
-	public NormalizedDistance(DistanceMeasure dm, double alfa) {
-		this.dm = dm;
-		this.alfa = alfa;
-	}
+	
 
 	public double calculateDistance(Instance i, Instance j) {
-		double dist = dm.calculateDistance(i, j);
-		return (1 - (dist / Math.sqrt(dist * dist + alfa))) / 2;
+        Instance normI=InstanceTools.normalizeMidrange(0.5,1,data.getMinimumInstance(),data.getMaximumInstance(), i);
+        Instance normJ=InstanceTools.normalizeMidrange(0.5,1,data.getMinimumInstance(),data.getMaximumInstance(), j);
+		return dm.calculateDistance(normI, normJ)/Math.sqrt(2);
+		
 	}
 }

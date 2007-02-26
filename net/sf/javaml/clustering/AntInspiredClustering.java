@@ -33,7 +33,7 @@ import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.SimpleInstance;
 import net.sf.javaml.distance.DistanceMeasure;
 import net.sf.javaml.distance.EuclideanDistance;
-import net.sf.javaml.distance.NormalizedDistance;
+import net.sf.javaml.distance.NormalizedEuclideanDistance;
 import net.sf.javaml.distance.RBFKernel;
 import net.sf.javaml.test.VisualizeClustering;
 import net.sf.javaml.tools.DatasetGenerator;

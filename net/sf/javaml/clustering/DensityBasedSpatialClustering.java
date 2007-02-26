@@ -33,19 +33,20 @@ import net.sf.javaml.core.DatasetTools;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.SimpleDataset;
 import net.sf.javaml.distance.DistanceMeasure;
+import net.sf.javaml.distance.NormalizedEuclideanDistance;
 
 public class DensityBasedSpatialClustering implements Clusterer {
 
     private DistanceMeasure dm;
-    
+
     /**
      * Specifies the radius for a range-query
      */
-    private double epsilon = 0.9;
+    private double epsilon = 0.01;
 
     /**
      * Specifies the density (the range-query must contain at least minPoints
-     * DataObjects)
+     * instances)
      */
     private int minPoints = 6;
 
@@ -54,14 +55,18 @@ public class DensityBasedSpatialClustering implements Clusterer {
      */
     private int clusterID;
 
-    public DensityBasedSpatialClustering(double epsilon, int minPoints,DistanceMeasure dm) {
+    public DensityBasedSpatialClustering(){
+        
+    }
+    
+    public DensityBasedSpatialClustering(double epsilon, int minPoints, DistanceMeasure dm) {
         this.dm = dm;
         this.epsilon = epsilon;
         this.minPoints = minPoints;
     }
 
     private List<DataObject> epsilonRangeQuery(double epsilon, Instance inst) {
-        List<Instance> tmp = DatasetTools.epsilonRangeQuery(originalData, epsilon, inst,dm);
+        List<Instance> tmp = DatasetTools.epsilonRangeQuery(originalData, epsilon, inst, dm);
         List<DataObject> out = new LinkedList<DataObject>();
         for (Instance i : tmp) {
             out.add(new DataObject(i));
@@ -79,12 +84,14 @@ public class DensityBasedSpatialClustering implements Clusterer {
     private boolean expandCluster(DataObject dataObject) {
         List<DataObject> seedList = epsilonRangeQuery(epsilon, dataObject.instance);
 
+        System.out.println("Created initial seedlist with "+seedList.size()+" nodes");
         /** dataObject is NO coreObject */
         if (seedList.size() < minPoints) {
             dataObject.clusterIndex = DataObject.NOISE;
             return false;
         }
 
+        System.out.println("Object is core object");
         /** dataObject is coreObject */
         for (int i = 0; i < seedList.size(); i++) {
             DataObject seedListDataObject = seedList.get(i);
@@ -99,8 +106,12 @@ public class DensityBasedSpatialClustering implements Clusterer {
             }
         }
 
+        System.out.println("Seedlist is labeled and pruned");
         /** Iterate the seedList of the startDataObject */
         for (int j = 0; j < seedList.size(); j++) {
+            System.out.println("Add neighbours, seedList size: "+seedList.size());
+            if(seedList.size()>10000)
+                System.exit(-1);
             DataObject seedListDataObject = seedList.get(j);
             List<DataObject> seedListDataObject_Neighbourhood = epsilonRangeQuery(epsilon, seedListDataObject.instance);
 
@@ -122,16 +133,15 @@ public class DensityBasedSpatialClustering implements Clusterer {
 
         return true;
     }
+
     class DataObject {
-        public int clusterIndex = -1;
+        int clusterIndex = -1;
 
-        public static final int UNCLASSIFIED = -1;
+        static final int UNCLASSIFIED = -1;
 
-        public static final int NOISE = -2;
+        static final int NOISE = -2;
 
-        public static final int UNDEFINED = -3;
-
-        public Instance instance;
+        Instance instance;
 
         public DataObject(Instance inst) {
             this.instance = inst;
@@ -142,10 +152,9 @@ public class DensityBasedSpatialClustering implements Clusterer {
 
     private Dataset originalData = null;
 
-   
-
     public Dataset[] executeClustering(Dataset data) {
         this.originalData = data;
+        this.dm=new NormalizedEuclideanDistance(this.originalData);
         this.clusterID = 0;
         this.dataset = new Vector<DataObject>();
         for (int i = 0; i < data.size(); i++) {
@@ -155,16 +164,18 @@ public class DensityBasedSpatialClustering implements Clusterer {
 
         for (DataObject dataObject : dataset) {
             if (dataObject.clusterIndex == DataObject.UNCLASSIFIED) {
+                System.out.println("Starting to expand...");
                 if (expandCluster(dataObject)) {
+                    System.out.println(clusterID);
                     clusterID++;
-                    
+
                 }
             }
         }
-        
-        Dataset[]clusters = new Dataset[clusterID];
-        for(int i=0;i<clusters.length;i++){
-            clusters[i]=new SimpleDataset();
+
+        Dataset[] clusters = new Dataset[clusterID];
+        for (int i = 0; i < clusters.length; i++) {
+            clusters[i] = new SimpleDataset();
         }
         for (DataObject dataObject : dataset) {
             clusters[dataObject.clusterIndex].addInstance(dataObject.instance);
