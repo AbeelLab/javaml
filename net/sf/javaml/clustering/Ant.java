@@ -29,7 +29,6 @@ import java.util.Vector;
 import java.util.Random;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.core.SimpleInstance;
 import net.sf.javaml.distance.DistanceMeasure;
 import net.sf.javaml.distance.EuclideanDistance;
 
@@ -44,11 +43,7 @@ public class Ant implements Clusterer {
 
 	private Instance carried;
 
-	private Instance[] centroids;
-
 	private Random rg = new Random(System.currentTimeMillis());
-
-	private int numberOfClusters;
 
 	private int iterations;
 
@@ -148,7 +143,7 @@ public class Ant implements Clusterer {
 			nFunction += 1 - (delta / alfa);
 		}
 		nFunction = Math.max(nFunction, 0);
-		//double towerSize = tower.size();
+		// double towerSize = tower.size();
 		// System.out.println("towerSize: " + towerSize);
 		// nFunction /= towerSize;
 		return nFunction;
@@ -181,7 +176,7 @@ public class Ant implements Clusterer {
 	}
 
 	// main
-	public void buildClusterer(Dataset data) {
+	public Dataset[] executeClustering(Dataset data) {
 		if (data.size() == 0) {
 			throw new RuntimeException("The dataset should not be empty");
 		}
@@ -205,6 +200,7 @@ public class Ant implements Clusterer {
 		maxDis = maxDis(data);
 
 		// first, pick least similar instance from a random tower
+		// generate integer between 0 and clusters.size.
 		randomTower = rg.nextInt(clusters.size());
 		tower = clusters.get(randomTower);
 		carried = tower.get(0);// pickLeastSim(tower);
@@ -251,7 +247,7 @@ public class Ant implements Clusterer {
 					carried = null;
 				}
 			}
-			//System.out.println("-------instance dropped, carried: "+carried);
+			// System.out.println("-------instance dropped, carried: "+carried);
 			// move to other random tower when no instance carried
 			while (carried == null) {
 				// if number of moves reaches 100, recalculate alfa.
@@ -292,67 +288,17 @@ public class Ant implements Clusterer {
 					}
 				}
 			}
-			//System.out.println("-------instance picked, carried: " +carried);
+			// System.out.println("-------instance picked, carried: " +carried);
 		}
-		// calculate centriods of each tower/cluster
-		numberOfClusters = clusters.size();
-		System.out.println("numberOfClusters: " + numberOfClusters);
-		this.centroids = new Instance[numberOfClusters];
+		Dataset[] output = new Dataset[clusters.size()];
 		for (int i = 0; i < clusters.size(); i++) {
-			tower = clusters.get(i);
-			System.out.println("towerSize: " + tower.size());
-			int instanceLength = data.getInstance(0).size();
-			float sum[] = new float[instanceLength];
-			for (int j = 0; j < tower.size(); j++) {
-				float tmp[] = tower.get(j).getArrayForm();
-				for (int k = 0; k < instanceLength; k++) {
-					sum[k] += tmp[k];
-				}
-			}
-			for (int j = 0; j < instanceLength; j++) {
-				sum[j] /= tower.size();
-			}
-			this.centroids[i] = new SimpleInstance(sum);
-		}
-		// System.out.println("centroids["+i+"]: " + centroids[i]);
-	}
-
-	public int getNumberOfClusters() {
-		return this.numberOfClusters;
-	}
-
-	public int predictCluster(Instance instance) {
-		if (this.centroids == null)
-			throw new RuntimeException(
-					"The cluster should first be constructed");
-		int tmpCluster = -1;
-		double minDistance = Double.MAX_VALUE;
-		for (int i = 0; i < this.numberOfClusters; i++) {
-			// System.out.println("INSTANCE:" +instance);
-			// System.out.println("CENTROID: " +centroids[i]);
-			// System.out.println("DM: "+dm);
-
-			double dist = dm.calculateDistance(centroids[i], instance);
-			if (dist < minDistance) {
-				minDistance = dist;
-				tmpCluster = i;
+			Vector<Instance> getCluster = new Vector<Instance>();
+			getCluster = clusters.get(i);
+			for (int j = 0; j < getCluster.size(); j++) {
+				output[i].addInstance(getCluster.get(j));
 			}
 		}
-		return tmpCluster;
-	}
-
-	public double[] predictMembershipDistribution(Instance instance) {
-		double[] tmp = new double[this.getNumberOfClusters()];
-		tmp[this.predictCluster(instance)] = 1;
-		return tmp;
-	}
-
-	/**
-	 * This method is only intended for testing purposes.
-	 * 
-	 */
-	public Instance[] getCentroids() {
-		return this.centroids;
+		return output;
 	}
 
 }
