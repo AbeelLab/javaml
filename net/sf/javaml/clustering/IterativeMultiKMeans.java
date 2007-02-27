@@ -30,92 +30,97 @@ import net.sf.javaml.clustering.evaluation.ClusterEvaluation;
 import net.sf.javaml.clustering.evaluation.HybridPairwiseSimilarities;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
+
 /**
  * TODO code uitkuisen van output, er mag geen output zijn
  * 
- * This class implements an extension of SimpleKMeans, combining Iterative- en MultiKMeans. SKM will be run
- * several iterations with a different k value, starting from kMin and
- * increasing to kMax, and several iterations for each k.
- * Each clustering result is evaluated with an evaluation
- * score, the result with the best score will be returned as final result.
+ * This class implements an extension of SimpleKMeans, combining Iterative- en
+ * MultiKMeans. SKM will be run several iterations with a different k value,
+ * starting from kMin and increasing to kMax, and several iterations for each k.
+ * Each clustering result is evaluated with an evaluation score, the result with
+ * the best score will be returned as final result.
  * 
  * @author Thomas Abeel
- *
+ * @author Andreas De Rijcke
+ * 
  */
 public class IterativeMultiKMeans extends SimpleKMeans {
 
-    private int kMin;
+	private int kMin;
 
-    private int kMax;
+	private int kMax;
 
-    private int repeats;
+	private int repeats;
 
-    public IterativeMultiKMeans(int kMin, int kMax, int repeats) {
-        this.kMax = kMax;
-        this.kMin = kMin;
-        this.repeats = repeats;
-    }
+	public IterativeMultiKMeans(int kMin, int kMax, int repeats) {
+		this.kMax = kMax;
+		this.kMin = kMin;
+		this.repeats = repeats;
+	}
 
-    @Override
-    public void buildClusterer(Dataset data) {
-        System.out.println("Build Iterative clusterer");
-        if (data.size() == 0)
-            throw new RuntimeException("The dataset should not be empty");
-        if (kMin == 0)
-            throw new RuntimeException("There should be at least one cluster");
+	@Override
+	public void buildClusterer(Dataset data) {
+		System.out.println("Build Iterative clusterer");
+		if (data.size() == 0)
+			throw new RuntimeException("The dataset should not be empty");
+		if (kMin == 0)
+			throw new RuntimeException("There should be at least one cluster");
 
-        int bestNumberOfClusters = 0;
-        double bestScore = 0;
-        Instance[] bestCentroids = null;
+		int bestNumberOfClusters = 0;
+		double bestScore = 0;
+		Instance[] bestCentroids = null;
 
-        for (int k = kMin; k <= kMax; k++) {
-            super.numberOfClusters = k;
-            super.numberOfIterations = 100;
+		for (int k = kMin; k <= kMax; k++) {
+			super.numberOfClusters = k;
+			super.numberOfIterations = 100;
 
-            for (int i = 0; i < repeats; i++) {
-                super.buildClusterer(data);
-                ClusterEvaluation ce = new HybridPairwiseSimilarities();//new SumOfCentroidSimilarities();// I_2
-                double newScore = ce.score(this, data);
-                if (k == kMin && i==0) {
-                    bestScore = newScore;
-                    bestNumberOfClusters = k;
-                }
-                System.out.println("k = " + k);
-                System.out.println("score = " + newScore);
-                // System.out.println("old bestCosSim = "+bestCosSim);
-                if (ce.compareScore(bestScore, newScore)) {
-                    bestScore = newScore;
-                    bestCentroids = super.centroids;
-                    bestNumberOfClusters = k;
-                }
-                System.out.println("new bestCosSim  = " + bestScore);
-                System.out.println("bestNumberOfClusters = " + bestNumberOfClusters);
-                System.out.println();
-            }
+			for (int i = 0; i < repeats; i++) {
+				super.buildClusterer(data);
+				ClusterEvaluation ce = new HybridPairwiseSimilarities();// new
+																		// SumOfCentroidSimilarities();//
+																		// I_2
+				double newScore = ce.score(this, data);
+				if (k == kMin && i == 0) {
+					bestScore = newScore;
+					bestNumberOfClusters = k;
+				}
+				System.out.println("k = " + k);
+				System.out.println("score = " + newScore);
+				// System.out.println("old bestCosSim = "+bestCosSim);
+				if (ce.compareScore(bestScore, newScore)) {
+					bestScore = newScore;
+					bestCentroids = super.centroids;
+					bestNumberOfClusters = k;
+				}
+				System.out.println("new bestCosSim  = " + bestScore);
+				System.out.println("bestNumberOfClusters = "
+						+ bestNumberOfClusters);
+				System.out.println();
+			}
 
-        }
+		}
 
-        // copy centroids
-        super.centroids = bestCentroids;
-        super.numberOfClusters = bestNumberOfClusters;
-        // FILTER BESTCENTROIDS
-        int[] freqTable = new int[bestNumberOfClusters];
-        for (int i = 0; i < data.size(); i++) {
-            freqTable[super.predictCluster(data.getInstance(i))]++;
-        }
-        Vector<Instance> tmpCentroids = new Vector<Instance>();
-        int nonEmptyClusterCount = 0;
-        for (int i = 0; i < freqTable.length; i++) {
-            if (freqTable[i] > 0) {
-                tmpCentroids.add(bestCentroids[i]);
-                nonEmptyClusterCount++;
-            }
-        }
-        super.centroids = new Instance[tmpCentroids.size()];
-        super.centroids = tmpCentroids.toArray(super.centroids);
-        super.numberOfClusters = nonEmptyClusterCount;
-        // System.out.println("Final centroid count: "+super.centroids.length);
-        // System.out.println("Final number of Clusters:
-        // "+super.numberOfClusters);
-    }
+		// copy centroids
+		super.centroids = bestCentroids;
+		super.numberOfClusters = bestNumberOfClusters;
+		// FILTER BESTCENTROIDS
+		int[] freqTable = new int[bestNumberOfClusters];
+		for (int i = 0; i < data.size(); i++) {
+			freqTable[super.predictCluster(data.getInstance(i))]++;
+		}
+		Vector<Instance> tmpCentroids = new Vector<Instance>();
+		int nonEmptyClusterCount = 0;
+		for (int i = 0; i < freqTable.length; i++) {
+			if (freqTable[i] > 0) {
+				tmpCentroids.add(bestCentroids[i]);
+				nonEmptyClusterCount++;
+			}
+		}
+		super.centroids = new Instance[tmpCentroids.size()];
+		super.centroids = tmpCentroids.toArray(super.centroids);
+		super.numberOfClusters = nonEmptyClusterCount;
+		// System.out.println("Final centroid count: "+super.centroids.length);
+		// System.out.println("Final number of Clusters:
+		// "+super.numberOfClusters);
+	}
 }
