@@ -32,6 +32,13 @@ import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 /**
  * TODO code uitkuisen van output, er mag geen output zijn
+ * 
+ * This class implements an extension of SimpleKMeans, combining Iterative- en MultiKMeans. SKM will be run
+ * several iterations with a different k value, starting from kMin and
+ * increasing to kMax, and several iterations for each k.
+ * Each clustering result is evaluated with an evaluation
+ * score, the result with the best score will be returned as final result.
+ * 
  * @author Thomas Abeel
  *
  */

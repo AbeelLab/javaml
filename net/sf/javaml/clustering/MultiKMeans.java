@@ -30,8 +30,9 @@ import net.sf.javaml.core.Dataset;
 import net.sf.javaml.distance.DistanceMeasure;
 
 /**
- * This variant of the SimpleKMeans algorithm will run the Simple KMeans
- * algorithm multiple times and will only return the best centroids as the final
+ * This class implements an extension of SimpleKMeans. SKM will be run several
+ * iterations with the same k value. Each clustering result is evaluated with
+ * an evaluation score, the result with the best score will be returned as final
  * result.
  * 
  * @author Thomas Abeel
@@ -39,54 +40,53 @@ import net.sf.javaml.distance.DistanceMeasure;
  * 
  */
 
-public class MultiKMeans implements Clusterer{
-    private int repeats,clusters,iterations;
-    private DistanceMeasure dm;
-    private ClusterEvaluation ce;
+public class MultiKMeans implements Clusterer {
+	private int repeats, clusters, iterations;
 
-   
-    public MultiKMeans(int clusters, int iterations,DistanceMeasure dm,int repeats,ClusterEvaluation ce) {
-        this.repeats=repeats;
-        this.clusters=clusters;
-        this.iterations=iterations;
-        this.dm=dm;
-        this.ce=ce;
-        
-    }
+	private DistanceMeasure dm;
 
+	private ClusterEvaluation ce;
 
-    public Dataset[] executeClustering(Dataset data) {
-        SimpleKMeans km = new SimpleKMeans(this.clusters, this.iterations, this.dm);
-        Dataset[] bestClusters = km.executeClustering(data);
-        double bestScore = this.ce.score(bestClusters);
-        for (int i = 0; i < repeats; i++) {
-            Dataset[] tmpClusters = km.executeClustering(data);
-            double tmpScore = this.ce.score(tmpClusters);
-            if (this.ce.compareScore(bestScore, tmpScore)) {
-                bestScore = tmpScore;
-                bestClusters = tmpClusters;
-            }
-        }
-        return bestClusters;
-    }
-    
-    
-//    @Override
-//    public void buildClusterer(Dataset data) {
-//        double bestCosSim = 0;
-//        Instance[] bestCentroids = null;
-//        for (int i = 0; i < repeats; i++) {
-//            super.buildClusterer(data);
-//            ClusterEvaluation ce=new SumOfCentroidSimilarities();//I_2
-//            double cosSim = ce.score(this,data);
-//            if (cosSim > bestCosSim) {
-//                bestCosSim = cosSim;
-//                bestCentroids = super.centroids;
-//            }
-//        }
-//        super.centroids = bestCentroids;
-//    }
+	public MultiKMeans(int clusters, int iterations, DistanceMeasure dm,
+			int repeats, ClusterEvaluation ce) {
+		this.repeats = repeats;
+		this.clusters = clusters;
+		this.iterations = iterations;
+		this.dm = dm;
+		this.ce = ce;
 
-   
+	}
+
+	public Dataset[] executeClustering(Dataset data) {
+		SimpleKMeans km = new SimpleKMeans(this.clusters, this.iterations,
+				this.dm);
+		Dataset[] bestClusters = km.executeClustering(data);
+		double bestScore = this.ce.score(bestClusters);
+		for (int i = 0; i < repeats; i++) {
+			Dataset[] tmpClusters = km.executeClustering(data);
+			double tmpScore = this.ce.score(tmpClusters);
+			if (this.ce.compareScore(bestScore, tmpScore)) {
+				bestScore = tmpScore;
+				bestClusters = tmpClusters;
+			}
+		}
+		return bestClusters;
+	}
+
+	// @Override
+	// public void buildClusterer(Dataset data) {
+	// double bestCosSim = 0;
+	// Instance[] bestCentroids = null;
+	// for (int i = 0; i < repeats; i++) {
+	// super.buildClusterer(data);
+	// ClusterEvaluation ce=new SumOfCentroidSimilarities();//I_2
+	// double cosSim = ce.score(this,data);
+	// if (cosSim > bestCosSim) {
+	// bestCosSim = cosSim;
+	// bestCentroids = super.centroids;
+	// }
+	// }
+	// super.centroids = bestCentroids;
+	// }
 
 }
