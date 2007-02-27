@@ -25,6 +25,7 @@
 package net.sf.javaml.clustering.evaluation;
 
 import net.sf.javaml.core.Dataset;
+import net.sf.javaml.core.DatasetTools;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.distance.DistanceMeasure;
 
@@ -47,7 +48,7 @@ public class SumOfCentroidSimilarities implements ClusterEvaluation {
         // cdm=DistanceMeasureFactory.getEuclideanDistanceMeasure();
         Instance[] centroids = new Instance[datas.length];
         for (int i = 0; i < datas.length; i++) {
-            centroids[i] = datas[i].getCentroid(dm);
+            centroids[i] = DatasetTools.getCentroid(datas[i],dm);
 
         }
         double sum = 0;
