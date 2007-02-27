@@ -35,7 +35,14 @@ import net.sf.javaml.optimization.ExpectationMaximization;
 import java.lang.Math;
 import java.util.Vector;
 
-// TODO finish implementation
+/**
+* 
+* This class implements an Adaptive Quality-based Clustering Algorithm, based on the implementation in MATLAB
+* by De Smet et al., ESAT - SCD (SISTA), K.U.Leuven, Belgium. 
+* 
+* @author Andreas De Rijcke
+* 
+*/
 
 public class AdaptiveQualityBasedClustering implements Clusterer {
 

@@ -32,6 +32,18 @@ import net.sf.javaml.core.Instance;
 import net.sf.javaml.distance.DistanceMeasure;
 import net.sf.javaml.distance.EuclideanDistance;
 
+/**
+* 
+* This class implements an Ant Based Clustering Algorithm based on some ideas
+* from papers by Handl et al. and Schockaert et al.
+* 
+* The distance measure should be normalized in the interval [0,1].
+* 
+* 
+* @author Andreas De Rijcke
+* 
+*/
+
 public class Ant implements Clusterer {
 	Vector<Instance> tower = new Vector<Instance>();
 
