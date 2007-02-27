@@ -35,7 +35,37 @@ import net.sf.javaml.distance.DistanceMeasure;
  * @author Thomas Abeel
  * 
  */
-public class DatasetTools {
+final public class DatasetTools {
+
+    /**
+     * Return the centroid of this cluster when using the given distance
+     * measure.
+     * 
+     * @param dm
+     *            the distance measure to use when calculating the centroid.
+     * @return the centroid of this dataset
+     */
+    public static Instance getCentroid(Dataset data, DistanceMeasure dm) {
+        if (data.size() == 0)
+            return null;
+        int instanceLength = data.getInstance(0).size();
+        float[] sumPosition = new float[instanceLength];
+        for (int i = 0; i < data.size(); i++) {
+            Instance in = data.getInstance(i);
+            for (int j = 0; j < instanceLength; j++) {
+
+                sumPosition[j] += in.getWeight() * in.getValue(j);
+
+            }
+
+        }
+        for (int j = 0; j < instanceLength; j++) {
+            sumPosition[j] /= data.size();
+        }
+        return new SimpleInstance(sumPosition);
+
+    }
+
     /**
      * Performs an epsilon range query for this instance relative to the
      * supplied dataset.

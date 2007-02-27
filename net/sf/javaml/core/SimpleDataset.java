@@ -27,12 +27,10 @@ package net.sf.javaml.core;
 
 import java.util.Vector;
 
-import net.sf.javaml.distance.DistanceMeasure;
-
 public class SimpleDataset implements Dataset {
     private Vector<Instance> instances = new Vector<Instance>();
 
-    float[] lowArray, highArray;
+    private float[] lowArray, highArray;
 
     public boolean addInstance(Instance instance) {
 
@@ -128,23 +126,5 @@ public class SimpleDataset implements Dataset {
         return out;
     }
 
-    public Instance getCentroid(DistanceMeasure dm) {
-        if (this.size() == 0)
-            return null;
-        int instanceLength = this.getInstance(0).size();
-        float[] sumPosition = new float[instanceLength];
-        for (int i = 0; i < this.size(); i++) {
-            Instance in = this.getInstance(i);
-            for (int j = 0; j < instanceLength; j++) {
-
-                sumPosition[j] += in.getWeight() * in.getValue(j);
-
-            }
-
-        }
-        for (int j = 0; j < instanceLength; j++) {
-            sumPosition[j] /= this.size();
-        }
-        return new SimpleInstance(sumPosition);
-    }
+    
 }

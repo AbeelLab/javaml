@@ -30,7 +30,7 @@ import net.sf.javaml.core.Dataset;
 import net.sf.javaml.distance.DistanceMeasure;
 
 /**
- * This class implements an extension of SimpleKMeans. SKM will be run several
+ * This class implements an extension of SimpleKMeans (SKM). SKM will be run several
  * iterations with the same k value. Each clustering result is evaluated with
  * an evaluation score, the result with the best score will be returned as final
  * result.
@@ -72,21 +72,4 @@ public class MultiKMeans implements Clusterer {
 		}
 		return bestClusters;
 	}
-
-	// @Override
-	// public void buildClusterer(Dataset data) {
-	// double bestCosSim = 0;
-	// Instance[] bestCentroids = null;
-	// for (int i = 0; i < repeats; i++) {
-	// super.buildClusterer(data);
-	// ClusterEvaluation ce=new SumOfCentroidSimilarities();//I_2
-	// double cosSim = ce.score(this,data);
-	// if (cosSim > bestCosSim) {
-	// bestCosSim = cosSim;
-	// bestCentroids = super.centroids;
-	// }
-	// }
-	// super.centroids = bestCentroids;
-	// }
-
 }

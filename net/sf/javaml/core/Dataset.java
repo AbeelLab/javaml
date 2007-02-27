@@ -25,19 +25,7 @@
 
 package net.sf.javaml.core;
 
-import net.sf.javaml.distance.DistanceMeasure;
-
 public interface Dataset {
-
-    /**
-     * Return the centroid of this cluster when using the given distance
-     * measure.
-     * 
-     * @param dm
-     *            the distance measure to use when calculating the centroid.
-     * @return the centroid of this dataset
-     */
-    public Instance getCentroid(DistanceMeasure dm);
 
     /**
      * Add an instance to this dataset. The compatibility of the new item with
@@ -51,15 +39,6 @@ public interface Dataset {
     public boolean addInstance(Instance i);
 
     /**
-     * Return the index associated with an Instance.
-     * 
-     * @param i
-     *            the instance where you want to know the index for.
-     * @return
-     */
-    public int getIndex(Instance i);
-
-    /**
      * Get the instance with a certain index.
      * 
      * @param index
@@ -67,14 +46,6 @@ public interface Dataset {
      * @return
      */
     public Instance getInstance(int index);
-
-    /**
-     * Remove the instance that is given as parameter from the dataset.
-     * 
-     * @param i
-     *            the instance to be removed from the dataset.
-     */
-    public void removeInstance(Instance i);
 
     /**
      * Return the instance with the given index.
