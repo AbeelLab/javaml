@@ -57,7 +57,8 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
 
 	private int maxIter = 50;
 
-	private double div = 1 / 30;
+	private double div = 0.03333333333333;
+		//1 / 30;
 
 	private double accurRad = 0.1;
 
@@ -136,11 +137,13 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
 		
 		// normalize dataset
 		Dataset dataNorm = normMean.filterDataset(data);
-
+		System.out.println("dataset normalized");
 		// calculate preliminary estimate of radius
 		dimension = dataNorm.getInstance(0).size();
+		System.out.println("step 1: dimension"+dimension);
+		System.out.println("step 1: rk_prelim"+rk_prelim);
 		rk_prelim = Math.sqrt((dimension - 1) / 2);
-
+		
 		// convert dataset of instances to vector of instances
 		Vector<Instance> all = new Vector<Instance>();
 		// temporarily processing vector
@@ -150,48 +153,78 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
 			all.add(in);
 			cluster.add(in);
 		}
+		System.out.println("data put in vectors");
 		
 		int iterator = 0;
 		while (iterator <= maxIterMain & all != null) {
-
+			
+			System.out.println("start step 1");
 			// step1: locate cluster center
 			ck = mean(cluster);
 			rad = maxDist(cluster, ck);
+			System.out.println("step 1: initial rad"+rad);
 			deltarad = (rad - rk_prelim) * div;
+			System.out.println("step 1: deltarad"+deltarad);
 			rad = rad - deltarad;
+			System.out.println("step 1: new rad"+rad);
 			cluster = newCluster(cluster, ck, rad);
+			System.out.println("step 1: initial cluster size"+ cluster.size());
 			Instance newMean = mean(cluster);
+			
 			int iter = 0;
+			System.out.println("step 1: start while loop");
 			while ((iter < maxIter && newMean != ck) || rad > rk_prelim) {
 				iter++;
+				System.out.println("step 1: iter"+iter);
 				ck = newMean;
+				
 				if (rad > rk_prelim) {
 					rad = rad - deltarad;
+					System.out.println("step 1: new rad"+rad);
 				}
+				else{
+					System.out.println("step 1: rad < rk_prelim!");
+				}
+				System.out.println("step 1: recalculate cluster");
 				cluster = newCluster(cluster, ck, rad);
+				System.out.println("step 1: new cluster size"+ cluster.size());
+				System.out.println("step 1: recalculate mean");
 				newMean = mean(cluster);
+				System.out.println("ck is"+ck);
+				System.out.println("new mean is"+newMean);
+				double distCkNewMean = dm.calculateDistance(ck, newMean);
+				if ( distCkNewMean == 0) {
+					System.out.println("convergence.");
+				}
+				else{
+					System.out.println("ck still not equal to new mean.");
+				}
 			}
-			if (iter >= maxIter && newMean != ck) {
+			System.out.println("step1 : end while");
+			/*if (iter >= maxIter && distCkNewMean == 0) {
 				ck = null;
 				System.out
 						.println("Undefined cluster center or no convergence.");
 				return null;
 			} else {
 				ck = newMean;
-			}
-
+			}*/
+			System.out.println("start step 2");
 			// step 2:recalculate radius
 
 			// calculation of sigma and a prior prob pc and pb via EM
 			// temporarily vector for variance calculation via EM
+			System.out.println("step 2 : use EM algorithm");
 			Vector<Double> varianceEst = new Vector<Double>();
-			double pc = em.em(cluster, ck, rk_prelim, dimension, varianceEst);
+			double pc = em.em(all, cluster, ck, rk_prelim, dimension, varianceEst);
 			double pb = 1 - pc;
+			System.out.println("step 2 : end EM use");
 			variance = varianceEst.get(0);
 			if (pc == 0 & varianceEst == null) {
 				System.out.println("EM algorithm did not converge.");
 				return null;
 			}
+			System.out.println("step 2 : start recalculation variables");
 			// calculation new radius
 			double dimD = dimension - 2;
 			double sD = em.sD(dimD);
@@ -202,7 +235,7 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
 			double c3 = 1 - (1 / significanceLevel);
 			rk = Math.sqrt(2 * variance * variance
 					* Math.log(pb * c2 / (pc * c1 * c3)));
-
+			System.out.println("step 2 : end recalculation variables");
 			if (Math.abs(rk - rk_prelim) / rk_prelim < accurRad) {
 				cluster = newCluster(cluster, ck, rk);
 				// remove cluster from data if valid cluster and calculate
@@ -219,9 +252,12 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
 			} else {
 				iterator++;
 			}
+			System.out.println("end step 2");
 			// update preliminary radius estimate with new estimate
 			rk_prelim = rk;
+			System.out.println("rk_prelim updated ");
 		}
+		System.out.println("write clusters to output");
 		Dataset[] output = new Dataset[finalClusters.size()];
 		for(int i=0;i<finalClusters.size();i++){
 			Vector<Instance> getCluster = new Vector<Instance>();
