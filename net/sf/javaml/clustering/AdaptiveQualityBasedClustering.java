@@ -72,7 +72,7 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
 
 	private double rad;
 
-	private double deltarad;
+	private static double deltarad;
 
 	private double variance;
 
@@ -140,10 +140,9 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
 		System.out.println("dataset normalized");
 		// calculate preliminary estimate of radius
 		dimension = dataNorm.getInstance(0).size();
-		System.out.println("step 1: dimension"+dimension);
-		System.out.println("step 1: rk_prelim"+rk_prelim);
+		System.out.println("initiation: dimension"+dimension);
 		rk_prelim = Math.sqrt((dimension - 1) / 2);
-		
+		System.out.println("initiation: rk_prelim"+rk_prelim);
 		// convert dataset of instances to vector of instances
 		Vector<Instance> all = new Vector<Instance>();
 		// temporarily processing vector
@@ -162,11 +161,12 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
 			// step1: locate cluster center
 			ck = mean(cluster);
 			rad = maxDist(cluster, ck);
-			System.out.println("step 1: initial rad"+rad);
+			System.out.println("step 1: initial rad "+rad);
 			deltarad = (rad - rk_prelim) * div;
-			System.out.println("step 1: deltarad"+deltarad);
+			System.out.println("initiation: deltarad"+deltarad);
 			rad = rad - deltarad;
-			System.out.println("step 1: new rad"+rad);
+			System.out.println("step 1: new rad "+rad);
+			System.out.println("initiation: deltarad"+deltarad);
 			cluster = newCluster(cluster, ck, rad);
 			System.out.println("step 1: initial cluster size"+ cluster.size());
 			Instance newMean = mean(cluster);
@@ -240,6 +240,7 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
 				// centroid
 				if (cluster.size() >= minInstances) {
 					finalClusters.add(cluster);
+					System.out.println("Cluster added to final clusters.");
 					all.removeAll(cluster);
 					cluster.clear();
 					cluster.addAll(all);

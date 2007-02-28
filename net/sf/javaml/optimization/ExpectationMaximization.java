@@ -259,15 +259,15 @@ public class ExpectationMaximization {
 			System.out.println("EM : pcOp " +pcOp);
 			pbOp = 1 - pcOp;
 			System.out.println("EM : pbOp " +pbOp);
-			if ( Math.abs(varianceOp - variance) < cdif & Math.abs(pcOp-pc)< cdif){
+			/*if ( Math.abs(varianceOp - variance) < cdif & Math.abs(pcOp-pc)< cdif){
 				System.out.println("No or incorrect convergence.");
 				varianceEst=null;
 				return 0;
-			}
+			}*/
 			pc = pcOp;
 			pb = pbOp;
 			variance = varianceOp;
-			System.out.println("EM : next iteration");
+			System.out.println("EM : end iteration "+i);
 		}
 		System.out.println("EM : end calculation estimates");
 		varianceEst.add(variance);
