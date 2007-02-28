@@ -37,6 +37,10 @@ import net.sf.javaml.distance.NormalizedEuclideanDistance;
 
 public class MCL implements Clusterer {
 
+    public MCL(DistanceMeasure dm){
+        this.dm=dm;
+    }
+    
 	private DistanceMeasure dm;
 
 	// Maximum difference between row elements and row square sum (measure of
@@ -53,11 +57,9 @@ public class MCL implements Clusterer {
 	double maxZero = 0.001;
 
 	public Dataset[] executeClustering(Dataset data) {
-		try {
-			PrintWriter log = new PrintWriter("log.txt");
 			// convert dataset to matrix of distances
 			double[][] dataConverted = new double[data.size()][data.size()];
-			dm = new NormalizedEuclideanDistance(data);
+			double sum=0;
 			for (int i = 0; i < data.size(); i++) {
 				for (int j = 0; j < data.size(); j++) {
 					double distance = dm.calculateDistance(data.getInstance(i),
@@ -68,9 +70,19 @@ public class MCL implements Clusterer {
 						dataConverted[i][j] = distance;
 						dataConverted[j][i] = distance;
 					}
+                    sum+=distance/(data.size()*data.size());
 				}
+                
 			}
-			System.out.println("dataset converted");
+            System.out.println("Cut-off distance="+sum);
+            sum=0.85;
+            for (int i = 0; i < data.size(); i++) {
+                for (int j = 0; j < data.size(); j++) {
+                    if(dataConverted[i][j]<sum)
+                        dataConverted[i][j]=0;
+                }
+            }
+			//System.out.println("dataset converted");
 			SparseMatrix dataSparseMatrix = new SparseMatrix(dataConverted);
 			MarkovClustering mcl = new MarkovClustering();
 			SparseMatrix matrix = mcl.run(dataSparseMatrix, maxResidual,
@@ -79,7 +91,7 @@ public class MCL implements Clusterer {
 
 			// convert matrix to output dataset:
 			int[] sparseMatrixSize = matrix.getSize();
-			System.out.println("sparseMatrixSize: " + sparseMatrixSize[0]);
+			//System.out.println("sparseMatrixSize: " + sparseMatrixSize[0]);
 			
 			// find number of attractors (non zero values) in diagonal
 			int attractors = 0;
@@ -90,7 +102,7 @@ public class MCL implements Clusterer {
 				}
 			}
 			System.out.println("# attractors: " + attractors);
-			
+            System.out.print("final cluster size: ");
 			// create cluster for each attractor with value close to 1
 			Vector<Vector<Instance>> finalClusters = new Vector<Vector<Instance>>();
 			
@@ -98,21 +110,22 @@ public class MCL implements Clusterer {
 				Vector<Instance> cluster = new Vector<Instance>();
 				double val = matrix.get(i, i);
 				if (val >= 0.98 ) {
-					System.out.println("valid attractor found");
+					//System.out.println("valid attractor found");
 					for (int j = 0 ; j < sparseMatrixSize[0]; j++){
 						double value = matrix.get(j, i);
 						if ( value != 0){
 							cluster.add(data.getInstance(j));	
-							System.out.println("instance added");
+							//System.out.println("instance added");
 						}
 					}
-					System.out.println("final cluster size: "+ cluster.size());
+					System.out.print(cluster.size()+", ");
 					finalClusters.add(cluster);
 				}
 			}
-			System.out.println("finalClusterssize: "+ finalClusters.size());
+            System.out.println();
+			//System.out.println("finalClusterssize: "+ finalClusters.size());
 			
-			System.out.println("start data adding to dataset");
+			//System.out.println("start data adding to dataset");
 			Dataset[] output = new Dataset[finalClusters.size()];
 			for (int i = 0; i < finalClusters.size(); i++) {
 				output[i]=new SimpleDataset();
@@ -124,116 +137,8 @@ public class MCL implements Clusterer {
 					output[i].addInstance(getCluster.get(j));
 				}
 			}
-			System.out.println("data added to dataset[]");
 			
-			/*// find attractors in diagonal
-			Vector<double[]> attractors = new Vector<double[]>();
-			for (int i = 0; i < sparseMatrixSize[0]; i++) {
-				// attractor[0][1]: [0] = index in sparsematrix, [1]= value in
-				// matrix.
-				double[] attractor = new double[2];
-				double val = matrix.get(i, i);
-				if (val != 0) {
-					attractor[0] = i;
-					attractor[1] = val;
-					attractors.add(attractor);
-
-				}
-			}
-			int attractorsSize = attractors.size();
-			
-			System.out.println("attractors found");
-			System.out.println("# attractors: " + attractorsSize);
-			for (int i = 0; i < attractorsSize; i++) {
-				System.out.println("attractor " + i + " : "
-						+ attractors.get(i)[1]);
-			}
-			
-			// search for the different attractors values, their number is
-			// resulting number of clusters.
-			Vector<Double> attractorvalues = new Vector<Double>();
-			for (int i = 0; i < attractorsSize; i++) {
-				double temp = attractors.get(i)[1];
-				if (temp >= 0.95) {
-					attractorvalues.add(temp);
-				} else {
-					for (int j = 0; j < attractorvalues.size(); j++) {
-						double temp2 = attractors.get(j)[1];
-						if (temp != temp2) {
-							attractorvalues.add(temp);
-						}
-					}
-				}
-			}
-			int attractorvaluesSize = attractorvalues.size();
-			System.out.println("attractor values found");
-			for (int i = 0; i < attractorvaluesSize; i++) {
-				System.out.println("attractor value " + i + " : "
-						+ attractorvalues.get(i));
-			}
-			// put index of attractors with same value together. =
-			// attractorsystem
-			Vector<Double> attractorIndex = new Vector<Double>();
-			Vector<Vector<Double>> attractorSystems = new Vector<Vector<Double>>();
-			for (int i = 0; i < attractorvaluesSize; i++) {
-				for (int j = 0; j < attractorsSize; j++) {
-					if (attractors.get(j)[1] == attractorvalues.get(i)) {
-						attractorIndex.add(attractors.get(j)[1]);
-					}
-				}
-				attractorSystems.add(attractorIndex);
-			}
-			System.out.println("attractorsystems found");
-			System.out
-					.println("# attractorsystems: " + attractorSystems.size());
-
-			// cluster consist of an attractorsystem and the data they attract.
-			// for each attractorsystem, find attracted data and add to cluster
-			Vector<Instance> cluster = new Vector<Instance>();
-			Vector<Vector<Instance>> finalClusters = new Vector<Vector<Instance>>();
-			// for each attractorsystem
-			for (int i = 0; i < attractorSystems.size(); i++) {
-				// get columnindexes
-				attractorIndex = attractorSystems.get(i);
-				System.out.println("attractorIndex: " + attractorIndex.get(i));
-				// for each column
-				for (int j = 0; j < attractorIndex.size(); j++) {
-					int value = attractorIndex.get(j).intValue();
-					System.out.println("attractorValue: " + value);
-					// add attractor to cluster
-					cluster.add(data.getInstance(value));
-					// find data attracted to attractor (when matrix value is
-					// not 0)
-					// and add to cluster if not already present
-					for (int k = 0; k < data.size(); k++) {
-						if (matrix.get(value, k) != 0) {
-							for (int l = 0; l < cluster.size(); l++) {
-								if (data.getInstance(k) != cluster.get(j)) {
-									cluster.add(data.getInstance(k));
-								}
-							}
-
-						}
-					}
-				}
-				finalClusters.add(cluster);
-			}
-			System.out.println("clusters created");
-			// convert cluster
-			Dataset[] output = new Dataset[finalClusters.size()];
-			for (int i = 0; i < finalClusters.size(); i++) {
-				Vector<Instance> getCluster = new Vector<Instance>();
-				getCluster = finalClusters.get(i);
-				for (int j = 0; j < getCluster.size(); j++) {
-					output[i].addInstance(getCluster.get(j));
-				}
-			}*/
-			log.close();
 			return output;
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
+		
 	}
 }

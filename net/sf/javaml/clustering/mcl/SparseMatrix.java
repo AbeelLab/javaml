@@ -1,5 +1,5 @@
 /**
- * SparseMatrix.java, 22-nov-2006
+ * SparseMatrix.java
  *
  * This file is part of the Java Machine Learning API
  * 
@@ -17,7 +17,7 @@
  * along with the Java Machine Learning API; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * 
- * Copyright (c) 2006, Thomas Abeel
+ * Copyright (c) 2006-2007, Thomas Abeel
  * 
  * based on work from Gregor Heinrich, Arbylon (http://www.arbylon.net/projects/).
  * Copyright (c) 2006 Gregor Heinrich. All rights reserved.

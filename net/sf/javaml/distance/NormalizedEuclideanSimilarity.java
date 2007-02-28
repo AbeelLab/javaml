@@ -1,5 +1,5 @@
 /**
- * NormalizedEuclideanDistance.java
+ * NormalizedEuclideanSimilarity.java
  *
  * This file is part of the Java Machine Learning API
  * 
@@ -26,29 +26,19 @@ package net.sf.javaml.distance;
 
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.core.InstanceTools;
 
-/**
- *  
- * 
- * @author Thomas Abeel
- * 
- */
-public class NormalizedEuclideanDistance extends EuclideanDistance {
+public class NormalizedEuclideanSimilarity extends NormalizedEuclideanDistance{
 
-    private Dataset data;
+    public NormalizedEuclideanSimilarity(Dataset data) {
+        super(data);
+      }
+
+    @Override
+    public double calculateDistance(Instance i, Instance j) {
+        return 1-super.calculateDistance(i, j);
+    }
     
-	public NormalizedEuclideanDistance(Dataset data) {
-        super();
-	    this.data=data;
-	}
+    
+    
 
-	
-
-	public double calculateDistance(Instance i, Instance j) {
-        Instance normI=InstanceTools.normalizeMidrange(0.5,1,data.getMinimumInstance(),data.getMaximumInstance(), i);
-        Instance normJ=InstanceTools.normalizeMidrange(0.5,1,data.getMinimumInstance(),data.getMaximumInstance(), j);
-		return super.calculateDistance(normI, normJ)/Math.sqrt(i.size());
-		
-	}
 }

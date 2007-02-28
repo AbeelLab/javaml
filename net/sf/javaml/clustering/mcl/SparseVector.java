@@ -1,5 +1,5 @@
 /**
- * SparseVector.java, 22-nov-2006
+ * SparseVector.java
  *
  * This file is part of the Java Machine Learning API
  * 
