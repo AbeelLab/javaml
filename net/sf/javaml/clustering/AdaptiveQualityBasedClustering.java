@@ -143,6 +143,9 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
 		System.out.println("initiation: dimension"+dimension);
 		rk_prelim = Math.sqrt((dimension - 1) / 2);
 		System.out.println("initiation: rk_prelim"+rk_prelim);
+		
+		System.out.println("initiation: deltarad"+deltarad);
+		
 		// convert dataset of instances to vector of instances
 		Vector<Instance> all = new Vector<Instance>();
 		// temporarily processing vector
@@ -154,16 +157,19 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
 		}
 		System.out.println("data put in vectors");
 		
+		ck = mean(cluster);
+		rad = maxDist(cluster, ck);
+		System.out.println("initiation: initial rad "+rad);
+		deltarad = (rad - rk_prelim) * div;
+		
 		int iterator = 0;
 		while (iterator <= maxIterMain & all != null) {
-			
+			System.out.println("iterator "+iterator);
 			System.out.println("start step 1");
 			// step1: locate cluster center
 			ck = mean(cluster);
 			rad = maxDist(cluster, ck);
 			System.out.println("step 1: initial rad "+rad);
-			deltarad = (rad - rk_prelim) * div;
-			System.out.println("initiation: deltarad"+deltarad);
 			rad = rad - deltarad;
 			System.out.println("step 1: new rad "+rad);
 			System.out.println("initiation: deltarad"+deltarad);
