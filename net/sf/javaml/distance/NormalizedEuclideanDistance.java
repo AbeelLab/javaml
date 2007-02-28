@@ -38,12 +38,12 @@ import net.sf.javaml.core.InstanceTools;
  * @author Thomas Abeel
  * 
  */
-public class NormalizedEuclideanDistance implements DistanceMeasure {
+public class NormalizedEuclideanDistance extends EuclideanDistance {
 
-    private DistanceMeasure dm=new EuclideanDistance();
-	private Dataset data;
+    private Dataset data;
     
 	public NormalizedEuclideanDistance(Dataset data) {
+        super();
 	    this.data=data;
 	}
 
@@ -52,7 +52,7 @@ public class NormalizedEuclideanDistance implements DistanceMeasure {
 	public double calculateDistance(Instance i, Instance j) {
         Instance normI=InstanceTools.normalizeMidrange(0.5,1,data.getMinimumInstance(),data.getMaximumInstance(), i);
         Instance normJ=InstanceTools.normalizeMidrange(0.5,1,data.getMinimumInstance(),data.getMaximumInstance(), j);
-		return dm.calculateDistance(normI, normJ)/Math.sqrt(2);
+		return super.calculateDistance(normI, normJ)/Math.sqrt(2);//TODO This root may depend on the dimension of the data.
 		
 	}
 }
