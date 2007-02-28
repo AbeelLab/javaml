@@ -65,28 +65,28 @@ public class ExpectationMaximization {
 	private double varianceOp;
 
 	// p(r|C)
-	private Vector<Double> prc;
+	private Vector<Double> prc = new Vector<Double>() ;
 
 	// p(r|B)
-	private Vector<Double> prb;
+	private Vector<Double> prb = new Vector<Double>() ;
 
 	// p(r|C)*Pc
-	private Vector<Double> prcpc;
+	private Vector<Double> prcpc = new Vector<Double>() ;
 
 	// p(r|B)*Pb
-	private Vector<Double> prbpb;
+	private Vector<Double> prbpb = new Vector<Double>() ;
 
 	// p(r)
-	private Vector<Double> pr;
+	private Vector<Double> pr = new Vector<Double>() ;
 
 	// p(C|r)
-	private Vector<Double> pcr;
+	private Vector<Double> pcr = new Vector<Double>() ;
 
 	// all instances in cluster
-	private Vector<Instance> cluster;
+	private Vector<Instance> cluster = new Vector<Instance>() ;
 
 	// all distances between cluster centroid and Instance < rk_prelim
-	private Vector<Double> clusterDist;
+	private Vector<Double> clusterDist = new Vector<Double>() ;
 
 	private DistanceMeasure dm = new EuclideanDistance();
 
@@ -210,34 +210,47 @@ public class ExpectationMaximization {
 	}
 
 	// main algorithm
-	public double em(Vector<Instance> data, Instance ck, double rk_prelim,
+	public double em(Vector<Instance> data, Vector<Instance> cluster, Instance ck, double rk_prelim,
 			double dimension, Vector<Double> varianceEst) {
 		dimD = dimension - 2;
-		int dataSize = data.size();
-		// find instances within pre-estimated radius (rk_prelim) and calculate
-		// their distance to ck
-		for (int i = 0; i < dataSize; i++) {
-			double distance = dm.calculateDistance(data.get(i), ck);
-			if (distance < rk_prelim) {
-				cluster.add(data.get(i));
+		System.out.println("EM : dataSize" + data.size());
+		System.out.println("EM : clusterSize" + cluster.size());
+		System.out.println("EM : start main");
+		// for each instances in cluster: calculate distance to ck
+		for (int i = 0; i < cluster.size(); i++) {
+			double distance = dm.calculateDistance(cluster.get(i), ck);
+			System.out.println("EM : distance"+distance);
 				clusterDist.add(distance);
-			}
 		}
+		
+		System.out.println("EM : calculate first estimates");
 		// calculate first estimate for pc, pb variance
-		pc = clusterDist.size() / dataSize;
+		pc = clusterDist.size() / data.size();
+		System.out.println("EM : estimate pc"+pc);
 		pb = 1 - pc;
+		System.out.println("EM : estimate pb"+pb);
 		variance = var(cluster, clusterDist, dimD);
-
+		System.out.println("EM : estimate variance"+variance);
+		System.out.println("EM : start calculating optimized estimates");
 		for (int i = 0; i < maxIter; i++) {
 			sD = sD(dimD);
+			System.out.println("EM : sD");
 			sD1 = sD(dimD + 1);
+			System.out.println("EM : sD1");
 			prc = prc(variance, clusterDist, sD, dimD);
+			System.out.println("EM : prc");
 			prb = prb(variance, clusterDist, sD, sD1, dimD);
+			System.out.println("EM : prb");
 			prcpc = prxpx(prc, pc);
+			System.out.println("EM : prcpc");
 			prbpb = prxpx(prb, pb);
+			System.out.println("EM : prbpb");
 			pr = pr(prcpc, prbpb);
+			System.out.println("EM : pr");
 			pcr = pcr(prcpc, pr);
+			System.out.println("EM : pcr");
 			sm = sm(pcr);
+			System.out.println("EM : sm");
 			if ( sm == 0 || sm == Double.POSITIVE_INFINITY || sm == Double.NEGATIVE_INFINITY){
 				System.out.println("SM value not valid.");
 				varianceEst=null;
@@ -255,7 +268,9 @@ public class ExpectationMaximization {
 			pb = pbOp;
 			variance = varianceOp;
 		}
+		System.out.println("EM : end calculation estimates");
 		varianceEst.add(variance);
+		System.out.println("EM : end EM");
 		return pc;
 	}
 }
