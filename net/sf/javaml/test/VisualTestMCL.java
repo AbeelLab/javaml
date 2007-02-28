@@ -70,12 +70,13 @@ public class VisualTestMCL extends JPanel {
         Dataset[] clusters = km.executeClustering(data);
         
         Color[] colors = { Color.RED, Color.GREEN, Color.BLUE, Color.MAGENTA };
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < clusters.length; i++) {
+        	System.out.println(clusters[i].size());
             this.add(createLabel(clusters[i], colors[i], space, space, km, colors, i));
         }
         
-        CIndex cindex=new CIndex(new EuclideanDistance());
-        System.out.println("C-index score: "+cindex.score(clusters));
+        //CIndex cindex=new CIndex(new EuclideanDistance());
+        //System.out.println("C-index score: "+cindex.score(clusters));
         
 
     }

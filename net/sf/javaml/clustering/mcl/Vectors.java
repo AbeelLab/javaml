@@ -496,11 +496,12 @@ public class Vectors {
      */
     public static String print(double[] x) {
         if (x == null)
-            return "null";
+        	return "null";     
         StringBuffer b = new StringBuffer();
         for (int i = 0; i < x.length - 1; i++) {
             b.append(format(x[i])).append(" ");
         }
+        System.out.println("array length vector:" +x.length);
         b.append(format(x[x.length - 1]));
         return b.toString();
     }
@@ -523,6 +524,7 @@ public class Vectors {
         if (x == null)
             return "null";
         StringBuffer b = new StringBuffer();
+        System.out.println("array length array:" +x.length);
         for (int i = 0; i < x.length - 1; i++) {
             b.append(print(x[i])).append("\n");
         }

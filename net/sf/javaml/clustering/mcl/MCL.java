@@ -31,6 +31,7 @@ import java.util.Vector;
 import net.sf.javaml.clustering.Clusterer;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
+import net.sf.javaml.core.SimpleDataset;
 import net.sf.javaml.distance.DistanceMeasure;
 import net.sf.javaml.distance.NormalizedEuclideanDistance;
 
@@ -80,7 +81,7 @@ public class MCL implements Clusterer {
 			int[] sparseMatrixSize = matrix.getSize();
 			System.out.println("sparseMatrixSize: " + sparseMatrixSize[0]);
 			
-			// find number of attractors in diagonal
+			// find number of attractors (non zero values) in diagonal
 			int attractors = 0;
 			for (int i = 0; i < sparseMatrixSize[0]; i++) {
 				double val = matrix.get(i, i);
@@ -92,30 +93,30 @@ public class MCL implements Clusterer {
 			
 			// create cluster for each attractor with value close to 1
 			Vector<Vector<Instance>> finalClusters = new Vector<Vector<Instance>>();
-			Vector<Instance> cluster = new Vector<Instance>();
+			
 			for (int i = 0; i < sparseMatrixSize[0]; i++) {
+				Vector<Instance> cluster = new Vector<Instance>();
 				double val = matrix.get(i, i);
-				System.out.println("attractor value"+i+": " + val);
-				if (val != 0) {
-					System.out.println("attractor value"+i+": " + val);
+				if (val >= 0.98 ) {
+					System.out.println("valid attractor found");
 					for (int j = 0 ; j < sparseMatrixSize[0]; j++){
-						double value = matrix.get(i, j);
-						System.out.println("distance value"+j+": " + value);
+						double value = matrix.get(j, i);
 						if ( value != 0){
 							cluster.add(data.getInstance(j));	
 							System.out.println("instance added");
 						}
-						System.out.println("end if: val != 0");
 					}
+					System.out.println("final cluster size: "+ cluster.size());
 					finalClusters.add(cluster);
-					cluster.clear();
-					System.out.println("end if: search row");
 				}
-				System.out.println("end if: attractor !=0");
 			}
-			System.out.println("end for");
+			System.out.println("finalClusterssize: "+ finalClusters.size());
 			
+			System.out.println("start data adding to dataset");
 			Dataset[] output = new Dataset[finalClusters.size()];
+			for (int i = 0; i < finalClusters.size(); i++) {
+				output[i]=new SimpleDataset();
+			}
 			for (int i = 0; i < finalClusters.size(); i++) {
 				Vector<Instance> getCluster = new Vector<Instance>();
 				getCluster = finalClusters.get(i);
