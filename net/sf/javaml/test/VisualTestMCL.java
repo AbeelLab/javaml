@@ -35,10 +35,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import net.sf.javaml.clustering.mcl.MCL;
-import net.sf.javaml.clustering.evaluation.CIndex;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.distance.EuclideanDistance;
+import net.sf.javaml.distance.NormalizedEuclideanSimilarity;
 import net.sf.javaml.tools.DatasetGenerator;
 
 public class VisualTestMCL extends JPanel {
@@ -63,15 +62,14 @@ public class VisualTestMCL extends JPanel {
     public VisualTestMCL() {
         this.setLayout(new GridLayout(0, 3));
         int space = 300;
-        Dataset data = DatasetGenerator.createClusterSquareDataset(space, 10,10);
+        Dataset data = DatasetGenerator.createClusterSquareDataset(space, 10,100);
 
         this.add(createLabel(data, Color.BLACK, space, space, null, null, 0));
-        MCL km = new MCL();
+        MCL km = new MCL(new NormalizedEuclideanSimilarity(data));
         Dataset[] clusters = km.executeClustering(data);
         
         Color[] colors = { Color.RED, Color.GREEN, Color.BLUE, Color.MAGENTA };
         for (int i = 0; i < clusters.length; i++) {
-        	System.out.println(clusters[i].size());
             this.add(createLabel(clusters[i], colors[i], space, space, km, colors, i));
         }
         
