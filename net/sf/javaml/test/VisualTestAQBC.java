@@ -63,7 +63,7 @@ public class VisualTestAQBC  extends JPanel {
     public VisualTestAQBC() {
         this.setLayout(new GridLayout(0, 3));
         int space = 300;
-        Dataset data = DatasetGenerator.createClusterSquareDataset(space, 10,10);
+        Dataset data = DatasetGenerator.createClusterSquareDataset3D(space, 10,10);
 
         this.add(createLabel(data, Color.BLACK, space, space, null, null, 0));
         AdaptiveQualityBasedClustering km = new AdaptiveQualityBasedClustering();
