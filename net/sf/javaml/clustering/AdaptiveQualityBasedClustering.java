@@ -190,8 +190,6 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
 				System.out.println("step 1: new cluster size"+ cluster.size());
 				System.out.println("step 1: recalculate mean");
 				newMean = mean(cluster);
-				System.out.println("ck is"+ck);
-				System.out.println("new mean is"+newMean);
 				double distCkNewMean = dm.calculateDistance(ck, newMean);
 				if ( distCkNewMean == 0) {
 					System.out.println("convergence.");
