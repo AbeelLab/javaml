@@ -29,14 +29,39 @@ import java.util.Vector;
 import net.sf.javaml.clustering.Clusterer;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
+import net.sf.javaml.distance.DistanceMeasure;
+import net.sf.javaml.distance.NormalizedEuclideanDistance;
 
 // TODO implements bridge between Gregory's implementation and the interfaces.
 public class MCL implements Clusterer {
-
+	private DistanceMeasure dm;
+	// Maximum difference between row elements and row square sum (measure of idempotence)
+    double maxResidual = 0.001;
+	//inflation exponent for Gamma operator
+    double pGamma = 2.0;
+	//loopGain values for cycles
+    double loopGain = 0.;
+	//maximum value considered zero for pruning operations
+    double maxZero = 0.001;
 	public Dataset[] executeClustering(Dataset data) {
-		// TODO convert dataset to matrix of distances
+		// convert dataset to matrix of distances
+		double[][] dataConverted = new double[data.size()][data.size()];
+		dm = new NormalizedEuclideanDistance(data);
+		for (int i = 0; i<data.size(); i++){
+			for (int j = 0; j<data.size(); j++){
+				double distance = dm.calculateDistance(data.getInstance(i), data.getInstance(j));
+				if ( i == j){
+					dataConverted[i][i] = distance; 
+				}
+				else {
+					dataConverted[i][j] = distance;
+					dataConverted[j][i] = distance; 
+				}
+			}
+		}
+		SparseMatrix dataSparseMatrix = new SparseMatrix(dataConverted);
 		MarkovClustering mcl = new MarkovClustering();
-		SparseMatrix matrix = mcl.run(dataConverted, maxResidual, pGamma,
+		SparseMatrix matrix = mcl.run(dataSparseMatrix, maxResidual, pGamma,
 				loopGain, maxZero);
 		
 		// convert matrix to output dataset:

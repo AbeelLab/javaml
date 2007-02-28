@@ -77,32 +77,32 @@ package net.sf.javaml.clustering.mcl;
      */
     public class MarkovClustering {
 
-        /**
-         * test the MCL algorithm with the matrix loaded from the file in the
-         * argument. If no argument is given, the default file for the matrix T(G3 +
-         * I) from van Dongen (2000), page 50.
-         *
-         * @param args
-         */
-        public static void main(String[] args) {
-
-            String file = "m.txt";
-            if (args.length > 1)
-                file = args[0];
-
-            double[][] a = MatrixLoader.loadDense(file);
-            SparseMatrix aa = new SparseMatrix(a);
-
-            // we use the transpose because our sparse matrices are row-major
-            aa = aa.transpose();
-            double maxResidual = 0.001;
-            double gammaExp = 2.0;
-            double loopGain = 0.;
-            double zeroMax = 0.001;
-            MarkovClustering mcl = new MarkovClustering();
-            aa = mcl.run(aa, maxResidual, gammaExp, loopGain, zeroMax);
-            print(aa, "result");
-        }
+//        /**
+//         * test the MCL algorithm with the matrix loaded from the file in the
+//         * argument. If no argument is given, the default file for the matrix T(G3 +
+//         * I) from van Dongen (2000), page 50.
+//         *
+//         * @param args
+//         */
+//        public static void main(String[] args) {
+//
+//            String file = "m.txt";
+//            if (args.length > 1)
+//                file = args[0];
+//
+//            double[][] a = MatrixLoader.loadDense(file);
+//            SparseMatrix aa = new SparseMatrix(a);
+//
+//            // we use the transpose because our sparse matrices are row-major
+//            aa = aa.transpose();
+//            double maxResidual = 0.001;
+//            double gammaExp = 2.0;
+//            double loopGain = 0.;
+//            double zeroMax = 0.001;
+//            MarkovClustering mcl = new MarkovClustering();
+//            aa = mcl.run(aa, maxResidual, gammaExp, loopGain, zeroMax);
+//            print(aa, "result");
+//        }
 
         /**
          * run the MCL process.
