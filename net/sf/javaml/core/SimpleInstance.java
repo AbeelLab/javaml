@@ -24,11 +24,9 @@
  */
 package net.sf.javaml.core;
 
-import java.util.Vector;
-
 public class SimpleInstance implements Instance {
 
-    private Vector<Float> values = new Vector<Float>();
+    private float[] values =null;;
 
     private boolean classSet = false;
 
@@ -41,15 +39,15 @@ public class SimpleInstance implements Instance {
      * @param instance
      */
     public SimpleInstance(Instance instance) {
-        this(instance.getArrayForm(),instance.getWeight(),instance.isClassSet(),instance.getClassValue());
+        this(instance.toArray(),instance.getWeight(),instance.isClassSet(),instance.getClassValue());
 		
 	}
     @Override
     public String toString(){
         //TODO optimize using StringBuffer;
-        String out="["+values.get(0).toString();
-        for(int i=1;i<values.size();i++){
-            out+=";"+values.get(i);
+        String out="["+values[0];
+        for(int i=1;i<values.length;i++){
+            out+=";"+values[i];
         }
         out+=";w:"+this.weight;
         if(this.classSet){
@@ -68,30 +66,18 @@ public class SimpleInstance implements Instance {
     }
     
     public SimpleInstance(float [] values,float weight,boolean classSet,int classValue){
-        this.values=new Vector<Float>();
-        for(int i=0;i<values.length;i++){
-            this.values.add(values[i]);
-        }
+        this.values=new float[values.length];
+        System.arraycopy(values,0,this.values,0,values.length);
+      
         this.weight=weight;
         this.classSet=classSet;
         this.classValue=classValue;
     }
 
-    public Vector<Float> getVectorForm() {
-        return new Vector<Float>(values);
-    }
-
-    public float[] getArrayForm() {
-        float[] tmp = new float[values.size()];
-        for(int i=0;i<tmp.length;i++){
-            tmp[i]=values.get(i);
-        }
-        return tmp;
-    }
-
+    
     
     public float getValue(int index) {
-        return values.get(index);
+        return values[index];
     }
 
    
@@ -120,7 +106,12 @@ public class SimpleInstance implements Instance {
     }
 
     public int size() {
-       return values.size();
+       return values.length;
+    }
+    public float[] toArray() {
+        float[] out=new float[values.length];
+        System.arraycopy(this.values,0,out,0,this.values.length);
+        return out;
     }
 
 }

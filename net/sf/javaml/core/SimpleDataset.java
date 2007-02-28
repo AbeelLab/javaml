@@ -35,8 +35,8 @@ public class SimpleDataset implements Dataset {
     public boolean addInstance(Instance instance) {
 
         if (instances.size() == 0) {
-            lowArray = instance.getArrayForm();
-            highArray = instance.getArrayForm();
+            lowArray = instance.toArray();
+            highArray = instance.toArray();
         }
         if (instances.size() > 0 && !instance.isCompatible(instances.get(0))) {
             return false;
@@ -84,8 +84,8 @@ public class SimpleDataset implements Dataset {
             lowArray = null;
             highArray = null;
         } else {
-            lowArray = instances.get(0).getArrayForm();
-            highArray = instances.get(0).getArrayForm();
+            lowArray = instances.get(0).toArray();
+            highArray = instances.get(0).toArray();
             for (int j = 1; j < instances.size(); j++) {
                 Instance instance = instances.get(j);
                 for (int i = 0; i < instance.size(); i++) {
