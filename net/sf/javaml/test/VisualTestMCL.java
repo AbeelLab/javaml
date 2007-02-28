@@ -63,7 +63,7 @@ public class VisualTestMCL extends JPanel {
     public VisualTestMCL() {
         this.setLayout(new GridLayout(0, 3));
         int space = 300;
-        Dataset data = DatasetGenerator.createClusterSquareDataset(space, 10,100);
+        Dataset data = DatasetGenerator.createClusterSquareDataset(space, 10,10);
 
         this.add(createLabel(data, Color.BLACK, space, space, null, null, 0));
         MCL km = new MCL();
