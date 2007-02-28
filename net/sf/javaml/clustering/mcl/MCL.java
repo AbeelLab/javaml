@@ -17,7 +17,7 @@
  * along with the Java Machine Learning API; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * 
- * Copyright (c) 2006, Thomas Abeel
+ * Copyright (c) 2006, Thomas Abeel, Andreas De Rijcke
  * 
  * Project: http://sourceforge.net/projects/java-ml/
  * 
@@ -32,7 +32,6 @@ import net.sf.javaml.core.Instance;
 import net.sf.javaml.distance.DistanceMeasure;
 import net.sf.javaml.distance.NormalizedEuclideanDistance;
 
-// TODO implements bridge between Gregory's implementation and the interfaces.
 public class MCL implements Clusterer {
 	private DistanceMeasure dm;
 	// Maximum difference between row elements and row square sum (measure of idempotence)
