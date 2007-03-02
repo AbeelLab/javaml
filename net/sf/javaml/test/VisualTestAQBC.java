@@ -38,7 +38,6 @@ import javax.swing.JPanel;
 import net.sf.javaml.clustering.AdaptiveQualityBasedClustering;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.test.VisualTestAQBC.ClusterLabel;
 import net.sf.javaml.tools.DatasetGenerator;
 
 public class VisualTestAQBC  extends JPanel {
@@ -63,7 +62,7 @@ public class VisualTestAQBC  extends JPanel {
     public VisualTestAQBC() {
         this.setLayout(new GridLayout(0, 3));
         int space = 300;
-        Dataset data = DatasetGenerator.createClusterSquareDataset3D(space, 10,10);
+        Dataset data = DatasetGenerator.createClusterSquareDataset3D(space, 10,25);
 
         this.add(createLabel(data, Color.BLACK, space, space, null, null, 0));
         AdaptiveQualityBasedClustering km = new AdaptiveQualityBasedClustering();
