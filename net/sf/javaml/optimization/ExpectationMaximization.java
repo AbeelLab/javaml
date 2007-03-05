@@ -240,13 +240,23 @@ public class ExpectationMaximization {
 			varianceOp = varOp(cluster, pcr, dimD, sm);
 			System.out.println("EM : varianceOp " +varianceOp);
 			pcOp = sm / data.size();
+			if (pcOp >= 1){
+				pc = 1;
+				varianceEst.add(variance);
+				return pc;
+			}
+			else if (pbOp == 1){
+				pc = 0;
+				varianceEst.add(variance);
+				return pc;
+			}
 			pbOp = 1 - pcOp;
 			System.out.println("EM : pcOp " +pcOp+" pbOp " +pbOp);
-			if ( Math.abs(varianceOp - variance) < cdif & Math.abs(pcOp-pc)< cdif){
+			/*if ( Math.abs(varianceOp - variance) < cdif & Math.abs(pcOp-pc)< cdif){
 				System.out.println("No or incorrect convergence.");
 				varianceEst=null;
 				return 0;
-			}
+			}*/
 			pc = pcOp;
 			pb = pbOp;
 			variance = varianceOp;
