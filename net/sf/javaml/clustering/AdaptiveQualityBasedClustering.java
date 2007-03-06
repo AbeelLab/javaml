@@ -216,7 +216,6 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
 				System.out.println("EM algorithm did not converge.");
 				return null;
 			}
-			System.out.println("step 2 : start recalculation variables");
 			// calculation new radius
 			double dimD = dimension - 2;
 			double sD = em.sD(dimD);
@@ -228,7 +227,7 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
 			double c3 = Math.abs(1 - (1 / significanceLevel));
 			System.out.println("step 2 : c1 "+ c1+" c2 "+c2+" c3 "+c3);
 			double tmp = Math.log(pb * c2 / (pc * c1 * c3));
-			double tmp2 = - 2 * variance * variance
+			double tmp2 = 2 * variance * variance
 			* tmp;
 			System.out.println("step 2 : tmp "+tmp+" tmp2 "+tmp2);
 			if (tmp2 < 0){
