@@ -89,9 +89,9 @@ public class ExpectationMaximization {
 
 	private GammaFunction gammaF = new GammaFunction();
 
-	// calculates first variance esteimate for a number of instances
-	public double var(Vector<Instance> cluster, Vector<Double> clusterDist,
-			double dimD) {
+	// calculates first variance estimate for a number of instances
+	//public double var(Vector<Instance> cluster, Vector<Double> clusterDist,double dimD) {
+	public double var(Vector<Instance> cluster,double dimD) {
 		double var;
 		int instanceLenght = cluster.get(0).size();
 		double sum = 0;
@@ -100,7 +100,7 @@ public class ExpectationMaximization {
 				sum += cluster.get(i).getValue(j) * cluster.get(i).getValue(j);
 			}
 		}
-		return var = (1 / dimD) * sum / clusterDist.size();
+		return var = (1 / dimD) * sum / cluster.size();
 	}
 
 	// calculates optimized variance
@@ -204,22 +204,21 @@ public class ExpectationMaximization {
 	}
 
 	// main algorithm
-	public double em(Vector<Instance> data, Vector<Instance> cluster, Instance ck, double rk_prelim,
+	public double em(Vector<Instance> dataset, Vector<Instance> cluster, Instance ck, double rk_prelim,
 			double dimension, Vector<Double> varianceEst) {
 		dimD = dimension - 2;
-		System.out.println("EM : dataSize " + data.size()+" clusterSize " + cluster.size());
-		System.out.println("EM : -- start main --");
 		// for each instances in cluster: calculate distance to ck
 		for (int i = 0; i < cluster.size(); i++) {
 			double distance = dm.calculateDistance(cluster.get(i), ck);
 				clusterDist.add(distance);
 		}
-		// calculate first estimate for pc, pb variance
-		double clusterSize = cluster.size();
-		pc = clusterSize / data.size();
+		// first estimate for pc, pb
+		pc = cluster.size() / dataset.size();
 		pb = 1 - pc;
+		//variance = var(cluster, clusterDist, dimD);
+		variance = var(cluster, dimD);
+		System.out.println("EM : dataSize " + dataset.size()+" clusterSize " + cluster.size());
 		System.out.println("EM : estimate pc "+pc+" estimate pb "+pb);
-		variance = var(cluster, clusterDist, dimD);
 		System.out.println("EM : estimate variance "+variance);
 		sD = sD(dimD);
 		sD1 = sD(dimD + 1);
@@ -239,7 +238,7 @@ public class ExpectationMaximization {
 			}
 			varianceOp = varOp(cluster, pcr, dimD, sm);
 			System.out.println("EM : varianceOp " +varianceOp);
-			pcOp = sm / data.size();
+			pcOp = sm / dataset.size();
 			if (pcOp >= 1){
 				pc = 1;
 				varianceEst.add(variance);
