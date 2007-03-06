@@ -66,7 +66,7 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
 
 	// other variables
 	private int instanceLength;
-	
+
 	private double dimension;
 
 	private double rk_prelim;
@@ -174,10 +174,11 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
 
 		int iterator = 1, endSign =1, nonvalidcluster=0;
 		while (iterator < maxIterMain && endSign != 0) {
-		//while (iterator < maxIterMain) {
+		// while (iterator < maxIterMain) {
 			System.out.println("iterator main " + iterator);
 			
-			// step1: locate cluster center			
+			
+			// step1: locate cluster center
 			System.out.println("step 1: new rad " + rad);
 			cluster = newCluster(cluster, ck, rad);
 			if (cluster.size()<= minInstances){
@@ -207,54 +208,64 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
 					double distCkNewMean = dm.calculateDistance(ck, newMean);
 					if (distCkNewMean == 0) {
 						System.out.println("convergence.");
-						//cluster = newCluster(cluster, ck, rad);
+						// cluster = newCluster(cluster, ck, rad);
 						stop++;
 						System.out.println("step 1: stop " + stop);
 					} else {
 						System.out.println("ck still not equal to new mean.");
-						//cluster = newCluster(cluster, ck, rad);
+						// cluster = newCluster(cluster, ck, rad);
 						stop = 0;
 					}
 					ck = newMean;
 				}
 			}
 
-			/*
-			 * // step 2:recalculate radius // calculation of sigma and a prior
-			 * prob pc and pb via EM // temporarily vector for variance
-			 * calculation via EM Vector<Double> varianceEst = new Vector<Double>();
-			 * double pc = em.em(all, cluster, ck, rk_prelim, dimension,
-			 * varianceEst); double pb = 1 - pc; variance = varianceEst.get(0);
-			 * System.out.println("step 2 : new var "+ variance+" new pc "+pc+"
-			 * new pb "+pb); if (pc == 0 & varianceEst == null) {
-			 * System.out.println("EM algorithm did not converge."); return
-			 * null; } // calculation new radius double dimD = dimension - 2;
-			 * double sD = em.sD(dimD); double sD1 = em.sD(dimD + 1);
-			 * System.out.println("step 2 : sD "+ sD+" sD1 "+sD1); double c1 =
-			 * sD / Math.pow((2 * Math.PI * variance * variance), dimD / 2);
-			 * double c2 = sD / (sD1 * Math.pow(dimD + 1, dimD / 2)); double c3 =
-			 * Math.abs(1 - (1 / significanceLevel)); System.out.println("step 2 :
-			 * c1 "+ c1+" c2 "+c2+" c3 "+c3); double tmp = Math.log(pb * c2 /
-			 * (pc * c1 * c3)); double tmp2 = 2 * variance * variance tmp;
-			 * System.out.println("step 2 : tmp "+tmp+" tmp2 "+tmp2); if (tmp2 <
-			 * 0){ System.out.println("step 2 : tmp2 kleiner dan 0"); return
-			 * null; } rk = Math.sqrt(tmp2); System.out.println("step 2 : new rk "+
-			 * rk); System.out.println("initiation: deltarad"+deltarad);
-			 * System.out.println("step 2 : end recalculation variables");
-			 * double tmp3 = Math.abs((rk - rk_prelim) / rk_prelim);
-			 * System.out.println("step 2 : verschil rk, rk_prelim "+tmp3); if
-			 * (Math.abs((rk - rk_prelim) / rk_prelim) < accurRad) { cluster =
-			 * newCluster(cluster, ck, rk); // remove cluster from data if valid
-			 * cluster and calculate // centroid if (cluster.size() >=
-			 * minInstances) { finalClusters.add(cluster);
-			 * System.out.println("Cluster added to final clusters.");
-			 * all.removeAll(cluster); cluster.clear(); cluster.addAll(all); }
-			 * else { System.out.println("Cluster not valid."); return null; } }
-			 * else { iterator++; } System.out.println("end step 2"); // update
-			 * preliminary radius estimate with new estimate rk_prelim = rk;
-			 * System.out.println("rk_prelim updated ");
-			 * System.out.println("final clusters size "+finalClusters.size());
+			
+			
+			// step 2:recalculate radius: calculation of sigma and a prior prob pc and pb via EM
+			 
+			// temporarily vector for variance calculation via EM
+			 Vector<Double> varianceEst = new Vector<Double>();
+			 double pc = em.em(all, cluster, ck, rk_prelim, dimension,varianceEst);
+			 double pb = 1 - pc; variance = varianceEst.get(0);
+			 System.out.println("step 2 : new var "+ variance+" new pc "+pc+" new pb "+pb);
+			 if (pc == 0 & varianceEst == null) {
+			 	System.out.println("EM algorithm did not converge.");
+			 	return null;
+			 } 
+			 // calculation new radius
+			 double dimD = dimension - 2;
+			 double sD = em.sD(dimD);
+			 double sD1 = em.sD(dimD + 1);
+			 System.out.println("step 2 : sD "+ sD+" sD1 "+sD1);
+			 double c1 =sD / Math.pow((2 * Math.PI * variance * variance), dimD / 2);
+			 double c2 = sD / (sD1 * Math.pow(dimD + 1, dimD / 2));
+			 double c3 = Math.abs(1 - (1 / significanceLevel));
+			 System.out.println("step 2 : c1 "+ c1+" c2 "+c2+" c3 "+c3);
+			 double tmp = Math.log(pb * c2 /(pc * c1 * c3));
+			 double tmp2 = 2 * variance * variance *tmp;
+			 System.out.println("step 2 : tmp "+tmp+" tmp2 "+tmp2);
+			 if (tmp2 < 0){
+				 System.out.println("step 2 : tmp2 kleiner dan 0");
+				 return null; 
+			}
+			 rk = Math.sqrt(tmp2);
+			 System.out.println("step 2 : new rk "+ rk);
+			 System.out.println("initiation: deltarad"+deltarad);
+			 System.out.println("step 2 : end recalculation variables");
+			 double tmp3 = Math.abs((rk - rk_prelim) / rk_prelim);
+			 System.out.println("step 2 : verschil rk, rk_prelim "+tmp3);
+			 System.out.println("end step 2");
+			 
+			 if (Math.abs((rk - rk_prelim) / rk_prelim) < accurRad) {
+				 cluster = newCluster(cluster, ck, rk); 
+			 }
+			 
+			 /**
+			 // update preliminary radius estimate with new estimate
+			 rk_prelim = rk;
 			 */
+			 
 			
 			if (cluster.size()> minInstances){
 				Vector<Instance> finalCluster = new Vector<Instance>();
