@@ -257,10 +257,11 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
 			 System.out.println("step 2 : verschil rk, rk_prelim "+tmp3);
 			 System.out.println("end step 2");
 			 
+			 System.out.println(" cluster size "+cluster.size());
 			 if (Math.abs((rk - rk_prelim) / rk_prelim) < accurRad) {
 				 cluster = newCluster(cluster, ck, rk); 
 			 }
-			 
+			 System.out.println(" cluster size "+cluster.size());
 			 /**
 			 // update preliminary radius estimate with new estimate
 			 rk_prelim = rk;
