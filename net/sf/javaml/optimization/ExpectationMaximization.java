@@ -91,8 +91,7 @@ public class ExpectationMaximization {
 	private GammaFunction gammaF = new GammaFunction();
 
 	// calculates first variance ( = sigma^ 2) estimate for a number of
-	// instances
-	// checked
+	// instances checked
 	public double var(Vector<Instance> cluster, double dimD) {
 		double var;
 		int instanceLenght = cluster.get(0).size();
@@ -108,8 +107,7 @@ public class ExpectationMaximization {
 		return var;
 	}
 
-	// calculates optimized variance
-	//checked
+	// calculates optimized variance checked
 	public double varOp(Vector<Instance> cluster, Vector<Double> pcr,
 			double dimD, double sm) {
 		double varOp;
@@ -119,7 +117,7 @@ public class ExpectationMaximization {
 			// sum of all distances
 			for (int j = 0; j < instanceLenght; j++) {
 				double r = cluster.get(i).getValue(j);
-				sum += (r * r)* pcr.get(i);
+				sum += (r * r) * pcr.get(i);
 			}
 		}
 		varOp = (1 / dimD) * (sum / sm);
@@ -132,9 +130,20 @@ public class ExpectationMaximization {
 		Vector<Double> prc = new Vector<Double>();
 		for (int i = 0; i < clusterDist.size(); i++) {
 			double r = clusterDist.get(i);
-			double temp = sD * (1 / Math.pow(2 * Math.PI * var, (dimD / 2)))
-					* Math.pow(r, (dimD - 1)) * Math.exp((-r * r) / (2 * var));
-			prc.add(temp);
+			if (var == 0){
+				System.out.println(" var is 0");
+				prc.add(0.0);
+			}
+			else if (r == 0) {
+				prc.add(1.0);
+				System.out.println(" r is 0");
+			} else {
+				double temp = sD
+						* (1 / Math.pow(2 * Math.PI * var, (dimD / 2)))
+						* Math.pow(r, (dimD - 1))
+						* Math.exp((-r * r) / (2 * var));
+				prc.add(temp);
+			}
 		}
 		return prc;
 	}
@@ -145,7 +154,8 @@ public class ExpectationMaximization {
 		Vector<Double> prb = new Vector<Double>();
 		for (int i = 0; i < clusterDist.size(); i++) {
 			double r = clusterDist.get(i);
-			double temp = (sD / (sD1 * Math.pow(r, dimD)) * Math.pow(r, dimD - 1));
+			double temp = (sD / (sD1 * Math.pow(r, dimD)) * Math.pow(r,
+					dimD - 1));
 			prb.add(temp);
 		}
 		return prb;
@@ -187,7 +197,6 @@ public class ExpectationMaximization {
 		return sD;
 	}
 
-
 	// calculates sm
 	public double sm(Vector<Double> pcr) {
 		double sm = 0;
@@ -214,9 +223,8 @@ public class ExpectationMaximization {
 		pb = 1 - pc;
 		// variance = var(cluster, clusterDist, dimD);
 		variance = var(cluster, dimD);
-		System.out.println("EM : dataSize " + dataset.size() + " clusterSize "
-				+ cluster.size());
-		System.out.println("EM : estimate pc " + pc + " estimate pb " + pb+" estimate variance " + variance);
+		//System.out.println("EM : dataSize " + dataset.size() + " clusterSize "+ cluster.size());
+		//System.out.println("EM : estimate pc " + pc + " estimate pb " + pb+ " estimate variance " + variance);
 		sD = sD(dimD);
 		sD1 = sD(dimD + 1);
 		for (int i = 0; i < maxIter; i++) {
@@ -226,9 +234,9 @@ public class ExpectationMaximization {
 			prbpb = prxpx(prb, pb);
 			pr = pr(prcpc, prbpb);
 			pcr = pcr(prcpc, pr);
-			//sm = sm(pcr);
+			// sm = sm(pcr);
 			sm = pcr.size();
-			System.out.println("EM : sm " + sm);
+			//System.out.println("EM : sm " + sm);
 			if (sm == 0 || sm == Double.POSITIVE_INFINITY
 					|| sm == Double.NEGATIVE_INFINITY) {
 				System.out.println("SM value not valid.");
@@ -236,7 +244,7 @@ public class ExpectationMaximization {
 				return 0;
 			}
 			varianceOp = varOp(cluster, pcr, dimD, sm);
-			System.out.println("EM : varianceOp " + varianceOp);
+			//System.out.println("EM : varianceOp " + varianceOp);
 			pcOp = sm / dataset.size();
 			if (pcOp >= 1) {
 				pc = 1;
@@ -248,7 +256,7 @@ public class ExpectationMaximization {
 				return pc;
 			}
 			pbOp = 1 - pcOp;
-			System.out.println("EM : pcOp " + pcOp + " pbOp " + pbOp);
+			//System.out.println("EM : pcOp " + pcOp + " pbOp " + pbOp);
 			/*
 			 * if ( Math.abs(varianceOp - variance) < cdif & Math.abs(pcOp-pc)<
 			 * cdif){ System.out.println("No or incorrect convergence.");
@@ -257,10 +265,12 @@ public class ExpectationMaximization {
 			pc = pcOp;
 			pb = pbOp;
 			variance = varianceOp;
-			System.out.println("EM : end iteration " + i);
+			//System.out.println("EM : end iteration " + i);
 		}
+		
+		
 		varianceEst.add(variance);
-		System.out.println("EM : --- end EM ---");
+		//System.out.println("EM : --- end EM ---");
 		return pc;
 	}
 }
