@@ -33,11 +33,12 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import net.sf.javaml.clustering.Clusterer;
 import net.sf.javaml.clustering.MultiKMeans;
-import net.sf.javaml.clustering.SimpleKMeans;
+import net.sf.javaml.clustering.evaluation.Tau;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.core.SimpleDataset;
+import net.sf.javaml.distance.EuclideanDistance;
 import net.sf.javaml.tools.DatasetGenerator;
 
 public class VisualTestMultiKMeans extends JPanel {
@@ -65,25 +66,18 @@ public class VisualTestMultiKMeans extends JPanel {
         Dataset data = DatasetGenerator.createClusterSquareDataset(space, 10);
 
         this.add(createLabel(data, Color.BLACK, space, space, null, null, 0));
-        MultiKMeans km = new MultiKMeans(4, 20);
-        km.buildClusterer(data);
+        MultiKMeans km = new MultiKMeans(4, 20, new EuclideanDistance(),10, new Tau(new EuclideanDistance()));
+        Dataset[]clusters=km.executeClustering(data);
 
-        Dataset[] datas = new Dataset[4];
-        for (int i = 0; i < 4; i++) {
-            datas[i] = new SimpleDataset();
-        }
-        for (int i = 0; i < data.size(); i++) {
-            Instance in = data.getInstance(i);
-            datas[km.predictCluster(in)].addInstance(in);
-        }
+        
         Color[] colors = { Color.RED, Color.GREEN, Color.BLUE, Color.MAGENTA };
         for (int i = 0; i < 4; i++) {
-            this.add(createLabel(datas[i], colors[i], space, space, km, colors, i));
+            this.add(createLabel(clusters[i], colors[i], space, space, km, colors, i));
         }
 
     }
 
-    private JLabel createLabel(Dataset data, Color color, int width, int height, SimpleKMeans km, Color[] colors, int i) {
+    private JLabel createLabel(Dataset data, Color color, int width, int height, MultiKMeans km, Color[] colors, int i) {
         return new ClusterLabel(data, color, width, height, km, colors, i);
     }
 
@@ -99,15 +93,15 @@ public class VisualTestMultiKMeans extends JPanel {
 
         private Color color;
 
-        private SimpleKMeans km;
+        private Clusterer km;
 
        private int tmpI;
 
-        public ClusterLabel(Dataset data, Color color, int width, int height, SimpleKMeans km, Color[] colors, int i) {
+        public ClusterLabel(Dataset data, Color color, int width, int height, MultiKMeans km2, Color[] colors, int i) {
             this.setPreferredSize(new Dimension(width, height));
             this.data = data;
             this.color = color;
-            this.km = km;
+            this.km = km2;
              this.tmpI = i;
             this.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         }
@@ -121,17 +115,7 @@ public class VisualTestMultiKMeans extends JPanel {
                 g.fillOval((int) in.getValue(0) - 1, (int) in.getValue(1) - 1, 2, 2);
 
             }
-            if (km != null) {
-                Instance[] centroids = km.getCentroids();
-                for (int i = 0; i < centroids.length; i++) {
-                    g.setColor(Color.GRAY);
-                    g.fillRect((int) centroids[i].getValue(0) - 4, (int) centroids[i].getValue(1) - 4, 8, 8);
-
-                }
-                g.setColor(Color.BLACK);
-                g.fillRect((int) centroids[tmpI].getValue(0) - 4, (int) centroids[tmpI].getValue(1) - 4, 8, 8);
-
-            }
+            
 
         }
 
