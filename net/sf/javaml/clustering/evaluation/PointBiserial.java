@@ -50,6 +50,7 @@ public class PointBiserial implements ClusterEvaluation {
 		double nd, sd, pb;
 		
 		for (int i = 0; i < datas.length; i++) {
+			System.out.println("cluster: " + i + ": size: " + datas[i].size());
 			for (int j = 0; j < datas[i].size(); j++) {
 				Instance x = datas[i].getInstance(j);
 				// calculate sum of intra cluster distances dw and count their

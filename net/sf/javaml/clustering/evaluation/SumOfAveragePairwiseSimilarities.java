@@ -43,6 +43,7 @@ public class SumOfAveragePairwiseSimilarities implements ClusterEvaluation{
        
         double sum=0;
         for(int i=0;i<datas.length;i++){
+        	System.out.println("cluster: " + i + ": size: " + datas[i].size());
             double tmpSum=0;
             for(int j=0;j<datas[i].size();j++){
                 for(int k=0;k<datas[i].size();k++){
