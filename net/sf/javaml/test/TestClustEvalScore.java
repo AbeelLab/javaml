@@ -12,6 +12,7 @@ import net.sf.javaml.clustering.evaluation.WB;
 
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.SimpleDataset;
+import net.sf.javaml.distance.EuclideanDistance;
 import net.sf.javaml.tools.DatasetGenerator;
 
 
@@ -25,9 +26,9 @@ public class TestClustEvalScore {
 			throw new RuntimeException("The dataset should not be empty");
 		}
 		SimpleKMeans km = new SimpleKMeans(4, 500);
-        km.buildClusterer(data);
-		ClusterEvaluation ce=new Tau();
-		double score = ce.score(km,data);
+        km.executeClustering(data);
+		ClusterEvaluation ce=new Tau(new EuclideanDistance());
+		double score = ce.score(km.executeClustering(data));
 		System.out.println("score: "+score);
 	}
 }
