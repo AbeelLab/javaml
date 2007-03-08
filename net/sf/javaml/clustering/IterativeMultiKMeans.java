@@ -24,16 +24,11 @@
  */
 package net.sf.javaml.clustering;
 
-import java.util.Vector;
-
 import net.sf.javaml.clustering.evaluation.ClusterEvaluation;
-import net.sf.javaml.clustering.evaluation.HybridPairwiseSimilarities;
 import net.sf.javaml.core.Dataset;
-import net.sf.javaml.core.Instance;
+import net.sf.javaml.distance.DistanceMeasure;
 
 /**
- * TODO code uitkuisen van output, er mag geen output zijn
- * 
  * This class implements an extension of SimpleKMeans, combining Iterative- en
  * MultiKMeans. SKM will be run several iterations with a different k value,
  * starting from kMin and increasing to kMax, and several iterations for each k.
@@ -46,81 +41,43 @@ import net.sf.javaml.core.Instance;
  */
 public class IterativeMultiKMeans extends SimpleKMeans {
 
-	private int kMin;
+	private int kMin, kMax;
 
-	private int kMax;
+	private int repeats, clusters, iterations;;
 
-	private int repeats;
-
-	public IterativeMultiKMeans(int kMin, int kMax, int repeats) {
+	private ClusterEvaluation ce;
+	
+	
+	public IterativeMultiKMeans(int kMin, int kMax, int iterations,
+			DistanceMeasure dm, int repeats, ClusterEvaluation ce) {
 		this.kMax = kMax;
 		this.kMin = kMin;
+		this.iterations = iterations;
 		this.repeats = repeats;
+		this.dm = dm;
+		this.ce = ce;
 	}
 
 	@Override
-	public void buildClusterer(Dataset data) {
-		System.out.println("Build Iterative clusterer");
-		if (data.size() == 0)
-			throw new RuntimeException("The dataset should not be empty");
-		if (kMin == 0)
-			throw new RuntimeException("There should be at least one cluster");
-
-		int bestNumberOfClusters = 0;
-		double bestScore = 0;
-		Instance[] bestCentroids = null;
-
-		for (int k = kMin; k <= kMax; k++) {
-			super.numberOfClusters = k;
-			super.numberOfIterations = 100;
-
+	public Dataset[] executeClustering(Dataset data) {
+		
+		SimpleKMeans km = new SimpleKMeans(kMin, this.iterations,
+				this.dm);
+		Dataset[] bestClusters = km.executeClustering(data);
+		for (clusters = kMin+1; clusters <= kMax; clusters++) {
+			double bestScore = this.ce.score(bestClusters);
 			for (int i = 0; i < repeats; i++) {
-				super.buildClusterer(data);
-				ClusterEvaluation ce = new HybridPairwiseSimilarities();// new
-																		// SumOfCentroidSimilarities();//
-																		// I_2
-				double newScore = ce.score(this, data);
-				if (k == kMin && i == 0) {
-					bestScore = newScore;
-					bestNumberOfClusters = k;
+				super.executeClustering(data);
+				SimpleKMeans km2 = new SimpleKMeans(clusters, this.iterations,
+						this.dm);
+				Dataset[] tmpClusters = km2.executeClustering(data);
+				double tmpScore = this.ce.score(tmpClusters);
+				if (this.ce.compareScore(bestScore, tmpScore)) {
+					bestScore = tmpScore;
+					bestClusters = tmpClusters;
 				}
-				System.out.println("k = " + k);
-				System.out.println("score = " + newScore);
-				// System.out.println("old bestCosSim = "+bestCosSim);
-				if (ce.compareScore(bestScore, newScore)) {
-					bestScore = newScore;
-					bestCentroids = super.centroids;
-					bestNumberOfClusters = k;
-				}
-				System.out.println("new bestCosSim  = " + bestScore);
-				System.out.println("bestNumberOfClusters = "
-						+ bestNumberOfClusters);
-				System.out.println();
-			}
-
-		}
-
-		// copy centroids
-		super.centroids = bestCentroids;
-		super.numberOfClusters = bestNumberOfClusters;
-		// FILTER BESTCENTROIDS
-		int[] freqTable = new int[bestNumberOfClusters];
-		for (int i = 0; i < data.size(); i++) {
-			freqTable[super.predictCluster(data.getInstance(i))]++;
-		}
-		Vector<Instance> tmpCentroids = new Vector<Instance>();
-		int nonEmptyClusterCount = 0;
-		for (int i = 0; i < freqTable.length; i++) {
-			if (freqTable[i] > 0) {
-				tmpCentroids.add(bestCentroids[i]);
-				nonEmptyClusterCount++;
 			}
 		}
-		super.centroids = new Instance[tmpCentroids.size()];
-		super.centroids = tmpCentroids.toArray(super.centroids);
-		super.numberOfClusters = nonEmptyClusterCount;
-		// System.out.println("Final centroid count: "+super.centroids.length);
-		// System.out.println("Final number of Clusters:
-		// "+super.numberOfClusters);
+		return bestClusters;
 	}
 }
