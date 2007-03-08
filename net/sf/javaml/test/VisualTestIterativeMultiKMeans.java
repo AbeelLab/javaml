@@ -35,7 +35,10 @@ import javax.swing.JPanel;
 
 import net.sf.javaml.clustering.IterativeMultiKMeans;
 import net.sf.javaml.clustering.SimpleKMeans;
+import net.sf.javaml.clustering.evaluation.CIndex;
 import net.sf.javaml.clustering.evaluation.Gamma;
+import net.sf.javaml.clustering.evaluation.SumOfAveragePairwiseSimilarities;
+import net.sf.javaml.clustering.evaluation.SumOfCentroidSimilarities;
 import net.sf.javaml.clustering.evaluation.SumOfSquaredErrors;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
@@ -64,7 +67,7 @@ public class VisualTestIterativeMultiKMeans extends JPanel {
         Dataset data = DatasetGenerator.createClusterSquareDataset(space, 8);
 
         this.add(createLabel(data, Color.BLACK, space, space, null, null, 0));
-        IterativeMultiKMeans km = new IterativeMultiKMeans(1, 10,100, new EuclideanDistance(), 10, new SumOfSquaredErrors(new EuclideanDistance()));
+        IterativeMultiKMeans km = new IterativeMultiKMeans(1, 10,100, new EuclideanDistance(), 10, new CIndex(new EuclideanDistance()));
         Dataset[]clusters=km.executeClustering(data);
 
         Color[] colors = { Color.RED, Color.GREEN, Color.BLUE, Color.MAGENTA,Color.CYAN };
