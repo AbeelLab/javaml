@@ -94,7 +94,7 @@ public class Tau implements ClusterEvaluation {
 	}
 
 	public boolean compareScore(double score1, double score2) {
-		// should be maxed
+		// should be maximized
 		return score2 > score1;
 	}
 

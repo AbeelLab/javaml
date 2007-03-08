@@ -85,7 +85,7 @@ public class GPlus implements ClusterEvaluation {
 	}
 
 	public boolean compareScore(double score1, double score2) {
-		// should be minimalized. range = [0,x] with x= fb/nd
-		return score2 < score1;
+		// should be maximized: range = [0,x] with x= fb/nd
+		return score2 > score1;
 	}
 }

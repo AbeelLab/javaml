@@ -76,7 +76,7 @@ public class TraceScatterMatrix implements ClusterEvaluation {
                 Instance in = datas[i].getInstance(i);
 
                 for (int k = 0; k < instanceLength; k++) {
-
+                	// TODO check why crash here...???
                     sumPosition[i][k] += in.getWeight() * in.getValue(j);
 
                 }

@@ -90,7 +90,7 @@ public class Gamma implements ClusterEvaluation {
 	}
 
 	public boolean compareScore(double score1, double score2) {
-		// should be maxed. range = [0,1]
+		// should be maximized. range = [0,1]
 		return score2 > score1;
 	}
 }

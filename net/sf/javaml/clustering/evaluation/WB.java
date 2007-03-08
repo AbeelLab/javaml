@@ -76,7 +76,7 @@ public class WB implements ClusterEvaluation {
 		return wb;
 	}
 	public boolean compareScore(double score1, double score2) {
-		// should be minimalized ( smallest intra cluster distances)
+		// should be minimized ( smallest intra cluster distances)
 		return score2 < score1;
 	}
 }

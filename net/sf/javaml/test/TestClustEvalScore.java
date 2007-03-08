@@ -6,8 +6,15 @@ import net.sf.javaml.clustering.evaluation.CIndex;
 import net.sf.javaml.clustering.evaluation.ClusterEvaluation;
 import net.sf.javaml.clustering.evaluation.GPlus;
 import net.sf.javaml.clustering.evaluation.Gamma;
+import net.sf.javaml.clustering.evaluation.HybridCentroidSimilarity;
+import net.sf.javaml.clustering.evaluation.HybridPairwiseSimilarities;
+import net.sf.javaml.clustering.evaluation.MinMaxCut;
 import net.sf.javaml.clustering.evaluation.PointBiserial;
+import net.sf.javaml.clustering.evaluation.SumOfAveragePairwiseSimilarities;
+import net.sf.javaml.clustering.evaluation.SumOfCentroidSimilarities;
+import net.sf.javaml.clustering.evaluation.SumOfSquaredErrors;
 import net.sf.javaml.clustering.evaluation.Tau;
+import net.sf.javaml.clustering.evaluation.TraceScatterMatrix;
 import net.sf.javaml.clustering.evaluation.WB;
 
 import net.sf.javaml.core.Dataset;
@@ -25,10 +32,12 @@ public class TestClustEvalScore {
 		if (data.size() == 0) {
 			throw new RuntimeException("The dataset should not be empty");
 		}
+		for (int i =0; i <10; i++){
 		SimpleKMeans km = new SimpleKMeans(4, 500);
         km.executeClustering(data);
-		ClusterEvaluation ce=new Tau(new EuclideanDistance());
+		ClusterEvaluation ce=new HybridPairwiseSimilarities(new EuclideanDistance());
 		double score = ce.score(km.executeClustering(data));
 		System.out.println("score: "+score);
+		}
 	}
 }

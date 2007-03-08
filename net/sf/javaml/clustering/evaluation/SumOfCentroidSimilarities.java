@@ -65,7 +65,7 @@ public class SumOfCentroidSimilarities implements ClusterEvaluation {
     }
 
     public boolean compareScore(double score1, double score2) {
-        // should be maxed
-        return score2 > score1;
+        // should be minimized; in paper: maxed!!
+        return score2 < score1;
     }
 }
