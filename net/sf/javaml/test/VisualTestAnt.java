@@ -33,14 +33,10 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import java.io.File;
-
 import net.sf.javaml.clustering.Ant;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.core.SimpleDataset;
 import net.sf.javaml.tools.DatasetGenerator;
-import net.sf.javaml.tools.DatasetLoader;
 
 public class VisualTestAnt extends JPanel {
 
@@ -65,21 +61,12 @@ public class VisualTestAnt extends JPanel {
         //Dataset data=DatasetLoader.loadDataset(new File("machine.data"));
         this.add(createLabel(data, Color.BLACK, space, space, null, null, 0));
         Ant km = new Ant(400, 10);
-        km.buildClusterer(data);
+        Dataset[] clusters = km.executeClustering(data);
 
         
-        Dataset[] datas = new Dataset[102];
-        for (int i = 0; i < 102; i++) {
-            datas[i] = new SimpleDataset();
-        }
-        for (int i = 0; i < data.size(); i++) {
-            Instance in = data.getInstance(i);
-            datas[km.predictCluster(in)].addInstance(in);
-        }
-        System.out.println("Generated clusters: "+km.getNumberOfClusters());
         Color[] colors = { Color.RED, Color.GREEN, Color.BLUE, Color.MAGENTA,Color.CYAN };
         for (int i = 0; i < 10; i++) {
-            this.add(createLabel(datas[i], colors[i/2], space, space, km, colors, i));
+            this.add(createLabel(clusters[i], colors[i/2], space, space, km, colors, i));
         }
 
     }
@@ -122,22 +109,6 @@ public class VisualTestAnt extends JPanel {
                 g.fillOval((int) in.getValue(0) - 1, (int) in.getValue(1) - 1, 2, 2);
 
             }
-            if (km != null) {
-                Instance[] centroids = km.getCentroids();
-                for (int i = 0; i < centroids.length; i++) {
-                    g.setColor(Color.GRAY);
-                    g.fillRect((int) centroids[i].getValue(0) - 4, (int) centroids[i].getValue(1) - 4, 8, 8);
-
-                }
-                try{
-                g.setColor(Color.BLACK);
-                g.fillRect((int) centroids[tmpI].getValue(0) - 4, (int) centroids[tmpI].getValue(1) - 4, 8, 8);
-                }catch(Exception e){
-                    System.err.println("Error with tmpI: "+tmpI);
-                }
-
-            }
-
         }
 
     }
