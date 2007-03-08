@@ -85,4 +85,19 @@ public class NormalizeMean implements Filter {
 		
 	}
 
+
+
+
+    public Instance unfilterInstance(Instance instance) {
+        if(mean==null||std==null)
+            throw new RuntimeException("You should first call filterDataset for this filter, some parameters are not yet set.");
+        float[] out=new float[instance.size()];
+        for(int i=0;i<out.length;i++){
+            //out[i]=(instance.getValue(i)-mean[i])/std[i];
+            out[i]=(instance.getValue(i)*std[i])+mean[i];
+        }
+        return new SimpleInstance(out, instance.getWeight(), instance.isClassSet(), instance
+                .getClassValue());
+    }
+
 }

@@ -58,4 +58,6 @@ public interface Filter {
      * @return the filtered instance
      */
     public Instance filterInstance(Instance instance);
+    
+    public Instance unfilterInstance(Instance instance);
 }

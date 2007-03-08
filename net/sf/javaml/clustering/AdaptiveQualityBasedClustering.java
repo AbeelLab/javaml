@@ -25,15 +25,16 @@
 
 package net.sf.javaml.clustering;
 
+import java.util.Vector;
+
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
+import net.sf.javaml.core.SimpleDataset;
 import net.sf.javaml.core.SimpleInstance;
 import net.sf.javaml.distance.DistanceMeasure;
 import net.sf.javaml.distance.EuclideanDistance;
 import net.sf.javaml.filter.NormalizeMean;
 import net.sf.javaml.optimization.ExpectationMaximization;
-import java.lang.Math;
-import java.util.Vector;
 
 /**
  * 
@@ -311,12 +312,13 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
 		System.out.println("write clusters to output");
 		Dataset[] output = new Dataset[finalClusters.size()];
 		for (int i = 0; i < finalClusters.size(); i++) {
+            output[i]=new SimpleDataset();
 			Vector<Instance> getCluster = new Vector<Instance>();
 			getCluster = finalClusters.get(i);
 			System.out.println("cluster " + i + " size " + getCluster.size());
 			for (int j = 0; j < getCluster.size(); j++) {
 				System.out.println("cluster " + i + " instance "+j+" " + getCluster.get(j));
-				output[i].addInstance(getCluster.get(j));
+				output[i].addInstance(normMean.unfilterInstance(getCluster.get(j)));
 			}
 		}
 		System.out.println("output written");

@@ -91,7 +91,7 @@ public class NormalizeMidrange implements Filter {
     }
 
     private Instance filter(Instance tmpInstance) {
-        float[] instance = tmpInstance.getArrayForm();
+        float[] instance = tmpInstance.toArray();
         for (int j = 0; j < instance.length; j++) {
             instance[j] = ((instance[j] - midrange[j]) / (range[j] / normalRange)) + normalMiddle;
         }
@@ -99,6 +99,16 @@ public class NormalizeMidrange implements Filter {
                 .getClassValue());
     }
 
+    public Instance unfilterInstance(Instance tmpInstance){
+        float[] instance = tmpInstance.toArray();
+        for (int j = 0; j < instance.length; j++) {
+            //instance[j] = ((instance[j] - midrange[j]) / (range[j] / normalRange)) + normalMiddle;
+            instance[j]=instance[j]*(range[j]/normalRange)+midrange[j];
+        }
+        return new SimpleInstance(instance, tmpInstance.getWeight(), tmpInstance.isClassSet(), tmpInstance
+                .getClassValue());
+    }
+    
     public Instance filterInstance(Instance instance) {
         if (!constructed) {
             throw new RuntimeException(

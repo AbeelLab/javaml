@@ -62,7 +62,7 @@ public class VisualTestAQBC  extends JPanel {
     public VisualTestAQBC() {
         this.setLayout(new GridLayout(0, 3));
         int space = 300;
-        Dataset data = DatasetGenerator.createClusterSquareDataset3D(space, 10,25);
+        Dataset data = DatasetGenerator.createClusterSquareDataset3D(space, 30,200);
 
         this.add(createLabel(data, Color.BLACK, space, space, null, null, 0));
         AdaptiveQualityBasedClustering km = new AdaptiveQualityBasedClustering();
@@ -70,7 +70,7 @@ public class VisualTestAQBC  extends JPanel {
         
         Color[] colors = { Color.RED, Color.GREEN, Color.BLUE, Color.MAGENTA };
         for (int i = 0; i < clusters.length; i++) {
-        	System.out.println(clusters[i].size());
+        	System.out.println("Visual test: "+clusters[i].size());
             this.add(createLabel(clusters[i], colors[i], space, space, km, colors, i));
         }
         
@@ -113,9 +113,12 @@ public class VisualTestAQBC  extends JPanel {
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
             g.setColor(color);
+            System.out.println("Visual PC: "+data.size());
             for (int i = 0; i < data.size(); i++) {
                 Instance in = data.getInstance(i);
-                g.fillOval((int) in.getValue(0) - 1, (int) in.getValue(1) - 1, 2, 2);
+                System.out.println("Datapoint: "+in.getValue(1)+","+in.getValue(2));
+                
+                g.fillOval((int) in.getValue(1) - 1, (int) in.getValue(2) - 1, 2, 2);
 
             }
             /*if (km != null) {
