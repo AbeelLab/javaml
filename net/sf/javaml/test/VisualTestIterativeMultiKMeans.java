@@ -35,15 +35,17 @@ import javax.swing.JPanel;
 
 import net.sf.javaml.clustering.IterativeMultiKMeans;
 import net.sf.javaml.clustering.SimpleKMeans;
+import net.sf.javaml.clustering.evaluation.Gamma;
+import net.sf.javaml.clustering.evaluation.SumOfSquaredErrors;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.core.SimpleDataset;
+import net.sf.javaml.distance.EuclideanDistance;
 import net.sf.javaml.tools.DatasetGenerator;
 
 public class VisualTestIterativeMultiKMeans extends JPanel {
 
      private static final long serialVersionUID = 5608683822417234316L;
-
+     
     /**
      * @param args
      */
@@ -62,22 +64,13 @@ public class VisualTestIterativeMultiKMeans extends JPanel {
         Dataset data = DatasetGenerator.createClusterSquareDataset(space, 8);
 
         this.add(createLabel(data, Color.BLACK, space, space, null, null, 0));
-        IterativeMultiKMeans km = new IterativeMultiKMeans(1, 10,10);
-        km.buildClusterer(data);
+        IterativeMultiKMeans km = new IterativeMultiKMeans(1, 10,100, new EuclideanDistance(), 10, new SumOfSquaredErrors(new EuclideanDistance()));
+        Dataset[]clusters=km.executeClustering(data);
 
-        Dataset[] datas = new Dataset[10];
-        for (int i = 0; i < 10; i++) {
-            datas[i] = new SimpleDataset();
-        }
-        for (int i = 0; i < data.size(); i++) {
-            Instance in = data.getInstance(i);
-            datas[km.predictCluster(in)].addInstance(in);
-        }
         Color[] colors = { Color.RED, Color.GREEN, Color.BLUE, Color.MAGENTA,Color.CYAN };
         for (int i = 0; i < 10; i++) {
-            this.add(createLabel(datas[i], colors[i/2], space, space, km, colors, i));
+            this.add(createLabel(clusters[i], colors[i/2], space, space, km, colors, i));
         }
-
     }
 
     private JLabel createLabel(Dataset data, Color color, int width, int height, SimpleKMeans km, Color[] colors, int i) {
@@ -116,21 +109,6 @@ public class VisualTestIterativeMultiKMeans extends JPanel {
             for (int i = 0; i < data.size(); i++) {
                 Instance in = data.getInstance(i);
                 g.fillOval((int) in.getValue(0) - 1, (int) in.getValue(1) - 1, 2, 2);
-
-            }
-            if (km != null) {
-                Instance[] centroids = km.getCentroids();
-                for (int i = 0; i < centroids.length; i++) {
-                    g.setColor(Color.GRAY);
-                    g.fillRect((int) centroids[i].getValue(0) - 4, (int) centroids[i].getValue(1) - 4, 8, 8);
-
-                }
-                try{
-                g.setColor(Color.BLACK);
-                g.fillRect((int) centroids[tmpI].getValue(0) - 4, (int) centroids[tmpI].getValue(1) - 4, 8, 8);
-                }catch(Exception e){
-                    System.err.println("Error with tmpI: "+tmpI);
-                }
 
             }
 
