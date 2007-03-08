@@ -34,7 +34,7 @@ import net.sf.javaml.distance.DistanceMeasure;
 import net.sf.javaml.distance.DistanceMeasureFactory;
 
 /**
- * Check code
+ * TODO Check code
  * 
  * @author Thomas Abeel
  * 
