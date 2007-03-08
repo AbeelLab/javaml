@@ -29,6 +29,7 @@ import java.util.Vector;
 import java.util.Random;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
+import net.sf.javaml.core.SimpleDataset;
 import net.sf.javaml.distance.DistanceMeasure;
 import net.sf.javaml.distance.EuclideanDistance;
 
@@ -304,6 +305,7 @@ public class Ant implements Clusterer {
 		}
 		Dataset[] output = new Dataset[clusters.size()];
 		for (int i = 0; i < clusters.size(); i++) {
+			output[i]=new SimpleDataset();
 			Vector<Instance> getCluster = new Vector<Instance>();
 			getCluster = clusters.get(i);
 			for (int j = 0; j < getCluster.size(); j++) {
