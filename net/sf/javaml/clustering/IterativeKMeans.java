@@ -30,10 +30,21 @@ import net.sf.javaml.core.Dataset;
 import net.sf.javaml.distance.DistanceMeasure;
 
 /**
- * This class implements an extension of SimpleKMeans. SKM will be run
- * several iterations with a different k value, starting from kMin and
- * increasing to kMax. Each clustering result is evaluated with an evaluation
- * score, the result with the best score will be returned as final result.
+ * This class implements an extension of SimpleKMeans. SKM will be run several
+ * iterations with a different k value, starting from kMin and increasing to
+ * kMax. Each clustering result is evaluated with an evaluation score, the
+ * result with the best score will be returned as final result.
+ * 
+ * @param kMin
+ *            minimal value for k (the number of clusters)
+ * @param kMax
+ *            maximal value for k (the number of clusters)
+ * @param iterations
+ *            the number of iterations in SKM
+ * @param dm
+ *            distance measure used for internal cluster evaluation
+ * @param ce
+ *            clusterevaluation methode used for internal cluster evaluation
  * 
  * @author Thomas Abeel
  * @author Andreas De Rijcke
@@ -53,9 +64,9 @@ public class IterativeKMeans implements Clusterer {
 
 	public IterativeKMeans(int kMin, int kMax, int iterations,
 			DistanceMeasure dm, ClusterEvaluation ce) {
+		this.kMin = kMin;
 		this.kMax = kMax;
 		this.iterations = iterations;
-		this.kMin = kMin;
 		this.dm = dm;
 		this.ce = ce;
 	}

@@ -34,16 +34,22 @@ import net.sf.javaml.distance.DistanceMeasure;
 import net.sf.javaml.distance.EuclideanDistance;
 
 /**
-* 
-* This class implements an Ant Based Clustering Algorithm based on some ideas
-* from papers by Handl et al. and Schockaert et al.
-* 
-* The distance measure should be normalized in the interval [0,1].
-* 
-* 
-* @author Andreas De Rijcke
-* 
-*/
+ * 
+ * This class implements an Ant Based Clustering Algorithm based on some ideas
+ * from papers by Handl et al. and Schockaert et al.
+ * 
+ * The distance measure should be normalized in the interval [0,1].
+ * 
+ * @param iterations
+ *            number of iterations of main loop
+ * @param maxFailMoves
+ *            maximum number of moves 'ants' are allowed to make, when failing
+ *            to drop an instance in an existing cluster. when maxFailMoves
+ *            reached, instance will be dropped in a new cluster
+ * 
+ * @author Andreas De Rijcke
+ * 
+ */
 
 public class Ant implements Clusterer {
 	Vector<Instance> tower = new Vector<Instance>();
@@ -305,7 +311,7 @@ public class Ant implements Clusterer {
 		}
 		Dataset[] output = new Dataset[clusters.size()];
 		for (int i = 0; i < clusters.size(); i++) {
-			output[i]=new SimpleDataset();
+			output[i] = new SimpleDataset();
 			Vector<Instance> getCluster = new Vector<Instance>();
 			getCluster = clusters.get(i);
 			for (int j = 0; j < getCluster.size(); j++) {

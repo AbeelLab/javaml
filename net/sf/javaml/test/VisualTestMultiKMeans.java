@@ -66,7 +66,7 @@ public class VisualTestMultiKMeans extends JPanel {
         Dataset data = DatasetGenerator.createClusterSquareDataset(space, 10);
 
         this.add(createLabel(data, Color.BLACK, space, space, null, null, 0));
-        MultiKMeans km = new MultiKMeans(4, 20, new EuclideanDistance(),10, new Tau(new EuclideanDistance()));
+        MultiKMeans km = new MultiKMeans(4, 20, 10 , new EuclideanDistance(), new Tau(new EuclideanDistance()));
         Dataset[]clusters=km.executeClustering(data);
 
         

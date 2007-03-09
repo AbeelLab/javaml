@@ -83,7 +83,6 @@ public class Gamma implements ClusterEvaluation {
 			}
 		}
 		// calculate gamma
-		System.out.println("s(+): "+sPlus+",s(-): "+sMin);
 		double gamma = (sPlus - sMin) / (sPlus + sMin);
 		return gamma;
 	}

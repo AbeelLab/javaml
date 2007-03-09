@@ -1,5 +1,6 @@
 package net.sf.javaml.test;
 
+import net.sf.javaml.clustering.IterativeKMeans;
 import net.sf.javaml.clustering.SimpleKMeans;
 import net.sf.javaml.clustering.evaluation.CIndex;
 import net.sf.javaml.clustering.evaluation.ClusterEvaluation;
@@ -18,6 +19,7 @@ import net.sf.javaml.clustering.evaluation.WB;
 
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.SimpleDataset;
+import net.sf.javaml.distance.CosineSimilarity;
 import net.sf.javaml.distance.EuclideanDistance;
 import net.sf.javaml.tools.DatasetGenerator;
 
@@ -30,14 +32,19 @@ public class TestClustEvalScore {
 		if (data.size() == 0) {
 			throw new RuntimeException("The dataset should not be empty");
 		}
+		ClusterEvaluation ce = new Tau(new EuclideanDistance());
 		for (int i = 0; i < 10; i++) {
 			SimpleKMeans km = new SimpleKMeans(4, 500);
+			//IterativeKMeans km = new IterativeKMeans(2, 10, 500,new EuclideanDistance(), ce);
+			//MultiKMeans km = new MultiKMeans(4, 500);
+			//IterativeMultiKMeans km = new IterativeMultiKMeans(4, 500);
+			//AdaptiveQualityBasedClustering km = new AdaptiveQualityBasedClustering();
+			//Ant km = new Ant(100, 10);
 			Dataset[] clusters = km.executeClustering(data);
 			for (int j = 0; j <  clusters.length; j++) {
 				System.out.println("cluster: " + j + ": size: "
 						+ clusters[j].size());
 			}
-			ClusterEvaluation ce = new CIndex(new EuclideanDistance());
 			double score = ce.score(clusters);
 			System.out.println("score: " + score);
 		}

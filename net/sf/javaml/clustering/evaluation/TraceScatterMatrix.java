@@ -25,8 +25,11 @@
  */
 package net.sf.javaml.clustering.evaluation;
 
+import java.util.Vector;
+
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
+import net.sf.javaml.core.SimpleDataset;
 import net.sf.javaml.core.SimpleInstance;
 import net.sf.javaml.distance.CosineSimilarity;
 import net.sf.javaml.distance.DistanceMeasure;
@@ -34,75 +37,71 @@ import net.sf.javaml.distance.DistanceMeasure;
 /**
  * E_1 from the Zhao 2001 paper
  * 
- * TODO uitleg
+ * Distance measure has to be CosineSimilarity TODO uitleg
  * 
  * @author Andreas De Rijcke
  * @author Thomas Abeel
  */
 
 public class TraceScatterMatrix implements ClusterEvaluation {
-    public TraceScatterMatrix(DistanceMeasure dm) {
-        this.dm = dm;
-    }
+	public TraceScatterMatrix(DistanceMeasure dm) {
+		this.dm = new CosineSimilarity();
+	}
 
-    private DistanceMeasure dm = new CosineSimilarity();
+	private DistanceMeasure dm = new CosineSimilarity();
 
-    public double score(Dataset[] datas) {
+	public Instance mean(Dataset cluster, int instanceLength) {
+		Instance in;
+		float[] sumVector = new float[instanceLength];
+		for (int i = 0; i < cluster.size(); i++) {
+			in = cluster.getInstance(i);
+			for (int j = 0; j < instanceLength; j++) {
+				sumVector[j] += in.getValue(j);
+			}
+		}
+		for (int j = 0; j < instanceLength; j++) {
+			sumVector[j] /= cluster.size();
+		}
+		Instance mean = new SimpleInstance(sumVector);
+		return mean;
+	}
 
-        // calculate centroid complete dataset
-        int instanceLength = datas[0].getInstance(0).size();
-        float[] sumVector = new float[instanceLength];
-        int count = 0;
-        for (int i = 0; i < datas.length; i++) {
-            for (int j = 0; j < datas[i].size(); j++) {
-                Instance in = datas[i].getInstance(j);
-                for (int k = 0; k < instanceLength; k++) {
-                    sumVector[k] += in.getValue(k) * in.getWeight();
-                    count++;
-                }
-            }
+	public double score(Dataset[] clusters) {
+		Instance clusterCentroid;
+		Instance overAllCentroid;
+		Vector<Instance> clusterCentroids =new Vector<Instance>();
+		Vector<Integer> clusterSizes =new Vector<Integer>();
+		
+		int instanceLength = clusters[0].getInstance(0).size();
+        
+        // calculate centroids of each cluster
+        for (int i =0; i<clusters.length; i++){
+        	clusterCentroid = mean(clusters[i], instanceLength);
+        	clusterCentroids.add(clusterCentroid);
+        	clusterSizes.add(clusters[i].size());
         }
-        for (int j = 0; j < instanceLength; j++) {
-            sumVector[j] /= count;
+        
+        // calculate centroid all instances
+        // firs put all cluster back together
+        Dataset data = new SimpleDataset();
+        for (int i =0; i<clusters.length; i++){
+        	for(int j = 0; j < clusters[i].size(); j++) {
+        		data.addInstance(clusters[i].getInstance(j));  
+        	}
         }
-        Instance mCentroid = new SimpleInstance(sumVector);
-        System.out.println(mCentroid);
-        // calculate centroids
-        double[][] sumPosition = new double[datas.length][instanceLength];
-        int[] countPosition = new int[datas.length];
-        for (int i = 0; i < datas.length; i++) {
-            for (int j = 0; j < datas[i].size(); j++) {
-                Instance in = datas[i].getInstance(i);
-
-                for (int k = 0; k < instanceLength; k++) {
-                	// TODO check why crash here...???
-                    sumPosition[i][k] += in.getWeight() * in.getValue(j);
-
-                }
-                countPosition[i]++;
-            }
-        }
-        // DistanceMeasure
-        Instance[] centroids = new Instance[datas.length];
-        for (int i = 0; i < datas.length; i++) {
-            float[] tmp = new float[instanceLength];
-            for (int j = 0; j < instanceLength; j++) {
-                tmp[j] = (float) sumPosition[i][j] / countPosition[i];
-            }
-            centroids[i] = new SimpleInstance(tmp);
-
-        }
+        overAllCentroid = mean(data, instanceLength);    
+        
         // calculate trace of the between-cluster scatter matrix.
         double sum = 0;
-        for (int i = 0; i < datas.length; i++) {
-            double error = dm.calculateDistance(centroids[i], mCentroid);
-            sum += error * datas[i].size();
+        for (int i = 0; i < clusterCentroids.size(); i++) {
+            double cos = dm.calculateDistance(clusterCentroids.get(i), overAllCentroid);
+            sum += cos * clusterSizes.get(i);
         }
         return sum;
     }
 
-    public boolean compareScore(double score1, double score2) {
-        // should be minimized
-        return score2 < score1;
-    }
+	public boolean compareScore(double score1, double score2) {
+		// should be minimized
+		return score2 < score1;
+	}
 }

@@ -35,6 +35,19 @@ import net.sf.javaml.distance.DistanceMeasure;
  * Each clustering result is evaluated with an evaluation score, the result with
  * the best score will be returned as final result.
  * 
+ * @param kMin
+ *            minimal value for k (the number of clusters)
+ * @param kMax
+ *            maximal value for k (the number of clusters)
+ * @param iterations
+ *            the number of iterations in SKM
+ * @param repeats
+ *            the number of SKM repeats
+ * @param dm
+ *            distance measure used for internal cluster evaluation
+ * @param ce
+ *            clusterevaluation methode used for internal cluster evaluation
+ * 
  * @author Thomas Abeel
  * @author Andreas De Rijcke
  * 
@@ -46,10 +59,9 @@ public class IterativeMultiKMeans extends SimpleKMeans {
 	private int repeats, clusters, iterations;;
 
 	private ClusterEvaluation ce;
-	
-	
+
 	public IterativeMultiKMeans(int kMin, int kMax, int iterations,
-			DistanceMeasure dm, int repeats, ClusterEvaluation ce) {
+			int repeats, DistanceMeasure dm, ClusterEvaluation ce) {
 		this.kMax = kMax;
 		this.kMin = kMin;
 		this.iterations = iterations;
@@ -60,11 +72,10 @@ public class IterativeMultiKMeans extends SimpleKMeans {
 
 	@Override
 	public Dataset[] executeClustering(Dataset data) {
-		
-		SimpleKMeans km = new SimpleKMeans(kMin, this.iterations,
-				this.dm);
+
+		SimpleKMeans km = new SimpleKMeans(kMin, this.iterations, this.dm);
 		Dataset[] bestClusters = km.executeClustering(data);
-		for (clusters = kMin+1; clusters <= kMax; clusters++) {
+		for (clusters = kMin + 1; clusters <= kMax; clusters++) {
 			double bestScore = this.ce.score(bestClusters);
 			for (int i = 0; i < repeats; i++) {
 				super.executeClustering(data);

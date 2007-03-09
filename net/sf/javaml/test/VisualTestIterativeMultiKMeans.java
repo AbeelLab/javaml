@@ -67,7 +67,7 @@ public class VisualTestIterativeMultiKMeans extends JPanel {
         Dataset data = DatasetGenerator.createClusterSquareDataset(space, 8);
 
         this.add(createLabel(data, Color.BLACK, space, space, null, null, 0));
-        IterativeMultiKMeans km = new IterativeMultiKMeans(1, 10,100, new EuclideanDistance(), 10, new CIndex(new EuclideanDistance()));
+        IterativeMultiKMeans km = new IterativeMultiKMeans(1, 10,100, 10, new EuclideanDistance(), new CIndex(new EuclideanDistance()));
         Dataset[]clusters=km.executeClustering(data);
 
         Color[] colors = { Color.RED, Color.GREEN, Color.BLUE, Color.MAGENTA,Color.CYAN };

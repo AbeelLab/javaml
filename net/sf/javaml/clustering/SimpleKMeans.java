@@ -83,7 +83,7 @@ public class SimpleKMeans implements Clusterer {
      * distance.
      * 
      * @param clusters
-     *            the number of clustesr
+     *            the number of clusters
      * @param iterations
      *            the number of iterations
      */

@@ -30,10 +30,21 @@ import net.sf.javaml.core.Dataset;
 import net.sf.javaml.distance.DistanceMeasure;
 
 /**
- * This class implements an extension of SimpleKMeans (SKM). SKM will be run several
- * iterations with the same k value. Each clustering result is evaluated with
- * an evaluation score, the result with the best score will be returned as final
- * result.
+ * This class implements an extension of SimpleKMeans (SKM). SKM will be run
+ * several iterations with the same k value. Each clustering result is evaluated
+ * with an evaluation score, the result with the best score will be returned as
+ * final result.
+ * 
+ * @param clusters
+ *            the number of clusters
+ * @param iterations
+ *            the number of iterations in SKM
+ * @param repeats
+ *            the number of SKM repeats
+ * @param dm
+ *            distance measure used for internal cluster evaluation
+ * @param ce
+ *            clusterevaluation methode used for internal cluster evaluation
  * 
  * @author Thomas Abeel
  * @author Andreas De Rijcke
@@ -47,11 +58,11 @@ public class MultiKMeans implements Clusterer {
 
 	private ClusterEvaluation ce;
 
-	public MultiKMeans(int clusters, int iterations, DistanceMeasure dm,
-			int repeats, ClusterEvaluation ce) {
-		this.repeats = repeats;
+	public MultiKMeans(int clusters, int iterations, int repeats,
+			DistanceMeasure dm, ClusterEvaluation ce) {
 		this.clusters = clusters;
 		this.iterations = iterations;
+		this.repeats = repeats;
 		this.dm = dm;
 		this.ce = ce;
 
