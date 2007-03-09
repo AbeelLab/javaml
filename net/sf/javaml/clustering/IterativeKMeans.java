@@ -75,10 +75,12 @@ public class IterativeKMeans implements Clusterer {
 		SimpleKMeans km = new SimpleKMeans(this.kMin, this.iterations, this.dm);
 		Dataset[] bestClusters = km.executeClustering(data);
 		double bestScore = this.ce.score(bestClusters);
+		System.out.println("score k = "+kMin+" : " + bestScore);
 		for (int i = kMin + 1; i <= kMax; i++) {
 			km = new SimpleKMeans(i, this.iterations, this.dm);
 			Dataset[] tmpClusters = km.executeClustering(data);
 			double tmpScore = this.ce.score(tmpClusters);
+			System.out.println("score k = "+i+" : " + tmpScore);
 			if (this.ce.compareScore(bestScore, tmpScore)) {
 				bestScore = tmpScore;
 				bestClusters = tmpClusters;

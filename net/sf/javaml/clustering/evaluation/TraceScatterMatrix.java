@@ -70,7 +70,7 @@ public class TraceScatterMatrix implements ClusterEvaluation {
 		Instance overAllCentroid;
 		Vector<Instance> clusterCentroids =new Vector<Instance>();
 		Vector<Integer> clusterSizes =new Vector<Integer>();
-		
+		// TODO check why trouble here: array index out of range
 		int instanceLength = clusters[0].getInstance(0).size();
         
         // calculate centroids of each cluster
