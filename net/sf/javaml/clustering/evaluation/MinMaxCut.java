@@ -48,11 +48,9 @@ public class MinMaxCut implements ClusterEvaluation {
 
         double sum = 0;
         for (int i = 0; i < datas.length; i++) {
-        	System.out.println("cluster: " + i + ": size: " + datas[i].size());
             double tmpTop = 0;
             double tmp = 0;
             for (int j = 0; j < datas[i].size(); j++) {
-
                 for (int k = 0; k < datas.length; k++) {
                     for (int p = 0; p < datas[k].size(); p++)
                         if (datas[i].getInstance(j) != datas[k].getInstance(p)) {

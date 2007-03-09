@@ -49,7 +49,6 @@ public class Tau implements ClusterEvaluation {
 		double t = 0, nd;
 		
 		for (int i = 0; i < datas.length; i++) {
-			System.out.println("cluster: " + i + ": size: " + datas[i].size());
 			maxIntraDist[i] = Double.MIN_VALUE;
 			for (int j = 0; j < datas[i].size(); j++) {
 				Instance x = datas[i].getInstance(j);
