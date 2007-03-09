@@ -32,36 +32,37 @@ import net.sf.javaml.distance.DistanceMeasure;
 /**
  * TODO uitleg I_2 from Zhao 2001
  * 
- * @author Thomas Abeel
- * 
+ * @author Andreas De Rijcke
  */
 public class SumOfCentroidSimilarities implements ClusterEvaluation {
 
-    public SumOfCentroidSimilarities(DistanceMeasure dm) {
-        this.dm = dm;
-    }
+	public SumOfCentroidSimilarities(DistanceMeasure dm) {
+		this.dm = dm;
+	}
 
-    private DistanceMeasure dm;
+	private DistanceMeasure dm;
 
-    public double score(Dataset[] datas) {
+	public double score(Dataset[] datas) {
 
-        // cdm=DistanceMeasureFactory.getEuclideanDistanceMeasure();
-        Instance[] centroids = new Instance[datas.length];
-        for (int i = 0; i < datas.length; i++) {
-            centroids[i] = DatasetTools.getCentroid(datas[i],dm);
-        }
-        double sum = 0;
-        for (int i = 0; i < datas.length; i++) {
-            for (int j = 0; j < datas[i].size(); j++) {
-                double error = dm.calculateDistance(datas[i].getInstance(j), centroids[i]);
-                sum += error;
-            }
-        }
-        return sum;
-    }
+		// cdm=DistanceMeasureFactory.getEuclideanDistanceMeasure();
+		Instance[] centroids = new Instance[datas.length];
+		for (int i = 0; i < datas.length; i++) {
+			centroids[i] = DatasetTools.getCentroid(datas[i], dm);
+		}
+		double sum = 0;
+		for (int i = 0; i < datas.length; i++) {
+			for (int j = 0; j < datas[i].size(); j++) {
+				double error = dm.calculateDistance(datas[i].getInstance(j),
+						centroids[i]);
+				sum += error;
+			}
+		}
+		return sum;
+	}
 
-    public boolean compareScore(double score1, double score2) {
-        // should be minimized; in paper: maxed!!
-        return score2 < score1;
-    }
+	public boolean compareScore(double score1, double score2) {
+		// TODO check right condition or code
+		// should be minimized; in paper: maxed!!
+		return score2 < score1;
+	}
 }

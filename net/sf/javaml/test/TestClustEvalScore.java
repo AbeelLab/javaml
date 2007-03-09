@@ -32,9 +32,22 @@ public class TestClustEvalScore {
 		if (data.size() == 0) {
 			throw new RuntimeException("The dataset should not be empty");
 		}
-		ClusterEvaluation ce = new Tau(new EuclideanDistance());
+		ClusterEvaluation ce = new CIndex(new EuclideanDistance());
+		//ClusterEvaluation ce = new Gamma(new EuclideanDistance());
+		//ClusterEvaluation ce = new GPlus(new EuclideanDistance());
+		//ClusterEvaluation ce = new HybridCentroidSimilarity(new EuclideanDistance());
+		//ClusterEvaluation ce = new HybridPairwiseSimilarities(new EuclideanDistance());
+		//ClusterEvaluation ce = new MinMaxCut(new EuclideanDistance());
+		//ClusterEvaluation ce = new PointBiserial(new EuclideanDistance());
+		//ClusterEvaluation ce = new SumOfAveragePairwiseSimilarities(new EuclideanDistance());
+		//ClusterEvaluation ce = new SumOfCentroidSimilarities(new EuclideanDistance());
+		//ClusterEvaluation ce = new SumOfSquaredErrors(new EuclideanDistance());
+		//ClusterEvaluation ce = new Tau(new EuclideanDistance());
+		//ClusterEvaluation ce = new TraceScatterMatrix(new EuclideanDistance());
+		//ClusterEvaluation ce = new WB(new EuclideanDistance());
+		
 		for (int i = 0; i < 10; i++) {
-			SimpleKMeans km = new SimpleKMeans(4, 500);
+			SimpleKMeans km = new SimpleKMeans(4, 200);
 			//IterativeKMeans km = new IterativeKMeans(2, 10, 500,new EuclideanDistance(), ce);
 			//MultiKMeans km = new MultiKMeans(4, 500);
 			//IterativeMultiKMeans km = new IterativeMultiKMeans(4, 500);

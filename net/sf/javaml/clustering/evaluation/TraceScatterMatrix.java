@@ -40,7 +40,6 @@ import net.sf.javaml.distance.DistanceMeasure;
  * Distance measure has to be CosineSimilarity TODO uitleg
  * 
  * @author Andreas De Rijcke
- * @author Thomas Abeel
  */
 
 public class TraceScatterMatrix implements ClusterEvaluation {

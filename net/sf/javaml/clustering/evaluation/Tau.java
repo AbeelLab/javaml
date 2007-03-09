@@ -34,7 +34,6 @@ import net.sf.javaml.distance.DistanceMeasure;
  * TODO uitleg
  * 
  * @author Andreas De Rijcke
- * 
  */
 public class Tau implements ClusterEvaluation {
     public Tau(DistanceMeasure dm) {

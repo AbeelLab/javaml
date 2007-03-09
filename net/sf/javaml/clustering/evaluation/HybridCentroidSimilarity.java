@@ -34,9 +34,7 @@ import net.sf.javaml.distance.DistanceMeasure;
  * 
  * TODO uitleg
  * 
- * @author Andreas De Rijcke
- * @author Thomas Abeel
- * 
+ * @author Andreas De Rijcke 
  */
 
 public class HybridCentroidSimilarity implements ClusterEvaluation {

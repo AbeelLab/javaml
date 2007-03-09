@@ -36,7 +36,6 @@ import net.sf.javaml.distance.EuclideanDistance;
  * TODO uitleg
  * 
  * @author Andreas De Rijcke
- * @author Thomas Abeel
  */
 
 public class HybridPairwiseSimilarities implements ClusterEvaluation {

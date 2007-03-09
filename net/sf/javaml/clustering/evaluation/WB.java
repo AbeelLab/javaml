@@ -34,8 +34,6 @@ import net.sf.javaml.distance.DistanceMeasure;
  * TODO uitleg
  * 
  * @author Andreas De Rijcke
- * @author Thomas Abeel
- * 
  */
 public class WB implements ClusterEvaluation {
     public WB(DistanceMeasure dm) {

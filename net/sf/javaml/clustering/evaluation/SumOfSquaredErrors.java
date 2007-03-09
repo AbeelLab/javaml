@@ -32,8 +32,7 @@ import net.sf.javaml.distance.DistanceMeasure;
  * 
  * TODO uitleg
  * 
- * @author Thomas Abeel
- * 
+ * @author Andreas De Rijcke
  */
 public class SumOfSquaredErrors implements ClusterEvaluation {
     public SumOfSquaredErrors(DistanceMeasure dm) {
@@ -59,7 +58,8 @@ public class SumOfSquaredErrors implements ClusterEvaluation {
     }
 
     public boolean compareScore(double score1, double score2) {
-        // should be minimized
+        // TODO solve bug: score is NaN when clusters with 0 instances
+    	// should be minimized
         return score2 < score1;
     }
 

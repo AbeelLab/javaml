@@ -30,8 +30,8 @@ import net.sf.javaml.distance.DistanceMeasure;
 /**
  * I_1 from the Zhao 2001 paper
  * TODO uitleg
- * @author Thomas Abeel
- *
+ * 
+ * @author Andreas De Rijcke
  */
 public class SumOfAveragePairwiseSimilarities implements ClusterEvaluation{
     public SumOfAveragePairwiseSimilarities(DistanceMeasure dm) {
@@ -56,7 +56,8 @@ public class SumOfAveragePairwiseSimilarities implements ClusterEvaluation{
     }
 
     public boolean compareScore(double score1, double score2) {
-        //should be minimized; in paper: maxed!!
+        // TODO check right condition or code
+    	//should be minimized; in paper: maxed!!
         return score2 < score1;
     }
 

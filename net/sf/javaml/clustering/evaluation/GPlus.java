@@ -34,7 +34,6 @@ import net.sf.javaml.distance.DistanceMeasure;
  * TODO uitleg
  * 
  * @author Andreas De Rijcke
- * @author Thomas Abeel
  */
 
 public class GPlus implements ClusterEvaluation {
