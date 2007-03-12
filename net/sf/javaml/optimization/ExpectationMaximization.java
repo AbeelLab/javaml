@@ -149,12 +149,12 @@ public class ExpectationMaximization {
 
 	// calculates p(r|B) checked, ev nog aan te passen
 	public Vector<Double> prb(double var, Vector<Double> clusterDist,
-			double sD, double sD1, double dimD) {
+			double sD, double sD1, double dimD, double rk_prelim) {
 		Vector<Double> prb = new Vector<Double>();
 		for (int i = 0; i < clusterDist.size(); i++) {
 			double r = clusterDist.get(i);
-			double temp = (sD / (sD1 * Math.pow(r, dimD)) * Math.pow(r,
-					dimD - 1));
+			double temp = (sD / (sD1 * Math.pow(rk_prelim, dimD))) * Math.pow(r,
+					dimD - 1);
 			prb.add(temp);
 		}
 		return prb;
@@ -225,8 +225,6 @@ public class ExpectationMaximization {
 	public double em(Vector<Instance> dataset,
 			Vector<Instance> cluster, Instance ck, double rk_prelim,
 			double dimension) {
-
-		Vector<Double> estimates = new Vector<Double>();
 		dimD = dimension - 2;
 		// for each instances in cluster: calculate distance to ck
 		clusterDist.clear();
@@ -247,17 +245,18 @@ public class ExpectationMaximization {
 		int iter = 0, convergence = 0;
 		while (iter < maxIter && convergence == 0) {
 			prc = prc(variance, clusterDist, sD, dimD);
-			prb = prb(variance, clusterDist, sD, sD1, dimD);
+			prb = prb(variance, clusterDist, sD, sD1, dimD, rk_prelim);
 			prcpc = prxpx(prc, pc);
 			prbpb = prxpx(prb, pb);
 			pr = pr(prcpc, prbpb);
 			pcr = pcr(prcpc, pr);
-			sm = sm(pcr);
-			//sm = pcr.size();
+			//sm = sm(pcr);
+			sm = pcr.size();
+			System.out.println("---EM: SM: "+sm);
 			if (sm == 0 || sm == Double.POSITIVE_INFINITY
 					|| sm == Double.NEGATIVE_INFINITY) {
 				System.out.println("---EM: SM value not valid.");
-				estimates = null;
+				return 0;
 			}
 			varianceOp = varOp(cluster, pcr, dimD, sm);
 			pcOp = sm / dataset.size();
@@ -267,8 +266,9 @@ public class ExpectationMaximization {
 				pc = 0;
 			}
 			pbOp = 1 - pcOp;
-			//System.out.println("VERSCHIL VAROP EN VAR: "+ Math.abs(varianceOp - variance));
-			//System.out.println("VERSCHIL PCOP EN PC: " + Math.abs(pcOp - pc));
+			
+			System.out.println("---EM: var: "+variance+", varop: "+varianceOp);
+			System.out.println("---EM: pc: "+pc+", pcOp: "+pcOp+", pb: "+pb+", pbOp: "+pbOp);
 			if (Math.abs(varianceOp - variance) < cdif
 					&& Math.abs(pcOp - pc) < cdif) {
 				System.out.println("---EM: VERSCHIL VAROP EN VAR OK");

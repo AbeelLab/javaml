@@ -76,8 +76,6 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
 
 	private double deltarad;
 
-	private double variance;
-
 	private Instance ck;
 
 	private Instance newMean;
@@ -165,7 +163,7 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
 		
 		int iterator = 1, endSign = 0, nonvalidcluster = 0;
 		while (iterator < maxIterMain && endSign == 0) {
-			System.out.println("MAIN NEW ITERATION++");
+			System.out.println("MAIN NEW ITERATION");
 			
 			// step1: locate cluster center
 			if (cluster.size() <= minInstances) {
@@ -203,8 +201,7 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
 
 			if (cluster.size() >= minInstances) {
 				System.out.println("MAIN CLUSTERSIZE VOOR EM: " + cluster.size());
-				System.out.println("MAIN RADIUS VOOR EM: " + rad);
-				System.out.println("MAIN RK_PRELIM: " + rk_prelim);
+				System.out.println("MAIN rad: " + rad+", rk_prelim: " + rk_prelim);
 				rk = em.em(all, cluster, ck, rk_prelim, dimension);
 				System.out.println("MAIN rk EST: " + rk);
 				System.out.println("MAIN DIFF RK & RK_PRELIM: "+ Math.abs((rk - rk_prelim) / rk_prelim));
@@ -294,11 +291,11 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
 
 		// write results to output
 		Dataset[] output = new Dataset[finalClusters.size()];
+		System.out.println("MAIN finalclustersize: " + finalClusters.size());
 		for (int i = 0; i < finalClusters.size(); i++) {
-			System.out.println("FINALCLUSTSIZE: " + finalClusters.size());
 			output[i] = new SimpleDataset();
 			Vector<Instance> getCluster = new Vector<Instance>();
-			System.out.println("CLUSTERSIZE: " + getCluster.size());
+			System.out.println("MAIN cluster: " + getCluster.size());
 			getCluster = finalClusters.get(i);
 			for (int j = 0; j < getCluster.size(); j++) {
 				output[i].addInstance(normMean.unfilterInstance(getCluster
