@@ -93,6 +93,8 @@ public class ExpectationMaximization {
 	// calculates first variance ( = sigma^ 2) estimate for a number of
 	// instances checked
 	public double var(Vector<Instance> cluster, double dimD) {
+		if (cluster.size() == 0)
+			return 0;
 		double var;
 		int instanceLenght = cluster.get(0).size();
 		double sum = 0;
@@ -130,10 +132,9 @@ public class ExpectationMaximization {
 		Vector<Double> prc = new Vector<Double>();
 		for (int i = 0; i < clusterDist.size(); i++) {
 			double r = clusterDist.get(i);
-			if (var == 0){
+			if (var == 0) {
 				prc.add(0.0);
-			}
-			else if (r == 0) {
+			} else if (r == 0) {
 				prc.add(1.0);
 			} else {
 				double temp = sD
@@ -204,10 +205,28 @@ public class ExpectationMaximization {
 		return sm;
 	}
 
+	/**
+	 * Calculates new estimates for variance and radius via Expectation
+	 * Maximization algorithm
+	 * 
+	 * @param dataset
+	 *            the current dataset which we want to cluster
+	 * @param cluster
+	 *            the cluster in progress
+	 * @param ck
+	 * @param rk_prelim
+	 * @param dimension
+	 * 
+	 * @return new radius estimate
+	 * 
+	 */
+
 	// main algorithm
-	public double em(Vector<Instance> dataset, Vector<Instance> cluster,
-			Instance ck, double rk_prelim, double dimension,
-			Vector<Double> varianceEst) {
+	public double em(Vector<Instance> dataset,
+			Vector<Instance> cluster, Instance ck, double rk_prelim,
+			double dimension) {
+
+		Vector<Double> estimates = new Vector<Double>();
 		dimD = dimension - 2;
 		// for each instances in cluster: calculate distance to ck
 		clusterDist.clear();
@@ -215,60 +234,77 @@ public class ExpectationMaximization {
 			double distance = dm.calculateDistance(cluster.get(i), ck);
 			clusterDist.add(distance);
 		}
+		double rad = 0;
+		
 		// first estimate for pc, pb
 		double clusterSize = cluster.size();
 		pc = clusterSize / dataset.size();
 		pb = 1 - pc;
-		// variance = var(cluster, clusterDist, dimD);
 		variance = var(cluster, dimD);
-		//System.out.println("EM : dataSize " + dataset.size() + " clusterSize "+ cluster.size());
-		//System.out.println("EM : estimate pc " + pc + " estimate pb " + pb+ " estimate variance " + variance);
 		sD = sD(dimD);
 		sD1 = sD(dimD + 1);
-		for (int i = 0; i < maxIter; i++) {
+		// calculate new estimates, and rad when convergence is reached
+		int iter = 0, convergence = 0;
+		while (iter < maxIter && convergence == 0) {
 			prc = prc(variance, clusterDist, sD, dimD);
 			prb = prb(variance, clusterDist, sD, sD1, dimD);
 			prcpc = prxpx(prc, pc);
 			prbpb = prxpx(prb, pb);
 			pr = pr(prcpc, prbpb);
 			pcr = pcr(prcpc, pr);
-			// sm = sm(pcr);
-			sm = pcr.size();
-			//System.out.println("EM : sm " + sm);
+			sm = sm(pcr);
+			//sm = pcr.size();
 			if (sm == 0 || sm == Double.POSITIVE_INFINITY
 					|| sm == Double.NEGATIVE_INFINITY) {
-				System.out.println("SM value not valid.");
-				varianceEst = null;
-				return 0;
+				System.out.println("---EM: SM value not valid.");
+				estimates = null;
 			}
 			varianceOp = varOp(cluster, pcr, dimD, sm);
-			//System.out.println("EM : varianceOp " + varianceOp);
 			pcOp = sm / dataset.size();
 			if (pcOp >= 1) {
 				pc = 1;
-				varianceEst.add(variance);
-				return pc;
-			} else if (pbOp == 1) {
+			} else if (pbOp >= 1) {
 				pc = 0;
-				varianceEst.add(variance);
-				return pc;
 			}
 			pbOp = 1 - pcOp;
-			//System.out.println("EM : pcOp " + pcOp + " pbOp " + pbOp);
-			/*
-			 * if ( Math.abs(varianceOp - variance) < cdif & Math.abs(pcOp-pc)<
-			 * cdif){ System.out.println("No or incorrect convergence.");
-			 * varianceEst=null; return 0; }
-			 */
+			//System.out.println("VERSCHIL VAROP EN VAR: "+ Math.abs(varianceOp - variance));
+			//System.out.println("VERSCHIL PCOP EN PC: " + Math.abs(pcOp - pc));
+			if (Math.abs(varianceOp - variance) < cdif
+					&& Math.abs(pcOp - pc) < cdif) {
+				System.out.println("---EM: VERSCHIL VAROP EN VAR OK");
+				pc = pcOp;
+				pb = pbOp;
+				variance = varianceOp;
+				if (pc == 0 || pc == 0) {
+					System.out.println("---EM: pc/pb: 0, No or incorrect convergence");
+					return 0;
+				}
+				double cc = sD
+						* (1 / Math.pow((2 * Math.PI * variance), (dimD / 2)));
+				double cb = sD / (sD1 * Math.pow(rk_prelim, dimD));
+				double lo = (0.95 / (1.0 - 0.95)) * ((pb * cb) * (pc * cc));
+				System.out.println("---EM: cc: "+cc+", cb: "+cb+", lo: "+lo);
+				if (lo < 0.0) {
+					System.out.println("---EM: Not possible to calculate radius.");
+					return 0;
+				}
+				double dis = -2 * variance * Math.log(lo);
+				System.out.println("---EM: dis: "+dis);
+				if (dis < 0) {
+					System.out.println("---EM: Not possible to calculate radius.");
+					return 0;
+				}
+				else{
+				rad = Math.sqrt(dis);
+				}
+				convergence = 1;
+			}
 			pc = pcOp;
 			pb = pbOp;
 			variance = varianceOp;
-			//System.out.println("EM : end iteration " + i);
+			iter++;
 		}
-		
-		
-		varianceEst.add(variance);
-		//System.out.println("EM : --- end EM ---");
-		return pc;
+		System.out.println("---EM: rad: "+rad);
+		return rad;
 	}
 }

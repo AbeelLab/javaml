@@ -55,7 +55,7 @@ public class TestClustEvalScore {
 			AdaptiveQualityBasedClustering km = new AdaptiveQualityBasedClustering();
 			//Ant km = new Ant(100, 10);
 			Dataset[] clusters = km.executeClustering(data);
-			//System.out.println("CLUSTERS: "+clusters);
+			System.out.println("CLUSTERS: "+clusters);
 			for (int j = 0; j <  clusters.length; j++) {
 				System.out.println("cluster: " + j + ": size: "
 						+ clusters[j].size());

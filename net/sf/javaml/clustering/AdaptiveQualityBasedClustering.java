@@ -51,8 +51,6 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
 	// user defined parameters
 	private int minInstances = 2;
 
-	private double significanceLevel = 0.95;
-
 	private int maxIterMain = 50;
 
 	// internal tuning parameters
@@ -140,8 +138,6 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
 	// main
 	public Dataset[] executeClustering(Dataset data) {
 		instanceLength = data.getInstance(0).size();
-		// stop criterion
-		double initDatasizeStopCrit = data.size() * 0.2;
 		// normalize dataset
 		Dataset dataNorm = normMean.filterDataset(data);
 		// convert dataset of instances to vector of instances
@@ -165,13 +161,13 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
 		rad = maxDist(cluster, ck);
 		deltarad = (rad - rk_prelim) * div;
 		rad = rad - deltarad;
-
-		int iterator = 1, endSign = 1, nonvalidcluster = 0;
-		while (iterator < maxIterMain && endSign != 0) {
-			// while (iterator < maxIterMain) {
-
+		cluster = newCluster(cluster, ck, rad);
+		
+		int iterator = 1, endSign = 0, nonvalidcluster = 0;
+		while (iterator < maxIterMain && endSign == 0) {
+			System.out.println("MAIN NEW ITERATION++");
+			
 			// step1: locate cluster center
-			cluster = newCluster(cluster, ck, rad);
 			if (cluster.size() <= minInstances) {
 				nonvalidcluster = 1;
 			} else {
@@ -180,12 +176,11 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
 			if (nonvalidcluster == 0) {
 				newMean = mean(cluster, instanceLength);
 				rad = maxDist(cluster, newMean);
+				System.out.println("MAIN rad:" + rad);
 				// move cluster center to new mean
 				ck = newMean;
 				int iter = 0, stop = 0;
-				// while ((iter < maxIter && newMean != ck) || rad > rk_prelim)
-				// {
-				while ((iter < maxIter && stop < 40) || rad > rk_prelim ) {
+				while ((iter < maxIter && stop < 40) || rad > rk_prelim) {	
 					iter++;
 					if (rad > rk_prelim) {
 						rad = rad - deltarad;
@@ -194,81 +189,120 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
 					newMean = mean(cluster, instanceLength);
 					double distCkNewMean = dm.calculateDistance(ck, newMean);
 					if (distCkNewMean == 0) {
-						// cluster = newCluster(cluster, ck, rad);
 						stop++;
 					} else {
-						// cluster = newCluster(cluster, ck, rad);
 						stop = 0;
 					}
 					ck = newMean;
+					
 				}
 			}
 
 			// step 2:recalculate radius: calculation of sigma and a prior prob
 			// pc and pb via EM
 
-			// temporarily vector for variance calculation via EM
-			Vector<Double> varianceEst = new Vector<Double>();
-			double pc = em.em(all, cluster, ck, rk_prelim, dimension,
-					varianceEst);
-			double pb = 1 - pc;
-			variance = varianceEst.get(0);
-			if (pc == 0 & varianceEst == null) {
-				System.out.println("EM algorithm did not converge.");
-				return null;
-			}
-			// calculation new radius
-			double dimD = dimension - 2;
-			double sD = em.sD(dimD);
-			double sD1 = em.sD(dimD + 1);
-			double c1 = sD
-					/ Math.pow((2 * Math.PI * variance * variance), dimD / 2);
-			double c2 = sD / (sD1 * Math.pow(dimD + 1, dimD / 2));
-			double c3 = Math.abs(1 - (1 / significanceLevel));
-			double tmp = Math.log(pb * c2 / (pc * c1 * c3));
-			double tmp2 = 2 * variance * variance * tmp;
-			if (tmp2 < 0) {
-				return null;
-			}
-			rk = Math.sqrt(tmp2);
-
-			if (Math.abs((rk - rk_prelim) / rk_prelim) < accurRad) {
-				cluster = newCluster(cluster, ck, rk);
-				if (cluster.size() > minInstances) {
-					Vector<Instance> finalCluster = new Vector<Instance>();
-					finalCluster.addAll(cluster);
-					finalClusters.add(finalCluster);
-					all.removeAll(cluster);
-					cluster.clear();
-					cluster.addAll(all);
-					if (cluster.size() <= initDatasizeStopCrit) {
-						endSign = 0;
+			if (cluster.size() >= minInstances) {
+				System.out.println("MAIN CLUSTERSIZE VOOR EM: " + cluster.size());
+				System.out.println("MAIN RADIUS VOOR EM: " + rad);
+				System.out.println("MAIN RK_PRELIM: " + rk_prelim);
+				rk = em.em(all, cluster, ck, rk_prelim, dimension);
+				System.out.println("MAIN rk EST: " + rk);
+				System.out.println("MAIN DIFF RK & RK_PRELIM: "+ Math.abs((rk - rk_prelim) / rk_prelim));
+				
+				if (Math.abs((rk - rk_prelim) / rk_prelim) < accurRad) {
+					System.out.println("- RK klein genoeg");
+					cluster = newCluster(cluster, ck, rk);
+					if (cluster.size() > minInstances) {
+						Vector<Instance> finalCluster = new Vector<Instance>();
+						finalCluster.addAll(cluster);
+						finalClusters.add(finalCluster);
+						System.out.println("- CLUSTER TO FINALCLUST, SIZE: "
+								+ cluster.size() + ",FINALCLUSTSIZE: "
+								+ finalClusters.size());
+						all.removeAll(cluster);
+						cluster.clear();
+						cluster.addAll(all);
+						System.out.println("- NEW CLUSTER SIZE "
+								+ cluster.size());
+						if (cluster.size() <= minInstances) {
+							System.out
+									.println("- STOP ALG, REST CLUSTER TOO SMALL"
+											+ cluster.size());
+							endSign = 1;
+						}
+						// update preliminary radius estimate with new estimate
+						System.out.println("- rk_prelim UPDATED");
+						rk_prelim = rk;
+						/*// reset start rad to max rad of new cluster in progress
+						newMean = mean(cluster, instanceLength);
+						ck = newMean;*/
+						iterator++;
+						System.out.println("- ITERATOR++ 1");
+					} else {
+						System.out
+								.println("- NON VALID CLUSTER, CLEAR CLUSTER AND RELOAD");
+						cluster.clear();
+						cluster.addAll(all);
+						if (cluster.size() <= minInstances) {
+							System.out
+									.println("- STOP ALG, REST CLUSTER TOO SMALL"
+											+ cluster.size());
+							endSign = 1;
+						}
+						/*newMean = mean(cluster, instanceLength);
+						ck = newMean;
+						rad = maxDist(cluster, ck);*/
+						iterator++;
+						System.out.println("- ITERATOR++ 2");
 					}
-					newMean = mean(cluster, instanceLength);
-					ck = newMean;
-					rad = maxDist(cluster, ck);
-				} else {
+				}
+				// if verschil rk & rk_prelim > accurad
+				else if (rk !=0.0){
+					System.out
+					.println("-- verschil rk & rk_prelim nog te groot");
+					// update preliminary radius estimate with new estimate
+					rk_prelim = rk;
+					System.out.println("-- rk_prelim UPDATED = rk: " + rk_prelim);
+					System.out
+					.println("-- old rad:" + rad );
+					/*rad = maxDist(cluster, ck);
+					System.out
+					.println("-- new rad: " + rad);*/
+					iterator++;
+					System.out.println("-- ITERATOR++ 3");	
+				}
+				else{
+					System.out.println("-- rk = 0, clear cluster and reload with all, reset ck and rad");
 					cluster.clear();
 					cluster.addAll(all);
-					newMean = mean(cluster, instanceLength);
+					/*newMean = mean(cluster, instanceLength);
 					ck = newMean;
-					rad = maxDist(cluster, ck);
+					rad = maxDist(cluster, ck);*/
+					iterator++;
+					System.out.println("-- ITERATOR++ 4");	
 				}
+
 			}
-			
-			// update preliminary radius estimate with new estimate
-			rk_prelim = rk;
-			iterator++;
+			// if clustersize not valid ( kleiner dan 2)
+			else {
+				cluster.clear();
+				cluster.addAll(all);
+				iterator++;
+				System.out.println("--- ITERATOR++ 5");
+			}
 		}
 
 		// write results to output
 		Dataset[] output = new Dataset[finalClusters.size()];
 		for (int i = 0; i < finalClusters.size(); i++) {
-            output[i]=new SimpleDataset();
+			System.out.println("FINALCLUSTSIZE: " + finalClusters.size());
+			output[i] = new SimpleDataset();
 			Vector<Instance> getCluster = new Vector<Instance>();
+			System.out.println("CLUSTERSIZE: " + getCluster.size());
 			getCluster = finalClusters.get(i);
 			for (int j = 0; j < getCluster.size(); j++) {
-				output[i].addInstance(normMean.unfilterInstance(getCluster.get(j)));
+				output[i].addInstance(normMean.unfilterInstance(getCluster
+						.get(j)));
 			}
 		}
 		return output;
