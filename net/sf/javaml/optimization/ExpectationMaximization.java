@@ -131,12 +131,10 @@ public class ExpectationMaximization {
 		for (int i = 0; i < clusterDist.size(); i++) {
 			double r = clusterDist.get(i);
 			if (var == 0){
-				System.out.println(" var is 0");
 				prc.add(0.0);
 			}
 			else if (r == 0) {
 				prc.add(1.0);
-				System.out.println(" r is 0");
 			} else {
 				double temp = sD
 						* (1 / Math.pow(2 * Math.PI * var, (dimD / 2)))
