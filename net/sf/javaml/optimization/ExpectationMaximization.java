@@ -92,15 +92,14 @@ public class ExpectationMaximization {
 
 	// calculates first variance ( = sigma^ 2) estimate for a number of
 	// instances checked
-	public double var(Vector<Instance> cluster, double dimD) {
+	public double var(Vector<Instance> cluster, double dimD, int instanceLength) {
 		if (cluster.size() == 0)
 			return 0;
 		double var;
-		int instanceLenght = cluster.get(0).size();
 		double sum = 0;
 		for (int i = 0; i < cluster.size(); i++) {
 			// sum of all distances
-			for (int j = 0; j < instanceLenght; j++) {
+			for (int j = 0; j < instanceLength; j++) {
 				double r = cluster.get(i).getValue(j);
 				sum += r * r;
 			}
@@ -111,13 +110,12 @@ public class ExpectationMaximization {
 
 	// calculates optimized variance checked
 	public double varOp(Vector<Instance> cluster, Vector<Double> pcr,
-			double dimD, double sm) {
+			double dimD, double sm, int instanceLength) {
 		double varOp;
-		int instanceLenght = cluster.get(0).size();
 		double sum = 0;
 		for (int i = 0; i < cluster.size(); i++) {
 			// sum of all distances
-			for (int j = 0; j < instanceLenght; j++) {
+			for (int j = 0; j < instanceLength; j++) {
 				double r = cluster.get(i).getValue(j);
 				sum += (r * r) * pcr.get(i);
 			}
@@ -222,9 +220,10 @@ public class ExpectationMaximization {
 	 */
 
 	// main algorithm
-	public double em(Vector<Instance> dataset,
-			Vector<Instance> cluster, Instance ck, double rk_prelim,
-			double dimension) {
+	public double em(Vector<Instance> dataset, Vector<Instance> cluster,
+			Instance ck, double rk_prelim, double dimension,int instanceLength,
+			Vector<Double> varianceEst) {
+
 		dimD = dimension - 2;
 		// for each instances in cluster: calculate distance to ck
 		clusterDist.clear();
@@ -238,7 +237,7 @@ public class ExpectationMaximization {
 		double clusterSize = cluster.size();
 		pc = clusterSize / dataset.size();
 		pb = 1 - pc;
-		variance = var(cluster, dimD);
+		variance = var(cluster, dimD, instanceLength);
 		sD = sD(dimD);
 		sD1 = sD(dimD + 1);
 		// calculate new estimates, and rad when convergence is reached
@@ -258,7 +257,7 @@ public class ExpectationMaximization {
 				System.out.println("---EM: SM value not valid.");
 				return 0;
 			}
-			varianceOp = varOp(cluster, pcr, dimD, sm);
+			varianceOp = varOp(cluster, pcr, dimD, sm, instanceLength);
 			pcOp = sm / dataset.size();
 			if (pcOp >= 1) {
 				pc = 1;

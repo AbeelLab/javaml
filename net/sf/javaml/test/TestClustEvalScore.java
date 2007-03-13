@@ -29,7 +29,7 @@ public class TestClustEvalScore {
 	public static void main(String[] args) {
 		int space = 300;
 		//Dataset data = DatasetGenerator.createClusterSquareDataset(space, 8);
-		Dataset data = DatasetGenerator.createClusterSquareDataset3D(space, 10,50);
+		Dataset data = DatasetGenerator.createClusterSquareDataset3D(space, 10,500);
 		if (data.size() == 0) {
 			throw new RuntimeException("The dataset should not be empty");
 		}
