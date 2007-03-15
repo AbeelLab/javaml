@@ -27,6 +27,7 @@
 package net.sf.javaml.clustering.evaluation;
 
 import net.sf.javaml.core.Dataset;
+import net.sf.javaml.utils.*;
 
 /**
  * TODO check code
@@ -38,47 +39,10 @@ public class AICScore implements ClusterEvaluation {
 	
 	public double score(Dataset[] clusters) {
 		
-		// number of clusters
-		int noc = clusters.length;	
-		// array of instances per cluster
-		double noic[] = new double[noc];
-		// total number of instances
-		double noit=0;		
-		for (int i = 0; i< noc;i++ ){
-			noic[i] = clusters[i].size();
-			noit += noic[i];
-		}
-		
-		// calculate log likelihoods
-		// array of cluster likelihoods
-		double[] cl = new double[noc];
-		// L = p(numb instances in cluster)^(numb instances in cluster)*p(numb instances not in cluster)^(numb instances not in cluster)
-		for (int i = 0 ; i<noc; i++){
-			// number of instances not in cluster for cluster i. 
-			double noinc = noit - noic[i];
-			// probab instance in cluster
-			double pIn = Math.pow(noic[i]/noit, noic[i]);
-			System.out.println("prob in cluster "+i+": "+noic[i]+" / "+noit+" ^ "+ noic[i]+" = "+pIn);
-//			 probab instance not in cluster
-			double pOut = Math.pow(noinc/noit, noinc);
-			System.out.println("prob not in cluster "+i+": "+pOut);
-			cl[i] = -2*Math.log(pIn*pOut);
-			System.out.println("cluster "+i+" loglike"+cl[i]);
-		}
-		
-		// calculate over all = sum cluster loglikes
-		// over-all loglikelihood
-		double oal = 0;
-		for (int i = 0 ; i<cl.length; i++){
-			oal += cl[i];
-		}
-		System.out.println("over-all loglike "+oal);
-		
-		// calculate aic
-		// free parameters
-		int k=1;
-		double aic = -2*oal+2*k;
-		System.out.println("aic "+aic);
+		LogLikelihoodFunction likelihood = new LogLikelihoodFunction();
+		double l = likelihood.loglikelihoodsum(clusters);
+		double k = 1;
+		double aic = -2*l+2*k;
 		return aic;
 	}
 	
