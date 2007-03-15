@@ -58,7 +58,6 @@ public class GammaFunction {
 				-2.29549961613378126380E-4, -2.68132617805781232825E-3,
 				3.47222221605458667310E-3, 8.33333333333482257126E-2, };
 		double MAXSTIR = 143.01608;
-
 		double w = 1.0 / x;
 		double y = Math.exp(x);
 
@@ -153,4 +152,89 @@ public class GammaFunction {
 		q = Polynomial.polevl(x, Q, 7);
 		return z * p / q;
 	}
+	
+	/**
+	 * Returns the natural logarithm of the gamma function; formerly named <tt>lgamma</tt>.
+	 */
+	public static double logGamma(double x) throws ArithmeticException {
+		double p, q, w, z;
+		double LOGPI = 1.14472988584940017414;
+
+			 double A[] = {
+						   8.11614167470508450300E-4,
+						   -5.95061904284301438324E-4,
+							7.93650340457716943945E-4,
+						   -2.77777777730099687205E-3,
+							8.33333333333331927722E-2
+						   };
+			 double B[] = {
+						   -1.37825152569120859100E3,
+						   -3.88016315134637840924E4,
+						   -3.31612992738871184744E5,
+						   -1.16237097492762307383E6,
+						   -1.72173700820839662146E6,
+						   -8.53555664245765465627E5
+						   };
+			 double C[] = {
+						   /* 1.00000000000000000000E0, */
+						   -3.51815701436523470549E2,
+						   -1.70642106651881159223E4,
+						   -2.20528590553854454839E5,
+						   -1.13933444367982507207E6,
+						   -2.53252307177582951285E6,
+						   -2.01889141433532773231E6
+						  };
+
+			 if( x < -34.0 ) {
+	  	   q = -x;
+		   w = logGamma(q);
+		   p = Math.floor(q);
+		   if( p == q ) throw new ArithmeticException("lgam: Overflow");
+		   z = q - p;
+		   if( z > 0.5 ) {
+			p += 1.0;
+			z = p - q;
+	 	   }
+		   z = q * Math.sin( Math.PI * z );
+		   if( z == 0.0 ) throw new 
+								   ArithmeticException("lgamma: Overflow");
+		   z = LOGPI - Math.log( z ) - w;
+		   return z;
+		 }
+
+			 if( x < 13.0 ) {
+	  	   z = 1.0;
+		   while( x >= 3.0 ) {
+			x -= 1.0;
+			z *= x;
+		   }
+		   while( x < 2.0 ) {
+			if( x == 0.0 ) throw new 
+									ArithmeticException("lgamma: Overflow");
+			z /= x;
+			x += 1.0;
+		   }
+		   if( z < 0.0 ) z = -z;
+		   if( x == 2.0 ) return Math.log(z);
+		   x -= 2.0;
+		   p = x * Polynomial.polevl( x, B, 5 ) / Polynomial.p1evl( x, C, 6);
+	 	   return( Math.log(z) + p );
+		 }
+
+			 if( x > 2.556348e305 ) throw new 
+							  ArithmeticException("lgamma: Overflow");
+
+			 q = ( x - 0.5 ) * Math.log(x) - x + 0.91893853320467274178;
+			 //if( x > 1.0e8 ) return( q );
+			 if( x > 1.0e8 ) return( q );
+
+			 p = 1.0/(x*x);
+			 if( x >= 1000.0 )
+		     q += ((   7.9365079365079365079365e-4 * p
+			      - 2.7777777777777777777778e-3) *p
+			     + 0.0833333333333333333333) / x;
+			 else
+		     q += Polynomial.polevl( p, A, 4 ) / x;
+			 return q;
+		 }
 }
