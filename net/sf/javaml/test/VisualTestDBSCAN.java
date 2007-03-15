@@ -71,7 +71,7 @@ public class VisualTestDBSCAN extends JPanel {
         Dataset[] clusters = km.executeClustering(data);
         
         Color[] colors = { Color.RED, Color.GREEN, Color.BLUE, Color.MAGENTA };
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < clusters.length; i++) {
             this.add(createLabel(clusters[i], colors[i], space, space,  colors));
         }
         
