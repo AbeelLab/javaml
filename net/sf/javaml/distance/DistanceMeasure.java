@@ -33,6 +33,7 @@ import net.sf.javaml.core.Instance;
  * should have high distance values.
  * 
  * Some distance measure may be normalized, i.e. in the interval [0,1], but this
+ * is not required by the interface.
  * 
  * @author Thomas Abeel
  * 
