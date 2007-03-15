@@ -26,13 +26,7 @@
 
 package net.sf.javaml.clustering.evaluation;
 
-import net.sf.javaml.clustering.Clusterer;
 import net.sf.javaml.core.Dataset;
-import net.sf.javaml.core.Instance;
-import net.sf.javaml.core.SimpleDataset;
-import net.sf.javaml.core.SimpleInstance;
-import net.sf.javaml.distance.DistanceMeasure;
-import net.sf.javaml.distance.DistanceMeasureFactory;
 
 /**
  * TODO check code
@@ -42,7 +36,54 @@ import net.sf.javaml.distance.DistanceMeasureFactory;
  */
 public class AICScore implements ClusterEvaluation {
 	
-	public double score(Clusterer c, Dataset data) {
+	public double score(Dataset[] clusters) {
+		
+		// number of clusters
+		int noc = clusters.length;	
+		// array of instances per cluster
+		double noic[] = new double[noc];
+		// total number of instances
+		double noit=0;		
+		for (int i = 0; i< noc;i++ ){
+			noic[i] = clusters[i].size();
+			noit += noic[i];
+		}
+		
+		// calculate log likelihoods
+		// array of cluster likelihoods
+		double[] cl = new double[noc];
+		// L = p(numb instances in cluster)^(numb instances in cluster)*p(numb instances not in cluster)^(numb instances not in cluster)
+		for (int i = 0 ; i<noc; i++){
+			// number of instances not in cluster for cluster i. 
+			double noinc = noit - noic[i];
+			// probab instance in cluster
+			double pIn = Math.pow(noic[i]/noit, noic[i]);
+			System.out.println("prob in cluster "+i+": "+noic[i]+" / "+noit+" ^ "+ noic[i]+" = "+pIn);
+//			 probab instance not in cluster
+			double pOut = Math.pow(noinc/noit, noinc);
+			System.out.println("prob not in cluster "+i+": "+pOut);
+			cl[i] = -2*Math.log(pIn*pOut);
+			System.out.println("cluster "+i+" loglike"+cl[i]);
+		}
+		
+		// calculate over all = sum cluster loglikes
+		// over-all loglikelihood
+		double oal = 0;
+		for (int i = 0 ; i<cl.length; i++){
+			oal += cl[i];
+		}
+		System.out.println("over-all loglike "+oal);
+		
+		// calculate aic
+		// free parameters
+		int k=1;
+		double aic = -2*oal+2*k;
+		System.out.println("aic "+aic);
+		return aic;
+	}
+	
+	
+	/*public double score(Clusterer c, Dataset data) {
 		Dataset[] datas = new Dataset[c.getNumberOfClusters()];
 		for (int i = 0; i < c.getNumberOfClusters(); i++) {
 			datas[i] = new SimpleDataset();
@@ -102,10 +143,12 @@ public class AICScore implements ClusterEvaluation {
 		double p = (k - 1) + instanceLength * k + overAllVariance;
 		aic = -2*overAllLoglike+2*p;;
 		return aic;
-	}
+	}*/
 
 	public boolean compareScore(double score1, double score2) {
 		// should be minimalized
 		return Math.abs(score2) < Math.abs(score1);
 	}
+
+	
 }

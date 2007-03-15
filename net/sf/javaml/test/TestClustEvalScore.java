@@ -3,6 +3,7 @@ package net.sf.javaml.test;
 import net.sf.javaml.clustering.AdaptiveQualityBasedClustering;
 import net.sf.javaml.clustering.IterativeKMeans;
 import net.sf.javaml.clustering.SimpleKMeans;
+import net.sf.javaml.clustering.evaluation.AICScore;
 import net.sf.javaml.clustering.evaluation.CIndex;
 import net.sf.javaml.clustering.evaluation.ClusterEvaluation;
 import net.sf.javaml.clustering.evaluation.GPlus;
@@ -33,6 +34,7 @@ public class TestClustEvalScore {
 		if (data.size() == 0) {
 			throw new RuntimeException("The dataset should not be empty");
 		}
+		ClusterEvaluation ce = new AICScore();
 		//ClusterEvaluation ce = new CIndex(new EuclideanDistance());
 		//ClusterEvaluation ce = new Gamma(new EuclideanDistance());
 		//ClusterEvaluation ce = new GPlus(new EuclideanDistance());
@@ -43,16 +45,16 @@ public class TestClustEvalScore {
 		//ClusterEvaluation ce = new SumOfAveragePairwiseSimilarities(new EuclideanDistance());
 		//ClusterEvaluation ce = new SumOfCentroidSimilarities(new EuclideanDistance());
 		//ClusterEvaluation ce = new SumOfSquaredErrors(new EuclideanDistance());
-		ClusterEvaluation ce = new Tau(new EuclideanDistance());
+		//ClusterEvaluation ce = new Tau(new EuclideanDistance());
 		//ClusterEvaluation ce = new TraceScatterMatrix(new EuclideanDistance());
 		//ClusterEvaluation ce = new WB(new EuclideanDistance());
 		
 		for (int i = 0; i < 10; i++) {
-			//SimpleKMeans km = new SimpleKMeans(4, 200);
+			SimpleKMeans km = new SimpleKMeans(4, 200);
 			//IterativeKMeans km = new IterativeKMeans(2, 10, 500,new EuclideanDistance(), ce);
 			//MultiKMeans km = new MultiKMeans(4, 500);
 			//IterativeMultiKMeans km = new IterativeMultiKMeans(4, 500);
-			AdaptiveQualityBasedClustering km = new AdaptiveQualityBasedClustering();
+			//AdaptiveQualityBasedClustering km = new AdaptiveQualityBasedClustering();
 			//Ant km = new Ant(100, 10);
 			Dataset[] clusters = km.executeClustering(data);
 			System.out.println("CLUSTERS: "+clusters);
