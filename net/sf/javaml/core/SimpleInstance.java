@@ -24,9 +24,13 @@
  */
 package net.sf.javaml.core;
 
+import net.sf.javaml.utils.MathUtils;
+
 public class SimpleInstance implements Instance {
 
-    private float[] values =null;;
+    private int hashCode = 0;
+
+    private float[] values = null;;
 
     private boolean classSet = false;
 
@@ -36,64 +40,80 @@ public class SimpleInstance implements Instance {
 
     /**
      * Copy constructor, this makes a deep copy of the Instance
+     * 
      * @param instance
      */
     public SimpleInstance(Instance instance) {
-        this(instance.toArray(),instance.getWeight(),instance.isClassSet(),instance.getClassValue());
-		
-	}
-    @Override
-    public String toString(){
-        //TODO optimize using StringBuffer;
-        String out="["+values[0];
-        for(int i=1;i<values.length;i++){
-            out+=";"+values[i];
-        }
-        out+=";w:"+this.weight;
-        if(this.classSet){
-            out+=";C:"+this.classValue;
-        }
-        return out+"]";
+        this(instance.toArray(), instance.getWeight(), instance.isClassSet(), instance.getClassValue());
+
     }
-    
-   
-	public SimpleInstance(float[] values) {
-        this(values,1.0f);
+
+    @Override
+    public boolean equals(Object obj) {
+        Instance tmp = (Instance) obj;
+        boolean equal = values.length == tmp.size();
+        int pos = 0;
+        while (equal && pos < values.length) {
+            equal = equal && MathUtils.eq(values[pos], tmp.getValue(pos));
+            pos++;
+        }
+        return equal;
+    }
+
+    @Override
+    public int hashCode() {
+        return hashCode;
+    }
+
+    @Override
+    public String toString() {
+        // TODO optimize using StringBuffer;
+        String out = "[" + values[0];
+        for (int i = 1; i < values.length; i++) {
+            out += ";" + values[i];
+        }
+        out += ";w:" + this.weight;
+        if (this.classSet) {
+            out += ";C:" + this.classValue;
+        }
+        return out + "]";
+    }
+
+    public SimpleInstance(float[] values) {
+        this(values, 1.0f);
     }
 
     public SimpleInstance(float[] values, float weight) {
-       this(values,weight,false,0);
-    }
-    
-    public SimpleInstance(float [] values,float weight,boolean classSet,int classValue){
-        this.values=new float[values.length];
-        System.arraycopy(values,0,this.values,0,values.length);
-      
-        this.weight=weight;
-        this.classSet=classSet;
-        this.classValue=classValue;
+        this(values, weight, false, 0);
     }
 
-    
-    
+    public SimpleInstance(float[] values, float weight, boolean classSet, int classValue) {
+        this.values = new float[values.length];
+        System.arraycopy(values, 0, this.values, 0, values.length);
+
+        this.weight = weight;
+        this.classSet = classSet;
+        this.classValue = classValue;
+        for (float f : values) {
+            hashCode += f;
+        }
+
+    }
+
     public float getValue(int index) {
         return values[index];
     }
 
-   
-
     public int getClassValue() {
         return classValue;
     }
-
-  
 
     public boolean isClassSet() {
         return classSet;
     }
 
     public boolean isCompatible(Instance instance) {
-        return instance.size()==this.size();
+        return instance.size() == this.size();
     }
 
     public float getWeight() {
@@ -106,13 +126,13 @@ public class SimpleInstance implements Instance {
     }
 
     public int size() {
-       return values.length;
+        return values.length;
     }
+
     public float[] toArray() {
-        float[] out=new float[values.length];
-        System.arraycopy(this.values,0,out,0,this.values.length);
+        float[] out = new float[values.length];
+        System.arraycopy(this.values, 0, out, 0, this.values.length);
         return out;
     }
 
 }
-
