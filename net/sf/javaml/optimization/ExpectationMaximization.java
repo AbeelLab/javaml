@@ -25,12 +25,12 @@
 
 package net.sf.javaml.optimization;
 
+import java.util.Vector;
+
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.distance.DistanceMeasure;
 import net.sf.javaml.distance.EuclideanDistance;
-import net.sf.javaml.optimization.GammaFunction;
-import java.lang.Math;
-import java.util.Vector;
+import net.sf.javaml.utils.GammaFunction;
 
 public class ExpectationMaximization {
 

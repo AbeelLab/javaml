@@ -1,3 +1,27 @@
+/**
+ * GammaFunction.java
+ *
+ * This file is part of the Java Machine Learning API
+ * 
+ * The Java Machine Learning API is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * The Java Machine Learning API is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with the Java Machine Learning API; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * 
+ * Copyright (c) 2006-2007, Thomas Abeel
+ * 
+ * Project: http://sourceforge.net/projects/java-ml/
+ * 
+ */
 /*
  Copyright © 1999 CERN - European Organization for Nuclear Research.
  Permission to use, copy, modify, distribute and sell this software and its documentation for any purpose 
@@ -6,9 +30,6 @@
  CERN makes no representations about the suitability of this software for any purpose. 
  It is provided "as is" without expressed or implied warranty.
  */
-/*package cern.jet.stat;
-import cern.jet.math.Polynomial;*/
-
 /**
  * Gamma and Beta functions.
  * <p>
@@ -21,7 +42,7 @@ import cern.jet.math.Polynomial;*/
  * @author wolfgang.hoschek@cern.ch
  * @version 0.9, 22-Jun-99
  */
-package net.sf.javaml.optimization;
+package net.sf.javaml.utils;
 
 import net.sf.javaml.optimization.Polynomial;
 
@@ -71,7 +92,7 @@ public class GammaFunction {
 		// double LOGPI = 1.14472988584940017414;
 
 		double p, z;
-		int i;
+		//int i;
 
 		double q = Math.abs(x);
 
@@ -80,7 +101,7 @@ public class GammaFunction {
 				p = Math.floor(q);
 				if (p == q)
 					throw new ArithmeticException("gamma: overflow");
-				i = (int) p;
+				//i = (int) p;
 				z = q - p;
 				if (z > 0.5) {
 					p += 1.0;
