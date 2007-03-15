@@ -55,10 +55,10 @@ public class DensityBasedSpatialClustering implements Clusterer {
      */
     private int clusterID;
 
-    public DensityBasedSpatialClustering(){
-        
+    public DensityBasedSpatialClustering() {
+
     }
-    
+
     public DensityBasedSpatialClustering(double epsilon, int minPoints, DistanceMeasure dm) {
         this.dm = dm;
         this.epsilon = epsilon;
@@ -84,9 +84,10 @@ public class DensityBasedSpatialClustering implements Clusterer {
     private boolean expandCluster(DataObject dataObject) {
         List<DataObject> seedList = epsilonRangeQuery(epsilon, dataObject.instance);
 
-        System.out.println("Created initial seedlist with "+seedList.size()+" nodes");
+        System.out.println("Created initial seedlist with " + seedList.size() + " nodes");
         /** dataObject is NO coreObject */
         if (seedList.size() < minPoints) {
+            System.out.println("This is noise...");
             dataObject.clusterIndex = DataObject.NOISE;
             return false;
         }
@@ -94,13 +95,16 @@ public class DensityBasedSpatialClustering implements Clusterer {
         System.out.println("Object is core object");
         /** dataObject is coreObject */
         for (int i = 0; i < seedList.size(); i++) {
+            System.out.println("Getting dataobject from seedList, size = "+seedList.size());
             DataObject seedListDataObject = seedList.get(i);
             /**
              * label this seedListDataObject with the current clusterID, because
              * it is in epsilon-range
              */
             seedListDataObject.clusterIndex = clusterID;
+            
             if (seedListDataObject.equals(dataObject)) {
+                System.out.println("Remove core object");
                 seedList.remove(i);
                 i--;
             }
@@ -109,8 +113,8 @@ public class DensityBasedSpatialClustering implements Clusterer {
         System.out.println("Seedlist is labeled and pruned");
         /** Iterate the seedList of the startDataObject */
         for (int j = 0; j < seedList.size(); j++) {
-            System.out.println("Add neighbours, seedList size: "+seedList.size());
-            if(seedList.size()>10000)
+            System.out.println("Add neighbours, seedList size: " + seedList.size());
+            if (seedList.size() > 10000)
                 System.exit(-1);
             DataObject seedListDataObject = seedList.get(j);
             List<DataObject> seedListDataObject_Neighbourhood = epsilonRangeQuery(epsilon, seedListDataObject.instance);
@@ -121,14 +125,16 @@ public class DensityBasedSpatialClustering implements Clusterer {
                     DataObject p = seedListDataObject_Neighbourhood.get(i);
                     if (p.clusterIndex == DataObject.UNCLASSIFIED || p.clusterIndex == DataObject.NOISE) {
                         if (p.clusterIndex == DataObject.UNCLASSIFIED) {
-                            seedList.add(p);
+                            if (!seedList.contains(p))
+                                seedList.add(p);
+                            p.clusterIndex = clusterID;
                         }
-                        p.clusterIndex = clusterID;
+                        
                     }
                 }
             }
-            seedList.remove(j);
-            j--;
+//            seedList.remove(j);
+//            j--;
         }
 
         return true;
@@ -146,6 +152,17 @@ public class DensityBasedSpatialClustering implements Clusterer {
         public DataObject(Instance inst) {
             this.instance = inst;
         }
+
+        @Override
+        public boolean equals(Object obj) {
+            DataObject tmp=(DataObject)obj;
+            return tmp.instance.equals(this.instance);
+        }
+
+        @Override
+        public int hashCode() {
+           return this.instance.hashCode();
+        }
     }
 
     private Vector<DataObject> dataset = null;
@@ -154,7 +171,7 @@ public class DensityBasedSpatialClustering implements Clusterer {
 
     public Dataset[] executeClustering(Dataset data) {
         this.originalData = data;
-        this.dm=new NormalizedEuclideanDistance(this.originalData);
+        this.dm = new NormalizedEuclideanDistance(this.originalData);
         this.clusterID = 0;
         this.dataset = new Vector<DataObject>();
         for (int i = 0; i < data.size(); i++) {
@@ -163,6 +180,7 @@ public class DensityBasedSpatialClustering implements Clusterer {
         }
 
         for (DataObject dataObject : dataset) {
+            System.out.println("Loop...");
             if (dataObject.clusterIndex == DataObject.UNCLASSIFIED) {
                 System.out.println("Starting to expand...");
                 if (expandCluster(dataObject)) {
@@ -174,12 +192,22 @@ public class DensityBasedSpatialClustering implements Clusterer {
         }
 
         Dataset[] clusters = new Dataset[clusterID];
+        System.out.println("Number of clusters: "+clusterID);
         for (int i = 0; i < clusters.length; i++) {
             clusters[i] = new SimpleDataset();
         }
+        int noiseCount=0;
+        int notKnownCount=0;
         for (DataObject dataObject : dataset) {
-            clusters[dataObject.clusterIndex].addInstance(dataObject.instance);
+            if(dataObject.clusterIndex>=0)
+                clusters[dataObject.clusterIndex].addInstance(dataObject.instance);
+            if(DataObject.NOISE==dataObject.clusterIndex)
+                noiseCount++;
+            if(DataObject.UNCLASSIFIED==dataObject.clusterIndex)
+                notKnownCount++;
         }
+        System.out.println("Noise data items: "+noiseCount);
+        System.out.println("Unknown data items: "+notKnownCount);
         return clusters;
     }
 
