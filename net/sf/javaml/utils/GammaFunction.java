@@ -40,11 +40,11 @@
  * Most Cephes code (missing from the 2D Graph Package) directly ported.
  *
  * @author wolfgang.hoschek@cern.ch
- * @version 0.9, 22-Jun-99
+ * @author Thomas Abeel
+ * 
  */
 package net.sf.javaml.utils;
 
-import net.sf.javaml.optimization.Polynomial;
 
 public class GammaFunction {
 	private final double SQTPI = 2.50662827463100050242E0;
