@@ -368,7 +368,7 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
 	private AQBCem em = new AQBCem();
 
 	// calculates mean instance of given dataset/cluster
-	public Instance mean(Vector<Instance> data, int instanceLength) {
+	private Instance mean(Vector<Instance> data, int instanceLength) {
 		Instance in;
 		float[] sumVector = new float[instanceLength];
 		for (int i = 0; i < data.size(); i++) {
@@ -386,7 +386,7 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
 
 	// calculate max distance between cluster center ck and instances in the
 	// cluster
-	public double maxDist(Vector<Instance> data, Instance mean) {
+	private double maxDist(Vector<Instance> data, Instance mean) {
 		double maxDist = Double.MIN_VALUE;
 		for (int i = 0; i < data.size(); i++) {
 			Instance x = data.get(i);
@@ -399,7 +399,7 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
 	}
 
 	// calculate instances in sphere with ck as center en rad as radius
-	public Vector<Instance> newCluster(Vector<Instance> data, Instance mean,
+	private Vector<Instance> newCluster(Vector<Instance> data, Instance mean,
 			double rad) {
 		Vector<Instance> newCluster = new Vector<Instance>();
 		for (int i = 0; i < data.size(); i++) {
