@@ -78,7 +78,7 @@ public class LogLikelihoodFunction {
 
 		for (int i = 0; i < clusters.length; i++) {
 
-			likelihood += logLikelihood(clusters[i]);
+			likelihood += logLikelihoodC(clusters[i]);
 
 		}
 		return (likelihood);
