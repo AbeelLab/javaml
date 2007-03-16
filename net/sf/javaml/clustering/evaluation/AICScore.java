@@ -1,5 +1,5 @@
 /**
- * AICScore.java, 17-nov-06
+ * AICScore.java
  *
  * This file is part of the Java Machine Learning API
  * 
@@ -17,7 +17,7 @@
  * along with the Java Machine Learning API; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * 
- * Copyright (c) 2006, Andreas De Rijcke
+ * Copyright (c) 2006-2007, Andreas De Rijcke
  * 
  * Project: http://sourceforge.net/projects/java-ml/
  * 
