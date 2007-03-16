@@ -159,6 +159,8 @@ public class Ant implements Clusterer {
 			Instance tmp = tower.get(j);
 			double delta = dm.calculateDistance(x, tmp);
 			delta /= maxDis;
+			// TODO improvemt??:
+			//delta = 1-delta;
 			nFunction += 1 - (delta / alfa);
 		}
 		nFunction = Math.max(nFunction, 0);
@@ -168,7 +170,7 @@ public class Ant implements Clusterer {
 		return nFunction;
 	}
 
-	// methode: calculate probility for picking-up an instance
+	// methode: calculate probability for picking-up an instance
 	public double probPick(Instance instance, double nFunction) {
 		double kPlus = 0.1;
 		double probPick;
@@ -181,7 +183,7 @@ public class Ant implements Clusterer {
 		return probPick;
 	}
 
-	// methode: calculate probility for dropping an instance
+	// methode: calculate probability for dropping an instance
 	public double probDrop(Instance instance, double nFunction) {
 		double kMin = 0.3;
 		double probDrop;
@@ -199,7 +201,7 @@ public class Ant implements Clusterer {
 		if (data.size() == 0) {
 			throw new RuntimeException("The dataset should not be empty");
 		}
-		// add all instances to a tower, add all towers to clusters.
+		// add one instances to one tower, add all towers to clusters.
 		System.out.println("dataSize: " + data.size());
 		for (int i = 0; i < data.size(); i++) {
 			Vector<Instance> tmpTower = new Vector<Instance>();
@@ -208,21 +210,20 @@ public class Ant implements Clusterer {
 			clusters.add(tmpTower);
 		}
 
-		// set initial parameters
 		// set alfa to random value between 0 and 1.
 		alfa = rg.nextDouble();
 		System.out.println("alfa: " + alfa);
+		// set initial parameters
 		actMoves = 0;
 		failMoves = 0;
 		failMovesGlobal = 0;
 		tower.clear();
 		maxDis = maxDis(data);
 
-		// first, pick least similar instance from a random tower
-		// generate integer between 0 and clusters.size.
+		// first, pick instance from a random tower
 		randomTower = rg.nextInt(clusters.size());
 		tower = clusters.get(randomTower);
-		carried = tower.get(0);// pickLeastSim(tower);
+		carried = tower.get(0);
 		tower.remove(0);
 		if (tower.size() == 0) {
 			clusters.remove(randomTower);
@@ -239,13 +240,14 @@ public class Ant implements Clusterer {
 					actMoves = 0;
 					failMovesGlobal = 0;
 				}
-				actMoves++;
-				// System.out.println("actMoves while try to drop: " +
-				// actMoves);
 				randomTower = rg.nextInt(clusters.size());
+				// get random tower
 				tower = clusters.get(randomTower);
+				actMoves++;
 				nFunction = nFunction(alfa, maxDis, carried, tower);
+				// calculate probability to drop instance
 				probDrop = probDrop(carried, nFunction);
+				// generate probability value
 				randomProb = rg.nextDouble();
 				// drop instance if random prob > probDrop
 				if (randomProb <= probDrop) {
@@ -258,7 +260,7 @@ public class Ant implements Clusterer {
 
 				}
 				if (failMoves >= maxFailMoves) {
-					System.out.println("failMoves >maxFailMoves");
+					System.out.println("failMoves >maxFailMoves, put instance in new tower");
 					Vector<Instance> newTower = new Vector<Instance>();
 					newTower.add(carried);
 					clusters.add(newTower);
@@ -277,13 +279,9 @@ public class Ant implements Clusterer {
 					actMoves = 0;
 					failMovesGlobal = 0;
 				}
-				actMoves++;
-				// System.out.println("actMoves while try to pick: " +
-				// actMoves);
-				// System.out.println("ClusterSize voor random:" +
-				// clusters.size());
 				randomTower = rg.nextInt(clusters.size());
 				tower = clusters.get(randomTower);
+				actMoves++;
 				// System.out.println("towerSize:" + tower.size());
 				if (tower.size() == 1) {
 					carried = tower.get(0);
@@ -302,6 +300,9 @@ public class Ant implements Clusterer {
 						carried = leastSim;
 						tower.remove(indexLS);
 					}
+					/*else{
+						failMovesGlobal++;
+					}*/
 					if (randomProb > probPick) {
 						failMovesGlobal++;
 					}
