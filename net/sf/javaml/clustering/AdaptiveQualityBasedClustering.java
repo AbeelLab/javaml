@@ -348,7 +348,7 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
 
 	// calculate max distance between cluster center ck and instances in the
 	// cluster
-	private double maxDist(Vector<Instance> data, Instance mean) {
+	public double maxDist(Vector<Instance> data, Instance mean) {
 		double maxDist = Double.MIN_VALUE;
 		for (int i = 0; i < data.size(); i++) {
 			Instance x = data.get(i);
@@ -361,7 +361,7 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
 	}
 
 	// calculate instances in sphere with ck as center en rad as radius
-	private Vector<Instance> newCluster(Vector<Instance> data, Instance mean,
+	public Vector<Instance> newCluster(Vector<Instance> data, Instance mean,
 			double rad) {
 		Vector<Instance> newCluster = new Vector<Instance>();
 		for (int i = 0; i < data.size(); i++) {
