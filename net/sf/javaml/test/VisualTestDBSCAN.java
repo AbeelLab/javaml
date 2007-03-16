@@ -64,7 +64,7 @@ public class VisualTestDBSCAN extends JPanel {
     public VisualTestDBSCAN() {
         this.setLayout(new GridLayout(0, 3));
         int space = 300;
-        Dataset data = DatasetGenerator.createClusterSquareDataset(space, 10,200);
+        Dataset data = DatasetGenerator.createClusterSquareDataset(space, 30,1000);
 
         this.add(createLabel(data, Color.BLACK, space, space,  null));
         DensityBasedSpatialClustering km = new DensityBasedSpatialClustering();
