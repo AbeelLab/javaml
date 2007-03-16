@@ -15,7 +15,7 @@ public class LogLikelihoodFunction {
 
 	double sum2;
 
-	// likelihood function itself
+	// likelihood of each column in a given cluster
 	public double logLikelihoodFunction(double N, double sum, double sum2) {
 		double loglikelihood = 0;
 		double lambda1 = lambda0 + N;
@@ -31,7 +31,7 @@ public class LogLikelihoodFunction {
 		return (loglikelihood);
 	}
 
-	// calculates likelihood of each value of all instances in a given cluster
+	// likelihood of all instances in a given cluster
 	public double logLikelihood(Dataset cluster) {
 		double instanceLength = cluster.getInstance(0).size();
 		this.count = instanceLength * cluster.size();
