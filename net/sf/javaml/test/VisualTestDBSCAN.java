@@ -64,7 +64,7 @@ public class VisualTestDBSCAN extends JPanel {
     public VisualTestDBSCAN() {
         this.setLayout(new GridLayout(0, 3));
         int space = 300;
-        Dataset data = DatasetGenerator.createClusterSquareDataset(space, 10,100);
+        Dataset data = DatasetGenerator.createClusterSquareDataset(space, 10,200);
 
         this.add(createLabel(data, Color.BLACK, space, space,  null));
         DensityBasedSpatialClustering km = new DensityBasedSpatialClustering();
@@ -72,7 +72,7 @@ public class VisualTestDBSCAN extends JPanel {
         
         Color[] colors = { Color.RED, Color.GREEN, Color.BLUE, Color.MAGENTA };
         for (int i = 0; i < clusters.length; i++) {
-            this.add(createLabel(clusters[i], colors[i], space, space,  colors));
+            this.add(createLabel(clusters[i], colors[i%4], space, space,  colors));
         }
         
         CIndex cindex=new CIndex(new EuclideanDistance());

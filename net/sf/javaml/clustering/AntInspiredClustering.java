@@ -34,7 +34,7 @@ import net.sf.javaml.core.SimpleInstance;
 import net.sf.javaml.distance.DistanceMeasure;
 import net.sf.javaml.distance.EuclideanDistance;
 import net.sf.javaml.distance.NormalizedEuclideanDistance;
-import net.sf.javaml.distance.RBFKernel;
+import net.sf.javaml.distance.RBFKernelSimilarity;
 import net.sf.javaml.test.VisualizeClustering;
 import net.sf.javaml.tools.DatasetGenerator;
 
@@ -62,7 +62,7 @@ public class AntInspiredClustering implements Clusterer {
 	private Vector<Vector<Instance>> tmpClusters = null;
 
 	public AntInspiredClustering() {
-		this(new RBFKernel(5));
+		this(new RBFKernelSimilarity(5));
 	}
 
 	public AntInspiredClustering(DistanceMeasure dm) {
@@ -393,7 +393,7 @@ public class AntInspiredClustering implements Clusterer {
 
 	public static void main(String[] args) {
 		Dataset data = DatasetGenerator.createClusterSquareDataset(200, 8, 100);
-		AntInspiredClustering ac = new AntInspiredClustering(new RBFKernel(100));
+		AntInspiredClustering ac = new AntInspiredClustering(new RBFKernelSimilarity(100));
 		ac.buildClusterer(data);
 		VisualizeClustering.visual(ac.tmpClusters);
 	}

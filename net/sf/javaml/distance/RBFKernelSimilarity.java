@@ -1,5 +1,5 @@
 /**
- * RBFKernel.java
+ * RBFKernelSimilarity.java
  *
  * This file is part of the Java Machine Learning API
  * 
@@ -26,11 +26,19 @@ package net.sf.javaml.distance;
 
 import net.sf.javaml.core.Instance;
 
-public class RBFKernel implements DistanceMeasure {
+/**
+ * The kernel method for measuring similarities between instances. The values
+ * for this measure lie in the interval [0,1] with 0 for low similarity (high
+ * distance) and 1 for high similarity (low distance).
+ * 
+ * @author Thomas Abeel
+ * 
+ */
+public class RBFKernelSimilarity implements DistanceMeasure {
 
     private double gamma = 0.01;
 
-    public RBFKernel() {
+    public RBFKernelSimilarity() {
         this(0.01);
     }
 
@@ -39,7 +47,7 @@ public class RBFKernel implements DistanceMeasure {
      * 
      * @param gamma
      */
-    public RBFKernel(double gamma) {
+    public RBFKernelSimilarity(double gamma) {
         this.gamma = gamma;
     }
 

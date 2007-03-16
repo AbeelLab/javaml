@@ -24,12 +24,11 @@
  */
 package net.sf.javaml.clustering;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
 import net.sf.javaml.core.Dataset;
-import net.sf.javaml.core.DatasetTools;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.SimpleDataset;
 import net.sf.javaml.distance.DistanceMeasure;
@@ -42,7 +41,7 @@ public class DensityBasedSpatialClustering implements Clusterer {
     /**
      * Specifies the radius for a range-query
      */
-    private double epsilon = 0.01;
+    private double epsilon = 0.02;
 
     /**
      * Specifies the density (the range-query must contain at least minPoints
@@ -65,13 +64,20 @@ public class DensityBasedSpatialClustering implements Clusterer {
         this.minPoints = minPoints;
     }
 
-    private List<DataObject> epsilonRangeQuery(double epsilon, Instance inst) {
-        List<Instance> tmp = DatasetTools.epsilonRangeQuery(originalData, epsilon, inst, dm);
-        List<DataObject> out = new LinkedList<DataObject>();
-        for (Instance i : tmp) {
-            out.add(new DataObject(i));
+    private List<DataObject> epsilonRangeQuery(double epsilon, DataObject inst) {
+        
+        ArrayList<DataObject> epsilonRange_List = new ArrayList<DataObject>();
+
+        for (int i = 0; i < dataset.size(); i++) {
+            DataObject tmp = dataset.get(i);
+            double distance = dm.calculateDistance(tmp.instance, inst.instance);
+            if (distance < epsilon) {
+                epsilonRange_List.add(tmp);
+            }
         }
-        return out;
+
+        return epsilonRange_List;
+        
     }
 
     /**
@@ -82,20 +88,19 @@ public class DensityBasedSpatialClustering implements Clusterer {
      * @return true, if the DataObject could be assigned, else false
      */
     private boolean expandCluster(DataObject dataObject) {
-        List<DataObject> seedList = epsilonRangeQuery(epsilon, dataObject.instance);
-
-        System.out.println("Created initial seedlist with " + seedList.size() + " nodes");
+        List<DataObject> seedList = epsilonRangeQuery(epsilon, dataObject);
+        //System.out.println("Created initial seedlist with " + seedList.size() + " nodes");
         /** dataObject is NO coreObject */
         if (seedList.size() < minPoints) {
-            System.out.println("This is noise...");
+            //System.out.println("This is noise...");
             dataObject.clusterIndex = DataObject.NOISE;
             return false;
         }
 
-        System.out.println("Object is core object");
+       // System.out.println("Object is core object");
         /** dataObject is coreObject */
         for (int i = 0; i < seedList.size(); i++) {
-            System.out.println("Getting dataobject from seedList, size = "+seedList.size());
+            //System.out.println("Getting dataobject from seedList, size = "+seedList.size());
             DataObject seedListDataObject = seedList.get(i);
             /**
              * label this seedListDataObject with the current clusterID, because
@@ -104,20 +109,20 @@ public class DensityBasedSpatialClustering implements Clusterer {
             seedListDataObject.clusterIndex = clusterID;
             
             if (seedListDataObject.equals(dataObject)) {
-                System.out.println("Remove core object");
+                //System.out.println("Remove core object");
                 seedList.remove(i);
                 i--;
             }
         }
 
-        System.out.println("Seedlist is labeled and pruned");
+        //System.out.println("Seedlist is labeled and pruned");
         /** Iterate the seedList of the startDataObject */
         for (int j = 0; j < seedList.size(); j++) {
-            System.out.println("Add neighbours, seedList size: " + seedList.size());
+            //System.out.println("Add neighbours, seedList size: " + seedList.size());
             if (seedList.size() > 10000)
                 System.exit(-1);
             DataObject seedListDataObject = seedList.get(j);
-            List<DataObject> seedListDataObject_Neighbourhood = epsilonRangeQuery(epsilon, seedListDataObject.instance);
+            List<DataObject> seedListDataObject_Neighbourhood = epsilonRangeQuery(epsilon, seedListDataObject);
 
             /** seedListDataObject is coreObject */
             if (seedListDataObject_Neighbourhood.size() >= minPoints) {
@@ -133,8 +138,8 @@ public class DensityBasedSpatialClustering implements Clusterer {
                     }
                 }
             }
-//            seedList.remove(j);
-//            j--;
+            seedList.remove(j);
+            j--;
         }
 
         return true;
@@ -180,18 +185,18 @@ public class DensityBasedSpatialClustering implements Clusterer {
         }
 
         for (DataObject dataObject : dataset) {
-            System.out.println("Loop...");
+            //System.out.println("Loop...");
             if (dataObject.clusterIndex == DataObject.UNCLASSIFIED) {
-                System.out.println("Starting to expand...");
+                //System.out.println("Starting to expand...");
                 if (expandCluster(dataObject)) {
-                    System.out.println(clusterID);
+                    //System.out.println("Found cluster, new ID: "+clusterID);
                     clusterID++;
 
                 }
             }
         }
 
-        Dataset[] clusters = new Dataset[clusterID];
+        Dataset[] clusters = new Dataset[clusterID+1];
         System.out.println("Number of clusters: "+clusterID);
         for (int i = 0; i < clusters.length; i++) {
             clusters[i] = new SimpleDataset();
@@ -201,8 +206,10 @@ public class DensityBasedSpatialClustering implements Clusterer {
         for (DataObject dataObject : dataset) {
             if(dataObject.clusterIndex>=0)
                 clusters[dataObject.clusterIndex].addInstance(dataObject.instance);
-            if(DataObject.NOISE==dataObject.clusterIndex)
+            if(DataObject.NOISE==dataObject.clusterIndex){
+                clusters[clusterID].addInstance(dataObject.instance);
                 noiseCount++;
+            }
             if(DataObject.UNCLASSIFIED==dataObject.clusterIndex)
                 notKnownCount++;
         }

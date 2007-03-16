@@ -29,7 +29,11 @@ import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.InstanceTools;
 
 /**
- *  
+ * A normalized version of the Euclidean distance. This distance measure is
+ * normalized in the interval [0,1].
+ * 
+ * High values denote low similar items (high distance) and low values denote
+ * highly similar items (low distance).
  * 
  * @author Thomas Abeel
  * 
@@ -37,18 +41,18 @@ import net.sf.javaml.core.InstanceTools;
 public class NormalizedEuclideanDistance extends EuclideanDistance {
 
     private Dataset data;
-    
-	public NormalizedEuclideanDistance(Dataset data) {
+
+    public NormalizedEuclideanDistance(Dataset data) {
         super();
-	    this.data=data;
-	}
+        this.data = data;
+    }
 
-	
+    public double calculateDistance(Instance i, Instance j) {
+        Instance normI = InstanceTools.normalizeMidrange(0.5, 1, data.getMinimumInstance(), data.getMaximumInstance(),
+                i);
+        Instance normJ = InstanceTools.normalizeMidrange(0.5, 1, data.getMinimumInstance(), data.getMaximumInstance(),
+                j);
+        return super.calculateDistance(normI, normJ) / Math.sqrt(i.size());
 
-	public double calculateDistance(Instance i, Instance j) {
-        Instance normI=InstanceTools.normalizeMidrange(0.5,1,data.getMinimumInstance(),data.getMaximumInstance(), i);
-        Instance normJ=InstanceTools.normalizeMidrange(0.5,1,data.getMinimumInstance(),data.getMaximumInstance(), j);
-		return super.calculateDistance(normI, normJ)/Math.sqrt(i.size());
-		
-	}
+    }
 }

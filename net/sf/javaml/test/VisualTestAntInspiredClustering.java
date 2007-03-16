@@ -40,7 +40,7 @@ import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.SimpleDataset;
 import net.sf.javaml.distance.EuclideanDistance;
 import net.sf.javaml.distance.NormalizedEuclideanDistance;
-import net.sf.javaml.distance.RBFKernel;
+import net.sf.javaml.distance.RBFKernelSimilarity;
 import net.sf.javaml.tools.DatasetGenerator;
 
 

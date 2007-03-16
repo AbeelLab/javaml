@@ -4,7 +4,7 @@ import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.SimpleDataset;
 import net.sf.javaml.core.SimpleInstance;
-import net.sf.javaml.distance.RBFKernel;
+import net.sf.javaml.distance.RBFKernelSimilarity;
 import net.sf.javaml.filter.Filter;
 import net.sf.javaml.filter.NormalizeMidrange;
 
@@ -14,7 +14,7 @@ public class TestRBFKernel {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		RBFKernel rbf=new RBFKernel(5);
+		RBFKernelSimilarity rbf=new RBFKernelSimilarity(5);
 		Instance x=new SimpleInstance(new float[]{0,10});
 		Instance y=new SimpleInstance(new float[]{0,0});
 		Instance z=new SimpleInstance(new float[]{10,10});
@@ -33,7 +33,7 @@ public class TestRBFKernel {
 	private static void test(){
 		System.out.println("Normalized test:");
 		
-		RBFKernel rbf=new RBFKernel();
+		RBFKernelSimilarity rbf=new RBFKernelSimilarity();
 		Instance x=new SimpleInstance(new float[]{0,10});
 		Instance y=new SimpleInstance(new float[]{0,0});
 		Instance z=new SimpleInstance(new float[]{10,10});

@@ -32,7 +32,12 @@ import net.sf.javaml.core.Instance;
  * low distance values, while object that are far apart or are not similar
  * should have high distance values.
  * 
- * Some distance measure may be normalized, i.e. in the interval [0,1], but this
+ * By convention measures that end in <code>Similarity</code> have a high
+ * value for highly similar (low distance) and measure that end in
+ * <code>Distance</code> have a high value for items that have low similarity
+ * (high distance).
+ * 
+ * Some distance measures are normalized, i.e. in the interval [0,1], but this
  * is not required by the interface.
  * 
  * @author Thomas Abeel
