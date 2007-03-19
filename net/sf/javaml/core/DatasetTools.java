@@ -38,6 +38,19 @@ import net.sf.javaml.distance.DistanceMeasure;
 final public class DatasetTools {
 
     /**
+     * Ranges of the whole Datasets. lowest and highest value and width (= high -
+     * low) for each dimension
+     * 
+     * The first dimension of the array contains the index, the second dimension of the array
+     * contains on [index][0] the min value, on [index][1] the max value and on
+     * [index][2] the width (=max-min).
+     */
+    public static double[][] getRanges(Dataset data, DistanceMeasure dm) {
+        // TODO implement
+        return null;
+    }
+
+    /**
      * Return the centroid of this cluster when using the given distance
      * measure.
      * 
