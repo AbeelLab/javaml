@@ -53,215 +53,278 @@ import net.sf.javaml.distance.EuclideanDistance;
  */
 
 public class Ant implements Clusterer {
-	Vector<Instance> tower = new Vector<Instance>();
-
-	Vector<Instance> tower1 = new Vector<Instance>();
-
-	Vector<Vector<Instance>> clusters = new Vector<Vector<Instance>>();
-
-	private Instance leastSim;
-
-	private Instance carried;
-
-	private Random rg = new Random(System.currentTimeMillis());
-
-	private int iterations;
-
-	private double maxDis;
-
-	private double actMoves;
-
-	private double failMovesDrop;
-	
-	private double failMovesPick;
-
-	private double failMovesGlobal;
-
-	private double maxFailMoves;
-
-	private int randomTower;
-
-	private double alfa;
-
-	private double nFunction;
-
-	private double probPick;
-
-	private double probDrop;
-
-	private double randomProb;
-
-	private DistanceMeasure dm = new EuclideanDistance();
-
-	public Ant() {
-		this(100, 10);
-	}
 
 	public Ant(int iterations, int maxFailMoves) {
 		this.iterations = iterations;
 		this.maxFailMoves = maxFailMoves;
 	}
 
-	
+	/*
+	 * schockaert's method
+	 * 
+	 */
 
-	// methode: calculate alfa (scaling param)
-	public double alfa(double alfa, double failMoves, double actMoves) {
-		double rateFail = failMoves / actMoves;
-		if (rateFail > 0.99) {
-			alfa += 0.01;
-			if (alfa > 1) {
-				alfa = 1;
-			}
-		}
-		if (rateFail <= 0.99) {
-			alfa -= 0.01;
-			if (alfa < 0.01) {
-				alfa = 0.01;
-			}
-		}
-		// System.out.println("alfa: " + alfa);
-		return alfa;
-	}
+	Vector<Instance> heap = new Vector<Instance>();
 
-	// methode: calculate max distance between instances
-	public double maxDis(Dataset data) {
+	Vector<Instance> heap1 = new Vector<Instance>();
+
+	Vector<Instance> carried = new Vector<Instance>();
+
+	Vector<Vector<Instance>> clusters = new Vector<Vector<Instance>>();
+
+	private Random rg = new Random(System.currentTimeMillis());
+
+	private DistanceMeasure dm = new EuclideanDistance();
+
+	private int randomHeap, iterations, instanceLength;
+
+	private double maxDist, randomProb;
+
+	private double failMovesDrop, failMovesPick, failMovesGlobal, maxFailMoves;
+
+	// tuning parameters with standard values
+	private double m1 = 5.0, m2 = 5.0;
+
+	private double teta1 = 0.5, teta2 = 0.5, teta3 = 0.5;
+
+	private double n1 = 10 /* for instance drop */, n2 = 20; /* for heap drop */
+
+	// matrix representation of fig 4.1.
+	double[][] similarityRanges = { { 0, 0.125, 0.375, 0.625, 0.875, 1 },
+			{ 4.0, 3.0, 2.0, 1.0, 0.0 } };
+
+	// matrix representation of table 4.1, values calculated on the basis of fig
+	// 4.2.
+	double[][] stimPickI = { { 0.5625, 0.0, 0.0, 0.0, 0.0 },
+			{ 0.8125, 0.6875, 0.0, 0.0, 0.0 }, { 1, 0.9375, 0.8125, 0.0, 0.0 },
+			{ 1.0, 1.0, 1.0, 0.9375, 0.0 }, { 1.0, 1.0, 1.0, 1.0, 1.0 }, };
+
+	// matrix representation of table 4.2, values calculated on the basis of fig
+	// 4.2.
+	double[][] stimPickH = { { 1.0, 0.0, 0.0, 0.0, 0.0 },
+			{ 0.5625, 0.9375, 0.0, 0.0, 0.0 },
+			{ 0.3125, 0.4375, 0.8125, 0.0, 0.0 },
+			{ 0.0625, 0.1875, 0.3125, 0.6875, 0.0 },
+			{ 0.0625, 0.0625, 0.0625, 0.1875, 0.5625 }, };
+
+	// matrix representation of table 4.3, values calculated on the basis of fig
+	// 4.2.
+	double[][] stimDrop = { { 0.6875, 0.8125, 0.9375, 1.0, 1.0 },
+			{ 0.3125, 0.6875, 0.8125, 0.9375, 1.0 },
+			{ 0.0625, 0.3125, 0.6875, 0.8125, 0.9375 },
+			{ 0.0625, 0.0625, 0.3125, 0.6875, 0.8125 },
+			{ 0.0625, 0.0625, 0.0625, 0.3125, 0.6875 }, };
+
+	// methods
+	// calculates max distance between all instances in dataset 
+	public double maxDist(Dataset data) {
 		Instance min = data.getMinimumInstance();
 		Instance max = data.getMaximumInstance();
-		double maxDis = dm.calculateDistance(min, max);
-		// System.out.println("max dist: " + maxDis);
-		return maxDis;
+		double maxDist = dm.calculateDistance(min, max);
+		return maxDist;
 	}
 
-	// methode: calculate neighborhood function
-	public double nFunction(double alfa, double maxDis, Instance x,
-			Vector<Instance> tower) {
-		// System.out.println("alfa: " + alfa);
-		double nFunction = 0;
-		for (int j = 0; j < tower.size(); j++) {
-			Instance tmp = tower.get(j);
-			double distance = dm.calculateDistance(x, tmp);
-			double relativeDistance = distance/maxDis;
-			// System.out.println("relativeDistance: "+relativeDistance);
-			double tmpNFunction =  1 - (relativeDistance / alfa);
-			// System.out.println("temp neighborhood function: "+tmpNFunction);
-			nFunction += tmpNFunction;
-		}
-		// System.out.println("total neighborhood function: "+nFunction);
-		
-		nFunction = Math.max(nFunction, 0);
-		// double towerSize = tower.size();
-		// System.out.println("towerSize: " + towerSize);
-		// nFunction /= towerSize;
-		return nFunction;
-	}
-
-	// methode: calculate probability for picking-up an instance
-	public double probPick(Instance instance, double nFunction) {
-		double kPlus = 0.1;
-		double probPick;
-		/**
-		 * if (nFunction<=1){ probPick=1.0; } else{ probPick = 1 /
-		 * (nFunction*nFunction); }
-		 */
-		System.out.println("nfuction: "+nFunction);
-		double tmp = (kPlus / (kPlus + nFunction));
-		System.out.println("tmp: "+tmp);
-		probPick = tmp*tmp;
-		System.out.println("probPick: "+probPick);
-		return probPick;
-	}
-
-	// X. alternative methode for picking-up an instance of a tower
-	//X.1 calculates mean instance of given tower
-	public Instance mean(Vector<Instance> tower, int instanceLength) {
+	/**
+	 * calculates mean instance of a heap H
+	 * 
+	 * @param Vector
+	 *            <Instance> heap
+	 * @return mean instance
+	 */
+	public Instance meanH(Vector<Instance> heap) {
 		Instance in;
 		float[] sumVector = new float[instanceLength];
-		for (int i = 0; i < tower.size(); i++) {
-			in = tower.get(i);
+		for (int i = 0; i < heap.size(); i++) {
+			in = heap.get(i);
 			for (int j = 0; j < instanceLength; j++) {
 				sumVector[j] += in.getValue(j);
 			}
 		}
 		for (int j = 0; j < instanceLength; j++) {
-			sumVector[j] /= tower.size();
+			sumVector[j] /= heap.size();
 		}
-		Instance mean = new SimpleInstance(sumVector);
-		return mean;
+		Instance meanH = new SimpleInstance(sumVector);
+		return meanH;
 	}
-	
-	// X.2 calculate average (dis)similarity
-	public double averageSim(Vector<Instance> tower, int instanceLength) {
-		double averageSim = 0;
-		//mean of the tower
-		Instance towerMean = mean(tower,instanceLength );
-		// average similatiry of the tower
-		for (int i = 0; i < tower.size(); i++){
-			double distance = dm.calculateDistance(towerMean, tower.get(i));
-			averageSim += distance;
-		}
-		averageSim /= tower.size();
-		return averageSim;
+
+	/**
+	 * calculates similarity E between 2 instances [0,1](100% sim: E=1, 0% sim:
+	 * E=0)
+	 * 
+	 * @param Instance,Instance
+	 * @return double similarity
+	 */
+	public double similarity(Instance instance1, Instance instance2) {
+		double similarity = 1 - (dm.calculateDistance(instance1, instance2) / maxDist);
+		return similarity;
 	}
-	//X.3 find least similar instance in tower
-	private Instance leastSim(Vector<Instance> tower, Instance mean, double averageSim) {
-		Instance leastSim= null;
-		double distance=0;
-		for (int i = 0; i < tower.size(); i++) {
-			Instance x = tower.get(i);
-			System.out.println("instance: "+ x);
-			distance = dm.calculateDistance(x, mean);
-			System.out.println("distance: "+ distance);
-			double maxDist = Double.MIN_VALUE;
-			if (maxDist < distance) {
-				maxDist = distance;
-				leastSim = x;
-				System.out.println("leastSim: "+ leastSim);
-			}
+
+	/**
+	 * finds minimal similarity in heap in respect to heap centrum [0,1]
+	 * 
+	 * @param Vector
+	 *            <Instance> heap
+	 * @return double minSimilar
+	 */
+	public double minSimilarity(Vector<Instance> heap) {
+		Instance meanH = meanH(heap);
+		double minSimilar = similarity(heap.get(0), meanH);
+		for (int i = 1; i < heap.size(); i++) {
+			double sim = similarity(heap.get(i), meanH);
+			minSimilar = Math.min(minSimilar, sim);
 		}
-		if (distance <= averageSim){
-			leastSim =null;
-		}
-		return leastSim;
+		return minSimilar;
 	}
 
 	
-	// methode: calculate probability for dropping an instance
-	public double probDrop(Instance instance, double nFunction) {
-		double kMin = 0.3;
-		double probDrop;
-		/**
-		 * if (nFunction>=1){ probDrop=1.0; } else{ probDrop =
-		 * nFunction*nFunction*nFunction*nFunction; }
-		 */
-		System.out.println("nfuction: "+nFunction);
-		double tmp =(nFunction / (kMin + nFunction));
-		probDrop = tmp*tmp;
-		System.out.println("tmp: "+tmp);
-		System.out.println("probDrop: "+probDrop);
-		return probDrop;
-	}
-	
-//	 methode: search for least similar instance in tower
-	public Instance pickLeastSim(Vector<Instance> tower) {
-		double leastSim = 0;
-		int leastSimIndex = 0;
-		int i;
-		double error;
-		for (i = 0; i < tower.size(); i++) {
-			Instance x = tower.get(i);
-			error = 0;
-			for (int j = 0; j < tower.size(); j++) {
-				Instance y = tower.get(j);
-				double newError = dm.calculateDistance(x, y);
-				error += newError;
-			}
-			if (error > leastSim) {
-				leastSim = error;
-				leastSimIndex = i;
+	/**
+	 * find least similar instance in heap (has lowest similarity value) [0,1]
+	 * 
+	 * @param Vector<Instance> heap
+	 * 
+	 * @return index of least similar instance
+	*/
+	public int leastSim (Vector<Instance> heap){
+		Instance meanH = meanH(heap);
+		double sim1 = similarity(heap.get(0), meanH);
+		int index=0;
+		for (int i = 1; i < heap.size(); i++) {
+			Instance x = heap.get(i);
+			double sim2 = similarity(x, meanH);
+			if (sim2> sim1){
+				sim1 = sim2;
+				index = heap.indexOf(x);
 			}
 		}
-		Instance pickLeastSim = tower.get(leastSimIndex);
-		return pickLeastSim;
+		return index;
+	}
+	
+	
+	/**
+	 * calculates average similarity of heap H [0,1]
+	 * 
+	 * @param Vector
+	 *            <Instance> heap
+	 * @return double average similarity of heap
+	 */
+	public double avg(Vector<Instance> heap) {
+		double avg = 0;
+		Instance meanH = meanH(heap);
+		// average similatiry of the heap
+		for (int i = 0; i < heap.size(); i++) {
+			avg += similarity(heap.get(i), meanH);
+		}
+		avg /= heap.size();
+		System.out.println("avg: "+avg);
+		return avg;
+	}
+
+	/**
+	 * calculates Lukasiewicz t-norm of avg(carried heap L) and the similarity
+	 * between clustercentra heap L and heap H.
+	 * 
+	 * @param Vector
+	 *            <Instance> heap carried, Vector<Instance> heap
+	 * @return double tW
+	 */
+	public double tW(Vector<Instance> heapCarried, Vector<Instance> heapH) {
+		Instance meanCarried = meanH(heapCarried);
+		Instance meanH = meanH(heapH);
+		double similarity = similarity(meanCarried, meanH);
+		double avgCarried = avg(heapCarried);
+		double tW = Math.max(0, similarity + avgCarried - 1);
+		System.out.println("tW: "+tW);
+		return tW;
+	}
+
+	/**
+	 * finds stimulus value for drop/pick action
+	 * 
+	 * @param double
+	 *            avg(heap H)
+	 * @param double
+	 *            for pick: minSimilar(heap H); for drop: tW
+	 * @param int
+	 *            i: for pick instance = 1, for pick heap = 2, for drop = 3
+	 * @return double stimulus
+	 */
+	public double stimulus(double param1, double param2, int i) {
+		int indexParam1 = 0;
+		int indexParam2 = 0;
+		for (int j = 0; j < 5; j++) {
+			if (param1 > similarityRanges[0][j]
+					&& param1 < similarityRanges[0][j+1]) {
+				indexParam1 = (int)similarityRanges[1][j];
+				System.out.println("indexParam1: "+ indexParam1);
+			}
+			if (param2 > similarityRanges[0][j]
+					&& param2 < similarityRanges[0][j+1]) {
+				indexParam2 = (int) similarityRanges[1][j];
+				System.out.println("indexParam2: "+indexParam2);
+			}
+		}
+		double stimulus = 0;
+		if (i == 1) {
+			System.out.println("stimPickI lenghth: "+stimPickI.length);
+			stimulus = stimPickI[indexParam1][indexParam2];
+			System.out.println("stimulus to pick instance: "+stimulus);
+		} else if (i == 2) {
+			System.out.println("stimPickH lenghth: "+ stimPickH.length);
+			stimulus = stimPickH[indexParam1][indexParam2];
+			System.out.println("stimulus to pick heap: "+stimulus);
+		} else if (i == 3) {
+			stimulus = stimDrop[ indexParam1][ indexParam2];
+			System.out.println("stimulus to drop: "+stimulus);
+		}
+		else{
+			System.out.println("nothin to do");
+		}
+		return stimulus;
+	}
+
+	/**
+	 * probability to pick 1 instance from heap H or whole heap [0,1]
+	 * 
+	 * @param stimI =
+	 *            stimulus to pick 1 instance.
+	 * @param stimH =
+	 *            stimulus to pick the complete heap.
+	 * @param int
+	 *            i: for pick instance = 1, for pick heap.
+	 * 
+	 * @return double probability to pick
+	 */
+	public double probPick(double stimI, double stimH, int i) {
+		double probPick = 0;
+		if (i == 1) {
+			probPick = (stimI / (stimI + stimH))
+					* (Math.pow(stimI, m1) / (Math.pow(teta1, m1) + Math.pow(
+							stimI, m1)));
+			System.out.println(i+" probPick I: "+probPick);
+		}
+		if (i == 2) {
+			probPick = (stimH / (stimI + stimH))
+					* (Math.pow(stimH, m2) / (Math.pow(teta2, m2) + Math.pow(
+							stimH, m2)));
+		}
+		System.out.println(i+" probPick H: "+probPick);
+		return probPick;
+	}
+
+	// probability to drop instance/heap other instance/heap [0,1]
+	/**
+	 * probability to drop instance/heap [0,1]
+	 * 
+	 * @param stim =
+	 *            stimulus to drop.
+	 * @param n:
+	 *            for instance standard 10, for heap 20
+	 * @return double probability to drop
+	 */
+	public double probDrop(double stim, double n) {
+		double probDrop = Math.pow(stim, n)
+				/ (Math.pow(teta3, n) + Math.pow(stim, n));
+		return probDrop;
 	}
 
 	// main
@@ -269,182 +332,167 @@ public class Ant implements Clusterer {
 		if (data.size() == 0) {
 			throw new RuntimeException("The dataset should not be empty");
 		}
-		// add one instances to one tower, add all towers to clusters.
-		System.out.println("dataSize: " + data.size());
-		
+		// add one instances to one heap, add all heap to clusters.
 		for (int i = 0; i < data.size(); i++) {
-			Vector<Instance> tmpTower = new Vector<Instance>();
+			Vector<Instance> tmpHeap = new Vector<Instance>();
 			Instance in = data.getInstance(i);
-			tmpTower.add(in);
-			clusters.add(tmpTower);
+			tmpHeap.add(in);
+			clusters.add(tmpHeap);
 		}
-
-		// set alfa to random value between 0 and 1.
-		alfa = rg.nextDouble();
-		System.out.println("alfa: " + alfa);
 		// set initial parameters
-		int instanceLength = data.getInstance(0).size();
-		actMoves = 0;
+		instanceLength = data.getInstance(0).size();
+		maxDist = maxDist(data);
 		failMovesDrop = 0;
 		failMovesPick = 0;
 		failMovesGlobal = 0;
-		tower.clear();
-		maxDis = maxDis(data);
-
-
-		// first, pick instance from a random tower
-		randomTower = rg.nextInt(clusters.size());
-		tower = clusters.get(randomTower);
-		carried = tower.get(0);
-		tower.remove(0);
-		if (tower.size() == 0) {
-			clusters.remove(randomTower);
+		heap.clear();
+		// first, load ant with instance from a random heap
+		randomHeap = rg.nextInt(clusters.size());
+		heap = clusters.get(randomHeap);
+		carried.add(heap.get(0));
+		heap.remove(0);
+		if (heap.size() == 0) {
+			clusters.remove(randomHeap);
 		}
-
 		// main loop
 		int j = 0;
 		int stopSign = 0;
-		while (j < iterations && stopSign ==0) {
+		while (j < iterations && stopSign == 0) {
 			j++;
 			System.out.println("---------------------iterations: " + j);
-			// move to random tower with carried instance
-			while (carried != null  && stopSign ==0) {
-				// if number of moves reaches 100, recalculate alfa.
-				if (actMoves >= 100) {
-					alfa = alfa(alfa, failMovesGlobal, actMoves);
-					actMoves = 0;
-					failMovesGlobal = 0;
+			
+			while (carried != null && stopSign == 0) {
+				double probDrop=0;
+				// move ant to random heap with carried instance
+				randomHeap = rg.nextInt(clusters.size());
+				heap = clusters.get(randomHeap);
+				if (heap.size() == 1) {
+					if (carried.size() == 1) {
+						probDrop = Math.pow(similarity(heap.get(0), carried
+								.get(0)), 5);
+					} else {
+						probDrop = 0;
+					}
+				} else if (heap.size() > 1) {
+					double avgHeap = avg(heap);
+					double tW = tW(carried, heap);
+					double stimToDrop = stimulus(avgHeap, tW, 3);
+					if (carried.size() == 1) {
+						probDrop = probDrop(stimToDrop, n1);
+					} else {
+						probDrop = probDrop(stimToDrop, n2);
+					}
+				} else {
+					System.out.println("this is weird");
 				}
-				randomTower = rg.nextInt(clusters.size());
-				// get random tower
-				tower = clusters.get(randomTower);
-				actMoves++;
-				nFunction = nFunction(alfa, maxDis, carried, tower);
-				// calculate probability to drop instance
-				probDrop = probDrop(carried, nFunction);
-				// generate probability value
 				randomProb = rg.nextDouble();
-				System.out.println("randomProb: " + randomProb);
-				// drop instance if random prob > probDrop
+				// drop instance if random prob < probDrop
 				if (randomProb <= probDrop) {
-					tower.add(carried);
-					carried = null;
-					failMovesDrop = 0;
+					for (int i = 0; i < carried.size(); i++) {
+						heap.add(carried.get(i));	
+					}
 					System.out.println("succesfull drop");
+					failMovesDrop = 0;
+					carried = null;
 				} else {
 					System.out.println("failed to drop");
 					failMovesDrop++;
 					failMovesGlobal++;
-
 				}
 				if (failMovesDrop >= maxFailMoves) {
-					System.out.println("failMoves >maxFailMoves, put instance in new tower");
-					Vector<Instance> newTower = new Vector<Instance>();
-					newTower.add(carried);
-					clusters.add(newTower);
+					System.out
+							.println("failMoves>maxFailMoves, put carried in new heap");
+					Vector<Instance> newHeap = new Vector<Instance>();
+					for (int i = 0; i < carried.size(); i++) {
+						newHeap.add(carried.get(i));
+					}
+					clusters.add(newHeap);
 					failMovesDrop = 0;
-					carried = null;
+					carried.removeAllElements();
 				}
 			}
-			
-			// System.out.println("-------instance dropped, carried: "+carried);
-			// move to other random tower when no instance carried
-			while (carried == null  && stopSign ==0) {
+
+			while (carried == null && stopSign == 0) {
 				System.out.println("now try to pick new instance");
-				// if number of moves reaches 100, recalculate alfa.
-				if (actMoves >= 100) {
-					// System.out.println("old alfa: " + alfa);
-					alfa = alfa(alfa, failMovesGlobal, actMoves);
-					// System.out.println("new alfa: " + alfa);
-					actMoves = 0;
-					failMovesGlobal = 0;
-				}
-				randomTower = rg.nextInt(clusters.size());
-				tower = clusters.get(randomTower);
-				System.out.println("new tower selected + "+tower);
-				actMoves++;
-				// System.out.println("towerSize:" + tower.size());
-				if (tower.size() == 1 || tower.size() == 2) {
-					carried = tower.get(0);
-					System.out.println("carried: "+carried);
-					System.out.println("succesfull pick");
-					clusters.remove(randomTower);
+				// move to other random heap when no instance carried
+				randomHeap = rg.nextInt(clusters.size());
+				heap = clusters.get(randomHeap);
+				System.out.println("heapSize:" + heap.size()+ heap);
+				if (heap.size() == 1) {
+					carried = heap;
+					System.out.println("succesfull pick, carried: " + carried);
+					clusters.remove(randomHeap);
 					failMovesPick = 0;
-					System.out.println("failMovesPick: "+failMovesPick);
-				} else {
-					System.out.println("towerSize:" + tower.size());
-					Instance mean = mean(tower, instanceLength);
-					System.out.println("tower mean:" + mean);
-					double averageSim = averageSim(tower,instanceLength);
-					System.out.println("averageSim: "+averageSim);
-					Instance leastSim = leastSim(tower,mean, averageSim);
-					System.out.println("leastSim: "+leastSim);
-					int indexLS = tower.indexOf(leastSim);
-					System.out.println("indexLS: "+indexLS);
-					if ( leastSim != null){
-						carried = leastSim;
-						tower.remove(indexLS);
-						System.out.println("carried: "+carried);
-						System.out.println("succesfull pick");
-					}
-					else{
-						System.out.println("failed to pick");
-						failMovesPick++;
-						failMovesGlobal++;
-					}
-					if (failMovesPick >= maxFailMoves*4) {
-						System.out.println("failMovesPick: "+failMovesPick);
-						System.out.println("failMovesPick >maxFailMoves, stop algorithm");
-						stopSign =1;
-					}
-						
-					/**leastSim = pickLeastSim(tower);
-					int indexLS = tower.indexOf(leastSim);
-					nFunction = nFunction(alfa, maxDis, leastSim, tower);
-					probPick = probPick(leastSim, nFunction);
+					System.out.println("failMovesPick: " + failMovesPick);
+				} else if (heap.size() == 2) {
+					Vector<Instance> tmp  = new Vector<Instance>();
+					tmp.add(heap.firstElement());
+					System.out.println("tmp: " + tmp);
+					carried = tmp;
+					// other option is to make random choice between instance 1
+					// or 2.
+					System.out.println("succesfull pick, carried: " + carried);
+					failMovesPick = 0;
+					System.out.println("failMovesPick: " + failMovesPick);
+				} else if (heap.size() > 2) {
+					double averageSim = avg(heap);
+					double minSim = minSimilarity(heap);
+					double stimI = stimulus(averageSim, minSim, 1);
+					double stimH = stimulus(averageSim, minSim, 2);
+					double probPickI = probPick(stimI, stimH, 1);
+					double probPickH = probPick(stimI, stimH, 2);
+					System.out.println("probPickI: " + probPickI
+							+ "; probPickH: " + probPickH);
 					randomProb = rg.nextDouble();
-					// System.out.println("nFunction to pick: " + nFunction);
-					// System.out.println("prob to pick: " + probPick);
-					// pick instance if random prob <= probPick
-					if (randomProb <= probPick) {
-						// System.out.println("indexLS: " + indexLS);
-						carried = leastSim;
-						System.out.println("carried: "+carried);
-						System.out.println("succesfull pick");
-						tower.remove(indexLS);
-						failMovesPick = 0;
-						System.out.println("failMovesPick: "+failMovesPick);
+					System.out.println("randomProb: " + randomProb);
+
+					if (probPickI > probPickH) {
+						if (randomProb <= probPickI) {
+							int indexLeastSimInstance = leastSim(heap);
+							carried.add(heap.get(indexLeastSimInstance));
+							System.out.println("succesfull pick instance");
+							heap.remove(indexLeastSimInstance);	
+						}
+						else {
+							System.out.println("failed to pick");
+							failMovesPick++;
+							failMovesGlobal++;
+						}
 					}
-					else{
-						System.out.println("failed to pick");
-						failMovesPick++;
-						failMovesGlobal++;
+					else if (probPickI < probPickH) {
+						if (randomProb <= probPickH) {
+							for (int i = 0; i< heap.size(); i++){
+								carried = heap;
+								System.out.println("succesfull pick heap");
+							}
+							clusters.removeAll(heap);
+						}
+						else {
+							System.out.println("failed to pick");
+							failMovesPick++;
+							failMovesGlobal++;
+						}
 					}
-					if (failMovesPick >= maxFailMoves*2) {
-						System.out.println("failMovesPick: "+failMovesPick);
-						System.out.println("failMovesPick >maxFailMoves, stop algorithm");
-						stopSign =1;
+					if (failMovesPick >= maxFailMoves * 4) {
+						System.out.println("failMovesPick: " + failMovesPick);
+						System.out
+								.println("failMovesPick >maxFailMoves, stop algorithm");
+						stopSign = 1;
 					}
-					/*
-					 * if (randomProb > probPick) { failMovesGlobal++; }
-					 */
-				
 				}
 			}
-			// System.out.println("-------instance picked, carried: " +carried);
 		}
 		Dataset[] output = new Dataset[clusters.size()];
-		System.out.println("clusters.size()"+clusters.size());
+		System.out.println("clusters.size()" + clusters.size());
 		for (int i = 0; i < clusters.size(); i++) {
 			output[i] = new SimpleDataset();
 			Vector<Instance> getCluster = new Vector<Instance>();
 			getCluster = clusters.get(i);
-			System.out.println("cluster size: "+getCluster.size());
+			System.out.println("cluster size: " + getCluster.size());
 			for (int k = 0; k < getCluster.size(); k++) {
 				output[i].addInstance(getCluster.get(k));
 			}
 		}
 		return output;
 	}
-
 }
