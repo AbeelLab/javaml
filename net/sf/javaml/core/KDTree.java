@@ -102,7 +102,7 @@ public class KDTree {
      * @throws Exception
      *             if something goes wrong
      */
-    public void setInstances(Dataset instances) throws Exception {
+    public void setInstances(Dataset instances)  {
         buildKDTree(instances);
     }
 
@@ -115,7 +115,7 @@ public class KDTree {
      * @throws Exception
      *             if something goes wrong
      */
-    private void buildKDTree(Dataset instances) throws Exception {
+    private void buildKDTree(Dataset instances) {
         data = instances;
         int numInst = data.size();
 
@@ -215,7 +215,7 @@ public class KDTree {
      * @throws Exception
      *             if something goes wrong
      */
-    public void centerInstances(Instance[] centers, int[] assignments, double pc) throws Exception {
+    public void centerInstances(Instance[] centers, int[] assignments, double pc)  {
 
         int[] centList = new int[centers.length];
         for (int i = 0; i < centers.length; i++)
@@ -558,7 +558,7 @@ public class KDTree {
          * @throws Exception
          *             if instance couldn't be retrieved
          */
-        private void makeKDTreeNode(int[] num, double[][] ranges, int start, int end) throws Exception {
+        private void makeKDTreeNode(int[] num, double[][] ranges, int start, int end){
             m_NodeRanges = ranges;
             makeKDTreeNode(num, start, end);
         }
@@ -578,7 +578,7 @@ public class KDTree {
          * @throws Exception
          *             if instance couldn't be retrieved
          */
-        void makeKDTreeNode(int[] num, int start, int end) throws Exception {
+        void makeKDTreeNode(int[] num, int start, int end) {
 
             num[0]++;
             m_NodeNumber = num[0];
@@ -905,7 +905,7 @@ public class KDTree {
          *             if something goes wrong
          */
         private void determineAssignments(Instance[] centers, int[] candidates, int[] assignments, double pc)
-                throws Exception {
+                {
 
             // reduce number of owners for current hyper rectangle
             int[] owners = refineOwners(centers, candidates);
@@ -940,7 +940,7 @@ public class KDTree {
          * @throws Exception
          *             if something goes wrong
          */
-        private int[] refineOwners(Instance[] centers, int[] candidates) throws Exception {
+        private int[] refineOwners(Instance[] centers, int[] candidates) {
 
             int[] owners = new int[candidates.length];
             double minDistance = Double.MAX_VALUE;
@@ -1023,7 +1023,7 @@ public class KDTree {
          * @throws Exception
          *             if something goes wrong
          */
-        private boolean candidateIsFullOwner(Instance candidate, Instance competitor) throws Exception {
+        private boolean candidateIsFullOwner(Instance candidate, Instance competitor) {
 
             // get extreme point
 
@@ -1052,7 +1052,7 @@ public class KDTree {
          * @throws Exception
          *             if something goes wrong
          */
-        private double distanceToHrect(Instance x) throws Exception {
+        private double distanceToHrect(Instance x)  {
             double distance = 0.0;
 
            
@@ -1093,7 +1093,7 @@ public class KDTree {
          *             if something goes wrong
          */
         public void assignSubToCenters(double[][] ranges, Instance[] centers, int[] centList, int[] assignments)
-                throws Exception {
+               {
 
             // todo: undecided situations
 
