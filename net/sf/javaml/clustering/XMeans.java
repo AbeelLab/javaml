@@ -236,7 +236,8 @@ public class XMeans implements Clusterer {
      *             if the clusterer has not been generated successfully
      */
     public Dataset[] executeClustering(Dataset data) {
-        // TODO implement
+        this.data=data;
+        
         m_NumSplits = 0;
         m_NumSplitsDone = 0;
         m_NumSplitsStillDone = 0;

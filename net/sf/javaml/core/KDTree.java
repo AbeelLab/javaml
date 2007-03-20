@@ -81,6 +81,8 @@ public class KDTree {
 
     private Dataset data;
 
+    //private double[][] m_Ranges;
+
     /**
      * Constructor, copies all options from an existing KDTree.
      * 
@@ -106,7 +108,93 @@ public class KDTree {
     public void setInstances(Dataset instances) {
         buildKDTree(instances);
     }
+  
+    /**
+     * Initializes the ranges using all instances of the dataset. Sets m_Ranges.
+     * 
+     * @return the ranges
+     */
+    // Being used in other classes (KDTree).
+    private double[][] initializeRanges() {
 
+        int numAtt = data.getInstance(0).size();
+        double[][] ranges = new double[numAtt][3];
+
+        // initialize ranges using the first instance
+        updateRangesFirst(data.getInstance(0), numAtt, ranges);
+
+        // update ranges, starting from the second
+        for (int i = 1; i < data.size(); i++) {
+            updateRanges(data.getInstance(i), numAtt, ranges);
+        }
+      //  m_Ranges = ranges;
+        // System.out.println("Initialized ranges");
+        // printRanges(m_Ranges);
+        return ranges;
+    }
+    /**
+     * Updates the minimum and maximum and width values for all the
+     * attributes based on a new instance.
+     * 
+     * @param instance
+     *            the new instance
+     * @param numAtt
+     *            number of attributes in the model
+     * @param ranges
+     *            low, high and width values for all attributes
+     */
+    // Being used in the functions above
+    void updateRanges(Instance instance, int numAtt, double[][] ranges) {
+
+        // updateRangesFirst must have been called on ranges
+        for (int j = 0; j < numAtt; j++) {
+            double value = instance.getValue(j);
+            if (value < ranges[j][R_MIN]) {
+                ranges[j][R_MIN] = value;
+                ranges[j][R_WIDTH] = ranges[j][R_MAX] - ranges[j][R_MIN];
+                if (value > ranges[j][R_MAX]) { // if this is the first
+                    // value that is
+                    ranges[j][R_MAX] = value; // not missing. The,0
+                    ranges[j][R_WIDTH] = ranges[j][R_MAX] - ranges[j][R_MIN];
+                }
+            } else {
+                if (value > ranges[j][R_MAX]) {
+                    ranges[j][R_MAX] = value;
+                    ranges[j][R_WIDTH] = ranges[j][R_MAX] - ranges[j][R_MIN];
+                }
+            }
+
+        }
+    }
+
+    /**
+     * Used to initialize the ranges. For this the values of the first
+     * instance is used to save time. Sets low and high to the values of the
+     * first instance and width to zero.
+     * 
+     * @param instance
+     *            the new instance
+     * @param numAtt
+     *            number of attributes in the model
+     * @param ranges
+     *            low, high and width values for all attributes
+     */
+    // being used in the functions above
+    void updateRangesFirst(Instance instance, int numAtt, double[][] ranges) {
+
+        // try {
+        // throw new Exception();
+        // } catch(Exception ex) { ex.printStackTrace(); }
+
+        // System.out.println("In ranges the first supplied instance is:\n"+
+        // instance.toString());
+        for (int j = 0; j < numAtt; j++) {
+            ranges[j][R_MIN] = instance.getValue(j);
+            ranges[j][R_MAX] = instance.getValue(j);
+            ranges[j][R_WIDTH] = 0.0;
+
+        }
+    }
     /**
      * Builds the KDTree. It is adviseable to run the replace missing attributes
      * filter on the passed instances first.
@@ -131,7 +219,7 @@ public class KDTree {
         m_Root = new KDTreeNode();
 
         // set global ranges
-        m_Universe = DatasetTools.getRanges(data, dm);
+        m_Universe = initializeRanges();
 
         // build the tree
         int[] num = new int[1];
@@ -268,9 +356,9 @@ public class KDTree {
      * @return true is value of instance is smaller or equal value
      */
     private boolean valueIsSmallerEqual(Instance instance, int dim, double value) { // This
-                                                                                    // stays
+        // stays
         return instance.getValue(dim) <= value; // Utils.smOrEq(instance.value(dim),
-                                                // value);
+        // value);
     }
 
     /**
@@ -682,7 +770,7 @@ public class KDTree {
          * @param startIdx
          *            start index of the subset of instances in the indices
          *            array
-         * @param endIdx
+         * @param endIdx`
          *            end index of the subset of instances in the indices array
          * @return the ranges
          */
@@ -701,59 +789,71 @@ public class KDTree {
 
             return ranges;
         }
+
         /**
-         * Updates the minimum and maximum and width values for all the attributes
-         * based on a new instance.
-         * @param instance the new instance
-         * @param numAtt number of attributes in the model
-         * @param ranges low, high and width values for all attributes
-         */ //Being used in the functions above
-        private void updateRanges(Instance instance, int numAtt, double [][] ranges) {
-          
-          // updateRangesFirst must have been called on ranges
-          for (int j = 0; j < numAtt; j++) {
-            double value = instance.getValue(j);
-              if (value < ranges[j][R_MIN]) {
-                ranges[j][R_MIN] = value;
-                ranges[j][R_WIDTH] = ranges[j][R_MAX] - ranges[j][R_MIN];
-                if(value > ranges[j][R_MAX]) { //if this is the first value that is
-                  ranges[j][R_MAX] = value;    //not missing. The,0
-                  ranges[j][R_WIDTH] = ranges[j][R_MAX] - ranges[j][R_MIN];
+         * Updates the minimum and maximum and width values for all the
+         * attributes based on a new instance.
+         * 
+         * @param instance
+         *            the new instance
+         * @param numAtt
+         *            number of attributes in the model
+         * @param ranges
+         *            low, high and width values for all attributes
+         */
+        // Being used in the functions above
+        private void updateRanges(Instance instance, int numAtt, double[][] ranges) {
+
+            // updateRangesFirst must have been called on ranges
+            for (int j = 0; j < numAtt; j++) {
+                double value = instance.getValue(j);
+                if (value < ranges[j][R_MIN]) {
+                    ranges[j][R_MIN] = value;
+                    ranges[j][R_WIDTH] = ranges[j][R_MAX] - ranges[j][R_MIN];
+                    if (value > ranges[j][R_MAX]) { // if this is the first
+                        // value that is
+                        ranges[j][R_MAX] = value; // not missing. The,0
+                        ranges[j][R_WIDTH] = ranges[j][R_MAX] - ranges[j][R_MIN];
+                    }
+                } else {
+                    if (value > ranges[j][R_MAX]) {
+                        ranges[j][R_MAX] = value;
+                        ranges[j][R_WIDTH] = ranges[j][R_MAX] - ranges[j][R_MIN];
+                    }
                 }
-              } else {
-                if (value > ranges[j][R_MAX]) {
-                  ranges[j][R_MAX] = value;
-                  ranges[j][R_WIDTH] = ranges[j][R_MAX] - ranges[j][R_MIN];
-                }
-              }
-            
-          }
+
+            }
         }
+
         /**
          * Used to initialize the ranges. For this the values of the first
-         * instance is used to save time.
-         * Sets low and high to the values of the first instance and
-         * width to zero.
-         * @param instance the new instance
-         * @param numAtt number of attributes in the model
-         * @param ranges low, high and width values for all attributes
-         */  //being used in the functions above
-        private void updateRangesFirst(Instance instance, int numAtt,
-                                      double[][] ranges) {
-          
-          //try {
-          //  throw new Exception();
-          //} catch(Exception ex) { ex.printStackTrace(); }
-          
-          //System.out.println("In ranges the first supplied instance is:\n"+
-          //                   instance.toString());
-          for (int j = 0; j < numAtt; j++) {
-              ranges[j][R_MIN] = instance.getValue(j);
-              ranges[j][R_MAX] = instance.getValue(j);
-              ranges[j][R_WIDTH] = 0.0;
-           
-          }
+         * instance is used to save time. Sets low and high to the values of the
+         * first instance and width to zero.
+         * 
+         * @param instance
+         *            the new instance
+         * @param numAtt
+         *            number of attributes in the model
+         * @param ranges
+         *            low, high and width values for all attributes
+         */
+        // being used in the functions above
+        private void updateRangesFirst(Instance instance, int numAtt, double[][] ranges) {
+
+            // try {
+            // throw new Exception();
+            // } catch(Exception ex) { ex.printStackTrace(); }
+
+            // System.out.println("In ranges the first supplied instance is:\n"+
+            // instance.toString());
+            for (int j = 0; j < numAtt; j++) {
+                ranges[j][R_MIN] = instance.getValue(j);
+                ranges[j][R_MAX] = instance.getValue(j);
+                ranges[j][R_WIDTH] = 0.0;
+
+            }
         }
+
         /**
          * Returns the widest dimension.
          * 
@@ -803,13 +903,15 @@ public class KDTree {
 
         /**
          * Returns value in the middle of the two parameter values.
-         * @param ranges the ranges to this dimension
+         * 
+         * @param ranges
+         *            the ranges to this dimension
          * @return the middle value
          */
         private double getMiddle(double[] ranges) {
 
-          double middle = ranges[R_MIN] + ranges[R_WIDTH] * 0.5;
-          return middle;
+            double middle = ranges[R_MIN] + ranges[R_WIDTH] * 0.5;
+            return middle;
         }
 
         /**
@@ -884,26 +986,30 @@ public class KDTree {
 
         /**
          * Updates the ranges given a new instance.
-         * @param instance the new instance
-         * @param ranges low, high and width values for all attributes
-         */  //being used in other classes (KDTree)
-        public double [][] updateRanges(Instance instance, double [][] ranges) {
-             
-          // updateRangesFirst must have been called on ranges
-          for (int j = 0; j < ranges.length; j++) {
-            double value = instance.getValue(j);
-              if (value < ranges[j][R_MIN]) {
-                ranges[j][R_MIN] = value;
-                ranges[j][R_WIDTH] = ranges[j][R_MAX] - ranges[j][R_MIN];
-              } else {
-                if (instance.getValue(j) > ranges[j][R_MAX]) {
-                  ranges[j][R_MAX] = value;
-                  ranges[j][R_WIDTH] = ranges[j][R_MAX] - ranges[j][R_MIN];
+         * 
+         * @param instance
+         *            the new instance
+         * @param ranges
+         *            low, high and width values for all attributes
+         */
+        // being used in other classes (KDTree)
+        public double[][] updateRanges(Instance instance, double[][] ranges) {
+
+            // updateRangesFirst must have been called on ranges
+            for (int j = 0; j < ranges.length; j++) {
+                double value = instance.getValue(j);
+                if (value < ranges[j][R_MIN]) {
+                    ranges[j][R_MIN] = value;
+                    ranges[j][R_WIDTH] = ranges[j][R_MAX] - ranges[j][R_MIN];
+                } else {
+                    if (instance.getValue(j) > ranges[j][R_MAX]) {
+                        ranges[j][R_MAX] = value;
+                        ranges[j][R_WIDTH] = ranges[j][R_MAX] - ranges[j][R_MIN];
+                    }
+
                 }
-              
             }
-          }
-          return ranges;
+            return ranges;
         }
 
         /**
@@ -1242,7 +1348,7 @@ public class KDTree {
             int bestPoint = 0;
             for (int i = 0; i < pointList.length; i++) {
                 double dist = dm.calculateDistance(instance, allPoints[pointList[i]]);// ,
-                                                                                        // Double.MAX_VALUE);
+                // Double.MAX_VALUE);
                 if (dist < minDist) {
                     minDist = dist;
                     bestPoint = i;
