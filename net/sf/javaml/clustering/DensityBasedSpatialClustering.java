@@ -24,19 +24,15 @@
  */
 package net.sf.javaml.clustering;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
 import net.sf.javaml.core.Dataset;
-import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.SimpleDataset;
 import net.sf.javaml.distance.DistanceMeasure;
 import net.sf.javaml.distance.NormalizedEuclideanDistance;
 
-public class DensityBasedSpatialClustering implements Clusterer {
-
-    private DistanceMeasure dm;
+public class DensityBasedSpatialClustering extends AbstractDensityBasedClustering implements Clusterer {
 
     /**
      * Specifies the radius for a range-query
@@ -64,21 +60,7 @@ public class DensityBasedSpatialClustering implements Clusterer {
         this.minPoints = minPoints;
     }
 
-    private List<DataObject> epsilonRangeQuery(double epsilon, DataObject inst) {
-        
-        ArrayList<DataObject> epsilonRange_List = new ArrayList<DataObject>();
-
-        for (int i = 0; i < dataset.size(); i++) {
-            DataObject tmp = dataset.get(i);
-            double distance = dm.calculateDistance(tmp.instance, inst.instance);
-            if (distance < epsilon) {
-                epsilonRange_List.add(tmp);
-            }
-        }
-
-        return epsilonRange_List;
-        
-    }
+    
 
     /**
      * Assigns this dataObject to a cluster or remains it as NOISE
@@ -145,32 +127,7 @@ public class DensityBasedSpatialClustering implements Clusterer {
         return true;
     }
 
-    class DataObject {
-        int clusterIndex = -1;
-
-        static final int UNCLASSIFIED = -1;
-
-        static final int NOISE = -2;
-
-        Instance instance;
-
-        public DataObject(Instance inst) {
-            this.instance = inst;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            DataObject tmp=(DataObject)obj;
-            return tmp.instance.equals(this.instance);
-        }
-
-        @Override
-        public int hashCode() {
-           return this.instance.hashCode();
-        }
-    }
-
-    private Vector<DataObject> dataset = null;
+    
 
     private Dataset originalData = null;
 
@@ -178,7 +135,7 @@ public class DensityBasedSpatialClustering implements Clusterer {
         this.originalData = data;
         this.dm = new NormalizedEuclideanDistance(this.originalData);
         this.clusterID = 0;
-        this.dataset = new Vector<DataObject>();
+        dataset = new Vector<DataObject>();
         for (int i = 0; i < data.size(); i++) {
             dataset.add(new DataObject(data.getInstance(i)));
 
