@@ -33,7 +33,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import net.sf.javaml.clustering.Clusterer;
 import net.sf.javaml.clustering.MultiKMeans;
 import net.sf.javaml.clustering.evaluation.Tau;
 import net.sf.javaml.core.Dataset;
@@ -93,17 +92,12 @@ public class VisualTestMultiKMeans extends JPanel {
 
         private Color color;
 
-        private Clusterer km;
-
-       private int tmpI;
-
+     
         public ClusterLabel(Dataset data, Color color, int width, int height, MultiKMeans km2, Color[] colors, int i) {
             this.setPreferredSize(new Dimension(width, height));
             this.data = data;
             this.color = color;
-            this.km = km2;
-             this.tmpI = i;
-            this.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+           this.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         }
 
         @Override

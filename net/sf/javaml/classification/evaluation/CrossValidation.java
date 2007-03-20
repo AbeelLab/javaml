@@ -28,7 +28,6 @@ import java.util.Random;
 import java.util.Vector;
 
 import net.sf.javaml.classification.Classifier;
-import net.sf.javaml.classification.svm.SMOPlatt;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.SimpleDataset;

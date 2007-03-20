@@ -94,16 +94,11 @@ public class VisualTestIterativeKMeans extends JPanel {
 
         private Color color;
 
-        private IterativeKMeans km;
-
-       private int tmpI;
-
+    
         public ClusterLabel(Dataset data, Color color, int width, int height, IterativeKMeans km2, Color[] colors, int i) {
             this.setPreferredSize(new Dimension(width, height));
             this.data = data;
             this.color = color;
-            this.km = km2;
-             this.tmpI = i;
             this.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         }
 

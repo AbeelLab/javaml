@@ -24,8 +24,6 @@
  */
 package net.sf.javaml.clustering.mcl;
 
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
 import java.util.Vector;
 
 import net.sf.javaml.clustering.Clusterer;
@@ -33,7 +31,6 @@ import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.SimpleDataset;
 import net.sf.javaml.distance.DistanceMeasure;
-import net.sf.javaml.distance.NormalizedEuclideanDistance;
 
 public class MCL implements Clusterer {
 

@@ -139,73 +139,73 @@ public class ArrayOperations {
         }
     }
 
-    /**
-     * Implements quicksort according to Manber's "Introduction to Algorithms".
-     * 
-     * @param array
-     *            the array of integers to be sorted
-     * @param index
-     *            the index into the array of integers
-     * @param left
-     *            the first index of the subset to be sorted
-     * @param right
-     *            the last index of the subset to be sorted
-     */
-    // @ requires 0 <= first && first <= right && right < array.length;
-    // @ requires (\forall int i; 0 <= i && i < index.length; 0 <= index[i] &&
-    // index[i] < array.length);
-    // @ requires array != index;
-    // assignable index;
-    private static void quickSort(/* @non_null@ */int[] array, /* @non_null@ */int[] index, int left, int right) {
+//    /**
+//     * Implements quicksort according to Manber's "Introduction to Algorithms".
+//     * 
+//     * @param array
+//     *            the array of integers to be sorted
+//     * @param index
+//     *            the index into the array of integers
+//     * @param left
+//     *            the first index of the subset to be sorted
+//     * @param right
+//     *            the last index of the subset to be sorted
+//     */
+//    // @ requires 0 <= first && first <= right && right < array.length;
+//    // @ requires (\forall int i; 0 <= i && i < index.length; 0 <= index[i] &&
+//    // index[i] < array.length);
+//    // @ requires array != index;
+//    // assignable index;
+//    private static void quickSort(/* @non_null@ */int[] array, /* @non_null@ */int[] index, int left, int right) {
+//
+//        if (left < right) {
+//            int middle = partition(array, index, left, right);
+//            quickSort(array, index, left, middle);
+//            quickSort(array, index, middle + 1, right);
+//        }
+//    }
 
-        if (left < right) {
-            int middle = partition(array, index, left, right);
-            quickSort(array, index, left, middle);
-            quickSort(array, index, middle + 1, right);
-        }
-    }
-
-    /**
-     * Partitions the instances around a pivot. Used by quicksort and
-     * kthSmallestValue.
-     * 
-     * @param array
-     *            the array of integers to be sorted
-     * @param index
-     *            the index into the array of integers
-     * @param l
-     *            the first index of the subset
-     * @param r
-     *            the last index of the subset
-     * 
-     * @return the index of the middle element
-     */
-    private static int partition(int[] array, int[] index, int l, int r) {
-
-        double pivot = array[index[(l + r) / 2]];
-        int help;
-
-        while (l < r) {
-            while ((array[index[l]] < pivot) && (l < r)) {
-                l++;
-            }
-            while ((array[index[r]] > pivot) && (l < r)) {
-                r--;
-            }
-            if (l < r) {
-                help = index[l];
-                index[l] = index[r];
-                index[r] = help;
-                l++;
-                r--;
-            }
-        }
-        if ((l == r) && (array[index[r]] > pivot)) {
-            r--;
-        }
-
-        return r;
-    }
+//    /**
+//     * Partitions the instances around a pivot. Used by quicksort and
+//     * kthSmallestValue.
+//     * 
+//     * @param array
+//     *            the array of integers to be sorted
+//     * @param index
+//     *            the index into the array of integers
+//     * @param l
+//     *            the first index of the subset
+//     * @param r
+//     *            the last index of the subset
+//     * 
+//     * @return the index of the middle element
+//     */
+//    private static int partition(int[] array, int[] index, int l, int r) {
+//
+//        double pivot = array[index[(l + r) / 2]];
+//        int help;
+//
+//        while (l < r) {
+//            while ((array[index[l]] < pivot) && (l < r)) {
+//                l++;
+//            }
+//            while ((array[index[r]] > pivot) && (l < r)) {
+//                r--;
+//            }
+//            if (l < r) {
+//                help = index[l];
+//                index[l] = index[r];
+//                index[r] = help;
+//                l++;
+//                r--;
+//            }
+//        }
+//        if ((l == r) && (array[index[r]] > pivot)) {
+//            r--;
+//        }
+//
+//        return r;
+//    }
 
     /**
      * Partitions the instances around a pivot. Used by quicksort and

@@ -96,16 +96,12 @@ public class VisualTestAQBC  extends JPanel {
 
         private Color color;
 
-        private AdaptiveQualityBasedClustering km;
-
-        private int tmpI;
-
+     
+       
         public ClusterLabel(Dataset data, Color color, int width, int height, AdaptiveQualityBasedClustering km, Color[] colors, int i) {
             this.setPreferredSize(new Dimension(width, height));
             this.data = data;
             this.color = color;
-            this.km = km;
-            this.tmpI = i;
             this.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         }
 

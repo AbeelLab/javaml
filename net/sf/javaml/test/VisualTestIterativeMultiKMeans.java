@@ -36,10 +36,6 @@ import javax.swing.JPanel;
 import net.sf.javaml.clustering.IterativeMultiKMeans;
 import net.sf.javaml.clustering.SimpleKMeans;
 import net.sf.javaml.clustering.evaluation.CIndex;
-import net.sf.javaml.clustering.evaluation.Gamma;
-import net.sf.javaml.clustering.evaluation.SumOfAveragePairwiseSimilarities;
-import net.sf.javaml.clustering.evaluation.SumOfCentroidSimilarities;
-import net.sf.javaml.clustering.evaluation.SumOfSquaredErrors;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.distance.EuclideanDistance;
@@ -92,16 +88,11 @@ public class VisualTestIterativeMultiKMeans extends JPanel {
 
         private Color color;
 
-        private SimpleKMeans km;
-
-       private int tmpI;
-
+     
         public ClusterLabel(Dataset data, Color color, int width, int height, SimpleKMeans km, Color[] colors, int i) {
             this.setPreferredSize(new Dimension(width, height));
             this.data = data;
             this.color = color;
-            this.km = km;
-             this.tmpI = i;
             this.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         }
 

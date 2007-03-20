@@ -35,7 +35,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import net.sf.javaml.clustering.DensityBasedSpatialClustering;
-import net.sf.javaml.clustering.SimpleKMeans;
 import net.sf.javaml.clustering.evaluation.CIndex;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;

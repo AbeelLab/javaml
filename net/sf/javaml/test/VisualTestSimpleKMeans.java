@@ -99,14 +99,12 @@ public class VisualTestSimpleKMeans extends JPanel {
         private SimpleKMeans km;
 
        
-        private int tmpI;
-
+       
         public ClusterLabel(Dataset data, Color color, int width, int height, SimpleKMeans km, Color[] colors, int i) {
             this.setPreferredSize(new Dimension(width, height));
             this.data = data;
             this.color = color;
             this.km = km;
-            this.tmpI = i;
             this.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         }
 
@@ -120,14 +118,14 @@ public class VisualTestSimpleKMeans extends JPanel {
 
             }
             if (km != null) {
-                Instance[] centroids = km.getCentroids();
-                for (int i = 0; i < centroids.length; i++) {
-                    g.setColor(Color.GRAY);
-                    g.fillRect((int) centroids[i].getValue(0) - 4, (int) centroids[i].getValue(1) - 4, 8, 8);
-
-                }
-                g.setColor(Color.BLACK);
-                g.fillRect((int) centroids[tmpI].getValue(0) - 4, (int) centroids[tmpI].getValue(1) - 4, 8, 8);
+//                Instance[] centroids = km.getCentroids();
+//                for (int i = 0; i < centroids.length; i++) {
+//                    g.setColor(Color.GRAY);
+//                    g.fillRect((int) centroids[i].getValue(0) - 4, (int) centroids[i].getValue(1) - 4, 8, 8);
+//
+//                }
+//                g.setColor(Color.BLACK);
+//                g.fillRect((int) centroids[tmpI].getValue(0) - 4, (int) centroids[tmpI].getValue(1) - 4, 8, 8);
 
             }
 

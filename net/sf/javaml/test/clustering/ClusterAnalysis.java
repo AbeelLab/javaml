@@ -27,28 +27,12 @@ package net.sf.javaml.test.clustering;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-import org.apache.commons.math.stat.StatUtils;
-
 import net.sf.javaml.clustering.Clusterer;
 import net.sf.javaml.clustering.XMeans;
-import net.sf.javaml.clustering.evaluation.AICScore;
-import net.sf.javaml.clustering.evaluation.BICScore;
-import net.sf.javaml.clustering.evaluation.CIndex;
-import net.sf.javaml.clustering.evaluation.ClusterEvaluation;
-import net.sf.javaml.clustering.evaluation.GPlus;
-import net.sf.javaml.clustering.evaluation.Gamma;
-import net.sf.javaml.clustering.evaluation.HybridCentroidSimilarity;
-import net.sf.javaml.clustering.evaluation.HybridPairwiseSimilarities;
-import net.sf.javaml.clustering.evaluation.MinMaxCut;
-import net.sf.javaml.clustering.evaluation.PointBiserial;
-import net.sf.javaml.clustering.evaluation.SumOfAveragePairwiseSimilarities;
-import net.sf.javaml.clustering.evaluation.SumOfCentroidSimilarities;
-import net.sf.javaml.clustering.evaluation.SumOfSquaredErrors;
-import net.sf.javaml.clustering.evaluation.Tau;
-import net.sf.javaml.clustering.evaluation.TraceScatterMatrix;
-import net.sf.javaml.clustering.evaluation.WB;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.tools.DatasetGenerator;
+
+import org.apache.commons.math.stat.StatUtils;
 
 public class ClusterAnalysis {
 
