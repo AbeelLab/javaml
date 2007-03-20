@@ -28,61 +28,57 @@
 
 package net.sf.javaml.clustering;
 
-
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Enumeration;
-import java.util.GregorianCalendar;
-import java.util.Iterator;
 import java.util.List;
 import java.util.TreeMap;
 import java.util.Vector;
 
-
-import net.sf.javaml.clustering.AbstractDensityBasedClustering.DataObject;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.SimpleDataset;
+import net.sf.javaml.distance.NormalizedEuclideanDistance;
 
 /**
- * Mihael Ankerst, Markus M. Breunig, Hans-Peter Kriegel, Joerg Sander: OPTICS: Ordering Points To Identify the Clustering Structure. In: ACM SIGMOD International Conference on Management of Data, 49-60, 1999.
- * <p/>
- *
- *
+ * Mihael Ankerst, Markus M. Breunig, Hans-Peter Kriegel, Joerg Sander: OPTICS:
+ * Ordering Points To Identify the Clustering Structure. In: ACM SIGMOD
+ * International Conference on Management of Data, 49-60, 1999. <p/>
+ * 
+ * 
  * @author Matthias Schubert (schubert@dbs.ifi.lmu.de)
  * @author Zhanna Melnikova-Albrecht (melnikov@cip.ifi.lmu.de)
  * @author Rainer Holzmann (holzmann@cip.ifi.lmu.de)
  * @author Thomas Abeel
  */
-public class OPTICS extends AbstractDensityBasedClustering implements Clusterer{
+public class OPTICS extends AbstractDensityBasedClustering implements Clusterer {
 
-   
     /**
      * Specifies the radius for a range-query
      */
-    private double epsilon = 0.9;
+    private double epsilon = 0.1;
 
     /**
-     * Specifies the density (the range-query must contain at least minPoints DataObjects)
+     * Specifies the density (the range-query must contain at least minPoints
+     * DataObjects)
      */
     private int minPoints = 6;
+
     /**
-     * Emits the k next-neighbours and performs an epsilon-range-query at the parallel.
-     * The returned list contains two elements:
-     * At index=0 --> list with all k next-neighbours;
-     * At index=1 --> list with all dataObjects within epsilon;
-     * @param k number of next neighbours
-     * @param epsilon Specifies the range for the query
-     * @param dataObject the start object
-     * @return list with the k-next neighbours (PriorityQueueElements) and a list
-     *         with candidates from the epsilon-range-query (EpsilonRange_ListElements)
+     * Emits the k next-neighbours and performs an epsilon-range-query at the
+     * parallel. The returned list contains two elements: At index=0 --> list
+     * with all k next-neighbours; At index=1 --> list with all dataObjects
+     * within epsilon;
+     * 
+     * @param k
+     *            number of next neighbours
+     * @param epsilon
+     *            Specifies the range for the query
+     * @param dataObject
+     *            the start object
+     * @return list with the k-next neighbours (PriorityQueueElements) and a
+     *         list with candidates from the epsilon-range-query
+     *         (EpsilonRange_ListElements)
      */
     public List k_nextNeighbourQuery(int k, double epsilon, DataObject dataObject) {
-//        Iterator iterator = dataObjectIterator();
+        // Iterator iterator = dataObjectIterator();
 
         List return_List = new ArrayList();
         List nextNeighbours_List = new ArrayList();
@@ -90,18 +86,22 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer{
 
         PriorityQueue priorityQueue = new PriorityQueue();
 
-        //while (iterator.hasNext()) {
-        for(int i=0;i<dataset.size();i++){
-            DataObject next_dataObject = dataset.get(i);//(DataObject) iterator.next();
-            double dist = dm.calculateDistance(dataObject.instance,next_dataObject.instance);
+        // while (iterator.hasNext()) {
+        for (int i = 0; i < dataset.size(); i++) {
+            DataObject next_dataObject = dataset.get(i);// (DataObject)
+                                                        // iterator.next();
+            //System.out.println(dataObject.instance);
+           // System.out.println(next_dataObject.instance);
+            double dist = dm.calculateDistance(dataObject.instance, next_dataObject.instance);
 
-            if (dist <= epsilon) epsilonRange_List.add(new EpsilonRange_ListElement(dist, next_dataObject));
+            if (dist <= epsilon)
+                epsilonRange_List.add(new EpsilonRange_ListElement(dist, next_dataObject));
 
             if (priorityQueue.size() < k) {
                 priorityQueue.add(dist, next_dataObject);
             } else {
                 if (dist < priorityQueue.getPriority(0)) {
-                    priorityQueue.next(); //removes the highest distance
+                    priorityQueue.next(); // removes the highest distance
                     priorityQueue.add(dist, next_dataObject);
                 }
             }
@@ -115,18 +115,24 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer{
         return_List.add(epsilonRange_List);
         return return_List;
     }
+
     /**
-     * Calculates the coreDistance for the specified DataObject.
-     * The returned list contains three elements:
-     * At index=0 --> list with all k next-neighbours;
-     * At index=1 --> list with all dataObjects within epsilon;
+     * Calculates the coreDistance for the specified DataObject. The returned
+     * list contains three elements: At index=0 --> list with all k
+     * next-neighbours; At index=1 --> list with all dataObjects within epsilon;
      * At index=2 --> coreDistance as Double-value
-     * @param minPoints minPoints-many neighbours within epsilon must be found to have a non-undefined coreDistance
-     * @param epsilon Specifies the range for the query
-     * @param dataObject Calculate coreDistance for this dataObject
-     * @return list with the k-next neighbours (PriorityQueueElements) and a list
-     *         with candidates from the epsilon-range-query (EpsilonRange_ListElements) and
-     *         the double-value for the calculated coreDistance
+     * 
+     * @param minPoints
+     *            minPoints-many neighbours within epsilon must be found to have
+     *            a non-undefined coreDistance
+     * @param epsilon
+     *            Specifies the range for the query
+     * @param dataObject
+     *            Calculate coreDistance for this dataObject
+     * @return list with the k-next neighbours (PriorityQueueElements) and a
+     *         list with candidates from the epsilon-range-query
+     *         (EpsilonRange_ListElements) and the double-value for the
+     *         calculated coreDistance
      */
     private List coreDistance(int minPoints, double epsilon, DataObject dataObject) {
         List list = k_nextNeighbourQuery(minPoints, epsilon, dataObject);
@@ -136,8 +142,8 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer{
             return list;
         } else {
             List nextNeighbours_List = (List) list.get(0);
-            PriorityQueueElement priorityQueueElement =
-                    (PriorityQueueElement) nextNeighbours_List.get(nextNeighbours_List.size() - 1);
+            PriorityQueueElement priorityQueueElement = (PriorityQueueElement) nextNeighbours_List
+                    .get(nextNeighbours_List.size() - 1);
             if (priorityQueueElement.getPriority() <= epsilon) {
                 list.add(new Double(priorityQueueElement.getPriority()));
                 return list;
@@ -147,31 +153,35 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer{
             }
         }
     }
+
     /**
      * Expands the ClusterOrder for this dataObject
-     * @param dataObject Start-DataObject
-     * @param seeds SeedList that stores dataObjects with reachability-distances
+     * 
+     * @param dataObject
+     *            Start-DataObject
+     * @param seeds
+     *            SeedList that stores dataObjects with reachability-distances
      */
     private void expandClusterOrder(DataObject dataObject, UpdateQueue seeds) {
         List list = coreDistance(minPoints, epsilon, dataObject);
         List epsilonRange_List = (List) list.get(1);
-        dataObject.r_dist=DataObject.UNDEFINED;
-        dataObject.c_dist=((Double) list.get(2)).doubleValue();
-        dataObject.processed=true;
+        dataObject.r_dist = DataObject.UNDEFINED;
+        dataObject.c_dist = ((Double) list.get(2)).doubleValue();
+        dataObject.processed = true;
 
         resultVector.addElement(dataObject);
-
+        dataObject.clusterIndex=clusterID;
         if (dataObject.c_dist != DataObject.UNDEFINED) {
             update(seeds, epsilonRange_List, dataObject);
             while (seeds.hasNext()) {
                 UpdateQueueElement updateQueueElement = seeds.next();
                 DataObject currentDataObject = (DataObject) updateQueueElement.getObject();
-                currentDataObject.r_dist=updateQueueElement.getPriority();
+                currentDataObject.r_dist = updateQueueElement.getPriority();
                 List list_1 = coreDistance(minPoints, epsilon, currentDataObject);
                 List epsilonRange_List_1 = (List) list_1.get(1);
-                currentDataObject.c_dist=((Double) list_1.get(2)).doubleValue();
-                currentDataObject.processed=true;
-
+                currentDataObject.c_dist = ((Double) list_1.get(2)).doubleValue();
+                currentDataObject.processed = true;
+                currentDataObject.clusterIndex=clusterID;
                 resultVector.addElement(currentDataObject);
 
                 if (currentDataObject.c_dist != DataObject.UNDEFINED) {
@@ -181,10 +191,15 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer{
         }
     }
 
-   /**
+    /**
      * Updates reachability-distances in the Seeds-List
-     * @param seeds UpdateQueue that holds DataObjects with their corresponding reachability-distances
-     * @param epsilonRange_list List of DataObjects that were found in epsilon-range of centralObject
+     * 
+     * @param seeds
+     *            UpdateQueue that holds DataObjects with their corresponding
+     *            reachability-distances
+     * @param epsilonRange_list
+     *            List of DataObjects that were found in epsilon-range of
+     *            centralObject
      * @param centralObject
      */
     private void update(UpdateQueue seeds, List epsilonRange_list, DataObject centralObject) {
@@ -208,31 +223,39 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer{
      */
     public String toString() {
         StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append("OPTICS clustering results\n" +
-                "============================================================================================\n\n");
+        stringBuffer.append("OPTICS clustering results\n"
+                + "============================================================================================\n\n");
         stringBuffer.append("Clustered DataObjects: " + dataset.size() + "\n");
-        //stringBuffer.append("Number of attributes: " + database.getInstances().numAttributes() + "\n");
+        // stringBuffer.append("Number of attributes: " +
+        // database.getInstances().numAttributes() + "\n");
         stringBuffer.append("Epsilon: " + epsilon + "; minPoints: " + minPoints + "\n");
-        //stringBuffer.append("Write results to file: " + (writeOPTICSresults ? "yes" : "no") + "\n");
-        //stringBuffer.append("Index: " + getDatabase_Type() + "\n");
-        //stringBuffer.append("Distance-type: " + getDatabase_distanceType() + "\n");
-        //stringBuffer.append("Number of generated clusters: " + numberOfGeneratedClusters + "\n");
-        //DecimalFormat decimalFormat = new DecimalFormat(".##");
-        //stringBuffer.append("Elapsed time: " + decimalFormat.format(elapsedTime) + "\n\n");
+        // stringBuffer.append("Write results to file: " + (writeOPTICSresults ?
+        // "yes" : "no") + "\n");
+        // stringBuffer.append("Index: " + getDatabase_Type() + "\n");
+        // stringBuffer.append("Distance-type: " + getDatabase_distanceType() +
+        // "\n");
+        // stringBuffer.append("Number of generated clusters: " +
+        // numberOfGeneratedClusters + "\n");
+        // DecimalFormat decimalFormat = new DecimalFormat(".##");
+        // stringBuffer.append("Elapsed time: " +
+        // decimalFormat.format(elapsedTime) + "\n\n");
 
-//        for (int i = 0; i < resultVector.size(); i++) {
-//            stringBuffer.append(format_dataObject((DataObject) resultVector.elementAt(i)));
-//        }
+        // for (int i = 0; i < resultVector.size(); i++) {
+        // stringBuffer.append(format_dataObject((DataObject)
+        // resultVector.elementAt(i)));
+        // }
         return stringBuffer.toString() + "\n";
     }
 
-    private int clusterID=0;
+    private int clusterID = 0;
+
     private Vector<DataObject> resultVector;
+
     public Dataset[] executeClustering(Dataset data) {
-//      can clusterer handle the data?
-      
+        // can clusterer handle the data?
+        this.dm = new NormalizedEuclideanDistance(data);
         resultVector = new Vector<DataObject>();
-       
+
         dataset = new Vector<DataObject>();
         for (int i = 0; i < data.size(); i++) {
             dataset.add(new DataObject(data.getInstance(i)));
@@ -241,35 +264,38 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer{
         UpdateQueue seeds = new UpdateQueue();
 
         /** OPTICS-Begin */
-        for(int i=0;i<dataset.size();i++){
-            DataObject tmp=dataset.get(i);
-            if(tmp.clusterIndex==DataObject.UNCLASSIFIED){
+        for (int i = 0; i < dataset.size(); i++) {
+            //System.out.println("Dataitem: "+i);
+            DataObject tmp = dataset.get(i);
+            if (!tmp.processed) {
                 expandClusterOrder(tmp, seeds);
+                clusterID++;
             }
+            
         }
-       Dataset[] clusters = new Dataset[clusterID+1];
-        System.out.println("Number of clusters: "+clusterID);
+        Dataset[] clusters = new Dataset[clusterID + 1];
+        System.out.println("Number of clusters: " + clusterID);
         for (int i = 0; i < clusters.length; i++) {
             clusters[i] = new SimpleDataset();
         }
-        int noiseCount=0;
-        int notKnownCount=0;
+        int noiseCount = 0;
+        int notKnownCount = 0;
         for (DataObject dataObject : dataset) {
-            if(dataObject.clusterIndex>=0)
+            if (dataObject.clusterIndex >= 0)
                 clusters[dataObject.clusterIndex].addInstance(dataObject.instance);
-            if(DataObject.NOISE==dataObject.clusterIndex){
+            if (DataObject.NOISE == dataObject.clusterIndex) {
                 clusters[clusterID].addInstance(dataObject.instance);
                 noiseCount++;
             }
-            if(DataObject.UNCLASSIFIED==dataObject.clusterIndex)
+            if (DataObject.UNCLASSIFIED == dataObject.clusterIndex)
                 notKnownCount++;
         }
-        System.out.println("Noise data items: "+noiseCount);
-        System.out.println("Unknown data items: "+notKnownCount);
+        System.out.println("Noise data items: " + noiseCount);
+        System.out.println("Unknown data items: " + notKnownCount);
         return clusters;
-        
-        
+
     }
+
     class UpdateQueue {
 
         /**
@@ -287,9 +313,10 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer{
         // *****************************************************************************************************************
 
         /**
-         * Creates a new PriorityQueue (backed on a binary heap) with the ability to efficiently
-         * update the priority of the stored objects in the heap. The ascending (!) queue is
-         * dynamically growing and shrinking.
+         * Creates a new PriorityQueue (backed on a binary heap) with the
+         * ability to efficiently update the priority of the stored objects in
+         * the heap. The ascending (!) queue is dynamically growing and
+         * shrinking.
          */
         public UpdateQueue() {
             queue = new ArrayList();
@@ -302,8 +329,12 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer{
 
         /**
          * Adds a new Object to the queue
-         * @param priority The priority associated with the object (in this case: the reachability-distance)
-         * @param objectKey The key for this object
+         * 
+         * @param priority
+         *            The priority associated with the object (in this case: the
+         *            reachability-distance)
+         * @param objectKey
+         *            The key for this object
          * @param o
          */
         public void add(double priority, Object o, String objectKey) {
@@ -311,7 +342,8 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer{
 
             if (objectPositionsInHeap.containsKey(objectKey)) {
                 objectPosition = ((Integer) objectPositionsInHeap.get(objectKey)).intValue();
-                if (((UpdateQueueElement) queue.get(objectPosition)).getPriority() <= priority) return;
+                if (((UpdateQueueElement) queue.get(objectPosition)).getPriority() <= priority)
+                    return;
                 queue.set(objectPosition++, new UpdateQueueElement(priority, o, objectKey));
             } else {
                 queue.add(new UpdateQueueElement(priority, o, objectKey));
@@ -322,7 +354,9 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer{
 
         /**
          * Returns the priority for the object at the specified index
-         * @param index the index of the object
+         * 
+         * @param index
+         *            the index of the object
          * @return priority
          */
         public double getPriority(int index) {
@@ -340,9 +374,9 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer{
 
             /** ascending order! */
             while (c > 0 && getPriority(c - 1) > recentlyInsertedElement.getPriority()) {
-                queue.set(a - 1, queue.get(c - 1));       //shift parent-node down
+                queue.set(a - 1, queue.get(c - 1)); // shift parent-node down
                 objectPositionsInHeap.put(((UpdateQueueElement) queue.get(a - 1)).getObjectKey(), new Integer(a - 1));
-                a = c;                                    //(c <= 0) => no parent-node remains
+                a = c; // (c <= 0) => no parent-node remains
                 c = a / 2;
             }
             queue.set(a - 1, recentlyInsertedElement);
@@ -354,18 +388,20 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer{
          */
         private void heapValueDownwards() {
             int a = 1;
-            int c = 2 * a;           //descendant
+            int c = 2 * a; // descendant
 
             UpdateQueueElement updateQueueElement = (UpdateQueueElement) queue.get(a - 1);
 
-            if (c < size() && (getPriority(c) < getPriority(c - 1))) c++;
+            if (c < size() && (getPriority(c) < getPriority(c - 1)))
+                c++;
 
             while (c <= size() && getPriority(c - 1) < updateQueueElement.getPriority()) {
                 queue.set(a - 1, queue.get(c - 1));
                 objectPositionsInHeap.put(((UpdateQueueElement) queue.get(a - 1)).getObjectKey(), new Integer(a - 1));
                 a = c;
                 c = 2 * a;
-                if (c < size() && (getPriority(c) < getPriority(c - 1))) c++;
+                if (c < size() && (getPriority(c) < getPriority(c - 1)))
+                    c++;
             }
             queue.set(a - 1, updateQueueElement);
             objectPositionsInHeap.put(((UpdateQueueElement) queue.get(a - 1)).getObjectKey(), new Integer(a - 1));
@@ -373,6 +409,7 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer{
 
         /**
          * Returns the queue's size
+         * 
          * @return size
          */
         public int size() {
@@ -381,6 +418,7 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer{
 
         /**
          * Tests, if the queue has some more elements left
+         * 
          * @return true, if there are any elements left, else false
          */
         public boolean hasNext() {
@@ -389,6 +427,7 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer{
 
         /**
          * Returns the element with the lowest priority
+         * 
          * @return next element
          */
         public UpdateQueueElement next() {
@@ -407,10 +446,12 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer{
         // *****************************************************************************************************************
 
     }
+
     class UpdateQueueElement {
 
         /**
-         * Holds the priority for the object (in this case: the reachability-distance)
+         * Holds the priority for the object (in this case: the
+         * reachability-distance)
          */
         private double priority;
 
@@ -439,6 +480,7 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer{
 
         /**
          * Returns the priority for this object
+         * 
          * @return priority
          */
         public double getPriority() {
@@ -447,6 +489,7 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer{
 
         /**
          * Returns the object
+         * 
          * @return
          */
         public Object getObject() {
@@ -455,6 +498,7 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer{
 
         /**
          * Returns the key
+         * 
          * @return objectKey
          */
         public String getObjectKey() {
@@ -465,6 +509,7 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer{
         // inner classes
         // *****************************************************************************************************************
     }
+
     class EpsilonRange_ListElement {
 
         /**
@@ -484,12 +529,15 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer{
         /**
          * Constructs a new Element that is stored in the ArrayList which is
          * built in the k_nextNeighbourQuery-method from a specified database.
-         * This structure is chosen to deliver not only the DataObjects that
-         * are within the epsilon-range but also deliver the distances that
-         * were calculated. This reduces the amount of distance-calculations
-         * within some data-mining-algorithms.
-         * @param distance The calculated distance for this dataObject
-         * @param dataObject A dataObject that is within the epsilon-range
+         * This structure is chosen to deliver not only the DataObjects that are
+         * within the epsilon-range but also deliver the distances that were
+         * calculated. This reduces the amount of distance-calculations within
+         * some data-mining-algorithms.
+         * 
+         * @param distance
+         *            The calculated distance for this dataObject
+         * @param dataObject
+         *            A dataObject that is within the epsilon-range
          */
         public EpsilonRange_ListElement(double distance, DataObject dataObject) {
             this.distance = distance;
@@ -501,9 +549,10 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer{
         // *****************************************************************************************************************
 
         /**
-         * Returns the distance that was calulcated for this dataObject
-         * (The distance between this dataObject and the dataObject for which an epsilon-range-query
-         * was performed.)
+         * Returns the distance that was calulcated for this dataObject (The
+         * distance between this dataObject and the dataObject for which an
+         * epsilon-range-query was performed.)
+         * 
          * @return distance
          */
         public double getDistance() {
@@ -512,6 +561,7 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer{
 
         /**
          * Returns this dataObject
+         * 
          * @return dataObject
          */
         public DataObject getDataObject() {
@@ -523,6 +573,7 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer{
         // *****************************************************************************************************************
 
     }
+
     class PriorityQueue {
 
         /**
@@ -536,8 +587,8 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer{
 
         /**
          * Creates a new PriorityQueue backed on a binary heap. The queue is
-         * dynamically growing and shrinking and it is descending, that is: the highest
-         * priority is always in the root.
+         * dynamically growing and shrinking and it is descending, that is: the
+         * highest priority is always in the root.
          */
         public PriorityQueue() {
             queue = new ArrayList();
@@ -549,7 +600,9 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer{
 
         /**
          * Adds a new Object to the queue
-         * @param priority The priority associated with the object
+         * 
+         * @param priority
+         *            The priority associated with the object
          * @param o
          */
         public void add(double priority, Object o) {
@@ -559,7 +612,9 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer{
 
         /**
          * Returns the priority for the object at the specified index
-         * @param index the index of the object
+         * 
+         * @param index
+         *            the index of the object
          * @return priority
          */
         public double getPriority(int index) {
@@ -576,8 +631,8 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer{
             PriorityQueueElement recentlyInsertedElement = (PriorityQueueElement) queue.get(a - 1);
 
             while (c > 0 && getPriority(c - 1) < recentlyInsertedElement.getPriority()) {
-                queue.set(a - 1, queue.get(c - 1));       //shift parent-node down
-                a = c;                                    //(c <= 0) => no parent-node remains
+                queue.set(a - 1, queue.get(c - 1)); // shift parent-node down
+                a = c; // (c <= 0) => no parent-node remains
                 c = a / 2;
             }
             queue.set(a - 1, recentlyInsertedElement);
@@ -588,23 +643,26 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer{
          */
         private void heapValueDownwards() {
             int a = 1;
-            int c = 2 * a;           //descendant
+            int c = 2 * a; // descendant
 
             PriorityQueueElement priorityQueueElement = (PriorityQueueElement) queue.get(a - 1);
 
-            if (c < size() && (getPriority(c) > getPriority(c - 1))) c++;
+            if (c < size() && (getPriority(c) > getPriority(c - 1)))
+                c++;
 
             while (c <= size() && getPriority(c - 1) > priorityQueueElement.getPriority()) {
                 queue.set(a - 1, queue.get(c - 1));
                 a = c;
                 c = 2 * a;
-                if (c < size() && (getPriority(c) > getPriority(c - 1))) c++;
+                if (c < size() && (getPriority(c) > getPriority(c - 1)))
+                    c++;
             }
             queue.set(a - 1, priorityQueueElement);
         }
 
         /**
          * Returns the queue's size
+         * 
          * @return size
          */
         public int size() {
@@ -613,6 +671,7 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer{
 
         /**
          * Tests, if the queue has some more elements left
+         * 
          * @return true, if there are any elements left, else false
          */
         public boolean hasNext() {
@@ -621,6 +680,7 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer{
 
         /**
          * Returns the element with the highest priority
+         * 
          * @return next element
          */
         public PriorityQueueElement next() {
@@ -638,6 +698,7 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer{
         // *****************************************************************************************************************
 
     }
+
     class PriorityQueueElement {
 
         /**
@@ -664,6 +725,7 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer{
 
         /**
          * Returns the priority for this object
+         * 
          * @return priority
          */
         public double getPriority() {
@@ -672,6 +734,7 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer{
 
         /**
          * Returns the object
+         * 
          * @return
          */
         public Object getObject() {
@@ -684,4 +747,3 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer{
 
     }
 }
-
