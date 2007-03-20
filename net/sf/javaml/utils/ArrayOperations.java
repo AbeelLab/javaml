@@ -277,13 +277,13 @@ public class ArrayOperations {
      *            the first array
      * @param b
      *            the second array
-     * @return the substraction of the second minus the first array
+     * @return the substraction of the first minus the second array
      */
     public static float[] substract(float[] a, float[] b) {
         float[] out = new float[a.length];
 
         for (int i = 0; i < a.length; i++) {
-            out[i] = b[i] - a[i];
+            out[i] = a[i] - b[i];
         }
 
         return out;

@@ -211,7 +211,7 @@ public class XMeans implements Clusterer {
 
             // converge in conventional K-means
             // ----------------------------------
-            PFD(0, "\nConverge in K-Means:");
+            //PFD(0, "\nConverge in K-Means:");
             while (!converged && !stopKMeansIteration(kMeansIteration, m_MaxKMeans)) {
 
                 kMeansIteration++;
@@ -237,7 +237,7 @@ public class XMeans implements Clusterer {
             // BIC before split distortioning the centres
             m_Mle = distortion(instOfCent, m_ClusterCenters);
             bic = calculateBIC(instOfCent, m_ClusterCenters, m_Mle);
-            PFD(0, "m_Bic " + bic);
+           // PFD(0, "m_Bic " + bic);
 
             int currNumCent = m_ClusterCenters.length;
             Instance[] splitCenters = new Instance[currNumCent * 2];// (m_ClusterCenters,
@@ -254,7 +254,7 @@ public class XMeans implements Clusterer {
             // && currNumCent + numSplits <= m_MaxNumClusters
             ; i++) {
 
-                PFD(0, "\nsplit center " + i + " " + m_ClusterCenters[i]);
+                //PFD(0, "\nsplit center " + i + " " + m_ClusterCenters[i]);
                 Instance currCenter = m_ClusterCenters[i];
                 int[] currInstList = instOfCent[i];
                 int currNumInst = instOfCent[i].length;
@@ -272,9 +272,9 @@ public class XMeans implements Clusterer {
                 // split centers ----------------------------------------------
                 double variance = m_Mle[i] / (double) currNumInst;
                 children = splitCenter(rg, currCenter, variance);
-                System.out.println("Preparing split: ");
-                System.out.println("\tChild 1: " + children[0]);
-                System.out.println("\tChild 2: " + children[1]);
+//                System.out.println("Preparing split: ");
+//                System.out.println("\tChild 1: " + children[0]);
+//                System.out.println("\tChild 2: " + children[1]);
                 // initialize assignments to -1
                 int[] oneCentAssignments = initAssignments(currNumInst);
                 int[][] instOfChCent = new int[2][]; // todo maybe split
@@ -283,7 +283,7 @@ public class XMeans implements Clusterer {
                 // converge the children --------------------------------------
                 converged = false;
                 int kMeansForChildrenIteration = 0;
-                PFD(0, "\nConverge, K-Means for children: " + i);
+                //PFD(0, "\nConverge, K-Means for children: " + i);
                 while (!converged && !stopKMeansIteration(kMeansForChildrenIteration, m_MaxKMeansForChildren)) {
                     kMeansForChildrenIteration++;
                     converged = assignToCenters(children, instOfChCent, currInstList, oneCentAssignments);
@@ -296,9 +296,9 @@ public class XMeans implements Clusterer {
                 splitCenters[splitIndex++] = children[0];// .instance(0));
                 splitCenters[splitIndex++] = children[1];// .instance(1));
 
-                PFD(0, "\nconverged children ");
-                PFD(0, " " + children[0]);
-                PFD(0, " " + children[1]);
+//                PFD(0, "\nconverged children ");
+//                PFD(0, " " + children[0]);
+//                PFD(0, " " + children[1]);
 
                 // compare parent and children model by their BIC-value
                 pbic[i] = calculateBIC(currInstList, currCenter, m_Mle[i]);
@@ -316,8 +316,8 @@ public class XMeans implements Clusterer {
             int newNumClusters = newClusterCenters.length;
             if (newNumClusters != m_NumClusters) {
 
-                PFD(0, "Compare with non-split");
-
+              //  PFD(0, "Compare with non-split");
+//
                 // initialize assignments to -1
                 int[] newClusterAssignments = initAssignments(data.size());
 
@@ -332,14 +332,14 @@ public class XMeans implements Clusterer {
 
                 double[] newMle = distortion(newInstOfCent, newClusterCenters);
                 double newBic = calculateBIC(newInstOfCent, newClusterCenters, newMle);
-                PFD(0, "newBic " + newBic);
+               // PFD(0, "newBic " + newBic);
                 if (newBic > bic) {
-                    PFD(0, "*** decide for new clusters");
+                   // PFD(0, "*** decide for new clusters");
                     bic = newBic;
                     m_ClusterCenters = newClusterCenters;
                     m_ClusterAssignments = newClusterAssignments;
                 } else {
-                    PFD(0, "*** keep old clusters");
+                   // PFD(0, "*** keep old clusters");
                 }
             }
 
@@ -360,7 +360,7 @@ public class XMeans implements Clusterer {
             int index = clusterProcessedInstance(inst, m_ClusterCenters);
             out[index].addInstance(inst);
         }
-        System.out.println(this.toString());
+       // System.out.println(this.toString());
         return out;
     }
 
@@ -2056,18 +2056,18 @@ public class XMeans implements Clusterer {
     // return (debugLevel == m_DebugLevel);
     // }
 
-    /**
-     * Does debug printouts.
-     * 
-     * @param debugLevel
-     *            level that gives according messages
-     * @param output
-     *            string that is printed
-     */
-    private void PFD(int debugLevel, String output) {
-
-        System.out.println(output);
-    }
+//    /**
+//     * Does debug printouts.
+//     * 
+//     * @param debugLevel
+//     *            level that gives according messages
+//     * @param output
+//     *            string that is printed
+//     */
+//    private void PFD(int debugLevel, String output) {
+//
+//        System.out.println(output);
+//    }
     //
     // /**
     // * Does debug printouts.

@@ -63,13 +63,13 @@ public class DatasetGenerator {
      */
     public static Dataset createClusterSquareDataset(float space, float clusterSpread,int itemsPerCluster) {
         Dataset out = new SimpleDataset();
-        System.out.println("Centers for space="+space+":");
+       // System.out.println("Centers for space="+space+":");
         float small=1.0f/4.0f;
         float large=3.0f/4.0f;
-        System.out.println(space * small+"\t"+space * small);
-        System.out.println(space * small+"\t"+space * large);
-        System.out.println(space * large+"\t"+space * small);
-        System.out.println(space * large+"\t"+space * large);
+//        System.out.println(space * small+"\t"+space * small);
+//        System.out.println(space * small+"\t"+space * large);
+//        System.out.println(space * large+"\t"+space * small);
+//        System.out.println(space * large+"\t"+space * large);
         
         Random rg = new Random(System.currentTimeMillis());
         for (int i = 0; i < itemsPerCluster; i++) {
@@ -96,13 +96,13 @@ public class DatasetGenerator {
 
     public static Dataset createClusterSquareDataset3D(float space, float clusterSpread,int itemsPerCluster) {
         Dataset out = new SimpleDataset();
-        System.out.println("Centers for space="+space+":");
+       // System.out.println("Centers for space="+space+":");
         float small=1.0f/4.0f;
         float large=3.0f/4.0f;
-        System.out.println(space * small+"\t"+space * small);
-        System.out.println(space * small+"\t"+space * large);
-        System.out.println(space * large+"\t"+space * small);
-        System.out.println(space * large+"\t"+space * large);
+//        System.out.println(space * small+"\t"+space * small);
+//        System.out.println(space * small+"\t"+space * large);
+//        System.out.println(space * large+"\t"+space * small);
+//        System.out.println(space * large+"\t"+space * large);
         
         Random rg = new Random(System.currentTimeMillis());
         for (int i = 0; i < itemsPerCluster; i++) {
