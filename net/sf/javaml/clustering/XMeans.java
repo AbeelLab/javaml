@@ -27,7 +27,6 @@
 package net.sf.javaml.clustering;
 
 import java.text.NumberFormat;
-import java.util.Arrays;
 import java.util.Random;
 
 import net.sf.javaml.core.Dataset;
@@ -117,7 +116,7 @@ public class XMeans implements Clusterer {
      * whether to use the KDTree (the KDTree is only initialized to be
      * configurable from the GUI)
      */
-    private boolean m_UseKDTree = false;
+    private boolean m_UseKDTree = true;
 
     /** counts iterations done in main loop */
     private int m_IterationCount = 0;
@@ -225,7 +224,7 @@ public class XMeans implements Clusterer {
 
                 // compute new centers = centers of mass of points
                 converged = recomputeCenters(m_ClusterCenters, instOfCent); // model
-                                                                            // information
+                // information
 
                 // PFD(0, "\nMain loop - Recompute - centers:");
                 // PrCentersFD(0);
@@ -274,8 +273,8 @@ public class XMeans implements Clusterer {
                 double variance = m_Mle[i] / (double) currNumInst;
                 children = splitCenter(rg, currCenter, variance);
                 System.out.println("Preparing split: ");
-                System.out.println("\tChild 1: "+children[0]);
-                System.out.println("\tChild 2: "+children[1]);
+                System.out.println("\tChild 1: " + children[0]);
+                System.out.println("\tChild 2: " + children[1]);
                 // initialize assignments to -1
                 int[] oneCentAssignments = initAssignments(currNumInst);
                 int[][] instOfChCent = new int[2][]; // todo maybe split
@@ -347,10 +346,9 @@ public class XMeans implements Clusterer {
             newNumClusters = m_ClusterCenters.length;
             // decide if finished: max num cluster reached
             // or last centers where not split at all
-            // if ((newNumClusters >= m_MaxNumClusters) || (newNumClusters ==
-            // m_NumClusters)) {
-            // finished = true;
-            // }
+            if ((newNumClusters >= m_MaxNumClusters) || (newNumClusters == m_NumClusters)) {
+                finished = true;
+            }
             m_NumClusters = newNumClusters;
         }
         Dataset[] out = new Dataset[m_NumClusters];
@@ -678,9 +676,8 @@ public class XMeans implements Clusterer {
         boolean converged = true;
         if (tree != null) {
             // using KDTree structure for assigning
-            converged = assignToCenters(tree, centers, instOfCent,
-             assignments, iterationCount);
-            //throw new RuntimeException("Tree not supported");
+            converged = assignToCenters(tree, centers, instOfCent, assignments, iterationCount);
+            // throw new RuntimeException("Tree not supported");
         } else {
             converged = assignToCenters(centers, instOfCent, allInstList, assignments);
         }
@@ -2034,19 +2031,19 @@ public class XMeans implements Clusterer {
         return temp.toString();
     }
 
-    /**
-     * Print centers for debug.
-     * 
-     * @param debugLevel
-     *            level that gives according messages
-     */
-    private void PrCentersFD(int debugLevel) {
-
-        for (int i = 0; i < m_ClusterCenters.length; i++) {
-            System.out.println(m_ClusterCenters[i]);
-
-        }
-    }
+//    /**
+//     * Print centers for debug.
+//     * 
+//     * @param debugLevel
+//     *            level that gives according messages
+//     */
+//    private void PrCentersFD(int debugLevel) {
+//
+//        for (int i = 0; i < m_ClusterCenters.length; i++) {
+//            System.out.println(m_ClusterCenters[i]);
+//
+//        }
+//    }
 
     // /**
     // * Tests on debug status.
