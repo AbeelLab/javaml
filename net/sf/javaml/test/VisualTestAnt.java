@@ -57,10 +57,10 @@ public class VisualTestAnt extends JPanel {
     public VisualTestAnt()throws Exception {
         this.setLayout(new GridLayout(0, 5));
         int space = 200;
-        Dataset data = DatasetGenerator.createClusterSquareDataset(space, 8, 20);
+        Dataset data = DatasetGenerator.createClusterSquareDataset(space, 8, 25);
         //Dataset data=DatasetLoader.loadDataset(new File("machine.data"));
         this.add(createLabel(data, Color.BLACK, space, space, null, null, 0));
-        Ant km = new Ant(500, 50);
+        Ant km = new Ant(5000, 250, 250);
         Dataset[] clusters = km.executeClustering(data);
 
         
