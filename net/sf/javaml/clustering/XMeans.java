@@ -27,6 +27,7 @@
 package net.sf.javaml.clustering;
 
 import java.text.NumberFormat;
+import java.util.Arrays;
 import java.util.Random;
 
 import net.sf.javaml.core.Dataset;
@@ -59,22 +60,7 @@ public class XMeans implements Clusterer {
 
     private Dataset data = null;
 
-    private Dataset model = null;
-
-    // /** training instances */
-    // private Instances m_Instances = null;
-    //
-    // /** model information, should increase readability */
-    // private Instances m_Model = null;
-    //  
-    // /** replace missing values in training instances */
-    // private ReplaceMissingValues m_ReplaceMissingFilter;
-
-    // /**
-    // * Distance value between true and false of binary attributes and
-    // * "same" and "different" of nominal attributes (default = 1.0).
-    // */
-    // private double m_BinValue = 1.0;
+    // private Dataset model = null;
 
     /** BIC-Score of the current model */
     private double bic = Double.MIN_VALUE;
@@ -83,7 +69,7 @@ public class XMeans implements Clusterer {
     private double[] m_Mle = null;
 
     /** maximum overall iterations */
-    private int m_MaxIterations = 1;
+    private int m_MaxIterations = 5;
 
     /**
      * maximum iterations to perform Kmeans part if negative, iterations are not
@@ -103,38 +89,13 @@ public class XMeans implements Clusterer {
     private int m_MinNumClusters = 2;
 
     /** max number of clusters to generate */
-    private int m_MaxNumClusters = 4;
+    private int m_MaxNumClusters = 10;
 
     /** the distance function used */
     private DistanceMeasure dm = new EuclideanDistance();
 
     /** cluster centers */
     private Instance[] m_ClusterCenters;
-
-//    /** file name of the output file for the cluster centers */
-//    private File m_InputCenterFile = new File(System.getProperty("user.dir"));
-
-    // /* --> DebugVectors - USED FOR DEBUGGING */
-    // /** input file for the random vectors --> USED FOR DEBUGGING */
-    // private Reader m_DebugVectorsInput = null;
-    // /** the index for the current debug vector */
-    // private int m_DebugVectorsIndex = 0;
-    // /** all the debug vectors */
-    // private Instances m_DebugVectors = null;
-
-    // /** file name of the input file for the random vectors */
-    // private File m_DebugVectorsFile = new
-    // File(System.getProperty("user.dir"));
-    //
-    // /** input file for the cluster centers */
-    // private Reader m_CenterInput = null;
-    //    
-    // /** file name of the output file for the cluster centers */
-    // private File m_OutputCenterFile = new
-    // File(System.getProperty("user.dir"));
-    //  
-    // /** output file for the cluster centers */
-    // private PrintWriter m_CenterOutput = null;
 
     /**
      * temporary variable holding cluster assignments while iterating
@@ -146,15 +107,6 @@ public class XMeans implements Clusterer {
      * relevant, if all children lost
      */
     private double m_CutOffFactor = 0.5;
-
-//    /** Index in ranges for LOW */
-//    private static int R_LOW = 0;
-//
-//    /** Index in ranges for HIGH */
-//    private static int R_HIGH = 1;
-//
-//    /** Index in ranges for WIDTH */
-//    private static int R_WIDTH = 2;
 
     /**
      * KDTrees class if KDTrees are used
@@ -182,51 +134,6 @@ public class XMeans implements Clusterer {
     /** Number of splits accepted just because of cutoff factor */
     private int m_NumSplitsStillDone = 0;
 
-//    /**
-//     * level of debug output, 0 is no output.
-//     */
-//    private int m_DebugLevel = 0;
-
-//    /** print the centers */
-//    public static int D_PRINTCENTERS = 1;
-//
-//    /** follows the splitting of the centers */
-//    public static int D_FOLLOWSPLIT = 2;
-//
-//    /** have a closer look at converge children */
-//    public static int D_CONVCHCLOSER = 3;
-//
-//    /** check on random vectors */
-//    public static int D_RANDOMVECTOR = 4;
-//
-//    /** check on kdtree */
-//    public static int D_KDTREE = 5;
-//
-//    /** follow iterations */
-//    public static int D_ITERCOUNT = 6;
-//
-//    /** functions were maybe misused */
-//    public static int D_METH_MISUSE = 80;
-//
-//    /** for current debug */
-//    public static int D_CURR = 88;
-//
-//    /** general debugging */
-//    public static int D_GENERAL = 99;
-//
-//    /** Flag: I'm debugging */
-//    public boolean m_CurrDebugFlag = true;
-
-    // /**
-    // * the default constructor
-    // */
-    // public XMeans() {
-    // super();
-    //    
-    // m_SeedDefault = 10;
-    // setSeed(m_SeedDefault);
-    // }
-
     /**
      * Generates the X-Means clusterer.
      * 
@@ -236,8 +143,8 @@ public class XMeans implements Clusterer {
      *             if the clusterer has not been generated successfully
      */
     public Dataset[] executeClustering(Dataset data) {
-        this.data=data;
-        
+        this.data = data;
+
         m_NumSplits = 0;
         m_NumSplitsDone = 0;
         m_NumSplitsStillDone = 0;
@@ -259,13 +166,11 @@ public class XMeans implements Clusterer {
             allInstList[i] = i;
         }
 
-        // set model used (just for convenience)
-        model = new SimpleDataset();
+        // // set model used (just for convenience)
+        // model = new SimpleDataset();
 
-       
         // makes the first centers randomly
         m_ClusterCenters = makeCentersRandomly(rg, data, m_NumClusters);
-        
 
         boolean finished = false;
         Instance[] children;
@@ -292,7 +197,7 @@ public class XMeans implements Clusterer {
              * 1. Improve-Params conventional K-means
              */
 
-             m_IterationCount++;
+            m_IterationCount++;
 
             // prepare to converge
             boolean converged = false;
@@ -307,7 +212,7 @@ public class XMeans implements Clusterer {
 
             // converge in conventional K-means
             // ----------------------------------
-            // PFD(D_FOLLOWSPLIT, "\nConverge in K-Means:");
+            PFD(0, "\nConverge in K-Means:");
             while (!converged && !stopKMeansIteration(kMeansIteration, m_MaxKMeans)) {
 
                 kMeansIteration++;
@@ -318,25 +223,22 @@ public class XMeans implements Clusterer {
                 converged = assignToCenters(m_UseKDTree ? m_KDTree : null, m_ClusterCenters, instOfCent, allInstList,
                         m_ClusterAssignments, kMeansIteration);
 
-                // PFD(D_FOLLOWSPLIT, "\nMain loop - Assign - centers:");
-                // PrCentersFD(D_FOLLOWSPLIT);
                 // compute new centers = centers of mass of points
-                converged = recomputeCenters(m_ClusterCenters, // clusters
-                        instOfCent, // their instances
-                        model); // model information
-                // PFD(D_FOLLOWSPLIT, "\nMain loop - Recompute - centers:");
-                // PrCentersFD(D_FOLLOWSPLIT);
+                converged = recomputeCenters(m_ClusterCenters, instOfCent); // model
+                                                                            // information
+
+                // PFD(0, "\nMain loop - Recompute - centers:");
+                // PrCentersFD(0);
             }
-            
+
             /**
-             * =====================================================================
-             * 2. Improve-Structur
+             * ===================== 2. Improve-Structure =====================
              */
 
             // BIC before split distortioning the centres
             m_Mle = distortion(instOfCent, m_ClusterCenters);
             bic = calculateBIC(instOfCent, m_ClusterCenters, m_Mle);
-            // PFD(D_FOLLOWSPLIT, "m_Bic " + bic);
+            PFD(0, "m_Bic " + bic);
 
             int currNumCent = m_ClusterCenters.length;
             Instance[] splitCenters = new Instance[currNumCent * 2];// (m_ClusterCenters,
@@ -353,8 +255,7 @@ public class XMeans implements Clusterer {
             // && currNumCent + numSplits <= m_MaxNumClusters
             ; i++) {
 
-                // PFD(D_FOLLOWSPLIT, "\nsplit center " + i + " " +
-                // m_ClusterCenters.instance(i));
+                PFD(0, "\nsplit center " + i + " " + m_ClusterCenters[i]);
                 Instance currCenter = m_ClusterCenters[i];
                 int[] currInstList = instOfCent[i];
                 int currNumInst = instOfCent[i].length;
@@ -371,8 +272,10 @@ public class XMeans implements Clusterer {
 
                 // split centers ----------------------------------------------
                 double variance = m_Mle[i] / (double) currNumInst;
-                children = splitCenter(rg, currCenter, variance, model);
-
+                children = splitCenter(rg, currCenter, variance);
+                System.out.println("Preparing split: ");
+                System.out.println("\tChild 1: "+children[0]);
+                System.out.println("\tChild 2: "+children[1]);
                 // initialize assignments to -1
                 int[] oneCentAssignments = initAssignments(currNumInst);
                 int[][] instOfChCent = new int[2][]; // todo maybe split
@@ -381,14 +284,12 @@ public class XMeans implements Clusterer {
                 // converge the children --------------------------------------
                 converged = false;
                 int kMeansForChildrenIteration = 0;
-                // PFD(D_FOLLOWSPLIT, "\nConverge, K-Means for children: " + i);
+                PFD(0, "\nConverge, K-Means for children: " + i);
                 while (!converged && !stopKMeansIteration(kMeansForChildrenIteration, m_MaxKMeansForChildren)) {
                     kMeansForChildrenIteration++;
-
                     converged = assignToCenters(children, instOfChCent, currInstList, oneCentAssignments);
-
                     if (!converged) {
-                        recomputeCentersFast(children, instOfChCent, model);
+                        recomputeCentersFast(children, instOfChCent);
                     }
                 }
 
@@ -396,12 +297,12 @@ public class XMeans implements Clusterer {
                 splitCenters[splitIndex++] = children[0];// .instance(0));
                 splitCenters[splitIndex++] = children[1];// .instance(1));
 
-                // PFD(D_FOLLOWSPLIT, "\nconverged cildren ");
-                // PFD(D_FOLLOWSPLIT, " " + children.instance(0));
-                // PFD(D_FOLLOWSPLIT, " " + children.instance(1));
+                PFD(0, "\nconverged children ");
+                PFD(0, " " + children[0]);
+                PFD(0, " " + children[1]);
 
                 // compare parent and children model by their BIC-value
-                pbic[i] = calculateBIC(currInstList, currCenter, m_Mle[i], model);
+                pbic[i] = calculateBIC(currInstList, currCenter, m_Mle[i]);
                 double[] chMLE = distortion(instOfChCent, children);
                 cbic[i] = calculateBIC(instOfChCent, children, chMLE);
 
@@ -416,7 +317,7 @@ public class XMeans implements Clusterer {
             int newNumClusters = newClusterCenters.length;
             if (newNumClusters != m_NumClusters) {
 
-                // PFD(D_FOLLOWSPLIT, "Compare with non-split");
+                PFD(0, "Compare with non-split");
 
                 // initialize assignments to -1
                 int[] newClusterAssignments = initAssignments(data.size());
@@ -432,35 +333,36 @@ public class XMeans implements Clusterer {
 
                 double[] newMle = distortion(newInstOfCent, newClusterCenters);
                 double newBic = calculateBIC(newInstOfCent, newClusterCenters, newMle);
-                // PFD(D_FOLLOWSPLIT, "newBic " + newBic);
+                PFD(0, "newBic " + newBic);
                 if (newBic > bic) {
-                    // PFD(D_FOLLOWSPLIT, "*** decide for new clusters");
+                    PFD(0, "*** decide for new clusters");
                     bic = newBic;
                     m_ClusterCenters = newClusterCenters;
                     m_ClusterAssignments = newClusterAssignments;
+                } else {
+                    PFD(0, "*** keep old clusters");
                 }
-                // else {
-                // //PFD(D_FOLLOWSPLIT, "*** keep old clusters");
-                // }
             }
 
             newNumClusters = m_ClusterCenters.length;
             // decide if finished: max num cluster reached
             // or last centers where not split at all
-            if ((newNumClusters >= m_MaxNumClusters) || (newNumClusters == m_NumClusters)) {
-                finished = true;
-            }
+            // if ((newNumClusters >= m_MaxNumClusters) || (newNumClusters ==
+            // m_NumClusters)) {
+            // finished = true;
+            // }
             m_NumClusters = newNumClusters;
         }
-        Dataset[]out=new Dataset[m_NumClusters];
-        for(int i=0;i<out.length;i++){
-            out[i]=new SimpleDataset();
+        Dataset[] out = new Dataset[m_NumClusters];
+        for (int i = 0; i < out.length; i++) {
+            out[i] = new SimpleDataset();
         }
-        for(int i=0;i<data.size();i++){
-            Instance inst=data.getInstance(i);
-            int index=clusterProcessedInstance(inst,m_ClusterCenters);
+        for (int i = 0; i < data.size(); i++) {
+            Instance inst = data.getInstance(i);
+            int index = clusterProcessedInstance(inst, m_ClusterCenters);
             out[index].addInstance(inst);
         }
+        System.out.println(this.toString());
         return out;
     }
 
@@ -477,7 +379,6 @@ public class XMeans implements Clusterer {
             ass[i] = -1;
         return ass;
     }
-
 
     /**
      * Returns new center list.
@@ -517,10 +418,10 @@ public class XMeans implements Clusterer {
                 // decide for splitting ----------------------------------------
                 splitWon[i] = true;
                 numToSplit++;
-                // PFD(D_FOLLOWSPLIT, "Center " + i + " decide for children");
+                // PFD(0, "Center " + i + " decide for children");
             } else {
                 // decide for parents and finished stays true -----------------
-                // PFD(D_FOLLOWSPLIT, "Center " + i + " decide for parent");
+                // PFD(0, "Center " + i + " decide for parent");
             }
         }
 
@@ -667,13 +568,15 @@ public class XMeans implements Clusterer {
      *            data model information
      * @return true if converged.
      */
-    private boolean recomputeCenters(Instance[] centers, int[][] instOfCent, Dataset model) {
+    // USED BY KMEANS
+    private boolean recomputeCenters(Instance[] centers, int[][] instOfCent) {
         boolean converged = true;
 
         for (int i = 0; i < centers.length; i++) {
             double val;
             float[] centerValues = centers[i].toArray();
-            for (int j = 0; j < model.size(); j++) {
+            for (int j = 0; j < centers[i].size(); j++) {
+
                 val = meanOrMode(data, instOfCent[i], j);
 
                 for (int k = 0; k < instOfCent[i].length; k++)
@@ -703,14 +606,13 @@ public class XMeans implements Clusterer {
      * @param model
      *            data model information
      */
-    private void recomputeCentersFast(Instance[] centers, int[][] instOfCentIndexes, Dataset model) {
+    private void recomputeCentersFast(Instance[] centers, int[][] instOfCentIndexes) {
         for (int i = 0; i < centers.length; i++) {
             float[] centerValues = centers[i].toArray();
             double val;
             for (int j = 0; j < centerValues.length; j++) {
                 val = meanOrMode(data, instOfCentIndexes[i], j);
-                centerValues[j] = (float) val;// [].getInstance(i).setValue(j,
-                // val);
+                centerValues[j] = (float) val;
             }
             centers[i] = new SimpleInstance(centerValues, centers[i].getWeight(), centers[i].isClassSet(), centers[i]
                     .getClassValue());
@@ -776,7 +678,9 @@ public class XMeans implements Clusterer {
         boolean converged = true;
         if (tree != null) {
             // using KDTree structure for assigning
-            converged = assignToCenters(tree, centers, instOfCent, assignments, iterationCount);
+            converged = assignToCenters(tree, centers, instOfCent,
+             assignments, iterationCount);
+            //throw new RuntimeException("Tree not supported");
         } else {
             converged = assignToCenters(centers, instOfCent, allInstList, assignments);
         }
@@ -867,7 +771,7 @@ public class XMeans implements Clusterer {
     }
 
     /**
-     * Assign instances to centers. Part of conventionell K-Means, returns true
+     * Assign instances to centers. Part of conventional K-Means, returns true
      * if new assignment is the same as the last one.
      * 
      * @param centers
@@ -879,13 +783,13 @@ public class XMeans implements Clusterer {
      * @param assignments
      *            assignments of instances to centers
      * @return true if converged
-      */
+     */
     private boolean assignToCenters(Instance[] centers, int[][] instOfCent, int[] allInstList, int[] assignments) {
 
         // todo: undecided situations
         boolean converged = true; // true if new assignment is the same
         // as the old one
-
+        int[] counts = new int[centers.length];
         int numInst = allInstList.length;
         int numCent = centers.length;
         int[] numInstOfCent = new int[numCent];
@@ -911,7 +815,7 @@ public class XMeans implements Clusterer {
         for (int i = 0; i < numInst; i++) {
             Instance inst = data.getInstance(allInstList[i]);
             int newC = clusterProcessedInstance(inst, centers);
-
+            counts[newC]++;
             if (converged && newC != assignments[i]) {
                 converged = false;
             }
@@ -920,11 +824,15 @@ public class XMeans implements Clusterer {
             if (!converged)
                 assignments[i] = newC;
         }
+        for (int i = 0; i < counts.length; i++) {
+            if (counts[i] == 0)
+                converged = false;
+        }
 
         // the following is only done
         // if assignments are not the same, because too much effort
         if (!converged) {
-            // PFD(D_FOLLOWSPLIT, "assignToCenters -> it has NOT converged");
+            // PFD(0, "assignToCenters -> it has NOT converged");
             for (int i = 0; i < numCent; i++) {
                 instOfCent[i] = new int[numInstOfCent[i]];
             }
@@ -937,8 +845,8 @@ public class XMeans implements Clusterer {
                 }
             }
         }
-        // } else
-        // PFD(D_FOLLOWSPLIT, "assignToCenters -> it has converged");
+        // else
+        // PFD(0, "assignToCenters -> it has converged");
 
         return converged;
     }
@@ -981,10 +889,8 @@ public class XMeans implements Clusterer {
      * @param model
      *            data model valid
      * @return a pair of new centers
-     * @throws Exception
-     *             something in AlgVector goes wrong
      */
-    private Instance[] splitCenter(Random rg, Instance center, double variance, Dataset model) {
+    private Instance[] splitCenter(Random rg, Instance center, double variance) {
         m_NumSplits++;
         float[] randomValues = new float[center.size()];
         ArrayOperations.fillRandom(randomValues, rg);
@@ -998,7 +904,11 @@ public class XMeans implements Clusterer {
         // random vector of length = variance
         // r = new AlgVector(model, random);
         // }
-        ArrayOperations.changeLength(Math.pow(variance, 0.5), randomValues);
+        // System.out.println("PRE: "+Arrays.toString(randomValues));
+        ArrayOperations.changeLength(Math.sqrt(variance), randomValues);
+        // System.out.println("var="+variance);
+        // System.out.println(Arrays.toString(randomValues));
+        // System.out.println();
         // PFD(D_RANDOMVECTOR, "random vector *variance " + randomValues);
 
         // add random vector to center
@@ -1012,35 +922,37 @@ public class XMeans implements Clusterer {
         ArrayOperations.fillRandom(randomValues, rg);
         centerValues = ArrayOperations.substract(centerValues, randomValues);
         children[1] = new SimpleInstance(centerValues, center.getWeight(), center.isClassSet(), center.getClassValue());
-        // PFD(D_FOLLOWSPLIT, "second child " + newCenter);
+        // PFD(0, "second child " + newCenter);
 
         return children;
     }
 
-//    /**
-//     * Split centers in their region. (*Alternative version of splitCenter()*)
-//     * 
-//     * @param random
-//     *            the random number generator
-//     * @param instances
-//     *            of the region
-//     * @param model
-//     * @return a pair of new centers
-//     */
-//    private Instance[] splitCenters(Random random, Dataset instances, Dataset model) {
-//        Instance[] children = new Instance[2];// (model, 2);
-//        int instIndex = Math.abs(random.nextInt()) % instances.size();
-//        children[0] = instances.getInstance(instIndex);
-//        int instIndex2 = instIndex;
-//        int count = 0;
-//        while ((instIndex2 == instIndex) && count < 10) {
-//            count++;
-//            instIndex2 = Math.abs(random.nextInt()) % instances.size();// numInstances();
-//        }
-//        children[1] = instances.getInstance(instIndex2);
-//
-//        return children;
-//    }
+    // /**
+    // * Split centers in their region. (*Alternative version of splitCenter()*)
+    // *
+    // * @param random
+    // * the random number generator
+    // * @param instances
+    // * of the region
+    // * @param model
+    // * @return a pair of new centers
+    // */
+    // private Instance[] splitCenters(Random random, Dataset instances, Dataset
+    // model) {
+    // Instance[] children = new Instance[2];// (model, 2);
+    // int instIndex = Math.abs(random.nextInt()) % instances.size();
+    // children[0] = instances.getInstance(instIndex);
+    // int instIndex2 = instIndex;
+    // int count = 0;
+    // while ((instIndex2 == instIndex) && count < 10) {
+    // count++;
+    // instIndex2 = Math.abs(random.nextInt()) % instances.size();//
+    // numInstances();
+    // }
+    // children[1] = instances.getInstance(instIndex2);
+    //
+    // return children;
+    // }
 
     /**
      * Generates new centers randomly. Used for starting centers.
@@ -1078,7 +990,7 @@ public class XMeans implements Clusterer {
      *            the data model
      * @return the BIC value
      */
-    private double calculateBIC(int[] instList, Instance center, double mle, Dataset model) {
+    private double calculateBIC(int[] instList, Instance center, double mle) {
         int[][] w1 = new int[1][instList.length];
         for (int i = 0; i < instList.length; i++) {
             w1[0][i] = instList[i];
@@ -1251,25 +1163,26 @@ public class XMeans implements Clusterer {
         return bestCluster;
     }
 
-//    /**
-//     * Clusters an instance that has been through the filters.
-//     * 
-//     * @param instance
-//     *            the instance to assign a cluster to
-//     * @return a cluster number
-//     */
-//    private int clusterProcessedInstance(Instance instance) throws Exception {
-//        double minDist = Integer.MAX_VALUE;
-//        int bestCluster = 0;
-//        for (int i = 0; i < m_NumClusters; i++) {
-//            double dist = dm.calculateDistance(instance, m_ClusterCenters[i]);
-//            if (dist < minDist) {
-//                minDist = dist;
-//                bestCluster = i;
-//            }
-//        }
-//        return bestCluster;
-//    }
+    // /**
+    // * Clusters an instance that has been through the filters.
+    // *
+    // * @param instance
+    // * the instance to assign a cluster to
+    // * @return a cluster number
+    // */
+    // private int clusterProcessedInstance(Instance instance) throws Exception
+    // {
+    // double minDist = Integer.MAX_VALUE;
+    // int bestCluster = 0;
+    // for (int i = 0; i < m_NumClusters; i++) {
+    // double dist = dm.calculateDistance(instance, m_ClusterCenters[i]);
+    // if (dist < minDist) {
+    // minDist = dist;
+    // bestCluster = i;
+    // }
+    // }
+    // return bestCluster;
+    // }
 
     // /**
     // * Classifies a given instance.
@@ -1289,14 +1202,14 @@ public class XMeans implements Clusterer {
     // return clusterProcessedInstance(inst);
     // }
 
-//    /**
-//     * Returns the number of clusters.
-//     * 
-//     * @return the number of clusters generated for a training dataset.
-//     */
-//    private int numberOfClusters() {
-//        return m_NumClusters;
-//    }
+    // /**
+    // * Returns the number of clusters.
+    // *
+    // * @return the number of clusters generated for a training dataset.
+    // */
+    // private int numberOfClusters() {
+    // return m_NumClusters;
+    // }
 
     // /**
     // * Returns an enumeration describing the available options.
@@ -2105,7 +2018,7 @@ public class XMeans implements Clusterer {
         temp.append("\nCluster centers                 : " + m_NumClusters + " centers\n");
         for (int i = 0; i < m_NumClusters; i++) {
             temp.append("\nCluster " + i + "\n           ");
-            for (int j = 0; j < m_ClusterCenters.length; j++) {
+            for (int j = 0; j < m_ClusterCenters[0].size(); j++) {
                 // if (m_ClusterCenters.attribute(j).isNominal()) {
                 // temp.append(" " + m_ClusterCenters.attribute(j).value((int)
                 // m_ClusterCenters.instance(i).value(j)));
@@ -2121,19 +2034,19 @@ public class XMeans implements Clusterer {
         return temp.toString();
     }
 
-    // /**
-    // * Print centers for debug.
-    // *
-    // * @param debugLevel
-    // * level that gives according messages
-    // */
-    // private void PrCentersFD(int debugLevel) {
-    // if (debugLevel == m_DebugLevel) {
-    // for (int i = 0; i < m_ClusterCenters.length; i++) {
-    // System.out.println(m_ClusterCenters[i]);
-    // }
-    // }
-    // }
+    /**
+     * Print centers for debug.
+     * 
+     * @param debugLevel
+     *            level that gives according messages
+     */
+    private void PrCentersFD(int debugLevel) {
+
+        for (int i = 0; i < m_ClusterCenters.length; i++) {
+            System.out.println(m_ClusterCenters[i]);
+
+        }
+    }
 
     // /**
     // * Tests on debug status.
@@ -2146,18 +2059,18 @@ public class XMeans implements Clusterer {
     // return (debugLevel == m_DebugLevel);
     // }
 
-    // /**
-    // * Does debug printouts.
-    // *
-    // * @param debugLevel
-    // * level that gives according messages
-    // * @param output
-    // * string that is printed
-    // */
-    // private void PFD(int debugLevel, String output) {
-    // if (debugLevel == m_DebugLevel)
-    // System.out.println(output);
-    // }
+    /**
+     * Does debug printouts.
+     * 
+     * @param debugLevel
+     *            level that gives according messages
+     * @param output
+     *            string that is printed
+     */
+    private void PFD(int debugLevel, String output) {
+
+        System.out.println(output);
+    }
     //
     // /**
     // * Does debug printouts.
