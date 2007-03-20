@@ -353,11 +353,7 @@ public class Ant implements Clusterer {
 		int j = 0, stopSign = 0;
 		while (j < iterations && stopSign == 0) {
 			j++;
-			System.out.println("-------iterations: " + j + "-------");
 			// drop instance / heap
-			System.out
-					.println("::MAIN:: try to drop instance / heap, carried size: "
-							+ carried.size());
 			while (carried != null && stopSign == 0) {
 				double probDropC = 0;
 				// move ant to random heap with carried instance
@@ -381,8 +377,7 @@ public class Ant implements Clusterer {
 						probDropC = probDrop(stimToDrop, n2);
 					}
 				} else {
-					System.out
-							.println("::MAIN:: failure: selected heap is empty!!!");
+					System.out.println("::MAIN:: failure: selected heap is empty!!!");
 				}
 				// generate random drop probability value.
 				randomProb = rg.nextDouble();
@@ -391,17 +386,13 @@ public class Ant implements Clusterer {
 					for (int i = 0; i < carried.size(); i++) {
 						heap.add(carried.get(i));
 					}
-					System.out.println("::MAIN:: succesfull drop");
 					failMovesDrop = 0;
 					carried = null;
 				} else {
-					System.out.println("::MAIN:: failed to drop");
 					failMovesDrop++;
 					failMovesGlobal++;
 				}
 				if (failMovesDrop >= maxFailMovesDrop) {
-					System.out
-							.println("::MAIN:: failMoves>maxFailMoves, put carried in new heap");
 					Vector<Instance> newHeap = new Vector<Instance>();
 					for (int i = 0; i < carried.size(); i++) {
 						newHeap.add(carried.get(i));
@@ -413,7 +404,6 @@ public class Ant implements Clusterer {
 			}
 
 			// pick instance/heap
-			System.out.println("::MAIN:: try to pick new instance / heap");
 			while (carried == null && stopSign == 0) {
 				// move to other random heap
 				randomHeap = rg.nextInt(clusters.size());
@@ -426,7 +416,6 @@ public class Ant implements Clusterer {
 					clusters.remove(heap);
 					heap.clear();
 					failMovesPick = 0;
-					System.out.println("::MAIN:: succesfull pick instance");
 				} else if (heap.size() == 2) {
 					// pick 1 instance and remove from heap
 					Vector<Instance> tmp = new Vector<Instance>();
@@ -436,7 +425,6 @@ public class Ant implements Clusterer {
 					// or 2.
 					heap.remove(tmp.elementAt(0));
 					failMovesPick = 0;
-					System.out.println("::MAIN:: succesfull pick instance");
 				} else if (heap.size() > 2) {
 					// calculate stimulus and pick probability for picking 1
 					// instance or heap
@@ -458,10 +446,7 @@ public class Ant implements Clusterer {
 							tmp.add(heap.get(indexLeastSimInstance));
 							carried = tmp;
 							heap.remove(indexLeastSimInstance);
-							System.out
-									.println("::MAIN:: succesfull pick instance");
 						} else {
-							System.out.println("::MAIN:: failed to pick");
 							failMovesPick++;
 							failMovesGlobal++;
 						}
@@ -474,22 +459,19 @@ public class Ant implements Clusterer {
 							carried = tmp;
 							clusters.remove(heap);
 							heap.clear();
-							System.out.println("::MAIN:: succesfull pick heap");
 						} else {
-							System.out.println("::MAIN:: failed to pick");
 							failMovesPick++;
 							failMovesGlobal++;
 						}
 					}
 					// if fail moves to pick grows to high, stop algorithm
 					if (failMovesPick >= maxFailMovesPick) {
-						System.out
-								.println("::MAIN:: failMovesPick >maxFailMovesPick, stop algorithm");
 						stopSign = 1;
 					}
 				}
 			}
 		}
+		System.out.println("iterations: " + j);
 		Dataset[] output = new Dataset[clusters.size()];
 		System.out.println("::MAIN:: clusters.size()" + clusters.size());
 		for (int i = 0; i < clusters.size(); i++) {
