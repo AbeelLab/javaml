@@ -12,7 +12,6 @@
  */
 package net.sf.javaml.classification.svm;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
@@ -20,10 +19,10 @@ import java.util.Set;
 import net.sf.javaml.classification.Classifier;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.core.MathUtils;
 import net.sf.javaml.distance.DistanceMeasure;
 import net.sf.javaml.filter.Filter;
 import net.sf.javaml.filter.NormalizeMidrange;
+import net.sf.javaml.utils.MathUtils;
 
 /**
  * An implementation of the SMO algorithm for SVM training from "Sequential

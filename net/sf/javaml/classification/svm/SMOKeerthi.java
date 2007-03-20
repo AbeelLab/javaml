@@ -29,8 +29,8 @@ import java.util.HashSet;
 import net.sf.javaml.classification.Classifier;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.core.MathUtils;
 import net.sf.javaml.distance.DistanceMeasure;
+import net.sf.javaml.utils.MathUtils;
 
 public class SMOKeerthi implements Classifier {
 
