@@ -22,6 +22,7 @@
 
 package net.sf.javaml.core;
 
+
 import net.sf.javaml.distance.DistanceMeasure;
 import net.sf.javaml.distance.EuclideanDistance;
 
@@ -57,20 +58,20 @@ public class KDTree {
     private DistanceMeasure dm = new EuclideanDistance();
 
     /** minimal relative width of a KDTree rectangle */
-    double m_MinBoxRelWidth = 1.0E-2;
+    private double m_MinBoxRelWidth = 1.0E-2;
 
     /** maximal number of instances in a leaf */
-    int m_MaxInstInLeaf = 40;
+    private int m_MaxInstInLeaf = 40;
 
     /**
      * Index in range array of attributes for MIN and MAX and WIDTH (range) of
      * an attribute.
      */
-    public static int R_MIN = 0;
+    private static int R_MIN = 0;
 
-    public static int R_MAX = 1;
+    private static int R_MAX = 1;
 
-    public static int R_WIDTH = 2;
+    private static int R_WIDTH = 2;
 
     /**
      * Default Constructor
@@ -78,7 +79,7 @@ public class KDTree {
     public KDTree() {
     }
 
-    Dataset data;
+    private Dataset data;
 
     /**
      * Constructor, copies all options from an existing KDTree.
@@ -102,7 +103,7 @@ public class KDTree {
      * @throws Exception
      *             if something goes wrong
      */
-    public void setInstances(Dataset instances)  {
+    public void setInstances(Dataset instances) {
         buildKDTree(instances);
     }
 
@@ -164,22 +165,22 @@ public class KDTree {
         }
     }
 
-    /**
-     * Adds one instance to KDTree loosly. It only changes the ranges in
-     * EuclideanDistance, and does not affect the structure of the KDTree.
-     * 
-     * @param instance
-     *            the new instance. Usually this is the test instance supplied
-     *            to update the range of attributes in the distance function.
-     */
-    public void addInstanceInfo(Instance instance) {
-        updateRanges(instance);
-    }
+    // /**
+    // * Adds one instance to KDTree loosly. It only changes the ranges in
+    // * EuclideanDistance, and does not affect the structure of the KDTree.
+    // *
+    // * @param instance
+    // * the new instance. Usually this is the test instance supplied
+    // * to update the range of attributes in the distance function.
+    // */
+    // private void addInstanceInfo(Instance instance) {
+    // updateRanges(instance);
+    // }
 
-    private void updateRanges(Instance instance) {
-        // TODO Auto-generated method stub
-
-    }
+    // private void updateRanges(Instance instance) {
+    // // TDO Auto-generated method stub
+    //
+    // }
 
     /**
      * string representing the tree
@@ -215,7 +216,7 @@ public class KDTree {
      * @throws Exception
      *             if something goes wrong
      */
-    public void centerInstances(Instance[] centers, int[] assignments, double pc)  {
+    public void centerInstances(Instance[] centers, int[] assignments, double pc) {
 
         int[] centList = new int[centers.length];
         for (int i = 0; i < centers.length; i++)
@@ -254,10 +255,22 @@ public class KDTree {
         return numLeft;
     }
 
-    // WEKA euclidean distance method
-    private boolean valueIsSmallerEqual(Instance instance, int splitDim, double splitValue) {
-        // TODO Auto-generated method stub
-        return false;
+    /**
+     * Returns true if the value of the given dimension is smaller or equal the
+     * value to be compared with.
+     * 
+     * @param instance
+     *            the instance where the value should be taken of
+     * @param dim
+     *            the dimension of the value
+     * @param value
+     *            the value to compare with
+     * @return true is value of instance is smaller or equal value
+     */
+    private boolean valueIsSmallerEqual(Instance instance, int dim, double value) { // This
+                                                                                    // stays
+        return instance.getValue(dim) <= value; // Utils.smOrEq(instance.value(dim),
+                                                // value);
     }
 
     /**
@@ -294,96 +307,94 @@ public class KDTree {
      * --------------------------------------------------------------------------------
      */
 
-    /** index/indices of current target */
-    private int[] m_NearestList;
-
-    /** length of nearest list (can be larger than k) */
-    private int m_NearestListLength = 0;
-
-    /** true if more than of k nearest neighbours */
-    private boolean m_MultipleFurthest = false;
-
-    /** number of nearest neighbours k */
-    private int m_kNN = 0;
-
-    /** distance to current furthest of the neighbours */
-    private double m_MaxMinDist = Double.MAX_VALUE;
-
-    /** index of the furthest of the neighbours in m_NearestList */
-    private int m_FurthestNear = 0;
-
-    /** distance to current nearest neighbour */
-    private double[] m_DistanceList;
-
-    /**
-     * Returns the distances to the kNearest or 1 nearest neighbour currently
-     * found with either the kNearestNeighbours or the nearestNeighbour method.
-     * 
-     * @return distances[] array containing the distances of the
-     *         nearestNeighbours. The length and ordering of the array is the
-     *         same as that of the instances returned by nearestNeighbour
-     *         functions.
-     * @throws Exception
-     *             Throws an exception if called before calling
-     *             kNearestNeighbours or nearestNeighbours.
-     */
-    public double[] getDistances() throws Exception {
-        if (data == null || m_DistanceList == null)
-            throw new Exception("The tree has not been supplied with a set of "
-                    + "instances or getDistances() has been called " + "before calling kNearestNeighbours().");
-        return m_DistanceList;
-    }
-
-    /** debug pls remove after use. */
-    private boolean print = false;
-
-    /**
-     * Returns the k nearest neighbours to the supplied instance.
-     * 
-     * @param target
-     *            The instance to find the nearest neighbours for.
-     * @param k
-     *            The number of neighbours to find.
-     * @return the neighbors
-     * @throws Exception
-     *             Throws an exception if the nearest neighbour could not be
-     *             found.
-     */
-    public Instance[] kNearestNeighbours(Instance target, int k) throws Exception {
-        if (data == null)
-            throw new Exception("No instances supplied yet. Have to call "
-                    + "setInstances(instances) with a set of Instances " + "first.");
-
-        m_kNN = k;
-       
-        m_NearestList = new int[data.size()];
-        m_DistanceList = new double[data.size()];
-        m_NearestListLength = 0;
-        for (int i = 0; i < m_DistanceList.length; i++) {
-            m_DistanceList[i] = Double.MAX_VALUE;
-        }
-        //double maxDist = m_Root.kNearestNeighbour(target);
-        m_Root.kNearestNeighbour(target);
-        combSort11(m_DistanceList, m_NearestList);
-        postProcessDistances(m_DistanceList);
-
-        Instance[] nearest = new SimpleInstance[m_NearestListLength];
-        double[] newDistanceList = new double[m_NearestListLength];
-        for (int i = 0; i < m_NearestListLength; i++) {
-            nearest[i] = data.getInstance(m_NearestList[i]);
-            newDistanceList[i] = m_DistanceList[i];
-        }
-
-        m_DistanceList = newDistanceList;
-        return nearest;
-    }
-
-    // /WEKA Euclidean distance method
-    private void postProcessDistances(double[] distanceList) {
-        // TODO Auto-generated method stub
-
-    }
-
+    // /** index/indices of current target */
+    // private int[] m_NearestList;
+    //
+    // /** length of nearest list (can be larger than k) */
+    // private int m_NearestListLength = 0;
+    //
+    // /** true if more than of k nearest neighbours */
+    // private boolean m_MultipleFurthest = false;
+    //
+    // /** number of nearest neighbours k */
+    // private int m_kNN = 0;
+    //
+    // /** distance to current furthest of the neighbours */
+    // private double m_MaxMinDist = Double.MAX_VALUE;
+    //
+    // /** index of the furthest of the neighbours in m_NearestList */
+    // private int m_FurthestNear = 0;
+    //
+    // /** distance to current nearest neighbour */
+    // private double[] m_DistanceList;
+    // /**
+    // * Returns the distances to the kNearest or 1 nearest neighbour currently
+    // * found with either the kNearestNeighbours or the nearestNeighbour
+    // method.
+    // *
+    // * @return distances[] array containing the distances of the
+    // * nearestNeighbours. The length and ordering of the array is the
+    // * same as that of the instances returned by nearestNeighbour
+    // * functions.
+    // * @throws Exception
+    // * Throws an exception if called before calling
+    // * kNearestNeighbours or nearestNeighbours.
+    // */
+    // private double[] getDistances() throws Exception {
+    // if (data == null || m_DistanceList == null)
+    // throw new Exception("The tree has not been supplied with a set of "
+    // + "instances or getDistances() has been called " + "before calling
+    // kNearestNeighbours().");
+    // return m_DistanceList;
+    // }
+    // /** debug pls remove after use. */
+    // private boolean print = false;
+    // /**
+    // * Returns the k nearest neighbours to the supplied instance.
+    // *
+    // * @param target
+    // * The instance to find the nearest neighbours for.
+    // * @param k
+    // * The number of neighbours to find.
+    // * @return the neighbors
+    // * @throws Exception
+    // * Throws an exception if the nearest neighbour could not be
+    // * found.
+    // */
+    // private Instance[] kNearestNeighbours(Instance target, int k) throws
+    // Exception {
+    // if (data == null)
+    // throw new Exception("No instances supplied yet. Have to call "
+    // + "setInstances(instances) with a set of Instances " + "first.");
+    //
+    // m_kNN = k;
+    //       
+    // m_NearestList = new int[data.size()];
+    // m_DistanceList = new double[data.size()];
+    // m_NearestListLength = 0;
+    // for (int i = 0; i < m_DistanceList.length; i++) {
+    // m_DistanceList[i] = Double.MAX_VALUE;
+    // }
+    // //double maxDist = m_Root.kNearestNeighbour(target);
+    // m_Root.kNearestNeighbour(target);
+    // combSort11(m_DistanceList, m_NearestList);
+    // postProcessDistances(m_DistanceList);
+    //
+    // Instance[] nearest = new SimpleInstance[m_NearestListLength];
+    // double[] newDistanceList = new double[m_NearestListLength];
+    // for (int i = 0; i < m_NearestListLength; i++) {
+    // nearest[i] = data.getInstance(m_NearestList[i]);
+    // newDistanceList[i] = m_DistanceList[i];
+    // }
+    //
+    // m_DistanceList = newDistanceList;
+    // return nearest;
+    // }
+    // // /WEKA Euclidean distance method
+    // private void postProcessDistances(double[] distanceList) {
+    // // TDO Auto-generated method stub
+    //
+    // }
     public static void combSort11(double arrayToSort[], int linkedArray[]) {
         int switches, j, top, gap;
         double hold1;
@@ -419,65 +430,66 @@ public class KDTree {
         } while (switches > 0 || gap > 1);
     }
 
-    /**
-     * Returns the nearest neighbour to the supplied instance.
-     * 
-     * @param target
-     *            The instance to find the nearest neighbour for.
-     * @return the nearest neighbor
-     * @throws Exception
-     *             Throws an exception if the neighbours could not be found.
-     */
-    public Instance nearestNeighbour(Instance target) throws Exception {
-        return (kNearestNeighbours(target, 1))[0];
-    }
+    // /**
+    // * Returns the nearest neighbour to the supplied instance.
+    // *
+    // * @param target
+    // * The instance to find the nearest neighbour for.
+    // * @return the nearest neighbor
+    // * @throws Exception
+    // * Throws an exception if the neighbours could not be found.
+    // */
+    // private Instance nearestNeighbour(Instance target) throws Exception {
+    // return (kNearestNeighbours(target, 1))[0];
+    // }
 
-//    /**
-//     * Find k nearest neighbours to target. This is the main method.
-//     * 
-//     * @param target
-//     *            the instance to find nearest neighbour for
-//     * @param kNN
-//     *            the number of neighbors to find
-//     * @param nearestList
-//     * @param distanceList
-//     * @return
-//     * @throws Exception
-//     *             if something goes wrong
-//     */
-//    // redundant no longer needed
-//    public int findKNearestNeighbour(Instance target, int kNN, int[] nearestList, double[] distanceList)
-//            throws Exception {
-//        m_kNN = kNN;
-//        m_NearestList = nearestList;
-//        m_DistanceList = distanceList;
-//        m_NearestListLength = 0;
-//        for (int i = 0; i < distanceList.length; i++) {
-//            distanceList[i] = Double.MAX_VALUE;
-//        }
-//        int[] num = new int[1];
-//        num[0] = 0;
-//        //double minDist = m_Root.kNearestNeighbour(target);
-//        return m_NearestListLength;
-//    }
+    // /**
+    // * Find k nearest neighbours to target. This is the main method.
+    // *
+    // * @param target
+    // * the instance to find nearest neighbour for
+    // * @param kNN
+    // * the number of neighbors to find
+    // * @param nearestList
+    // * @param distanceList
+    // * @return
+    // * @throws Exception
+    // * if something goes wrong
+    // */
+    // // redundant no longer needed
+    // public int findKNearestNeighbour(Instance target, int kNN, int[]
+    // nearestList, double[] distanceList)
+    // throws Exception {
+    // m_kNN = kNN;
+    // m_NearestList = nearestList;
+    // m_DistanceList = distanceList;
+    // m_NearestListLength = 0;
+    // for (int i = 0; i < distanceList.length; i++) {
+    // distanceList[i] = Double.MAX_VALUE;
+    // }
+    // int[] num = new int[1];
+    // num[0] = 0;
+    // //double minDist = m_Root.kNearestNeighbour(target);
+    // return m_NearestListLength;
+    // }
 
-    /**
-     * Get the distance of the furthest of the nearest neighbour returns the
-     * index of this instance in the index list.
-     * 
-     * @return the index of the instance
-     */
-    private int checkFurthestNear() {
-        double max = 0.0;
-        int furthestNear = 0;
-        for (int i = 0; i < m_kNN; i++) {
-            if (m_DistanceList[i] > max) {
-                max = m_DistanceList[i];
-                furthestNear = i;
-            }
-        }
-        return furthestNear;
-    }
+    // /**
+    // * Get the distance of the furthest of the nearest neighbour returns the
+    // * index of this instance in the index list.
+    // *
+    // * @return the index of the instance
+    // */
+    // private int checkFurthestNear() {
+    // double max = 0.0;
+    // int furthestNear = 0;
+    // for (int i = 0; i < m_kNN; i++) {
+    // if (m_DistanceList[i] > max) {
+    // max = m_DistanceList[i];
+    // furthestNear = i;
+    // }
+    // }
+    // return furthestNear;
+    // }
 
     /***************************************************************************
      * 
@@ -558,13 +570,13 @@ public class KDTree {
          * @throws Exception
          *             if instance couldn't be retrieved
          */
-        private void makeKDTreeNode(int[] num, double[][] ranges, int start, int end){
+        private void makeKDTreeNode(int[] num, double[][] ranges, int start, int end) {
             m_NodeRanges = ranges;
             makeKDTreeNode(num, start, end);
         }
 
         /** flag for normalizing */
-        boolean m_NormalizeNodeWidth = false;
+        private boolean m_NormalizeNodeWidth = false;
 
         /**
          * Makes a KDTreeNode.
@@ -578,7 +590,7 @@ public class KDTree {
          * @throws Exception
          *             if instance couldn't be retrieved
          */
-        void makeKDTreeNode(int[] num, int start, int end) {
+        private void makeKDTreeNode(int[] num, int start, int end) {
 
             num[0]++;
             m_NodeNumber = num[0];
@@ -659,12 +671,89 @@ public class KDTree {
             }
         }
 
-        // WEKA Euclidean distance method
-        private double[][] initializeRanges(int[] instList, int start, int end) {
-            // TODO Auto-generated method stub
-            return null;
-        }
+        /**
+         * Initializes the ranges of a subset of the instances of this dataset.
+         * Therefore m_Ranges is not set. The caller of this method should
+         * ensure that the supplied start and end indices are valid (start &lt;=
+         * end, end&lt;instList.length etc) and correct.
+         * 
+         * @param instList
+         *            list of indexes of the instances
+         * @param startIdx
+         *            start index of the subset of instances in the indices
+         *            array
+         * @param endIdx
+         *            end index of the subset of instances in the indices array
+         * @return the ranges
+         */
+        // being used in other classes (KDTree and XMeans)
+        private double[][] initializeRanges(int[] instList, int startIdx, int endIdx) {
 
+            int numAtt = data.getInstance(0).size();
+            double[][] ranges = new double[numAtt][3];
+
+            // initialize ranges using the first instance
+            updateRangesFirst(data.getInstance(instList[startIdx]), numAtt, ranges);
+            // update ranges, starting from the second
+            for (int i = startIdx + 1; i <= endIdx; i++) {
+                updateRanges(data.getInstance(instList[i]), numAtt, ranges);
+            }
+
+            return ranges;
+        }
+        /**
+         * Updates the minimum and maximum and width values for all the attributes
+         * based on a new instance.
+         * @param instance the new instance
+         * @param numAtt number of attributes in the model
+         * @param ranges low, high and width values for all attributes
+         */ //Being used in the functions above
+        private void updateRanges(Instance instance, int numAtt, double [][] ranges) {
+          
+          // updateRangesFirst must have been called on ranges
+          for (int j = 0; j < numAtt; j++) {
+            double value = instance.getValue(j);
+              if (value < ranges[j][R_MIN]) {
+                ranges[j][R_MIN] = value;
+                ranges[j][R_WIDTH] = ranges[j][R_MAX] - ranges[j][R_MIN];
+                if(value > ranges[j][R_MAX]) { //if this is the first value that is
+                  ranges[j][R_MAX] = value;    //not missing. The,0
+                  ranges[j][R_WIDTH] = ranges[j][R_MAX] - ranges[j][R_MIN];
+                }
+              } else {
+                if (value > ranges[j][R_MAX]) {
+                  ranges[j][R_MAX] = value;
+                  ranges[j][R_WIDTH] = ranges[j][R_MAX] - ranges[j][R_MIN];
+                }
+              }
+            
+          }
+        }
+        /**
+         * Used to initialize the ranges. For this the values of the first
+         * instance is used to save time.
+         * Sets low and high to the values of the first instance and
+         * width to zero.
+         * @param instance the new instance
+         * @param numAtt number of attributes in the model
+         * @param ranges low, high and width values for all attributes
+         */  //being used in the functions above
+        private void updateRangesFirst(Instance instance, int numAtt,
+                                      double[][] ranges) {
+          
+          //try {
+          //  throw new Exception();
+          //} catch(Exception ex) { ex.printStackTrace(); }
+          
+          //System.out.println("In ranges the first supplied instance is:\n"+
+          //                   instance.toString());
+          for (int j = 0; j < numAtt; j++) {
+              ranges[j][R_MIN] = instance.getValue(j);
+              ranges[j][R_MAX] = instance.getValue(j);
+              ranges[j][R_WIDTH] = 0.0;
+           
+          }
+        }
         /**
          * Returns the widest dimension.
          * 
@@ -712,10 +801,15 @@ public class KDTree {
             return split;
         }
 
-        // WEKA euclidean distance function
-        private double getMiddle(double[] ds) {
-            // TODO Auto-generated method stub
-            return 0;
+        /**
+         * Returns value in the middle of the two parameter values.
+         * @param ranges the ranges to this dimension
+         * @return the middle value
+         */
+        private double getMiddle(double[] ranges) {
+
+          double middle = ranges[R_MIN] + ranges[R_WIDTH] * 0.5;
+          return middle;
         }
 
         /**
@@ -729,7 +823,7 @@ public class KDTree {
          * @throws Exception
          *             if something goes wrong
          */
-        public boolean addInstance(Instance instance) throws Exception {
+        private boolean addInstance(Instance instance) throws Exception {
 
             boolean success = false;
             if (!isALeaf()) {
@@ -788,17 +882,35 @@ public class KDTree {
             return success;
         }
 
-        // WEKA euclidean distance function
-        private double[][] updateRanges(Instance instance, double[][] nodeRanges) {
-            // TODO Auto-generated method stub
-            return null;
+        /**
+         * Updates the ranges given a new instance.
+         * @param instance the new instance
+         * @param ranges low, high and width values for all attributes
+         */  //being used in other classes (KDTree)
+        public double [][] updateRanges(Instance instance, double [][] ranges) {
+             
+          // updateRangesFirst must have been called on ranges
+          for (int j = 0; j < ranges.length; j++) {
+            double value = instance.getValue(j);
+              if (value < ranges[j][R_MIN]) {
+                ranges[j][R_MIN] = value;
+                ranges[j][R_WIDTH] = ranges[j][R_MAX] - ranges[j][R_MIN];
+              } else {
+                if (instance.getValue(j) > ranges[j][R_MAX]) {
+                  ranges[j][R_MAX] = value;
+                  ranges[j][R_WIDTH] = ranges[j][R_MAX] - ranges[j][R_MIN];
+                }
+              
+            }
+          }
+          return ranges;
         }
 
         /**
          * Corrects the boundaries of all nodes to the right of the leaf where
          * the instance was added to.
          */
-        public void afterAddInstance() {
+        private void afterAddInstance() {
 
             m_Start++;
             m_End++;
@@ -817,7 +929,7 @@ public class KDTree {
          *            give number of leaves
          * @return a text string that contains the statistics to the KDTree
          */
-        public String statToString(boolean nodes, boolean leaves) {
+        private String statToString(boolean nodes, boolean leaves) {
 
             int count = 1;
             int stats[] = new int[2];
@@ -843,7 +955,7 @@ public class KDTree {
          *            array with stats info
          * @return the number of nodes
          */
-        public int collectStats(int count, int[] stats) {
+        private int collectStats(int count, int[] stats) {
 
             count++;
             if (this.m_Left != null)
@@ -863,7 +975,7 @@ public class KDTree {
          *            adds the instances of the leaves
          * @return a string representing the node
          */
-        public String nodeToString(boolean leaves) {
+        private String nodeToString(boolean leaves) {
             StringBuffer text = new StringBuffer();
             text.append("NODE-Nr:          " + m_NodeNumber + "\n");
             int len = m_End - m_Start + 1;
@@ -904,8 +1016,7 @@ public class KDTree {
          * @throws Exception
          *             if something goes wrong
          */
-        private void determineAssignments(Instance[] centers, int[] candidates, int[] assignments, double pc)
-                {
+        private void determineAssignments(Instance[] centers, int[] candidates, int[] assignments, double pc) {
 
             // reduce number of owners for current hyper rectangle
             int[] owners = refineOwners(centers, candidates);
@@ -915,7 +1026,7 @@ public class KDTree {
                 // all instances of this node are owned by one center
                 for (int i = m_Start; i <= m_End; i++) {
                     assignments[m_InstList[i]] // the assignment of this
-                                                // instance
+                    // instance
                     = owners[0]; // is the current owner
                 }
             } else if (!this.isALeaf()) {
@@ -968,7 +1079,7 @@ public class KDTree {
                 if ((inside[i])
 
                 // 2. take all points with same distance to the rect. as the
-                // owner
+                        // owner
                         || (distance[i] == distance[ownerIndex])) {
 
                     // add competitor to owners list
@@ -1052,30 +1163,28 @@ public class KDTree {
          * @throws Exception
          *             if something goes wrong
          */
-        private double distanceToHrect(Instance x)  {
+        private double distanceToHrect(Instance x) {
             double distance = 0.0;
 
-           
-            float[] closestPointValues=new float[x.size()];
+            float[] closestPointValues = new float[x.size()];
             boolean inside = true;
             for (int i = 0; i < x.size(); i++) {
                 if (x.getValue(i) < m_NodeRanges[i][R_MIN]) {
-                    closestPointValues[i]= (float)m_NodeRanges[i][R_MIN];
+                    closestPointValues[i] = (float) m_NodeRanges[i][R_MIN];
                     inside = false;
                 } else if (x.getValue(i) > m_NodeRanges[i][R_MAX]) {
-                    closestPointValues[i]= (float) m_NodeRanges[i][R_MAX];
+                    closestPointValues[i] = (float) m_NodeRanges[i][R_MAX];
                     inside = false;
                 }
             }
-            
-            Instance closestPoint = new SimpleInstance(closestPointValues,x.getWeight(),x.isClassSet(),x.getClassValue());
-        
+
+            Instance closestPoint = new SimpleInstance(closestPointValues, x.getWeight(), x.isClassSet(), x
+                    .getClassValue());
+
             if (!inside)
                 distance = dm.calculateDistance(closestPoint, x);
             return distance;
         }
-
-        
 
         /**
          * Assigns instances of this node to center. Center to be assign to is
@@ -1092,8 +1201,7 @@ public class KDTree {
          * @throws Exception
          *             if something goes wrong
          */
-        public void assignSubToCenters(double[][] ranges, Instance[] centers, int[] centList, int[] assignments)
-               {
+        private void assignSubToCenters(double[][] ranges, Instance[] centers, int[] centList, int[] assignments) {
 
             // todo: undecided situations
 
@@ -1117,187 +1225,213 @@ public class KDTree {
             }
         }
 
-        // WEKA euclidean distance method
-        private int closestPoint(Instance inst, Instance[] centers, int[] centList) {
-            // TODO Auto-generated method stub
-            return 0;
-        }
-
         /**
-         * Find k nearest neighbours to target by simply searching through all
-         * instances in the leaf. No check on missing class.
+         * Returns the index of the closest point to the current instance. Index
+         * is index in Instances object that is the second parameter.
          * 
-         * @param target
-         *            the instance to find nearest neighbour for
-         * @return the minimal distance found
-         * @throws Exception
-         *             if something goes wrong
+         * @param instance
+         *            the instance to assign a cluster to
+         * @param allPoints
+         *            all points
+         * @param pointList
+         *            the list of points
+         * @return the index of the closest point
          */
-        public double simpleKNearestNeighbour(Instance target) throws Exception {
-
-            double dist = 0;
-            int currIndex;
-            // sets and uses:
-            // double m_MinDist
-            // double m_MaxMinDist
-            // int m_FurthestNear
-            int i = m_NearestListLength;
-            int index = m_Start;
-
-            // if no instances, return max value as distance
-            if (m_End < m_Start)
-                return Double.MAX_VALUE;
-
-            if (m_NearestListLength < m_kNN) {
-                for (; (index <= m_End) && (i < m_kNN);) {
-                    currIndex = m_InstList[index];
-                    Instance trainInstance = data.getInstance(m_InstList[index]);
-
-                    if (target != trainInstance) { // for hold-one-out
-                        // cross-validation
-                        // if(print==true)
-                        // OOPS("K: "+i);
-                        dist = distance(target, trainInstance, Double.MAX_VALUE, print);
-                        m_NearestList[i] = currIndex;
-                        m_DistanceList[i] = dist;
-                        i++;
-                    }
-                    index++;
-                }
-                m_NearestListLength = i;
-            }
-
-            // set the new furthest nearest
-            m_FurthestNear = checkFurthestNear(); // FURTHEST IN m_kNN NEAREST
-            // NEIGHBOURS
-            m_MaxMinDist = m_DistanceList[m_FurthestNear];
-
-            int firstFurthestIndex = -1;
-            double firstFurthestDistance = -1;
-            int oldNearestListLength = -1;
-            // check all or rest of instances if nearer
-            for (; index <= m_End; index++) {
-
-                currIndex = m_InstList[index];
-                Instance trainInstance = data.getInstance(currIndex);
-                if (target != trainInstance) { // for hold-one-out
-                                                // cross-validation
-
-                    dist = distance(target, trainInstance, m_MaxMinDist, print);
-
-                    // is instance one of the nearest?
-                    if (dist < m_MaxMinDist) {
-
-                        // set instance as one of the nearest,
-                        // replacing the last furthest nearest
-                        firstFurthestIndex = m_NearestList[m_FurthestNear];
-                        firstFurthestDistance = m_DistanceList[m_FurthestNear];
-                        m_NearestList[m_FurthestNear] = currIndex;
-                        m_DistanceList[m_FurthestNear] = dist;
-
-                        // set the new furthest nearest
-                        m_FurthestNear = checkFurthestNear();
-                        m_MaxMinDist = m_DistanceList[m_FurthestNear];
-
-                        if (m_MultipleFurthest) {
-                            // remove multiple entries of old furthest nearest
-                            oldNearestListLength = m_NearestListLength;
-                            m_NearestListLength = m_kNN;
-                            m_MultipleFurthest = false;
-                        }
-
-                        // the instance just replaced is at same distance as
-                        // furthest nearest
-                        // therefore there are multiple furthest nearest
-                        if (firstFurthestDistance == m_MaxMinDist) {
-                            m_MultipleFurthest = true;
-                            if (oldNearestListLength != -1)
-                                m_NearestListLength = oldNearestListLength;
-                            m_NearestList[m_NearestListLength] = firstFurthestIndex;
-                            m_DistanceList[m_NearestListLength] = firstFurthestDistance;
-                            m_NearestListLength++;
-                        }
-
-                        // get rid of the old list length as it is no longer
-                        // needed
-                        // and can create problems.
-                        oldNearestListLength = m_NearestListLength;
-                    } else {
-                        if (dist == m_MaxMinDist) {
-                            // instance is at same distance as furthest nearest
-                            m_MultipleFurthest = true;
-                            m_NearestList[m_NearestListLength] = currIndex;
-                            m_DistanceList[m_NearestListLength] = dist;
-                            m_NearestListLength++;
-                        }
-                    }
+        private int closestPoint(Instance instance, Instance[] allPoints, int[] pointList) {
+            double minDist = Integer.MAX_VALUE;
+            int bestPoint = 0;
+            for (int i = 0; i < pointList.length; i++) {
+                double dist = dm.calculateDistance(instance, allPoints[pointList[i]]);// ,
+                                                                                        // Double.MAX_VALUE);
+                if (dist < minDist) {
+                    minDist = dist;
+                    bestPoint = i;
                 }
             }
-
-            return m_MaxMinDist;
+            return pointList[bestPoint];
         }
 
-        // WEKA euclidean distance method
-        private double distance(Instance target, Instance trainInstance, double max_value, boolean print) {
-            // TODO Auto-generated method stub
-            return 0;
-        }
+        // /**
+        // * Find k nearest neighbours to target by simply searching through all
+        // * instances in the leaf. No check on missing class.
+        // *
+        // * @param target
+        // * the instance to find nearest neighbour for
+        // * @return the minimal distance found
+        // * @throws Exception
+        // * if something goes wrong
+        // */
+        // private double simpleKNearestNeighbour(Instance target) throws
+        // Exception {
+        //
+        // double dist = 0;
+        // int currIndex;
+        // // sets and uses:
+        // // double m_MinDist
+        // // double m_MaxMinDist
+        // // int m_FurthestNear
+        // int i = m_NearestListLength;
+        // int index = m_Start;
+        //
+        // // if no instances, return max value as distance
+        // if (m_End < m_Start)
+        // return Double.MAX_VALUE;
+        //
+        // if (m_NearestListLength < m_kNN) {
+        // for (; (index <= m_End) && (i < m_kNN);) {
+        // currIndex = m_InstList[index];
+        // Instance trainInstance = data.getInstance(m_InstList[index]);
+        //
+        // if (target != trainInstance) { // for hold-one-out
+        // // cross-validation
+        // // if(print==true)
+        // // OOPS("K: "+i);
+        // dist = distance(target, trainInstance, Double.MAX_VALUE, print);
+        // m_NearestList[i] = currIndex;
+        // m_DistanceList[i] = dist;
+        // i++;
+        // }
+        // index++;
+        // }
+        // m_NearestListLength = i;
+        // }
+        //
+        // // set the new furthest nearest
+        // m_FurthestNear = checkFurthestNear(); // FURTHEST IN m_kNN NEAREST
+        // // NEIGHBOURS
+        // m_MaxMinDist = m_DistanceList[m_FurthestNear];
+        //
+        // int firstFurthestIndex = -1;
+        // double firstFurthestDistance = -1;
+        // int oldNearestListLength = -1;
+        // // check all or rest of instances if nearer
+        // for (; index <= m_End; index++) {
+        //
+        // currIndex = m_InstList[index];
+        // Instance trainInstance = data.getInstance(currIndex);
+        // if (target != trainInstance) { // for hold-one-out
+        // // cross-validation
+        //
+        // dist = distance(target, trainInstance, m_MaxMinDist, print);
+        //
+        // // is instance one of the nearest?
+        // if (dist < m_MaxMinDist) {
+        //
+        // // set instance as one of the nearest,
+        // // replacing the last furthest nearest
+        // firstFurthestIndex = m_NearestList[m_FurthestNear];
+        // firstFurthestDistance = m_DistanceList[m_FurthestNear];
+        // m_NearestList[m_FurthestNear] = currIndex;
+        // m_DistanceList[m_FurthestNear] = dist;
+        //
+        // // set the new furthest nearest
+        // m_FurthestNear = checkFurthestNear();
+        // m_MaxMinDist = m_DistanceList[m_FurthestNear];
+        //
+        // if (m_MultipleFurthest) {
+        // // remove multiple entries of old furthest nearest
+        // oldNearestListLength = m_NearestListLength;
+        // m_NearestListLength = m_kNN;
+        // m_MultipleFurthest = false;
+        // }
+        //
+        // // the instance just replaced is at same distance as
+        // // furthest nearest
+        // // therefore there are multiple furthest nearest
+        // if (firstFurthestDistance == m_MaxMinDist) {
+        // m_MultipleFurthest = true;
+        // if (oldNearestListLength != -1)
+        // m_NearestListLength = oldNearestListLength;
+        // m_NearestList[m_NearestListLength] = firstFurthestIndex;
+        // m_DistanceList[m_NearestListLength] = firstFurthestDistance;
+        // m_NearestListLength++;
+        // }
+        //
+        // // get rid of the old list length as it is no longer
+        // // needed
+        // // and can create problems.
+        // oldNearestListLength = m_NearestListLength;
+        // } else {
+        // if (dist == m_MaxMinDist) {
+        // // instance is at same distance as furthest nearest
+        // m_MultipleFurthest = true;
+        // m_NearestList[m_NearestListLength] = currIndex;
+        // m_DistanceList[m_NearestListLength] = dist;
+        // m_NearestListLength++;
+        // }
+        // }
+        // }
+        // }
+        //
+        // return m_MaxMinDist;
+        // }
 
-        /**
-         * Finds the nearest neighbour to target, this method is called
-         * recursively.
-         * 
-         * @param target
-         *            the instance to find nearest neighbour for
-         * @return the minimal distance found
-         * @throws Exception
-         *             if something goes wrong
-         */
-        private double kNearestNeighbour(Instance target) throws Exception {
-            double maxDist;
-            KDTreeNode nearer, further;
+        // // WEKA euclidean distance method
+        // private double distance(Instance target, Instance trainInstance,
+        // double max_value, boolean print) {
+        // // TDO Auto-generated method stub
+        // return 0;
+        // }
 
-            // if is a leaf then the instance is in this hyperrectangle
-            if (this.isALeaf()) {
-                // return distance to kthnearest (and index of all
-                // all k nearest in m_NearestList)
-                return this.simpleKNearestNeighbour(target);
-            }
-            boolean targetInLeft = valueIsSmallerEqual(target, m_SplitDim, m_SplitValue);
+        // /**
+        // * Finds the nearest neighbour to target, this method is called
+        // * recursively.
+        // *
+        // * @param target
+        // * the instance to find nearest neighbour for
+        // * @return the minimal distance found
+        // * @throws Exception
+        // * if something goes wrong
+        // */
+        // private double kNearestNeighbour(Instance target) throws Exception {
+        // double maxDist;
+        // KDTreeNode nearer, further;
+        //
+        // // if is a leaf then the instance is in this hyperrectangle
+        // if (this.isALeaf()) {
+        // // return distance to kthnearest (and index of all
+        // // all k nearest in m_NearestList)
+        // return this.simpleKNearestNeighbour(target);
+        // }
+        // boolean targetInLeft = valueIsSmallerEqual(target, m_SplitDim,
+        // m_SplitValue);
+        //
+        // if (targetInLeft) {
+        // nearer = m_Left;
+        // further = m_Right;
+        // } else {
+        // nearer = m_Right;
+        // further = m_Left;
+        // }
+        // // look for nearer neighbours in nearer half
+        // maxDist = nearer.kNearestNeighbour(target);
+        //
+        // // ... now look in further half if maxDist reaches into it
+        // //Instance splitPoint = new SimpleInstance(target);
+        // //splitPoint.setValue(m_SplitDim, m_SplitValue);
+        // float[]splitValues=target.toArray();
+        // splitValues[m_SplitDim]=(float)m_SplitValue;
+        // Instance splitPoint=new
+        // SimpleInstance(splitValues,target.getWeight(),target.isClassSet(),target.getClassValue());
+        // double distanceToSplit = distance(target, splitPoint,
+        // Double.MAX_VALUE);
+        // boolean lookInSecondHalf = maxDist >= distanceToSplit;
+        //
+        // if (lookInSecondHalf) {
+        // // System.out.println("Searching into the 2nd half of the
+        // // tree.");
+        // // look for nearer neighbours in further half
+        // maxDist = further.kNearestNeighbour(target);
+        // }
+        // return maxDist;
+        // }
 
-            if (targetInLeft) {
-                nearer = m_Left;
-                further = m_Right;
-            } else {
-                nearer = m_Right;
-                further = m_Left;
-            }
-            // look for nearer neighbours in nearer half
-            maxDist = nearer.kNearestNeighbour(target);
-
-            // ... now look in further half if maxDist reaches into it
-            //Instance splitPoint = new SimpleInstance(target);
-            //splitPoint.setValue(m_SplitDim, m_SplitValue);
-            float[]splitValues=target.toArray();
-            splitValues[m_SplitDim]=(float)m_SplitValue;
-            Instance splitPoint=new SimpleInstance(splitValues,target.getWeight(),target.isClassSet(),target.getClassValue());
-            double distanceToSplit = distance(target, splitPoint, Double.MAX_VALUE);
-            boolean lookInSecondHalf = maxDist >= distanceToSplit;
-
-            if (lookInSecondHalf) {
-                // System.out.println("Searching into the 2nd half of the
-                // tree.");
-                // look for nearer neighbours in further half
-                maxDist = further.kNearestNeighbour(target);
-            }
-            return maxDist;
-        }
-
-        // WEKA method Euclidean distance
-        private double distance(Instance target, Instance splitPoint, double max_value) {
-            // TODO Auto-generated method stub
-            return 0;
-        }
+        // // WEKA method Euclidean distance
+        // private double distance(Instance target, Instance splitPoint, double
+        // max_value) {
+        // // TDO Auto-generated method stub
+        // return 0;
+        // }
 
     }
 }
