@@ -42,6 +42,10 @@ import net.sf.javaml.distance.NormalizedEuclideanDistance;
  * Ordering Points To Identify the Clustering Structure. In: ACM SIGMOD
  * International Conference on Management of Data, 49-60, 1999. <p/>
  * 
+ * TODO clean implementation of different types of queue and object in those 
+ * queues, the code should compile without warnings.
+ * XXX add references
+ * XXX add pseudocode
  * 
  * @author Matthias Schubert (schubert@dbs.ifi.lmu.de)
  * @author Zhanna Melnikova-Albrecht (melnikov@cip.ifi.lmu.de)
@@ -82,7 +86,7 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer 
 
         List return_List = new ArrayList();
         List nextNeighbours_List = new ArrayList();
-        List epsilonRange_List = new ArrayList();
+        List<EpsilonRange_ListElement> epsilonRange_List = new ArrayList<EpsilonRange_ListElement>();
 
         PriorityQueue priorityQueue = new PriorityQueue();
 
@@ -226,25 +230,8 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer 
         stringBuffer.append("OPTICS clustering results\n"
                 + "============================================================================================\n\n");
         stringBuffer.append("Clustered DataObjects: " + dataset.size() + "\n");
-        // stringBuffer.append("Number of attributes: " +
-        // database.getInstances().numAttributes() + "\n");
         stringBuffer.append("Epsilon: " + epsilon + "; minPoints: " + minPoints + "\n");
-        // stringBuffer.append("Write results to file: " + (writeOPTICSresults ?
-        // "yes" : "no") + "\n");
-        // stringBuffer.append("Index: " + getDatabase_Type() + "\n");
-        // stringBuffer.append("Distance-type: " + getDatabase_distanceType() +
-        // "\n");
-        // stringBuffer.append("Number of generated clusters: " +
-        // numberOfGeneratedClusters + "\n");
-        // DecimalFormat decimalFormat = new DecimalFormat(".##");
-        // stringBuffer.append("Elapsed time: " +
-        // decimalFormat.format(elapsedTime) + "\n\n");
-
-        // for (int i = 0; i < resultVector.size(); i++) {
-        // stringBuffer.append(format_dataObject((DataObject)
-        // resultVector.elementAt(i)));
-        // }
-        return stringBuffer.toString() + "\n";
+       return stringBuffer.toString() + "\n";
     }
 
     private int clusterID = 0;
@@ -252,7 +239,6 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer 
     private Vector<DataObject> resultVector;
 
     public Dataset[] executeClustering(Dataset data) {
-        // can clusterer handle the data?
         this.dm = new NormalizedEuclideanDistance(data);
         resultVector = new Vector<DataObject>();
 
@@ -265,7 +251,6 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer 
 
         /** OPTICS-Begin */
         for (int i = 0; i < dataset.size(); i++) {
-            //System.out.println("Dataitem: "+i);
             DataObject tmp = dataset.get(i);
             if (!tmp.processed) {
                 expandClusterOrder(tmp, seeds);
@@ -274,7 +259,6 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer 
             
         }
         Dataset[] clusters = new Dataset[clusterID + 1];
-        System.out.println("Number of clusters: " + clusterID);
         for (int i = 0; i < clusters.length; i++) {
             clusters[i] = new SimpleDataset();
         }
@@ -290,8 +274,6 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer 
             if (DataObject.UNCLASSIFIED == dataObject.clusterIndex)
                 notKnownCount++;
         }
-        System.out.println("Noise data items: " + noiseCount);
-        System.out.println("Unknown data items: " + notKnownCount);
         return clusters;
 
     }

@@ -31,7 +31,14 @@ import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.SimpleDataset;
 import net.sf.javaml.distance.DistanceMeasure;
 import net.sf.javaml.distance.NormalizedEuclideanDistance;
-
+/**
+ * XXX add doc
+ * XXX add reference
+ * XXX add pseudocode
+ * 
+ * @author Thomas Abeel
+ *
+ */
 public class DensityBasedSpatialClustering extends AbstractDensityBasedClustering implements Clusterer {
 
     /**
@@ -50,10 +57,17 @@ public class DensityBasedSpatialClustering extends AbstractDensityBasedClusterin
      */
     private int clusterID;
 
+    /**
+     * XXX add doc
+     *
+     */
     public DensityBasedSpatialClustering() {
 
     }
-
+    /**
+     * XXX add doc
+     *
+     */
     public DensityBasedSpatialClustering(double epsilon, int minPoints, DistanceMeasure dm) {
         this.dm = dm;
         this.epsilon = epsilon;
@@ -128,9 +142,15 @@ public class DensityBasedSpatialClustering extends AbstractDensityBasedClusterin
     }
 
     
-
+    /**
+     * XXX add doc
+     *
+     */
     private Dataset originalData = null;
-
+    /**
+     * XXX add doc
+     *
+     */
     public Dataset[] executeClustering(Dataset data) {
         this.originalData = data;
         this.dm = new NormalizedEuclideanDistance(this.originalData);
