@@ -35,6 +35,9 @@ import net.sf.javaml.distance.DistanceMeasure;
  * with an evaluation score, the result with the best score will be returned as
  * final result.
  * 
+ * XXX add references
+ * XXX add pseudocode
+ * 
  * @param clusters
  *            the number of clusters
  * @param iterations
@@ -50,14 +53,22 @@ import net.sf.javaml.distance.DistanceMeasure;
  * @author Andreas De Rijcke
  * 
  */
-
 public class MultiKMeans implements Clusterer {
-	private int repeats, clusters, iterations;
-
+    /**
+     * XXX add doc
+     */
+    private int repeats, clusters, iterations;
+    /**
+     * XXX add doc
+     */
 	private DistanceMeasure dm;
-
+    /**
+     * XXX add doc
+     */
 	private ClusterEvaluation ce;
-
+    /**
+     * XXX add doc
+     */
 	public MultiKMeans(int clusters, int iterations, int repeats,
 			DistanceMeasure dm, ClusterEvaluation ce) {
 		this.clusters = clusters;
@@ -67,7 +78,9 @@ public class MultiKMeans implements Clusterer {
 		this.ce = ce;
 
 	}
-
+    /**
+     * XXX add doc
+     */
 	public Dataset[] executeClustering(Dataset data) {
 		SimpleKMeans km = new SimpleKMeans(this.clusters, this.iterations,
 				this.dm);

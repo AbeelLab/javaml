@@ -34,11 +34,24 @@ import net.sf.javaml.core.SimpleInstance;
 import net.sf.javaml.distance.DistanceMeasure;
 import net.sf.javaml.distance.EuclideanDistance;
 
+/**
+ * Implements the K-means algorithms as described by Mac Queen in 1967.
+ * 
+ * <bibtex> J. B. MacQueen (1967): "Some Methods for classification and Analysis
+ * of Multivariate Observations, Proceedings of 5-th Berkeley Symposium on
+ * Mathematical Statistics and Probability", Berkeley, University of California
+ * Press, 1:281-297 </bibtex>
+ * 
+ * XXX add pseudocode of the algorithm
+ * 
+ * @author Thomas Abeel
+ * 
+ */
 public class SimpleKMeans implements Clusterer {
     /**
      * The number of clusters.
      */
-    protected int numberOfClusters = -1;
+    private int numberOfClusters = -1;
 
     /**
      * The number of iterations the algorithm should make. If this value is
@@ -46,18 +59,18 @@ public class SimpleKMeans implements Clusterer {
      * change.
      * 
      */
-    protected int numberOfIterations = -1;
+    private int numberOfIterations = -1;
 
     /**
      * Random generator for this clusterer.
      */
-    protected Random rg;
+    private Random rg;
 
     /**
      * The distance measure used in the algorithm, defaults to Euclidean
      * distance.
      */
-    protected DistanceMeasure dm;
+    private DistanceMeasure dm;
 
     /**
      * Constuct a default Simple K-means clusterer with 100 iterations, 2
@@ -70,12 +83,8 @@ public class SimpleKMeans implements Clusterer {
     /**
      * The centroids of the different clusters.
      */
-    protected Instance[] centroids;
+    private Instance[] centroids;
 
-    @Deprecated
-    public Instance[]getCentroids(){
-        return centroids;
-    }
     /**
      * Create a new Simple K-means clusterer with the given number of clusters
      * and iterations. The internal random generator is a new one based upon the
@@ -111,37 +120,9 @@ public class SimpleKMeans implements Clusterer {
         rg = new Random(System.currentTimeMillis());
     }
 
-   
-
-    // public int predictCluster(Instance instance) {
-    // if (this.centroids == null)
-    // throw new RuntimeException("The cluster should first be constructed");
-    // int tmpCluster = -1;
-    // double minDistance = Double.MAX_VALUE;
-    // for (int i = 0; i < this.numberOfClusters; i++) {
-    // double dist = dm.calculateDistance(centroids[i], instance);
-    // if (dist < minDistance) {
-    // minDistance = dist;
-    // tmpCluster = i;
-    // }
-    // }
-    // return tmpCluster;
-    // }
-
-    // public double[] predictMembershipDistribution(Instance instance) {
-    // double[] tmp = new double[this.getNumberOfClusters()];
-    // tmp[this.predictCluster(instance)] = 1;
-    // return tmp;
-    // }
-
-    // /**
-    // * This method is only intended for testing purposes.
-    // *
-    // */
-    // public Instance[] getCentroids() {
-    // return this.centroids;
-    // }
-
+    /**
+     * XXX add doc
+     */
     public Dataset[] executeClustering(Dataset data) {
         if (data.size() == 0)
             throw new RuntimeException("The dataset should not be empty");
@@ -224,8 +205,8 @@ public class SimpleKMeans implements Clusterer {
 
         }
         Dataset[] output = new Dataset[centroids.length];
-        for(int i=0;i<centroids.length;i++)
-            output[i]=new SimpleDataset();
+        for (int i = 0; i < centroids.length; i++)
+            output[i] = new SimpleDataset();
         for (int i = 0; i < data.size(); i++) {
             int tmpCluster = -1;
             double minDistance = Double.MAX_VALUE;

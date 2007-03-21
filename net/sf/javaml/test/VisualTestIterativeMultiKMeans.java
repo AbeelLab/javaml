@@ -34,7 +34,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import net.sf.javaml.clustering.IterativeMultiKMeans;
-import net.sf.javaml.clustering.SimpleKMeans;
 import net.sf.javaml.clustering.evaluation.CIndex;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
@@ -72,7 +71,7 @@ public class VisualTestIterativeMultiKMeans extends JPanel {
         }
     }
 
-    private JLabel createLabel(Dataset data, Color color, int width, int height, SimpleKMeans km, Color[] colors, int i) {
+    private JLabel createLabel(Dataset data, Color color, int width, int height, IterativeMultiKMeans km, Color[] colors, int i) {
         return new ClusterLabel(data, color, width, height, km, colors, i);
     }
 
@@ -89,7 +88,7 @@ public class VisualTestIterativeMultiKMeans extends JPanel {
         private Color color;
 
      
-        public ClusterLabel(Dataset data, Color color, int width, int height, SimpleKMeans km, Color[] colors, int i) {
+        public ClusterLabel(Dataset data, Color color, int width, int height, IterativeMultiKMeans km, Color[] colors, int i) {
             this.setPreferredSize(new Dimension(width, height));
             this.data = data;
             this.color = color;

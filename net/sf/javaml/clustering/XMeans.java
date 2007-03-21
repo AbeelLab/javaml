@@ -56,10 +56,10 @@ import net.sf.javaml.utils.MathUtils;
  * 
  */
 public class XMeans implements Clusterer {
-
+    /**
+     * XXX add doc
+     */
     private Dataset data = null;
-
-    // private Dataset model = null;
 
     /** BIC-Score of the current model */
     private double bic = Double.MIN_VALUE;
@@ -154,20 +154,11 @@ public class XMeans implements Clusterer {
         // num of clusters to start with
         m_NumClusters = m_MinNumClusters;
 
-        // checkInstances();
-        //
-        // if (m_DebugVectorsFile.exists() && m_DebugVectorsFile.isFile())
-        // initDebugVectorsInput();
-
         // make list of indexes for m_Instances
         int[] allInstList = new int[data.size()];
         for (int i = 0; i < data.size(); i++) {
             allInstList[i] = i;
         }
-
-        // // set model used (just for convenience)
-        // model = new SimpleDataset();
-
         // makes the first centers randomly
         m_ClusterCenters = makeCentersRandomly(rg, data, m_NumClusters);
 
@@ -192,8 +183,8 @@ public class XMeans implements Clusterer {
         while (!finished && !stopIteration(m_IterationCount, m_MaxIterations)) {
 
             /*
-             * ====================================================================
-             * 1. Improve-Params conventional K-means
+             * ======================================= 1. Improve-Params
+             * conventional K-means =======================================
              */
 
             m_IterationCount++;
@@ -211,7 +202,6 @@ public class XMeans implements Clusterer {
 
             // converge in conventional K-means
             // ----------------------------------
-            //PFD(0, "\nConverge in K-Means:");
             while (!converged && !stopKMeansIteration(kMeansIteration, m_MaxKMeans)) {
 
                 kMeansIteration++;
@@ -224,37 +214,26 @@ public class XMeans implements Clusterer {
 
                 // compute new centers = centers of mass of points
                 converged = recomputeCenters(m_ClusterCenters, instOfCent); // model
-                // information
-
-                // PFD(0, "\nMain loop - Recompute - centers:");
-                // PrCentersFD(0);
             }
 
-            /**
+            /*
              * ===================== 2. Improve-Structure =====================
              */
 
             // BIC before split distortioning the centres
             m_Mle = distortion(instOfCent, m_ClusterCenters);
             bic = calculateBIC(instOfCent, m_ClusterCenters, m_Mle);
-           // PFD(0, "m_Bic " + bic);
 
             int currNumCent = m_ClusterCenters.length;
-            Instance[] splitCenters = new Instance[currNumCent * 2];// (m_ClusterCenters,
-            // currNumCent
-            // * 2);
+            Instance[] splitCenters = new Instance[currNumCent * 2];
             int splitIndex = 0;
             // store BIC values of parent and children
             double[] pbic = new double[currNumCent];
             double[] cbic = new double[currNumCent];
 
             // split each center
-            for (int i = 0; i < currNumCent
-            // this could help to optimize the algorithm
-            // && currNumCent + numSplits <= m_MaxNumClusters
-            ; i++) {
+            for (int i = 0; i < currNumCent; i++) {
 
-                //PFD(0, "\nsplit center " + i + " " + m_ClusterCenters[i]);
                 Instance currCenter = m_ClusterCenters[i];
                 int[] currInstList = instOfCent[i];
                 int currNumInst = instOfCent[i].length;
@@ -272,9 +251,6 @@ public class XMeans implements Clusterer {
                 // split centers ----------------------------------------------
                 double variance = m_Mle[i] / (double) currNumInst;
                 children = splitCenter(rg, currCenter, variance);
-//                System.out.println("Preparing split: ");
-//                System.out.println("\tChild 1: " + children[0]);
-//                System.out.println("\tChild 2: " + children[1]);
                 // initialize assignments to -1
                 int[] oneCentAssignments = initAssignments(currNumInst);
                 int[][] instOfChCent = new int[2][]; // todo maybe split
@@ -283,7 +259,6 @@ public class XMeans implements Clusterer {
                 // converge the children --------------------------------------
                 converged = false;
                 int kMeansForChildrenIteration = 0;
-                //PFD(0, "\nConverge, K-Means for children: " + i);
                 while (!converged && !stopKMeansIteration(kMeansForChildrenIteration, m_MaxKMeansForChildren)) {
                     kMeansForChildrenIteration++;
                     converged = assignToCenters(children, instOfChCent, currInstList, oneCentAssignments);
@@ -295,11 +270,6 @@ public class XMeans implements Clusterer {
                 // store new centers for later decision if they are taken
                 splitCenters[splitIndex++] = children[0];// .instance(0));
                 splitCenters[splitIndex++] = children[1];// .instance(1));
-
-//                PFD(0, "\nconverged children ");
-//                PFD(0, " " + children[0]);
-//                PFD(0, " " + children[1]);
-
                 // compare parent and children model by their BIC-value
                 pbic[i] = calculateBIC(currInstList, currCenter, m_Mle[i]);
                 double[] chMLE = distortion(instOfChCent, children);
@@ -316,8 +286,6 @@ public class XMeans implements Clusterer {
             int newNumClusters = newClusterCenters.length;
             if (newNumClusters != m_NumClusters) {
 
-              //  PFD(0, "Compare with non-split");
-//
                 // initialize assignments to -1
                 int[] newClusterAssignments = initAssignments(data.size());
 
@@ -332,14 +300,10 @@ public class XMeans implements Clusterer {
 
                 double[] newMle = distortion(newInstOfCent, newClusterCenters);
                 double newBic = calculateBIC(newInstOfCent, newClusterCenters, newMle);
-               // PFD(0, "newBic " + newBic);
                 if (newBic > bic) {
-                   // PFD(0, "*** decide for new clusters");
                     bic = newBic;
                     m_ClusterCenters = newClusterCenters;
                     m_ClusterAssignments = newClusterAssignments;
-                } else {
-                   // PFD(0, "*** keep old clusters");
                 }
             }
 
@@ -360,7 +324,6 @@ public class XMeans implements Clusterer {
             int index = clusterProcessedInstance(inst, m_ClusterCenters);
             out[index].addInstance(inst);
         }
-       // System.out.println(this.toString());
         return out;
     }
 
@@ -416,10 +379,6 @@ public class XMeans implements Clusterer {
                 // decide for splitting ----------------------------------------
                 splitWon[i] = true;
                 numToSplit++;
-                // PFD(0, "Center " + i + " decide for children");
-            } else {
-                // decide for parents and finished stays true -----------------
-                // PFD(0, "Center " + i + " decide for parent");
             }
         }
 
@@ -566,7 +525,6 @@ public class XMeans implements Clusterer {
      *            data model information
      * @return true if converged.
      */
-    // USED BY KMEANS
     private boolean recomputeCenters(Instance[] centers, int[][] instOfCent) {
         boolean converged = true;
 
@@ -842,9 +800,6 @@ public class XMeans implements Clusterer {
                 }
             }
         }
-        // else
-        // PFD(0, "assignToCenters -> it has converged");
-
         return converged;
     }
 
@@ -893,20 +848,7 @@ public class XMeans implements Clusterer {
         ArrayOperations.fillRandom(randomValues, rg);
         Instance[] children = new Instance[2];
 
-        // if (m_DebugVectorsFile.exists() && m_DebugVectorsFile.isFile()) {
-        // Instance nextVector = getNextDebugVectorsInstance(model);
-        // PFD(D_RANDOMVECTOR, "Random Vector from File " + nextVector);
-        // r = new AlgVector(nextVector);
-        // } else {
-        // random vector of length = variance
-        // r = new AlgVector(model, random);
-        // }
-        // System.out.println("PRE: "+Arrays.toString(randomValues));
         ArrayOperations.changeLength(Math.sqrt(variance), randomValues);
-        // System.out.println("var="+variance);
-        // System.out.println(Arrays.toString(randomValues));
-        // System.out.println();
-        // PFD(D_RANDOMVECTOR, "random vector *variance " + randomValues);
 
         // add random vector to center
         float[] centerValues = center.toArray();
@@ -919,37 +861,8 @@ public class XMeans implements Clusterer {
         ArrayOperations.fillRandom(randomValues, rg);
         centerValues = ArrayOperations.substract(centerValues, randomValues);
         children[1] = new SimpleInstance(centerValues, center.getWeight(), center.isClassSet(), center.getClassValue());
-        // PFD(0, "second child " + newCenter);
-
         return children;
     }
-
-    // /**
-    // * Split centers in their region. (*Alternative version of splitCenter()*)
-    // *
-    // * @param random
-    // * the random number generator
-    // * @param instances
-    // * of the region
-    // * @param model
-    // * @return a pair of new centers
-    // */
-    // private Instance[] splitCenters(Random random, Dataset instances, Dataset
-    // model) {
-    // Instance[] children = new Instance[2];// (model, 2);
-    // int instIndex = Math.abs(random.nextInt()) % instances.size();
-    // children[0] = instances.getInstance(instIndex);
-    // int instIndex2 = instIndex;
-    // int count = 0;
-    // while ((instIndex2 == instIndex) && count < 10) {
-    // count++;
-    // instIndex2 = Math.abs(random.nextInt()) % instances.size();//
-    // numInstances();
-    // }
-    // children[1] = instances.getInstance(instIndex2);
-    //
-    // return children;
-    // }
 
     /**
      * Generates new centers randomly. Used for starting centers.
@@ -1160,828 +1073,6 @@ public class XMeans implements Clusterer {
         return bestCluster;
     }
 
-    // /**
-    // * Clusters an instance that has been through the filters.
-    // *
-    // * @param instance
-    // * the instance to assign a cluster to
-    // * @return a cluster number
-    // */
-    // private int clusterProcessedInstance(Instance instance) throws Exception
-    // {
-    // double minDist = Integer.MAX_VALUE;
-    // int bestCluster = 0;
-    // for (int i = 0; i < m_NumClusters; i++) {
-    // double dist = dm.calculateDistance(instance, m_ClusterCenters[i]);
-    // if (dist < minDist) {
-    // minDist = dist;
-    // bestCluster = i;
-    // }
-    // }
-    // return bestCluster;
-    // }
-
-    // /**
-    // * Classifies a given instance.
-    // *
-    // * @param instance
-    // * the instance to be assigned to a cluster
-    // * @return the number of the assigned cluster as an integer if the class
-    // is
-    // * enumerated, otherwise the predicted value
-    // * @throws Exception
-    // * if instance could not be classified successfully
-    // */
-    // public int clusterInstance(Instance instance) throws Exception {
-    // m_ReplaceMissingFilter.input(instance);
-    // Instance inst = m_ReplaceMissingFilter.output();
-    //
-    // return clusterProcessedInstance(inst);
-    // }
-
-    // /**
-    // * Returns the number of clusters.
-    // *
-    // * @return the number of clusters generated for a training dataset.
-    // */
-    // private int numberOfClusters() {
-    // return m_NumClusters;
-    // }
-
-    // /**
-    // * Returns an enumeration describing the available options.
-    // *
-    // * @return an enumeration of all the available options
-    // */
-    // public Enumeration listOptions() {
-    // Vector result = new Vector();
-    //
-    // result
-    // .addElement(new Option("\tmaximum number of overall iterations\n" +
-    // "\t(default 1).", "I", 1,
-    // "-I <num>"));
-    //
-    // result.addElement(new Option("\tmaximum number of iterations in the
-    // kMeans loop in\n"
-    // + "\tthe Improve-Parameter part \n" + "\t(default 1000).", "M", 1, "-M
-    // <num>"));
-    //
-    // result.addElement(new Option("\tmaximum number of iterations in the
-    // kMeans loop\n"
-    // + "\tfor the splitted centroids in the Improve-Structure part \n" +
-    // "\t(default 1000).", "J", 1,
-    // "-J <num>"));
-    //
-    // result.addElement(new Option("\tminimum number of clusters\n" +
-    // "\t(default 2).", "L", 1, "-L <num>"));
-    //
-    // result.addElement(new Option("\tmaximum number of clusters\n" +
-    // "\t(default 4).", "H", 1, "-H <num>"));
-    //
-    // result.addElement(new Option("\tdistance value for binary attributes\n" +
-    // "\t(default 1.0).", "B", 1,
-    // "-B <value>"));
-    //
-    // result.addElement(new Option("\tUses the KDTree internally\n" +
-    // "\t(default no).", "use-kdtree", 0,
-    // "-use-kdtree"));
-    //
-    // result.addElement(new Option("\tFull class name of KDTree class to use,
-    // followed\n" + "\tby scheme options.\n"
-    // + "\teg: \"weka.core.KDTree -P\"\n" + "\t(default no KDTree class
-    // used).", "K", 1,
-    // "-K <KDTree class specification>"));
-    //
-    // result.addElement(new Option("\tcutoff factor, takes the given percentage
-    // of the splitted \n"
-    // + "\tcentroids if none of the children win\n" + "\t(default 0.0).", "C",
-    // 1, "-C <value>"));
-    //
-    // result.addElement(new Option("\tFull class name of Distance function
-    // class to use, followed\n"
-    // + "\tby scheme options.\n" + "\t(default weka.core.EuclideanDistance).",
-    // "D", 1,
-    // "-D <distance function class specification>"));
-    //
-    // result.addElement(new Option("\tfile to read starting centers from (ARFF
-    // format).", "N", 1, "-N <file name>"));
-    //
-    // result.addElement(new Option("\tfile to write centers to (ARFF format).",
-    // "O", 1, "-O <file name>"));
-    //
-    // result.addElement(new Option("\tThe debug level.\n" + "\t(default 0)",
-    // "U", 1, "-U <int>"));
-    //
-    // result.addElement(new Option("\tThe debug vectors file.", "Y", 1, "-Y
-    // <file name>"));
-    //
-    // Enumeration en = super.listOptions();
-    // while (en.hasMoreElements())
-    // result.addElement(en.nextElement());
-    //
-    // return result.elements();
-    // }
-    //
-    // /**
-    // * Returns the tip text for this property
-    // *
-    // * @return tip text for this property
-    // */
-    // public String minNumClustersTipText() {
-    // return "set minimum number of clusters";
-    // }
-    //
-    // /**
-    // * Sets the minimum number of clusters to generate.
-    // *
-    // * @param n
-    // * the minimum number of clusters to generate
-    // */
-    // public void setMinNumClusters(int n) {
-    // if (n <= m_MaxNumClusters) {
-    // m_MinNumClusters = n;
-    // }
-    // }
-    //
-    // /**
-    // * Gets the minimum number of clusters to generate.
-    // *
-    // * @return the minimum number of clusters to generate
-    // */
-    // public int getMinNumClusters() {
-    // return m_MinNumClusters;
-    // }
-    //
-    // /**
-    // * Returns the tip text for this property
-    // *
-    // * @return tip text for this property
-    // */
-    // public String maxNumClustersTipText() {
-    // return "set maximum number of clusters";
-    // }
-    //
-    // /**
-    // * Sets the maximum number of clusters to generate.
-    // *
-    // * @param n
-    // * the maximum number of clusters to generate
-    // */
-    // public void setMaxNumClusters(int n) {
-    // if (n >= m_MinNumClusters) {
-    // m_MaxNumClusters = n;
-    // }
-    // }
-    //
-    // /**
-    // * Gets the maximum number of clusters to generate.
-    // *
-    // * @return the maximum number of clusters to generate
-    // */
-    // public int getMaxNumClusters() {
-    // return m_MaxNumClusters;
-    // }
-    //
-    // /**
-    // * Returns the tip text for this property
-    // *
-    // * @return tip text for this property
-    // */
-    // public String maxIterationsTipText() {
-    // return "the maximum number of iterations to perform";
-    // }
-    //
-    // /**
-    // * Sets the maximum number of iterations to perform.
-    // *
-    // * @param i
-    // * the number of iterations
-    // * @throws Exception
-    // * if i is less than 1
-    // */
-    // public void setMaxIterations(int i) throws Exception {
-    // if (i < 0)
-    // throw new Exception("Only positive values for iteration number" + "
-    // allowed (Option I).");
-    // m_MaxIterations = i;
-    // }
-    //
-    // /**
-    // * Gets the maximum number of iterations.
-    // *
-    // * @return the number of iterations
-    // */
-    // public int getMaxIterations() {
-    // return m_MaxIterations;
-    // }
-    //
-    // /**
-    // * Returns the tip text for this property
-    // *
-    // * @return tip text for this property
-    // */
-    // public String maxKMeansTipText() {
-    // return "the maximum number of iterations to perform in KMeans";
-    // }
-    //
-    // /**
-    // * Set the maximum number of iterations to perform in KMeans
-    // *
-    // * @param i
-    // * the number of iterations
-    // */
-    // public void setMaxKMeans(int i) {
-    // m_MaxKMeans = i;
-    // m_MaxKMeansForChildren = i;
-    // }
-    //
-    // /**
-    // * Returns the tip text for this property
-    // *
-    // * @return tip text for this property
-    // */
-    // public String cutOffFactorTipText() {
-    // return "the cut-off factor to use";
-    // }
-    //
-    // /**
-    // * Sets a new cutoff factor.
-    // *
-    // * @param i
-    // * the new cutoff factor
-    // */
-    // public void setCutOffFactor(double i) throws Exception {
-    // m_CutOffFactor = i;
-    // }
-    //
-    // /**
-    // * Gets the cutoff factor.
-    // *
-    // * @return the cutoff factor
-    // */
-    // public double getCutOffFactor() {
-    // return m_CutOffFactor;
-    // }
-    //
-    // /**
-    // * Returns the tip text for this property
-    // *
-    // * @return tip text for this property suitable for displaying in the
-    // * explorer/experimenter gui
-    // */
-    // public String binValueTipText() {
-    // return "Set the value that represents true in the new attributes.";
-    // }
-    //
-    // /**
-    // * Gets value that represents true in a new numeric attribute. (False is
-    // * always represented by 0.0.)
-    // *
-    // * @return the value that represents true in a new numeric attribute
-    // */
-    // public double getBinValue() {
-    // return m_BinValue;
-    // }
-    //
-    // /**
-    // * Sets the distance value between true and false of binary attributes and
-    // * "same" and "different" of nominal attributes
-    // *
-    // * @param value
-    // * the distance
-    // */
-    // public void setBinValue(double value) {
-    // m_BinValue = value;
-    // }
-    //
-    // /**
-    // * Returns the tip text for this property
-    // *
-    // * @return tip text for this property suitable for displaying in the
-    // * explorer/experimenter gui
-    // */
-    // public String distanceFTipText() {
-    // return "The distance function to use.";
-    // }
-    //
-    // /**
-    // * gets the "binary" distance value
-    // *
-    // * @param distanceF
-    // * the distance function with all options set
-    // */
-    // public void setDistanceF(DistanceFunction distanceF) {
-    // dm = distanceF;
-    // }
-    //
-    // /**
-    // * Gets the distance function.
-    // *
-    // * @return the distance function
-    // */
-    // public DistanceFunction getDistanceF() {
-    // return dm;
-    // }
-    //
-    // /**
-    // * Gets the distance function specification string, which contains the
-    // class
-    // * name of the distance function class and any options to it
-    // *
-    // * @return the distance function specification string
-    // */
-    // private String getDistanceFSpec() {
-    //
-    // DistanceFunction d = getDistanceF();
-    // if (d instanceof OptionHandler) {
-    // return d.getClass().getName() + " " + Utils.joinOptions(((OptionHandler)
-    // d).getOptions());
-    // }
-    // return d.getClass().getName();
-    // }
-    //
-    // /**
-    // * Returns the tip text for this property
-    // *
-    // * @return tip text for this property suitable for displaying in the
-    // * explorer/experimenter gui
-    // */
-    // public String debugVectorsFileTipText() {
-    // return "The file containing the debug vectors (only for debugging!).";
-    // }
-    //
-    // /**
-    // * Sets the file that has the random vectors stored. Only used for
-    // debugging
-    // * reasons.
-    // *
-    // * @param value
-    // * the file to read the random vectors from
-    // */
-    // public void setDebugVectorsFile(File value) {
-    // m_DebugVectorsFile = value;
-    // }
-    //
-    // /**
-    // * Gets the file name for a file that has the random vectors stored. Only
-    // * used for debugging purposes.
-    // *
-    // * @return the file to read the vectors from
-    // */
-    // public File getDebugVectorsFile() {
-    // return m_DebugVectorsFile;
-    // }
-    //
-    // /**
-    // * Initialises the debug vector input.
-    // */
-    // public void initDebugVectorsInput() throws Exception {
-    // m_DebugVectorsInput = new BufferedReader(new
-    // FileReader(m_DebugVectorsFile));
-    // m_DebugVectors = new Instances(m_DebugVectorsInput);
-    // m_DebugVectorsIndex = 0;
-    // }
-    //
-    // /**
-    // * Read an instance from debug vectors file.
-    // *
-    // * @param model
-    // * the data model for the instance
-    // */
-    // public Instance getNextDebugVectorsInstance(Instances model) throws
-    // Exception {
-    // if (m_DebugVectorsIndex >= m_DebugVectors.numInstances())
-    // throw new Exception("no more prefabricated Vectors");
-    // Instance nex = m_DebugVectors.instance(m_DebugVectorsIndex);
-    // nex.setDataset(model);
-    // m_DebugVectorsIndex++;
-    // return nex;
-    // }
-    //
-    // /**
-    // * Returns the tip text for this property
-    // *
-    // * @return tip text for this property suitable for displaying in the
-    // * explorer/experimenter gui
-    // */
-    // public String inputCenterFileTipText() {
-    // return "The file to read the list of centers from.";
-    // }
-    //
-    // /**
-    // * Sets the file to read the list of centers from.
-    // *
-    // * @param value
-    // * the file to read centers from
-    // */
-    // public void setInputCenterFile(File value) {
-    // m_InputCenterFile = value;
-    // }
-    //
-    // /**
-    // * Gets the file to read the list of centers from.
-    // *
-    // * @return the file to read the centers from
-    // */
-    // public File getInputCenterFile() {
-    // return m_InputCenterFile;
-    // }
-    //
-    // /**
-    // * Returns the tip text for this property
-    // *
-    // * @return tip text for this property suitable for displaying in the
-    // * explorer/experimenter gui
-    // */
-    // public String outputCenterFileTipText() {
-    // return "The file to write the list of centers to.";
-    // }
-    //
-    // /**
-    // * Sets file to write the list of centers to.
-    // *
-    // * @param value
-    // * file to write centers to
-    // */
-    // public void setOutputCenterFile(File value) {
-    // m_OutputCenterFile = value;
-    // }
-    //
-    // /**
-    // * Gets the file to write the list of centers to.
-    // *
-    // * @return filename of the file to write centers to
-    // */
-    // public File getOutputCenterFile() {
-    // return m_OutputCenterFile;
-    // }
-    //
-    // /**
-    // * Returns the tip text for this property
-    // *
-    // * @return tip text for this property suitable for displaying in the
-    // * explorer/experimenter gui
-    // */
-    // public String KDTreeTipText() {
-    // return "The KDTree to use.";
-    // }
-    //
-    // /**
-    // * Sets the KDTree class.
-    // *
-    // * @param k
-    // * a KDTree object with all options set
-    // */
-    // public void setKDTree(KDTree k) {
-    // m_KDTree = k;
-    // }
-    //
-    // /**
-    // * Gets the KDTree class.
-    // *
-    // * @return the configured KDTree
-    // */
-    // public KDTree getKDTree() {
-    // return m_KDTree;
-    // }
-    //
-    // /**
-    // * Returns the tip text for this property
-    // *
-    // * @return tip text for this property suitable for displaying in the
-    // * explorer/experimenter gui
-    // */
-    // public String useKDTreeTipText() {
-    // return "Whether to use the KDTree.";
-    // }
-    //
-    // /**
-    // * Sets whether to use the KDTree or not.
-    // *
-    // * @param value
-    // * if true the KDTree is used
-    // */
-    // public void setUseKDTree(boolean value) {
-    // m_UseKDTree = value;
-    // }
-    //
-    // /**
-    // * Gets whether the KDTree is used or not.
-    // *
-    // * @return true if KDTrees are used
-    // */
-    // public boolean getUseKDTree() {
-    // return m_UseKDTree;
-    // }
-
-    // /**
-    // * Gets the KDTree specification string, which contains the class name of
-    // * the KDTree class and any options to the KDTree
-    // *
-    // * @return the KDTree string.
-    // */
-    // private String getKDTreeSpec() {
-    //
-    // KDTree c = getKDTree();
-    // if (c instanceof OptionHandler) {
-    // return c.getClass().getName() + " " + Utils.joinOptions(((OptionHandler)
-    // c).getOptions());
-    // }
-    // return c.getClass().getName();
-    // }
-    //
-    // /**
-    // * Returns the tip text for this property
-    // *
-    // * @return tip text for this property suitable for displaying in the
-    // * explorer/experimenter gui
-    // */
-    // public String debugLevelTipText() {
-    // return "The debug level to use.";
-    // }
-
-    // /**
-    // * Sets the debug level. debug level = 0, means no output
-    // *
-    // * @param d
-    // * debuglevel
-    // */
-    // public void setDebugLevel(int d) {
-    // m_DebugLevel = d;
-    // }
-    //
-    // /**
-    // * Gets the debug level.
-    // *
-    // * @return debug level
-    // */
-    // public int getDebugLevel() {
-    // return m_DebugLevel;
-    // }
-
-    // /**
-    // * Parses a given list of options. <p/>
-    // *
-    // * <!-- options-start --> Valid options are: <p/>
-    // *
-    // * <pre> -I &lt;num&gt;
-    // * maximum number of overall iterations
-    // * (default 1).</pre>
-    // *
-    // * <pre> -M &lt;num&gt;
-    // * maximum number of iterations in the kMeans loop in
-    // * the Improve-Parameter part
-    // * (default 1000).</pre>
-    // *
-    // * <pre> -J &lt;num&gt;
-    // * maximum number of iterations in the kMeans loop
-    // * for the splitted centroids in the Improve-Structure part
-    // * (default 1000).</pre>
-    // *
-    // * <pre> -L &lt;num&gt;
-    // * minimum number of clusters
-    // * (default 2).</pre>
-    // *
-    // * <pre> -H &lt;num&gt;
-    // * maximum number of clusters
-    // * (default 4).</pre>
-    // *
-    // * <pre> -B &lt;value&gt;
-    // * distance value for binary attributes
-    // * (default 1.0).</pre>
-    // *
-    // * <pre> -K &lt;KDTree class specification&gt;
-    // * Full class name of KDTree class to use, followed
-    // * by scheme options.
-    // * eg: "weka.core.KDTree -P"
-    // * (default no KDTree class used).</pre>
-    // *
-    // * <pre> -C &lt;value&gt;
-    // * cutoff factor, takes the given percentage of the splitted
-    // * centroids if none of the children win
-    // * (default 0.0).</pre>
-    // *
-    // * <pre> -D &lt;distance function class specification&gt;
-    // * Full class name of Distance function class to use, followed
-    // * by scheme options.
-    // * (default weka.core.EuclideanDistance).</pre>
-    // *
-    // * <pre> -N &lt;file name&gt;
-    // * file to read starting centers from (ARFF format).</pre>
-    // *
-    // * <pre> -O &lt;file name&gt;
-    // * file to write centers to (ARFF format).</pre>
-    // *
-    // * <pre> -U &lt;int&gt;
-    // * The debug level.
-    // * (default 0)</pre>
-    // *
-    // * <pre> -Y &lt;file name&gt;
-    // * The debug vectors file.</pre>
-    // *
-    // * <pre> -S &lt;num&gt;
-    // * Random number seed.
-    // * (default 10)</pre>
-    // *
-    // * <!-- options-end -->
-    // *
-    // * @param options
-    // * the list of options as an array of strings
-    // * @throws Exception
-    // * if an option is not supported
-    // */
-    // public void setOptions(String[] options) throws Exception {
-    //
-    // String optionString;
-    // String funcString;
-    //
-    // optionString = Utils.getOption('I', options);
-    // if (optionString.length() != 0)
-    // setMaxIterations(Integer.parseInt(optionString));
-    // else
-    // setMaxIterations(1);
-    //
-    // optionString = Utils.getOption('M', options);
-    // if (optionString.length() != 0)
-    // setMaxKMeans(Integer.parseInt(optionString));
-    // else
-    // setMaxKMeans(1000);
-    //
-    // optionString = Utils.getOption('J', options);
-    // if (optionString.length() != 0)
-    // setMaxKMeansForChildren(Integer.parseInt(optionString));
-    // else
-    // setMaxKMeansForChildren(1000);
-    //
-    // optionString = Utils.getOption('L', options);
-    // if (optionString.length() != 0)
-    // setMinNumClusters(Integer.parseInt(optionString));
-    // else
-    // setMinNumClusters(2);
-    //
-    // optionString = Utils.getOption('H', options);
-    // if (optionString.length() != 0)
-    // setMaxNumClusters(Integer.parseInt(optionString));
-    // else
-    // setMaxNumClusters(4);
-    //
-    // optionString = Utils.getOption('B', options);
-    // if (optionString.length() != 0)
-    // setBinValue(Double.parseDouble(optionString));
-    // else
-    // setBinValue(1.0);
-    //
-    // setUseKDTree(Utils.getFlag("use-kdtree", options));
-    //
-    // if (getUseKDTree()) {
-    // funcString = Utils.getOption('K', options);
-    // if (funcString.length() != 0) {
-    // String[] funcSpec = Utils.splitOptions(funcString);
-    // if (funcSpec.length == 0) {
-    // throw new Exception("Invalid function specification string");
-    // }
-    // String funcName = funcSpec[0];
-    // funcSpec[0] = "";
-    // setKDTree((KDTree) Utils.forName(KDTree.class, funcName, funcSpec));
-    // } else {
-    // setKDTree(new KDTree());
-    // }
-    // } else {
-    // setKDTree(new KDTree());
-    // }
-    //
-    // optionString = Utils.getOption('C', options);
-    // if (optionString.length() != 0)
-    // setCutOffFactor(Double.parseDouble(optionString));
-    // else
-    // setCutOffFactor(0.0);
-    //
-    // funcString = Utils.getOption('D', options);
-    // if (funcString.length() != 0) {
-    // String[] funcSpec = Utils.splitOptions(funcString);
-    // if (funcSpec.length == 0) {
-    // throw new Exception("Invalid function specification string");
-    // }
-    // String funcName = funcSpec[0];
-    // funcSpec[0] = "";
-    // setDistanceF((DistanceFunction) Utils.forName(DistanceFunction.class,
-    // funcName, funcSpec));
-    // } else {
-    // setDistanceF(new EuclideanDistance());
-    // }
-    //
-    // optionString = Utils.getOption('N', options);
-    // if (optionString.length() != 0) {
-    // setInputCenterFile(new File(optionString));
-    // m_CenterInput = new BufferedReader(new FileReader(optionString));
-    // } else {
-    // setInputCenterFile(new File(System.getProperty("user.dir")));
-    // m_CenterInput = null;
-    // }
-    //
-    // optionString = Utils.getOption('O', options);
-    // if (optionString.length() != 0) {
-    // setOutputCenterFile(new File(optionString));
-    // m_CenterOutput = new PrintWriter(new FileOutputStream(optionString));
-    // } else {
-    // setOutputCenterFile(new File(System.getProperty("user.dir")));
-    // m_CenterOutput = null;
-    // }
-    //
-    // optionString = Utils.getOption('U', options);
-    // int debugLevel = 0;
-    // if (optionString.length() != 0) {
-    // try {
-    // debugLevel = Integer.parseInt(optionString);
-    // } catch (NumberFormatException e) {
-    // throw new Exception(optionString + "is an illegal value for option -U");
-    // }
-    // }
-    // setDebugLevel(debugLevel);
-    //
-    // optionString = Utils.getOption('Y', options);
-    // if (optionString.length() != 0) {
-    // setDebugVectorsFile(new File(optionString));
-    // } else {
-    // setDebugVectorsFile(new File(System.getProperty("user.dir")));
-    // m_DebugVectorsInput = null;
-    // m_DebugVectors = null;
-    // }
-    //
-    // super.setOptions(options);
-    // }
-
-    // /**
-    // * Gets the current settings of SimpleKMeans.
-    // *
-    // * @return an array of strings suitable for passing to setOptions
-    // */
-    // public String[] getOptions() {
-    // int i;
-    // Vector result;
-    // String[] options;
-    //
-    // result = new Vector();
-    //
-    // result.add("-I");
-    // result.add("" + getMaxIterations());
-    //
-    // result.add("-M");
-    // result.add("" + getMaxKMeans());
-    //
-    // result.add("-J");
-    // result.add("" + getMaxKMeansForChildren());
-    //
-    // result.add("-L");
-    // result.add("" + getMinNumClusters());
-    //
-    // result.add("-H");
-    // result.add("" + getMaxNumClusters());
-    //
-    // result.add("-B");
-    // result.add("" + getBinValue());
-    //
-    // if (getKDTree() != null) {
-    // result.add("-K");
-    // result.add("" + getKDTreeSpec());
-    // }
-    //
-    // result.add("-C");
-    // result.add("" + getCutOffFactor());
-    //
-    // if (getDistanceF() != null) {
-    // result.add("-D");
-    // result.add("" + getDistanceFSpec());
-    // }
-    //
-    // if (getInputCenterFile().exists() && getInputCenterFile().isFile()) {
-    // result.add("-N");
-    // result.add("" + getInputCenterFile());
-    // }
-    //
-    // if (getOutputCenterFile().exists() && getOutputCenterFile().isFile()) {
-    // result.add("-O");
-    // result.add("" + getOutputCenterFile());
-    // }
-    //
-    // int dL = getDebugLevel();
-    // if (dL > 0) {
-    // result.add("-U");
-    // result.add("" + getDebugLevel());
-    // }
-    //
-    // if (getDebugVectorsFile().exists() && getDebugVectorsFile().isFile()) {
-    // result.add("-Y");
-    // result.add("" + getDebugVectorsFile());
-    // }
-    //
-    // options = super.getOptions();
-    // for (i = 0; i < options.length; i++)
-    // result.add(options[i]);
-    //
-    // return (String[]) result.toArray(new String[result.size()]);
-    // }
-
     /**
      * Return a string describing this clusterer.
      * 
@@ -2031,62 +1122,4 @@ public class XMeans implements Clusterer {
         return temp.toString();
     }
 
-//    /**
-//     * Print centers for debug.
-//     * 
-//     * @param debugLevel
-//     *            level that gives according messages
-//     */
-//    private void PrCentersFD(int debugLevel) {
-//
-//        for (int i = 0; i < m_ClusterCenters.length; i++) {
-//            System.out.println(m_ClusterCenters[i]);
-//
-//        }
-//    }
-
-    // /**
-    // * Tests on debug status.
-    // *
-    // * @param debugLevel
-    // * level that gives according messages
-    // * @return true if debug level is set
-    // */
-    // private boolean TFD(int debugLevel) {
-    // return (debugLevel == m_DebugLevel);
-    // }
-
-//    /**
-//     * Does debug printouts.
-//     * 
-//     * @param debugLevel
-//     *            level that gives according messages
-//     * @param output
-//     *            string that is printed
-//     */
-//    private void PFD(int debugLevel, String output) {
-//
-//        System.out.println(output);
-//    }
-    //
-    // /**
-    // * Does debug printouts.
-    // *
-    // * @param output
-    // * string that is printed
-    // */
-    // private void PFD_CURR(String output) {
-    // if (m_CurrDebugFlag)
-    // System.out.println(output);
-    // }
-
-    // /**
-    // * Main method for testing this class.
-    // *
-    // * @param argv
-    // * should contain options
-    // */
-    // public static void main(String[] argv) {
-    // runClusterer(new XMeans(), argv);
-    // }
 }

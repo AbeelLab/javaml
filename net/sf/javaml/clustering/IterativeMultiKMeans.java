@@ -35,6 +35,8 @@ import net.sf.javaml.distance.DistanceMeasure;
  * Each clustering result is evaluated with an evaluation score, the result with
  * the best score will be returned as final result.
  * 
+ * XXX add reference XXX add pseudo code
+ * 
  * @param kMin
  *            minimal value for k (the number of clusters)
  * @param kMax
@@ -52,43 +54,65 @@ import net.sf.javaml.distance.DistanceMeasure;
  * @author Andreas De Rijcke
  * 
  */
-public class IterativeMultiKMeans extends SimpleKMeans {
+public class IterativeMultiKMeans implements Clusterer {
+    /**
+     * XXX add doc
+     */
+    private int kMin, kMax;
 
-	private int kMin, kMax;
+    /**
+     * XXX add doc
+     */
+    private int repeats, clusters, iterations;;
 
-	private int repeats, clusters, iterations;;
+    /**
+     * XXX add doc
+     */
+    private ClusterEvaluation ce;
 
-	private ClusterEvaluation ce;
+    /**
+     * XXX add doc
+     */
+    private DistanceMeasure dm;
 
-	public IterativeMultiKMeans(int kMin, int kMax, int iterations,
-			int repeats, DistanceMeasure dm, ClusterEvaluation ce) {
-		this.kMax = kMax;
-		this.kMin = kMin;
-		this.iterations = iterations;
-		this.repeats = repeats;
-		this.dm = dm;
-		this.ce = ce;
-	}
+    /**
+     * XXX add doc
+     * 
+     * @param kMin
+     * @param kMax
+     * @param iterations
+     * @param repeats
+     * @param dm
+     * @param ce
+     */
+    public IterativeMultiKMeans(int kMin, int kMax, int iterations, int repeats, DistanceMeasure dm,
+            ClusterEvaluation ce) {
+        this.kMax = kMax;
+        this.kMin = kMin;
+        this.iterations = iterations;
+        this.repeats = repeats;
+        this.dm = dm;
+        this.ce = ce;
+    }
 
-	@Override
-	public Dataset[] executeClustering(Dataset data) {
-
-		SimpleKMeans km = new SimpleKMeans(kMin, this.iterations, this.dm);
-		Dataset[] bestClusters = km.executeClustering(data);
-		for (clusters = kMin + 1; clusters <= kMax; clusters++) {
-			double bestScore = this.ce.score(bestClusters);
-			for (int i = 0; i < repeats; i++) {
-				super.executeClustering(data);
-				SimpleKMeans km2 = new SimpleKMeans(clusters, this.iterations,
-						this.dm);
-				Dataset[] tmpClusters = km2.executeClustering(data);
-				double tmpScore = this.ce.score(tmpClusters);
-				if (this.ce.compareScore(bestScore, tmpScore)) {
-					bestScore = tmpScore;
-					bestClusters = tmpClusters;
-				}
-			}
-		}
-		return bestClusters;
-	}
+    /**
+     * XXX add doc
+     */
+    public Dataset[] executeClustering(Dataset data) {
+        SimpleKMeans km = new SimpleKMeans(kMin, this.iterations, this.dm);
+        Dataset[] bestClusters = km.executeClustering(data);
+        for (clusters = kMin + 1; clusters <= kMax; clusters++) {
+            double bestScore = this.ce.score(bestClusters);
+            for (int i = 0; i < repeats; i++) {
+                SimpleKMeans km2 = new SimpleKMeans(clusters, this.iterations, this.dm);
+                Dataset[] tmpClusters = km2.executeClustering(data);
+                double tmpScore = this.ce.score(tmpClusters);
+                if (this.ce.compareScore(bestScore, tmpScore)) {
+                    bestScore = tmpScore;
+                    bestClusters = tmpClusters;
+                }
+            }
+        }
+        return bestClusters;
+    }
 }
