@@ -1,6 +1,10 @@
 The Java-ML readme documentation. This document covers the basic documentation 
 of the library. The Java-ML library is licensed under GNU-GPL.
 
+More elaborate documentation can be found on the documentation website for 
+the project:
+http://java-ml.sourceforge.net/
+
 +-----------------+
 | 0. Releases     |
 | 1. Algorithms   |
