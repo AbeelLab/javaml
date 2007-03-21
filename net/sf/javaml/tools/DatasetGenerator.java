@@ -30,7 +30,7 @@ import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.SimpleDataset;
 import net.sf.javaml.core.SimpleInstance;
-
+@Deprecated
 public class DatasetGenerator {
 
     public static Dataset createClusterDataset(int clusters, int itemsInCluster, int spaceWidth, int clusterWidth) {

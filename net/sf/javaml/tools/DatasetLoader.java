@@ -48,6 +48,7 @@ import net.sf.javaml.core.SimpleInstance;
  * @author Thomas Abeel
  * 
  */
+@Deprecated
 public class DatasetLoader {
 
     public static Dataset loadDataset(String f) throws IOException {
@@ -90,6 +91,8 @@ public class DatasetLoader {
                 }
             }
             out.addInstance(new SimpleInstance(values));
+            lineCount++;
+            line=in.readLine();
             while (line != null && line.length() == 0) {
                 lineCount++;
                 line = in.readLine();
