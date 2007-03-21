@@ -1,6 +1,7 @@
 package net.sf.javaml.test;
 import java.io.File;
 
+import net.sf.javaml.clustering.XMeans;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.tools.DatasetLoader;
 
@@ -20,7 +21,12 @@ import net.sf.javaml.tools.DatasetLoader;
 public class TestDatasetLoader {
 
     public static void main(String[]args)throws Exception{
-        Dataset data=DatasetLoader.loadDataset(new File("iris.data"),4);
-        System.out.println(data);
+        System.out.println("Loading data...");
+        Dataset data=DatasetLoader.loadDataset(new File("dim16.data"));
+        System.out.println("Dataset size: "+data.size());
+        XMeans xm=new XMeans();
+        System.out.println("Executing clustering...");
+        Dataset[] clusters=xm.executeClustering(data);
+        System.out.println(clusters.length);
     }
 }
