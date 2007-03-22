@@ -46,9 +46,18 @@ public interface Dataset {
      * @return
      */
     public Instance getInstance(int index);
+    
+    /**
+     * Get the index of a certain instance.
+     * 
+     * @param inst
+     *            the instance you want the index of
+     * @return
+     */
+    public int getIndex(Instance inst);
 
     /**
-     * Return the instance with the given index.
+     * Return the instance with the given index and remove it from the dataset.
      * 
      * @param index
      *            the index of the instance to be deleted
