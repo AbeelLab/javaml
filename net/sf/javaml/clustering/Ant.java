@@ -170,10 +170,10 @@ public class Ant implements Clusterer {
             { 0.0625, 0.0625, 0.0625, 0.3125, 0.6875 }, };
 
     /**
-     * XXX add doc
+     * TODO delete methode
+     * this method will be availeble in distance measure itself
+     * calculates max distance between all instances in the given dataset.
      */
-    // methods
-    // calculates max distance between all instances in dataset
     private double maxDist(Dataset data) {
         Instance min = data.getMinimumInstance();
         Instance max = data.getMaximumInstance();
@@ -205,6 +205,8 @@ public class Ant implements Clusterer {
     }
 
     /**
+     * TODO delete methode
+     * this method will be availeble in distance measure itself
      * calculates similarity E between 2 instances [0,1](100% sim: E=1, 0% sim:
      * E=0)
      * 
@@ -266,7 +268,6 @@ public class Ant implements Clusterer {
     private double avg(Vector<Instance> heap) {
         double avg = 0;
         Instance meanH = meanH(heap);
-        // average similatiry of the heap
         for (int i = 0; i < heap.size(); i++) {
             avg += similarity(heap.get(i), meanH);
         }
@@ -348,7 +349,6 @@ public class Ant implements Clusterer {
         return probPick;
     }
 
-    // probability to drop instance/heap other instance/heap [0,1]
     /**
      * probability to drop instance/heap [0,1]
      * 

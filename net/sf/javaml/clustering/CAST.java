@@ -157,12 +157,21 @@ public class CAST {
         	all.remove(data.getInstance(randomInstance));
         	
         	while(){
-        		// add new elements to open clusters
+        		// add element U with max affinity to open cluster
+        		double maxAffinity=affinityThreshold*currentCluster.size();
+        		int indexU;
         		for (int i = 0; i<all.size();i++){
         			Instance u = all.elementAt(i);
-        			double affinityU = affinity(u, currentCluster, data);
-        			
+        			double affinityU = affinity(u,currentCluster, data, simMatrix);
+        			if (affinityU >maxAffinity){
+        				maxAffinity = affinityU;
+        				indexU = i;
+        			}
         		}
+        		Instance U = all.get(indexU);
+        		currentCluster.add(U);
+        		all.remove(U);
+        		
         		
         		
         	}
