@@ -24,6 +24,7 @@
  */
 package net.sf.javaml.distance;
 
+import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 
 /**
@@ -60,4 +61,13 @@ public class CosineSimilarity implements DistanceMeasure {
 
     }
 
+    public double getMaximumDistance(Dataset data) {
+        //TODO implement
+        throw new RuntimeException("Method getMaximumDistance is not implemented in CosineSimilarity.");
+    }
+
+    public double getMinimumDistance(Dataset data) {
+        // TODO implement
+        throw new RuntimeException("Method getMinimumDistance is not implemented in CosineSimilarity.");
+    }
 }

@@ -24,7 +24,9 @@
  */
 package net.sf.javaml.distance;
 
+import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
+
 /**
  * The norm distance or
  * 
@@ -33,11 +35,12 @@ import net.sf.javaml.core.Instance;
  * Euclidean distance, in this respect that the power we use becomes a parameter
  * instead of being fixed to two.
  * 
- * The x-Norm distance between two points P=(p1,p2,...,pn) and
- * Q=(q1,q2,...,qn) in the Euclidean n-space is defined as: ((p1-q1)^x +
- * (p2-q2)^x + ... + (pn-qn)^x)^(1/x)
+ * The x-Norm distance between two points P=(p1,p2,...,pn) and Q=(q1,q2,...,qn)
+ * in the Euclidean n-space is defined as: ((p1-q1)^x + (p2-q2)^x + ... +
+ * (pn-qn)^x)^(1/x)
  * 
- * Special instances are x=0, the Manhattan- or taxicab norm. Or x=infinity gives the  
+ * Special instances are x=0, the Manhattan- or taxicab norm. Or x=infinity
+ * gives the
  * 
  * The default is the Euclidean distance where x=2.
  * 
@@ -46,23 +49,51 @@ import net.sf.javaml.core.Instance;
  * 
  */
 public class NormDistance implements DistanceMeasure {
-
-    public NormDistance(){
+    /**
+     * XXX add doc
+     */
+    public NormDistance() {
         this(2);
     }
+
+    /**
+     * XXX add doc
+     */
     private double power;
-    public NormDistance(double power){
-        this.power=power;
+
+    /**
+     * XXX add doc
+     */
+    public NormDistance(double power) {
+        this.power = power;
     }
+
+    /**
+     * XXX add doc
+     */
     public double calculateDistance(Instance x, Instance y) {
         if (x.size() != y.size()) {
             throw new RuntimeException("Both instances should contain the same number of values.");
         }
         double sum = 0;
         for (int i = 0; i < x.size(); i++) {
-            sum+=Math.pow(Math.abs(y.getValue(i)-x.getValue(i)),power);
+            sum += Math.pow(Math.abs(y.getValue(i) - x.getValue(i)), power);
         }
-        return Math.pow(sum,1/power);
+        return Math.pow(sum, 1 / power);
+    }
+
+    /**
+     * XXX add doc
+     */
+    public double getMaximumDistance(Dataset data) {
+        return calculateDistance(data.getMaximumInstance(), data.getMinimumInstance());
+    }
+
+    /**
+     * XXX add doc
+     */
+    public double getMinimumDistance(Dataset data) {
+        return 0;
     }
 
 }

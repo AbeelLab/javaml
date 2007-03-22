@@ -24,6 +24,7 @@
  */
 package net.sf.javaml.distance;
 
+import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 
 /**
@@ -74,6 +75,16 @@ public class RBFKernelSimilarity implements DistanceMeasure {
         double result = Math.exp(gamma * (2.0 * dotProduct(x, y) - dotProduct(x, x) - dotProduct(y, y)));
         return result;
 
+    }
+    
+    public double getMaximumDistance(Dataset data) {
+        //TODO implement
+        throw new RuntimeException("Method getMaximumDistance is not implemented in the RBFkernel.");
+    }
+
+    public double getMinimumDistance(Dataset data) {
+        // TODO implement
+        throw new RuntimeException("Method getMinimumDistance is not implemented in the RBFkernel.");
     }
 
 }

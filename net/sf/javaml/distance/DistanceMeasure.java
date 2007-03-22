@@ -24,6 +24,7 @@
  */
 package net.sf.javaml.distance;
 
+import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 
 /**
@@ -44,6 +45,32 @@ import net.sf.javaml.core.Instance;
  * 
  */
 public interface DistanceMeasure {
+    /**
+     * XXX add doc
+     * 
+     * @param i
+     * @param j
+     * @return
+     */
     public double calculateDistance(Instance i, Instance j);
 
+    /**
+     * XXX add doc
+     * maximal distance, minimal similarity
+     * for distance measures this value should be high,
+     * for similarity measures this value should be low
+     * @param data
+     * @return
+     */
+    public double getMaximumDistance(Dataset data);
+
+    /**
+     * XXX add doc
+     * minimal distance, maximal similarty
+     * for distance measures this value should be low,
+     * for similarity measures this value should be high
+     * @param data
+     * @return
+     */
+    public double getMinimumDistance(Dataset data);
 }
