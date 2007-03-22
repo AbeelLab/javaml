@@ -56,19 +56,19 @@ public interface Dataset {
      */
     public int getIndex(Instance inst);
 
-    /**
-     * Return the instance with the given index and remove it from the dataset.
-     * 
-     * @param index
-     *            the index of the instance to be deleted
-     */
-    public void removeInstance(int index);
+//    /**
+//     * Return the instance with the given index and remove it from the dataset.
+//     * 
+//     * @param index
+//     *            the index of the instance to be deleted
+//     */
+//    public void removeInstance(int index);
 
-    /**
-     * Remove all instances from the dataset.
-     * 
-     */
-    public void clear();
+//    /**
+//     * Remove all instances from the dataset.
+//     * 
+//     */
+//    public void clear();
 
     /**
      * Returns the size of the dataset
