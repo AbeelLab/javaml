@@ -100,6 +100,7 @@ public class SimpleInstance implements Instance {
 
     }
 
+   
     public float getValue(int index) {
         return values[index];
     }

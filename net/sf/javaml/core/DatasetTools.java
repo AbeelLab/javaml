@@ -27,6 +27,9 @@ package net.sf.javaml.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.math.stat.StatUtils;
+import org.apache.commons.math.stat.descriptive.moment.StandardDeviation;
+
 import net.sf.javaml.distance.DistanceMeasure;
 
 /**
@@ -37,7 +40,27 @@ import net.sf.javaml.distance.DistanceMeasure;
  */
 final public class DatasetTools {
 
-    
+    /**
+     * Return an instance with on each position the standard deviation for that
+     * attribute.
+     * 
+     * @param data
+     * @return
+     */
+    public static Instance getStandardDeviation(Dataset data) {
+        int numAttributes=data.getInstance(0).size();
+        float[] stdValues=new float[numAttributes];
+        double[] attr=new double[data.size()];
+        for(int i=0;i<numAttributes;i++){
+            StandardDeviation std=new StandardDeviation();
+            for(int j=0;j<data.size();j++){
+                attr[j]=data.getInstance(j).getValue(i);
+            }
+            stdValues[i]=(float)std.evaluate(attr);
+        }
+        return new SimpleInstance(stdValues);
+        
+    }
 
     /**
      * Return the centroid of this cluster when using the given distance
