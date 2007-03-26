@@ -1,5 +1,5 @@
 /**
- * DimensionSpeedTestDatasets.java
+ * VariableDimensionDatasets.java
  *
  * This file is part of the Java Machine Learning API
  * 

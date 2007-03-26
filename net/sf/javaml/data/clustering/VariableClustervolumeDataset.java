@@ -62,7 +62,7 @@ import net.sf.javaml.core.SimpleInstance;
 
 public class VariableClustervolumeDataset {
 	public static void main(String[] args) {
-		for (int i = 25; i < 201; i *= 2) {
+		for (int i = 25; i < 103000; i *= 2) {
 			write(createNd(i), "clustervolume" + i + ".data");
 		}
 	}
@@ -71,7 +71,7 @@ public class VariableClustervolumeDataset {
 		Dataset out = new SimpleDataset();
 		float small = 1.0f / 4.0f;
 		float large = 3.0f / 4.0f;
-		float clusterSpread = 0.1f;
+		float clusterSpread = 0.025f;
 		Random rg = new Random(System.currentTimeMillis());
 		for (int i = 0; i < n; i++) {
 			// lower left
@@ -83,27 +83,28 @@ public class VariableClustervolumeDataset {
 			// upper left
 			for (int j = 0; j < 2; j++) {
 				float[] vec2 = new float[2];
-				vec2[0] = (float) ((rg.nextGaussian() * clusterSpread*2) + small);
-				vec2[1] = (float) ((rg.nextGaussian() * clusterSpread*2) + large);
+				vec2[0] = (float) ((rg.nextGaussian() * (clusterSpread*2)) + small);
+				vec2[1] = (float) ((rg.nextGaussian() * (clusterSpread*2)) + large);
 				out.addInstance(new SimpleInstance(vec2));
 			}
 			// lower righ
 			for (int j = 0; j < 3; j++) {
 				float[] vec3 = new float[2];
-				vec3[0] = (float) ((rg.nextGaussian() * clusterSpread*3) + large);
-				vec3[1] = (float) ((rg.nextGaussian() * clusterSpread*3) + small);
+				vec3[0] = (float) ((rg.nextGaussian() * (clusterSpread*3)) + large);
+				vec3[1] = (float) ((rg.nextGaussian() * (clusterSpread*3)) + small);
 				out.addInstance(new SimpleInstance(vec3));
 			}
 
 			// upper right
 			for (int j = 0; j < 4; j++) {
 				float[] vec4 = new float[2];
-				vec4[0] = (float) ((rg.nextGaussian() * clusterSpread*4) + large);
-				vec4[1] = (float) ((rg.nextGaussian() * clusterSpread*4) + large);
+				vec4[0] = (float) ((rg.nextGaussian() * (clusterSpread*4)) + large);
+				vec4[1] = (float) ((rg.nextGaussian() * (clusterSpread*4)) + large);
 				out.addInstance(new SimpleInstance(vec4));
 			}
 		}
 		return out;
+		
 	}
 
 	private static void write(Dataset data, String fileName) {
