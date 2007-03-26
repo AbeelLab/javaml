@@ -90,18 +90,15 @@ public class FarthestFirst implements Clusterer {
      */
     private Instance[] centroids;
 
-    // /**
-    // * attribute min values
-    // */
-    // private double[] m_Min;
-    //
-    // /**
-    // * attribute max values
-    // */
-    // private double[] m_Max;
-
     private DistanceMeasure dm;
 
+    /**
+     * XXX DOC
+     * 
+     * @param minDistance
+     * @param selected
+     * @param center
+     */
     private void updateMinDistance(double[] minDistance, boolean[] selected, Instance center) {
         for (int i = 0; i < selected.length; i++)
             if (!selected[i]) {
@@ -111,6 +108,13 @@ public class FarthestFirst implements Clusterer {
             }
     }
 
+    /**
+     * XXX DOC
+     * 
+     * @param minDistance
+     * @param selected
+     * @return
+     */
     private int farthestAway(double[] minDistance, boolean[] selected) {
         double maxDistance = -1.0;
         int maxI = -1;
@@ -123,244 +127,32 @@ public class FarthestFirst implements Clusterer {
         return maxI;
     }
 
-    //
-    // private void initMinMax(Instances data) {
-    // m_Min = new double[data.numAttributes()];
-    // m_Max = new double[data.numAttributes()];
-    // for (int i = 0; i < data.numAttributes(); i++) {
-    // m_Min[i] = m_Max[i] = Double.NaN;
-    // }
-    //
-    // for (int i = 0; i < data.numInstances(); i++) {
-    // updateMinMax(data.instance(i));
-    // }
-    // }
-
-    // /**
-    // * Updates the minimum and maximum values for all the attributes based on
-    // a
-    // * new instance.
-    // *
-    // * @param instance
-    // * the new instance
-    // */
-    // private void updateMinMax(Instance instance) {
-    //
-    // for (int j = 0; j < instance.numAttributes(); j++) {
-    // if (Double.isNaN(m_Min[j])) {
-    // m_Min[j] = instance.value(j);
-    // m_Max[j] = instance.value(j);
-    // } else {
-    // if (instance.value(j) < m_Min[j]) {
-    // m_Min[j] = instance.value(j);
-    // } else {
-    // if (instance.value(j) > m_Max[j]) {
-    // m_Max[j] = instance.value(j);
-    // }
-    // }
-    // }
-    // }
-    // }
-    //
-    // /**
-    // * clusters an instance that has been through the filters
-    // *
-    // * @param instance
-    // * the instance to assign a cluster to
-    // * @return a cluster number
-    // */
-    // protected int clusterProcessedInstance(Instance instance) {
-    // double minDist = Double.MAX_VALUE;
-    // int bestCluster = 0;
-    // for (int i = 0; i < m_NumClusters; i++) {
-    // double dist = distance(instance, centroids.instance(i));
-    // if (dist < minDist) {
-    // minDist = dist;
-    // bestCluster = i;
-    // }
-    // }
-    // return bestCluster;
-    // }
-
-    // /**
-    // * Classifies a given instance.
-    // *
-    // * @param instance
-    // * the instance to be assigned to a cluster
-    // * @return the number of the assigned cluster as an integer if the class
-    // is
-    // * enumerated, otherwise the predicted value
-    // * @throws Exception
-    // * if instance could not be classified successfully
-    // */
-    // public int clusterInstance(Instance instance) throws Exception {
-    // m_ReplaceMissingFilter.input(instance);
-    // m_ReplaceMissingFilter.batchFinished();
-    // Instance inst = m_ReplaceMissingFilter.output();
-    //
-    // return clusterProcessedInstance(inst);
-    // }
-
-    // /**
-    // * Calculates the distance between two instances
-    // *
-    // * @param first
-    // * the first instance
-    // * @param second
-    // * the second instance
-    // * @return the distance between the two given instances, between 0 and 1
-    // */
-    // protected double distance(Instance first, Instance second) {
-    //
-    // double distance = 0;
-    // int firstI, secondI;
-    //
-    // for (int p1 = 0, p2 = 0; p1 < first.numValues() || p2 <
-    // second.numValues();) {
-    // if (p1 >= first.numValues()) {
-    // firstI = data.numAttributes();
-    // } else {
-    // firstI = first.index(p1);
-    // }
-    // if (p2 >= second.numValues()) {
-    // secondI = data.numAttributes();
-    // } else {
-    // secondI = second.index(p2);
-    // }
-    // if (firstI == data.classIndex()) {
-    // p1++;
-    // continue;
-    // }
-    // if (secondI == data.classIndex()) {
-    // p2++;
-    // continue;
-    // }
-    // double diff;
-    // if (firstI == secondI) {
-    // diff = difference(firstI, first.valueSparse(p1), second.valueSparse(p2));
-    // p1++;
-    // p2++;
-    // } else if (firstI > secondI) {
-    // diff = difference(secondI, 0, second.valueSparse(p2));
-    // p2++;
-    // } else {
-    // diff = difference(firstI, first.valueSparse(p1), 0);
-    // p1++;
-    // }
-    // distance += diff * diff;
-    // }
-    //
-    // return Math.sqrt(distance / data.numAttributes());
-    // }
-
-    // /**
-    // * Computes the difference between two given attribute values.
-    // */
-    // protected double difference(int index, double val1, double val2) {
-    //
-    // switch (data.attribute(index).type()) {
-    // case Attribute.NOMINAL:
-    //
-    // // If attribute is nominal
-    // if (Instance.isMissingValue(val1) || Instance.isMissingValue(val2) ||
-    // ((int) val1 != (int) val2)) {
-    // return 1;
-    // } else {
-    // return 0;
-    // }
-    // case Attribute.NUMERIC:
-    //
-    // // If attribute is numeric
-    // if (Instance.isMissingValue(val1) || Instance.isMissingValue(val2)) {
-    // if (Instance.isMissingValue(val1) && Instance.isMissingValue(val2)) {
-    // return 1;
-    // } else {
-    // double diff;
-    // if (Instance.isMissingValue(val2)) {
-    // diff = norm(val1, index);
-    // } else {
-    // diff = norm(val2, index);
-    // }
-    // if (diff < 0.5) {
-    // diff = 1.0 - diff;
-    // }
-    // return diff;
-    // }
-    // } else {
-    // return norm(val1, index) - norm(val2, index);
-    // }
-    // default:
-    // return 0;
-    // }
-    // }
-
-    // /**
-    // * Normalizes a given value of a numeric attribute.
-    // *
-    // * @param x
-    // * the value to be normalized
-    // * @param i
-    // * the attribute's index
-    // * @return the normalized value
-    // */
-    // private double norm(double x, int i) {
-    //
-    // if (Double.isNaN(m_Min[i]) || Utils.eq(m_Max[i], m_Min[i])) {
-    // return 0;
-    // } else {
-    // return (x - m_Min[i]) / (m_Max[i] - m_Min[i]);
-    // }
-    // }
-
-    // /**
-    // * return a string describing this clusterer
-    // *
-    // * @return a description of the clusterer as a string
-    // */
-    // public String toString() {
-    // StringBuffer temp = new StringBuffer();
-    //
-    // temp.append("\n FarthestFirst\n==============\n");
-    //
-    // temp.append("\nCluster centroids:\n");
-    // for (int i = 0; i < m_NumClusters; i++) {
-    // temp.append("\nCluster " + i + "\n\t");
-    // for (int j = 0; j < centroids.numAttributes(); j++) {
-    // if (centroids.attribute(j).isNominal()) {
-    // temp.append(" "
-    // + centroids.attribute(j).value((int) centroids.instance(i).value(j)));
-    // } else {
-    // temp.append(" " + centroids.instance(i).value(j));
-    // }
-    // }
-    // }
-    // temp.append("\n\n");
-    // return temp.toString();
-    // }
-
     /**
      * XXX doc
      */
     private Random rg;
 
     /**
-     * XXX doc
+     * XXX DOC
      * 
      * @param numClusters
-     * @param rg
+     * @param dm
      */
-    public FarthestFirst(int numClusters, DistanceMeasure dm, Random rg) {
+    public FarthestFirst(int numClusters, DistanceMeasure dm) {
         super();
         m_NumClusters = numClusters;
         this.dm = dm;
-        this.rg = rg;
+        this.rg = new Random(System.currentTimeMillis());
     }
 
+    /**
+     * XXX DOC
+     */
     public Dataset[] executeClustering(Dataset data) {
         this.data = data;
         centroids = new Instance[m_NumClusters];
 
-        int n = data.size();// .numInstances();
+        int n = data.size();
         boolean[] selected = new boolean[n];
         double[] minDistance = new double[n];
 
@@ -382,6 +174,8 @@ public class FarthestFirst implements Clusterer {
             selected[nextI] = true;
             updateMinDistance(minDistance, selected, data.getInstance(nextI));
         }
+
+        // put data in clusters using the calculated centroids
         Dataset[] clusters = new Dataset[m_NumClusters];
         for (int i = 0; i < m_NumClusters; i++) {
             clusters[i] = new SimpleDataset();
@@ -400,8 +194,5 @@ public class FarthestFirst implements Clusterer {
             clusters[index].addInstance(inst);
         }
         return clusters;
-        // data = new Instances(data, 0);
-        // long end = System.currentTimeMillis();
-        // System.out.println("Clustering Time = " + (end-start));
     }
 }
