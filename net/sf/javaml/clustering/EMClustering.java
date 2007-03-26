@@ -1211,7 +1211,7 @@ public class EMClustering implements Clusterer {
         for (int i = 0; i < best.length; i++) {
             centers[i] = DatasetTools.getCentroid(best[i], new EuclideanDistance());
             clusterSizes[i] = best[i].size();
-            DatasetTools.getStandardDeviation(best[i]);
+            stdD[i]=DatasetTools.getStandardDeviation(best[i]);
         }
         // Instances centers = bestK.getClusterCentroids();
         
@@ -2077,14 +2077,25 @@ this.m_num_clusters=4;
         // }
 
         doEM();
-        // TODO export clusters
-        
-        for(int i=0;i<data.size();i++){
-            System.out.println("Prob: "+Arrays.toString(distributionForInstance(data.getInstance(i))));
+       //construct clusters based on the probabiliy distributions
+        Dataset[] clusters=new Dataset[m_num_clusters];
+        for(int j=0;j<m_num_clusters;j++){
+            clusters[j]=new SimpleDataset();
         }
-        return null;
+        for(int i=0;i<data.size();i++){
+            double[] distr=distributionForInstance(data.getInstance(i));
+            for(int j=0;j<m_num_clusters;j++){
+                if(distr[j]>clusterThreshold){
+                    clusters[j].addInstance(data.getInstance(i));
+                }
+            }
+        }
+       return clusters;
     }
-
+/**
+ * The minimum probability an instance should have before it belongs to a cluster.
+ */
+    private double clusterThreshold=0.75;
     /**
      * Contains static utility functions for Estimators.
      * <p>
