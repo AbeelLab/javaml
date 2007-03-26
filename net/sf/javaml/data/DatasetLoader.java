@@ -90,6 +90,7 @@ public class DatasetLoader {
                 }
             }
             out.addInstance(new SimpleInstance(values));
+            line=in.readLine();
             while (line != null && line.length() == 0) {
                 lineCount++;
                 line = in.readLine();
