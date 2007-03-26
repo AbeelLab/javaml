@@ -3,7 +3,7 @@ import java.io.File;
 
 import net.sf.javaml.clustering.XMeans;
 import net.sf.javaml.core.Dataset;
-import net.sf.javaml.tools.DatasetLoader;
+import net.sf.javaml.data.DatasetLoader;
 
 /*
  * TestDatasetLoader.java 
