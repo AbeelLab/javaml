@@ -28,7 +28,6 @@ package net.sf.javaml.test;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.GridLayout;
 import java.io.File;
 
 import javax.swing.BorderFactory;
@@ -36,10 +35,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import net.sf.javaml.clustering.Ant;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.test.VisualTestAnt.ClusterLabel;
 import net.sf.javaml.data.DatasetLoader;
 
 public class VisualTestVariableDataset extends JPanel {
@@ -57,12 +54,10 @@ public class VisualTestVariableDataset extends JPanel {
 
     }
 
-    int space = 750;
+    int space = 400;
 
     public VisualTestVariableDataset() throws Exception {
-        // Dataset data = DatasetGenerator.createClusterSquareDataset(space, 8,
-        // 50);
-        Dataset data = DatasetLoader.loadDataset(new File("clustersize1600.data"));
+        Dataset data = DatasetLoader.loadDataset(new File("clusternumber25.data"));
         this.add(createLabel(data));
 
     }
