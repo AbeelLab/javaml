@@ -1,5 +1,5 @@
 /**
- * SimpleDataset.java, 11-okt-06
+ * SimpleDataset.java
  *
  * This file is part of the Java Machine Learning API
  * 
@@ -17,7 +17,7 @@
  * along with the Java Machine Learning API; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * 
- * Copyright (c) 2006, Thomas Abeel
+ * Copyright (c) 2006-2007, Thomas Abeel
  * 
  * Project: http://sourceforge.net/projects/java-ml/
  * 
@@ -26,12 +26,23 @@
 package net.sf.javaml.core;
 
 import java.util.Vector;
-
+/**
+ * XXX write doc
+ * @author Thomas Abeel
+ *
+ */
 public class SimpleDataset implements Dataset {
+    /**
+     * XXX doc
+     */
     private Vector<Instance> instances = new Vector<Instance>();
-
+    /**
+     * XXX doc
+     */
     private float[] lowArray, highArray;
-
+    /**
+     * XXX doc
+     */
     public boolean addInstance(Instance instance) {
 
         if (instances.size() == 0) {
@@ -54,31 +65,43 @@ public class SimpleDataset implements Dataset {
         }
 
     }
-
+    /**
+     * XXX doc
+     */
     public int getIndex(Instance i) {
         return instances.indexOf(i);
     }
-
+    /**
+     * XXX doc
+     */
     public Instance getInstance(int index) {
         return instances.get(index);
     }
-
+    /**
+     * XXX doc
+     */
     public void removeInstance(Instance i) {
         instances.remove(i);
         recalculate();
     }
-
-    public void removeInstance(int index) {
-        instances.remove(index);
-        recalculate();
-    }
-
-    public void clear() {
-        instances.removeAllElements();
-        lowArray = null;
-        highArray = null;
-    }
-
+//    /**
+//     * XX doc
+//     */
+//    public void removeInstance(int index) {
+//        instances.remove(index);
+//        recalculate();
+//    }
+//    /**
+//     * XX doc
+//     */
+//    public void clear() {
+//        instances.removeAllElements();
+//        lowArray = null;
+//        highArray = null;
+//    }
+    /**
+     * XXX doc
+     */
     private void recalculate() {
         if (instances.size() == 0) {
             lowArray = null;
@@ -100,19 +123,27 @@ public class SimpleDataset implements Dataset {
         }
 
     }
-
+    /**
+     * XXX doc
+     */
     public int size() {
         return instances.size();
     }
-
+    /**
+     * XXX doc
+     */
     public Instance getMaximumInstance() {
         return new SimpleInstance(highArray);
     }
-
+    /**
+     * XXX doc
+     */
     public Instance getMinimumInstance() {
         return new SimpleInstance(lowArray);
     }
-
+    /**
+     * XXX doc
+     */
     @Override
     public String toString() {
         // TODO optimize using stringbuffer;
