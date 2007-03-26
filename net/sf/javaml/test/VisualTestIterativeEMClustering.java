@@ -36,14 +36,16 @@ import javax.swing.JPanel;
 
 import net.sf.javaml.clustering.Cobweb;
 import net.sf.javaml.clustering.EMClustering;
+import net.sf.javaml.clustering.IterativeEMClustering;
 import net.sf.javaml.clustering.evaluation.CIndex;
+import net.sf.javaml.clustering.evaluation.ClusterEvaluation;
 import net.sf.javaml.clustering.evaluation.Tau;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.distance.EuclideanDistance;
 import net.sf.javaml.tools.DatasetGenerator;
 
-public class VisualTestEMClustering extends JPanel {
+public class VisualTestIterativeEMClustering extends JPanel {
 
     /**
      * 
@@ -54,21 +56,21 @@ public class VisualTestEMClustering extends JPanel {
      * @param args
      */
     public static void main(String[] args) {
-        JFrame window = new JFrame("EM test");
+        JFrame window = new JFrame("IterativeEM test");
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.setContentPane(new VisualTestEMClustering());
+        window.setContentPane(new VisualTestIterativeEMClustering());
         window.pack();
         window.setVisible(true);
 
     }
 
-    public VisualTestEMClustering() {
+    public VisualTestIterativeEMClustering() {
         this.setLayout(new GridLayout(0, 3));
         int space = 300;
-        Dataset data = DatasetGenerator.createClusterSquareDataset(space, 10,100);
+        Dataset data = DatasetGenerator.createClusterSquareDataset(space, 10,250);
 
         this.add(createLabel(data, Color.BLACK, space, space,  null));
-        EMClustering km = new EMClustering(3);
+        IterativeEMClustering km = new IterativeEMClustering(new Tau(new EuclideanDistance()),2,4);
         Dataset[] clusters = km.executeClustering(data);
         
         Color[] colors = { Color.RED, Color.GREEN, Color.BLUE, Color.MAGENTA };
