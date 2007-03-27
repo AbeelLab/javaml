@@ -36,11 +36,14 @@ import net.sf.javaml.core.Dataset;
  */
 public interface Clusterer {
     /**
-     * Will execute a particular clustering on a dataset.
+     * This method will execute the clustering algorithm on a particular
+     * dataset. The result will be an array of Dataset where each dataset is a
+     * cluster.
      * 
      * @param data
      *            the dataset on which to execute the clustering.
-     * @return the different clusters obtained by this clustering algorithm
+     * @return the different clusters obtained by this clustering algorithm.
+     *         Each cluster is represented as a seperate dataset.
      */
     public Dataset[] executeClustering(Dataset data);
 
