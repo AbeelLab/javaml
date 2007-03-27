@@ -29,6 +29,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.io.File;
+import java.io.IOException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
@@ -39,6 +41,7 @@ import net.sf.javaml.clustering.AdaptiveQualityBasedClustering;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.tools.DatasetGenerator;
+import net.sf.javaml.data.DatasetLoader;
 
 public class VisualTestAQBC  extends JPanel {
 
@@ -62,8 +65,11 @@ public class VisualTestAQBC  extends JPanel {
     public VisualTestAQBC() {
         this.setLayout(new GridLayout(0, 3));
         int space = 300;
-        Dataset data = DatasetGenerator.createClusterSquareDataset3D(space, 20,1000);
-
+        //Dataset data = DatasetGenerator.createClusterSquareDataset3D(space, 20,1000);
+        Dataset data;
+		try {
+			data = DatasetLoader.loadDataset(new File("clustervolume25.data"));
+		
         this.add(createLabel(data, Color.BLACK, space, space, null, null, 0));
         AdaptiveQualityBasedClustering km = new AdaptiveQualityBasedClustering();
         Dataset[] clusters = km.executeClustering(data);
@@ -73,7 +79,10 @@ public class VisualTestAQBC  extends JPanel {
         	System.out.println("Visual test: "+clusters[i].size());
             this.add(createLabel(clusters[i], colors[i], space, space, km, colors, i));
         }
-        
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         //CIndex cindex=new CIndex(new EuclideanDistance());
         //System.out.println("C-index score: "+cindex.score(clusters));
         

@@ -57,7 +57,7 @@ public class VisualTestVariableDataset extends JPanel {
     int space = 400;
 
     public VisualTestVariableDataset() throws Exception {
-        Dataset data = DatasetLoader.loadDataset(new File("clusternumber25.data"));
+        Dataset data = DatasetLoader.loadDataset(new File("clusterSubSpace10.data"));
         this.add(createLabel(data));
 
     }

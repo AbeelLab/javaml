@@ -22,7 +22,7 @@ public class TestDatasetLoader {
 
     public static void main(String[]args)throws Exception{
         System.out.println("Loading data...");
-        Dataset data=DatasetLoader.loadDataset(new File("dim16.data"));
+        Dataset data=DatasetLoader.loadDataset(new File("clusternumber4.data"));
         System.out.println("Dataset size: "+data.size());
         XMeans xm=new XMeans();
         System.out.println("Executing clustering...");
