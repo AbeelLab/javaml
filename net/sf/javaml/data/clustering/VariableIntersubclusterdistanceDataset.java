@@ -1,5 +1,5 @@
 /**
- * VariableNumberofclusterDataset.java
+ * SubclusterDataset.java
  *
  * This file is part of the Java Machine Learning API
  * 
@@ -23,7 +23,6 @@
  * Project: http://sourceforge.net/projects/java-ml/
  * 
  */
-
 package net.sf.javaml.data.clustering;
 
 import java.io.FileNotFoundException;
@@ -34,17 +33,14 @@ import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.SimpleDataset;
 import net.sf.javaml.core.SimpleInstance;
-import net.sf.javaml.filter.Filter;
-import net.sf.javaml.filter.NormalizeMidrange;
 
 /**
- * This class can generate datasets with variable number of clusters to test the
- * time complexity and performance of clustering algorithms on datasets that
- * contain different number of clusters.
+ * This class can generates datasets with 4 clusters, who contain each 4
+ * subclusters with variable inter subcluster distance to test the time
+ * complexity and performance of clustering algorithms on datasets with
+ * subclusters.
  * 
- * All datasets contain X clusters, with 1000 instances each.
- * 
- * All instances have dimension 2
+ * All subclusters contain 100 instances. All instances have dimension 2
  * 
  * All datasets are normalized with the values in each dimension between 0 and
  * 1.
@@ -54,40 +50,65 @@ import net.sf.javaml.filter.NormalizeMidrange;
  * The values in each dimension within a cluster are Gaussian distributed with a
  * standard deviation of 0.1.
  * 
- * The number of dataitems in each dataset is variable.
- * 
- * @author Thomas Abeel
  * @author Andreas De Rijcke
  * 
  */
 
-public class VariableNumberofclusterDataset {
+public class VariableIntersubclusterdistanceDataset {
 	public static void main(String[] args) {
-		for (int i = 2; i < 26; i++) {
-			write(createNd(i), "clusternumber" + i + ".data");
+		for (int i = 1; i < 11; i++) {
+			write(createNd(i), "clusterSubSpace" + i + ".data");
 		}
+
 	}
 
-	private static Dataset createNd(int n) {
+	private static Dataset createNd(int space) {
+		double spacer = 0.01 * space;
 		Dataset out = new SimpleDataset();
-		int datasize = 500;
+		int datasize = 100;
 		Random rg = new Random(System.currentTimeMillis());
-		int dim = (int) Math.sqrt(n) + 1;
-		float clusterSpread = 0.1f;
-		for (int i = 0; i < n; i++) {
-			int rij = i / dim;
-			int kolom = i % dim;
-			for (int j = 0; j < datasize; j++) {
-				double x = rg.nextGaussian() * clusterSpread + 0.5 + kolom;
-				double y = rg.nextGaussian() * clusterSpread + 0.5 + rij;
-				float[] vec1 = new float[2];
-				vec1[0] = (float) x;
-				vec1[1] = (float) y;
-				out.addInstance(new SimpleInstance(vec1));
+		double clusterSpread = 0.014;
+		for (int i = 0; i < 2; i++) {
+			double rij = 0.25 + 0.5 * i;
+			for (int j = 0; j < 2; j++) {
+				double kolom = 0.25 + 0.5 * j;
+				for (int k = 0; k < datasize; k++) {
+					double x1 = rg.nextGaussian() * clusterSpread + kolom
+							+ spacer;
+					double y1 = rg.nextGaussian() * clusterSpread + rij
+							+ spacer;
+					float[] vec1 = new float[2];
+					vec1[0] = (float) x1;
+					vec1[1] = (float) y1;
+					out.addInstance(new SimpleInstance(vec1));
+					double x2 = rg.nextGaussian() * clusterSpread + kolom
+							+ spacer;
+					double y2 = rg.nextGaussian() * clusterSpread + rij
+							- spacer;
+					float[] vec2 = new float[2];
+					vec2[0] = (float) x2;
+					vec2[1] = (float) y2;
+					out.addInstance(new SimpleInstance(vec2));
+					double x3 = rg.nextGaussian() * clusterSpread + kolom
+							- spacer;
+					double y3 = rg.nextGaussian() * clusterSpread + rij
+							+ spacer;
+					float[] vec3 = new float[2];
+					vec3[0] = (float) x3;
+					vec3[1] = (float) y3;
+					out.addInstance(new SimpleInstance(vec3));
+					double x4 = rg.nextGaussian() * clusterSpread + kolom
+							- spacer;
+					double y4 = rg.nextGaussian() * clusterSpread + rij
+							- spacer;
+					float[] vec4 = new float[2];
+					vec4[0] = (float) x4;
+					vec4[1] = (float) y4;
+					out.addInstance(new SimpleInstance(vec4));
+				}
 			}
 		}
-		Filter filter = new NormalizeMidrange(0.5, 1);
-		return filter.filterDataset(out);
+		return out;
 	}
 
 	private static void write(Dataset data, String fileName) {

@@ -1,5 +1,5 @@
 /**
- * VariableNumberofclusterDataset.java
+ * Specialclustershape1Dataset.java
  *
  * This file is part of the Java Machine Learning API
  * 
@@ -34,15 +34,14 @@ import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.SimpleDataset;
 import net.sf.javaml.core.SimpleInstance;
-import net.sf.javaml.filter.Filter;
-import net.sf.javaml.filter.NormalizeMidrange;
 
 /**
- * This class can generate datasets with variable number of clusters to test the
- * time complexity and performance of clustering algorithms on datasets that
- * contain different number of clusters.
+ * This class can generate a dataset with non-spherical shaped clusters to test
+ * the time complexity and performance of clustering algorithms on datasets that
+ * contain non-spherical clusters .
  * 
- * All datasets contain X clusters, with 1000 instances each.
+ * Dataset contains 4 clusters, with respectively 100, 200, 400 and 1300
+ * instances each, 2000 over-all.
  * 
  * All instances have dimension 2
  * 
@@ -54,40 +53,55 @@ import net.sf.javaml.filter.NormalizeMidrange;
  * The values in each dimension within a cluster are Gaussian distributed with a
  * standard deviation of 0.1.
  * 
- * The number of dataitems in each dataset is variable.
- * 
- * @author Thomas Abeel
  * @author Andreas De Rijcke
  * 
  */
-
-public class VariableNumberofclusterDataset {
+public class Specialclustershape1Dataset {
 	public static void main(String[] args) {
-		for (int i = 2; i < 26; i++) {
-			write(createNd(i), "clusternumber" + i + ".data");
-		}
+		write(createNd(), "special_shape1.data");
 	}
 
-	private static Dataset createNd(int n) {
+	private static Dataset createNd() {
 		Dataset out = new SimpleDataset();
-		int datasize = 500;
 		Random rg = new Random(System.currentTimeMillis());
-		int dim = (int) Math.sqrt(n) + 1;
-		float clusterSpread = 0.1f;
-		for (int i = 0; i < n; i++) {
-			int rij = i / dim;
-			int kolom = i % dim;
-			for (int j = 0; j < datasize; j++) {
-				double x = rg.nextGaussian() * clusterSpread + 0.5 + kolom;
-				double y = rg.nextGaussian() * clusterSpread + 0.5 + rij;
-				float[] vec1 = new float[2];
-				vec1[0] = (float) x;
-				vec1[1] = (float) y;
-				out.addInstance(new SimpleInstance(vec1));
-			}
+		double clusterSpread;
+		for (int i = 0; i < 100; i++) {
+			clusterSpread = 0.03;
+			double x1 = rg.nextGaussian() * clusterSpread + 0.125;
+			double y1 = rg.nextGaussian() * clusterSpread + 0.125;
+			float[] vec1 = new float[2];
+			vec1[0] = (float) x1;
+			vec1[1] = (float) y1;
+			out.addInstance(new SimpleInstance(vec1));
 		}
-		Filter filter = new NormalizeMidrange(0.5, 1);
-		return filter.filterDataset(out);
+		for (int i = 0; i < 200; i++) {
+			clusterSpread = 0.03;
+			double x2 = rg.nextGaussian() * clusterSpread + 0.125;
+			double y2 = rg.nextGaussian() * clusterSpread + 0.875;
+			float[] vec2 = new float[2];
+			vec2[0] = (float) x2;
+			vec2[1] = (float) y2;
+			out.addInstance(new SimpleInstance(vec2));
+		}
+		for (int i = 0; i < 400; i++) {
+			clusterSpread = 0.03;
+			double x3 = rg.nextGaussian() * clusterSpread + 0.875;
+			double y3 = rg.nextGaussian() * clusterSpread + 0.875;
+			float[] vec3 = new float[2];
+			vec3[0] = (float) x3;
+			vec3[1] = (float) y3;
+			out.addInstance(new SimpleInstance(vec3));
+		}
+		for (int i = 0; i < 1300; i++) {
+			clusterSpread = 0.08;
+			double x4 = rg.nextGaussian() * clusterSpread + 0.5;
+			double y4 = rg.nextGaussian() * clusterSpread + 0.5;
+			float[] vec4 = new float[2];
+			vec4[0] = (float) x4;
+			vec4[1] = (float) y4;
+			out.addInstance(new SimpleInstance(vec4));
+		}
+		return out;
 	}
 
 	private static void write(Dataset data, String fileName) {
