@@ -94,7 +94,7 @@ public class EMClustering implements Clusterer {
         Instance datasetSTD = DatasetTools.getStandardDeviation(data);
         double bestSqE = Double.MAX_VALUE;
         for (int i = 0; i < 10; i++) {
-            SimpleKMeans sk = new SimpleKMeans(m_num_clusters, 100);
+            KMeans sk = new KMeans(m_num_clusters, 100);
             ClusterEvaluation ce = new SumOfSquaredErrors(new EuclideanDistance());
             Dataset[] tmp = sk.executeClustering(data);
             double score = ce.score(tmp);

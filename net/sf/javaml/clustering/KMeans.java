@@ -1,5 +1,5 @@
 /**
- * SimpleKMeans.java
+ * KMeans.java
  *
  * This file is part of the Java Machine Learning API
  * 
@@ -47,7 +47,7 @@ import net.sf.javaml.distance.EuclideanDistance;
  * @author Thomas Abeel
  * 
  */
-public class SimpleKMeans implements Clusterer {
+public class KMeans implements Clusterer {
     /**
      * The number of clusters.
      */
@@ -76,7 +76,7 @@ public class SimpleKMeans implements Clusterer {
      * Constuct a default Simple K-means clusterer with 100 iterations, 2
      * clusters, a default random generator and using the Euclidean distance.
      */
-    public SimpleKMeans() {
+    public KMeans() {
         this(2, 100);
     }
 
@@ -96,7 +96,7 @@ public class SimpleKMeans implements Clusterer {
      * @param iterations
      *            the number of iterations
      */
-    public SimpleKMeans(int clusters, int iterations) {
+    public KMeans(int clusters, int iterations) {
         this(clusters, iterations, new EuclideanDistance());
     }
 
@@ -113,7 +113,7 @@ public class SimpleKMeans implements Clusterer {
      * @param dm
      *            the distance measure to use
      */
-    public SimpleKMeans(int clusters, int iterations, DistanceMeasure dm) {
+    public KMeans(int clusters, int iterations, DistanceMeasure dm) {
         this.numberOfClusters = clusters;
         this.numberOfIterations = iterations;
         this.dm = dm;

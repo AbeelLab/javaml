@@ -40,7 +40,7 @@ public class TestClustEvalScore {
 		// ClusterEvaluation ce = new WB(new EuclideanDistance());
 
 		for (int i = 0; i < 10; i++) {
-			//SimpleKMeans km = new SimpleKMeans(4, 200);
+			//KMeans km = new KMeans(4, 200);
 			// IterativeKMeans km = new IterativeKMeans(2, 10, 500,new
 			// EuclideanDistance(), ce);
 			// MultiKMeans km = new MultiKMeans(4, 500);

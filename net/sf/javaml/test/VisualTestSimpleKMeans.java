@@ -34,7 +34,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import net.sf.javaml.clustering.SimpleKMeans;
+import net.sf.javaml.clustering.KMeans;
 import net.sf.javaml.clustering.evaluation.CIndex;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
@@ -66,7 +66,7 @@ public class VisualTestSimpleKMeans extends JPanel {
         Dataset data = DatasetGenerator.createClusterSquareDataset(space, 10,100);
 
         this.add(createLabel(data, Color.BLACK, space, space, null, null, 0));
-        SimpleKMeans km = new SimpleKMeans(4, 100);
+        KMeans km = new KMeans(4, 100);
         Dataset[] clusters = km.executeClustering(data);
         
         Color[] colors = { Color.RED, Color.GREEN, Color.BLUE, Color.MAGENTA };
@@ -80,7 +80,7 @@ public class VisualTestSimpleKMeans extends JPanel {
 
     }
 
-    private JLabel createLabel(Dataset data, Color color, int width, int height, SimpleKMeans km, Color[] colors, int i) {
+    private JLabel createLabel(Dataset data, Color color, int width, int height, KMeans km, Color[] colors, int i) {
         return new ClusterLabel(data, color, width, height, km, colors, i);
     }
 
@@ -96,11 +96,11 @@ public class VisualTestSimpleKMeans extends JPanel {
 
         private Color color;
 
-        private SimpleKMeans km;
+        private KMeans km;
 
        
        
-        public ClusterLabel(Dataset data, Color color, int width, int height, SimpleKMeans km, Color[] colors, int i) {
+        public ClusterLabel(Dataset data, Color color, int width, int height, KMeans km, Color[] colors, int i) {
             this.setPreferredSize(new Dimension(width, height));
             this.data = data;
             this.color = color;

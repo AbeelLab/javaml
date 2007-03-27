@@ -40,7 +40,7 @@ import net.sf.javaml.distance.DistanceMeasure;
  * 10(2):180-184.<br/> <br/> Sanjoy Dasgupta: Performance Guarantees for
  * Hierarchical Clustering. In: 15th Annual Conference on Computational Learning
  * Theory, 351-363, 2002.<br/> <br/> Notes:<br/> - works as a fast simple
- * approximate clusterer<br/> - modelled after SimpleKMeans, might be a useful
+ * approximate clusterer<br/> - modelled after KMeans, might be a useful
  * initializer for it <p/>
  * 
  * BibTeX:
