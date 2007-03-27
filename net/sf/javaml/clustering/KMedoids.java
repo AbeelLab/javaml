@@ -74,14 +74,12 @@ public class KMedoids implements Clusterer {
         Dataset[] output = new SimpleDataset[numberOfClusters];
         for (int i = 0; i < numberOfClusters; i++) {
             int random=rg.nextInt(data.size());
-            System.out.println("Random index: "+random+"\t"+data.getInstance(random));
             medoids[i] = data.getInstance(random);
         }
 
         boolean changed = true;
         int count = 0;
         while (changed && count < maxIterations) {
-            System.out.println("Iteration: "+count);
             changed = false;
             count++;
             int[] assignment = assign(medoids, data);
