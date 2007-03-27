@@ -156,7 +156,7 @@ public class KMeans implements Clusterer {
                 double minDistance = Double.MAX_VALUE;
                 for (int j = 0; j < centroids.length; j++) {
                     double dist = dm.calculateDistance(centroids[j], data.getInstance(i));
-                    if (dist < minDistance) {
+                    if (dm.compare(dist, minDistance)) {
                         minDistance = dist;
                         tmpCluster = j;
                     }
@@ -212,7 +212,7 @@ public class KMeans implements Clusterer {
             double minDistance = Double.MAX_VALUE;
             for (int j = 0; j < centroids.length; j++) {
                 double dist = dm.calculateDistance(centroids[j], data.getInstance(i));
-                if (dist < minDistance) {
+                if (dm.compare(dist, minDistance)) {
                     minDistance = dist;
                     tmpCluster = j;
                 }
