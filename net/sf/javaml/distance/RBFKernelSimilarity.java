@@ -35,7 +35,7 @@ import net.sf.javaml.core.Instance;
  * @author Thomas Abeel
  * 
  */
-public class RBFKernelSimilarity implements DistanceMeasure {
+public class RBFKernelSimilarity extends AbstractSimilarity {
 
     private double gamma = 0.01;
 
@@ -68,7 +68,9 @@ public class RBFKernelSimilarity implements DistanceMeasure {
         }
         return result;
     }
-
+/**
+ * XXX DOC
+ */
     public double calculateDistance(Instance x, Instance y) {
         if (x.equals(y))
             return 1.0;
@@ -76,15 +78,19 @@ public class RBFKernelSimilarity implements DistanceMeasure {
         return result;
 
     }
-    
+/**
+ * XXX DOC
+ */
     public double getMaximumDistance(Dataset data) {
-        //TODO implement
-        throw new RuntimeException("Method getMaximumDistance is not implemented in the RBFkernel.");
+        // TODO implement
+        throw new UnsupportedOperationException("Method not implemented");
     }
-
+/**
+ * XXX DOC
+ */
     public double getMinimumDistance(Dataset data) {
         // TODO implement
-        throw new RuntimeException("Method getMinimumDistance is not implemented in the RBFkernel.");
+        throw new UnsupportedOperationException("Method not implemented");
     }
 
 }

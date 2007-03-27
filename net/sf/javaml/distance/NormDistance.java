@@ -48,7 +48,7 @@ import net.sf.javaml.core.Instance;
  * @author Thomas Abeel
  * 
  */
-public class NormDistance implements DistanceMeasure {
+public class NormDistance extends AbstractDistance {
     /**
      * XXX add doc
      */

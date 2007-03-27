@@ -36,7 +36,7 @@ import net.sf.javaml.core.Instance;
  * @author Thomas Abeel
  * 
  */
-public class CosineSimilarity implements DistanceMeasure {
+public class CosineSimilarity extends AbstractSimilarity {
 
     public double calculateDistance(Instance x, Instance y) {
         if (x.size() != y.size()) {

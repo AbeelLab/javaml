@@ -27,18 +27,42 @@ package net.sf.javaml.distance;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 
-public class NormalizedEuclideanSimilarity extends NormalizedEuclideanDistance{
+/**
+ * XXX DOC
+ */
+public class NormalizedEuclideanSimilarity extends AbstractSimilarity {
+    /**
+     * XXX DOC
+     */
+    private NormalizedEuclideanDistance dm;
 
+    /**
+     * XXX DOC
+     */
     public NormalizedEuclideanSimilarity(Dataset data) {
-        super(data);
-      }
-
-    @Override
-    public double calculateDistance(Instance i, Instance j) {
-        return 1-super.calculateDistance(i, j);
+        super();
+        this.dm = new NormalizedEuclideanDistance(data);
     }
-    
-    
-    
+
+    /**
+     * XXX DOC
+     */
+    public double calculateDistance(Instance i, Instance j) {
+        return 1 - dm.calculateDistance(i, j);
+    }
+
+    /**
+     * XXX DOC
+     */
+    public double getMaximumDistance(Dataset data) {
+        return calculateDistance(data.getMaximumInstance(), data.getMinimumInstance());
+    }
+
+    /**
+     * XXX DOC
+     */
+    public double getMinimumDistance(Dataset data) {
+        return 0;
+    }
 
 }

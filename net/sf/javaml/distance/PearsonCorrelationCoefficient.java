@@ -44,8 +44,10 @@ import net.sf.javaml.core.Instance;
  * @author Thomas Abeel
  * 
  */
-public class PearsonCorrelationCoefficient implements DistanceMeasure {
-
+public class PearsonCorrelationCoefficient extends AbstractSimilarity {
+    /**
+     * XXX DOC
+     */
     public double calculateDistance(Instance a, Instance b) {
         if (a.size() != b.size())
             throw new RuntimeException("Both instances should have the same length");
@@ -61,14 +63,20 @@ public class PearsonCorrelationCoefficient implements DistanceMeasure {
         return (xy - (x * y) / n) / Math.sqrt((x2 - (x * x) / n) * (y2 - (y * y) / n));
     }
 
+    /**
+     * XXX DOC
+     */
     public double getMaximumDistance(Dataset data) {
-        //TODO implement
-        throw new RuntimeException("Method getMaximumDistance is not implemented in PCC.");
+        // TODO implement
+        throw new UnsupportedOperationException("Method not implemented");
     }
 
+    /**
+     * XXX DOC
+     */
     public double getMinimumDistance(Dataset data) {
         // TODO implement
-        throw new RuntimeException("Method getMinimumDistance is not implemented in PCC.");
+        throw new UnsupportedOperationException("Method not implemented");
     }
 
 }

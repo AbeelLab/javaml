@@ -36,7 +36,7 @@ import net.sf.javaml.core.Instance;
  * @author Michael Wurst
  * @author Thomas Abeel
  */
-public class MaxProductSimilarity implements DistanceMeasure {
+public class MaxProductSimilarity extends AbstractSimilarity {
     /**
      * XXX doc
      */

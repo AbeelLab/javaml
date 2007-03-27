@@ -55,22 +55,33 @@ public interface DistanceMeasure {
     public double calculateDistance(Instance i, Instance j);
 
     /**
-     * XXX add doc
-     * maximal distance, minimal similarity
-     * for distance measures this value should be high,
-     * for similarity measures this value should be low
+     * XXX add doc maximal distance, minimal similarity for distance measures
+     * this value should be high, for similarity measures this value should be
+     * low
+     * 
      * @param data
      * @return
      */
     public double getMaximumDistance(Dataset data);
 
     /**
-     * XXX add doc
-     * minimal distance, maximal similarty
-     * for distance measures this value should be low,
-     * for similarity measures this value should be high
+     * XXX add doc minimal distance, maximal similarty for distance measures
+     * this value should be low, for similarity measures this value should be
+     * high
+     * 
      * @param data
      * @return
      */
     public double getMinimumDistance(Dataset data);
+    /**
+     * Returns whether the first distance/similarity is better than the second distance/similarity.
+     * 
+     * For similarity measures the higher the similarity the better the measure,
+     * for distance measures it is the lower the better.
+     * 
+     * @param x the first distance or similarity
+     * @param y the second distance or similarity
+     * @return true if the first distance is better than the second, false in other cases.
+     */
+    public boolean compare(double x,double y);
 }

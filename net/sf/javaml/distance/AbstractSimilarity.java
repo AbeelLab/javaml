@@ -1,5 +1,5 @@
 /**
- * RBFKernelDistance.java
+ * AbstractSimilarity.java
  *
  * This file is part of the Java Machine Learning API
  * 
@@ -24,23 +24,10 @@
  */
 package net.sf.javaml.distance;
 
-import net.sf.javaml.core.Dataset;
-import net.sf.javaml.core.Instance;
+public abstract class AbstractSimilarity implements DistanceMeasure {
 
-public class RBFKernelDistance extends AbstractDistance {
-
-    
-    public double calculateDistance(Instance x, Instance y) {
-        
-        return 1-new RBFKernelSimilarity().calculateDistance(x, y);
-    }
-
-    public double getMaximumDistance(Dataset data) {
-        throw new UnsupportedOperationException("Method not implemented");
-    }
-
-    public double getMinimumDistance(Dataset data) {
-        throw new UnsupportedOperationException("Method not implemented");
+    public boolean compare(double x, double y) {
+       return x>y;
     }
 
 }

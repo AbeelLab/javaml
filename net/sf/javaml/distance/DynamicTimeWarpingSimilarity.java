@@ -39,7 +39,7 @@ import net.sf.javaml.core.Instance;
  * @author Thomas Abeel
  * 
  */
-public class DynamicTimeWarpingSimilarity implements DistanceMeasure {
+public class DynamicTimeWarpingSimilarity extends AbstractSimilarity {
     /**
      * XXX DOC
      * 

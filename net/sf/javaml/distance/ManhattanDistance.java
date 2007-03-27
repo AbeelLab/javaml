@@ -34,7 +34,7 @@ import net.sf.javaml.core.Instance;
  * @author Michael Wurst
  * @author Thomas Abeel
  */
-public class ManhattanDistance implements DistanceMeasure {
+public class ManhattanDistance extends AbstractDistance {
 
     /**
      * XXX doc
