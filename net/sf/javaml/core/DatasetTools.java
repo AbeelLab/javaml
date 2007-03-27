@@ -27,7 +27,6 @@ package net.sf.javaml.core;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.math.stat.StatUtils;
 import org.apache.commons.math.stat.descriptive.moment.StandardDeviation;
 
 import net.sf.javaml.distance.DistanceMeasure;
@@ -41,6 +40,29 @@ import net.sf.javaml.distance.DistanceMeasure;
 final public class DatasetTools {
 
     /**
+     * Returns the instance of the given dataset that is closest to the instance
+     * that is given as a parameter.
+     * 
+     * @param data
+     *            the dataset to search in
+     * @param inst
+     *            the instance for which we need to find the closest
+     * @return
+     */
+    public static Instance getClosest(Dataset data, DistanceMeasure dm, Instance inst) {
+        Instance closest = data.getInstance(0);
+        double bestDistance = dm.calculateDistance(inst, closest);
+        for (int i = 1; i < data.size(); i++) {
+            double tmpDistance = dm.calculateDistance(inst, data.getInstance(i));
+            if (dm.compare(tmpDistance, bestDistance)) {
+                bestDistance = tmpDistance;
+                closest = data.getInstance(i);
+            }
+        }
+        return closest;
+    }
+
+    /**
      * Return an instance with on each position the standard deviation for that
      * attribute.
      * 
@@ -48,18 +70,18 @@ final public class DatasetTools {
      * @return
      */
     public static Instance getStandardDeviation(Dataset data) {
-        int numAttributes=data.getInstance(0).size();
-        float[] stdValues=new float[numAttributes];
-        double[] attr=new double[data.size()];
-        for(int i=0;i<numAttributes;i++){
-            StandardDeviation std=new StandardDeviation();
-            for(int j=0;j<data.size();j++){
-                attr[j]=data.getInstance(j).getValue(i);
+        int numAttributes = data.getInstance(0).size();
+        float[] stdValues = new float[numAttributes];
+        double[] attr = new double[data.size()];
+        for (int i = 0; i < numAttributes; i++) {
+            StandardDeviation std = new StandardDeviation();
+            for (int j = 0; j < data.size(); j++) {
+                attr[j] = data.getInstance(j).getValue(i);
             }
-            stdValues[i]=(float)std.evaluate(attr);
+            stdValues[i] = (float) std.evaluate(attr);
         }
         return new SimpleInstance(stdValues);
-        
+
     }
 
     /**
