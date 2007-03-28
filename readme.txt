@@ -18,6 +18,7 @@ information regarding the status of all algorithms in the release.
 
 version ~ date ~ revision
 0.0.1 ~ 2007-03-21 ~ 323
+0.0.2 ~ 2007-03-28 ~ 371
 
 1. Algorithms
 =============
@@ -34,18 +35,25 @@ classes and other functions are not described here.
 net.sf.classification.svm.SMOKeerthi
 net.sf.classification.svm.SMOPlatt
 net.sf.classification.evaluation.CrossValidation
+net.sf.clustering.CAST
 
 1.2. Working implementation (work on small test)
 ------------------------------------------------
 net.sf.clustering.mcl.MCL
 net.sf.clustering.AdaptiveQualityBasedClustering
 net.sf.clustering.Ant
+net.sf.clustering.Cobweb
 net.sf.clustering.DensityBasedSpatialClustering
+net.sf.clustering.EMClustering
+net.sf.clustering.FarthestFirst
+net.sf.clustering.IterativeEMClustering
+net.sf.clustering.IterativeFarthestFirst
 net.sf.clustering.IterativeKMeans
 net.sf.clustering.IterativeMultiKMeans
+net.sf.clustering.KMeans
+net.sf.clustering.KMedoids
 net.sf.clustering.MultiKMeans
 net.sf.clustering.OPTICS
-net.sf.clustering.SimpleKMeans
 net.sf.clustering.XMeans
 
 1.3 Mature algorithms (thoroughly tested) 
