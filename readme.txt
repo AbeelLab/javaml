@@ -9,7 +9,8 @@ http://java-ml.sourceforge.net/
 | 0. Releases     |
 | 1. Algorithms   |
 | 2. Dependencies |
-| 3. Contact      |
+| 3. Requirements |
+| 4. Contact      |
 +-----------------+
 0. Releases
 ===========
@@ -65,9 +66,14 @@ none yet
 The library requires the commons-math library of the Jakarta project which is 
 bundled with the library.
 
-3. Contact
+3. Requirements
+===============
+The library is coded for Java 1.5.0 so you will need and JDK that is at least
+version 1.5.0.
+
+4. Contact
 ==========
-You can contact me by using the Sourceforge contact page:
+You can contact us by using the Sourceforge contact page:
 http://sourceforge.net/users/thomasabeel/
 or send an email to the mailinglist:
 java-ml-development@lists.sourceforge.net
