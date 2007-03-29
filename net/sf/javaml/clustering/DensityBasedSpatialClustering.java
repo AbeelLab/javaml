@@ -31,13 +31,12 @@ import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.SimpleDataset;
 import net.sf.javaml.distance.DistanceMeasure;
 import net.sf.javaml.distance.NormalizedEuclideanDistance;
+
 /**
- * XXX add doc
- * XXX add reference
- * XXX add pseudocode
+ * XXX add doc XXX add reference XXX add pseudocode
  * 
  * @author Thomas Abeel
- *
+ * 
  */
 public class DensityBasedSpatialClustering extends AbstractDensityBasedClustering implements Clusterer {
 
@@ -59,22 +58,21 @@ public class DensityBasedSpatialClustering extends AbstractDensityBasedClusterin
 
     /**
      * XXX add doc
-     *
+     * 
      */
     public DensityBasedSpatialClustering() {
 
     }
+
     /**
      * XXX add doc
-     *
+     * 
      */
     public DensityBasedSpatialClustering(double epsilon, int minPoints, DistanceMeasure dm) {
         this.dm = dm;
         this.epsilon = epsilon;
         this.minPoints = minPoints;
     }
-
-    
 
     /**
      * Assigns this dataObject to a cluster or remains it as NOISE
@@ -85,36 +83,39 @@ public class DensityBasedSpatialClustering extends AbstractDensityBasedClusterin
      */
     private boolean expandCluster(DataObject dataObject) {
         List<DataObject> seedList = epsilonRangeQuery(epsilon, dataObject);
-        //System.out.println("Created initial seedlist with " + seedList.size() + " nodes");
+        // System.out.println("Created initial seedlist with " + seedList.size()
+        // + " nodes");
         /** dataObject is NO coreObject */
         if (seedList.size() < minPoints) {
-            //System.out.println("This is noise...");
+            // System.out.println("This is noise...");
             dataObject.clusterIndex = DataObject.NOISE;
             return false;
         }
 
-       // System.out.println("Object is core object");
+        // System.out.println("Object is core object");
         /** dataObject is coreObject */
         for (int i = 0; i < seedList.size(); i++) {
-            //System.out.println("Getting dataobject from seedList, size = "+seedList.size());
+            // System.out.println("Getting dataobject from seedList, size =
+            // "+seedList.size());
             DataObject seedListDataObject = seedList.get(i);
             /**
              * label this seedListDataObject with the current clusterID, because
              * it is in epsilon-range
              */
             seedListDataObject.clusterIndex = clusterID;
-            
+
             if (seedListDataObject.equals(dataObject)) {
-                //System.out.println("Remove core object");
+                // System.out.println("Remove core object");
                 seedList.remove(i);
                 i--;
             }
         }
 
-        //System.out.println("Seedlist is labeled and pruned");
+        // System.out.println("Seedlist is labeled and pruned");
         /** Iterate the seedList of the startDataObject */
         for (int j = 0; j < seedList.size(); j++) {
-            //System.out.println("Add neighbours, seedList size: " + seedList.size());
+            // System.out.println("Add neighbours, seedList size: " +
+            // seedList.size());
             if (seedList.size() > 10000)
                 System.exit(-1);
             DataObject seedListDataObject = seedList.get(j);
@@ -130,7 +131,7 @@ public class DensityBasedSpatialClustering extends AbstractDensityBasedClusterin
                                 seedList.add(p);
                             p.clusterIndex = clusterID;
                         }
-                        
+
                     }
                 }
             }
@@ -141,15 +142,15 @@ public class DensityBasedSpatialClustering extends AbstractDensityBasedClusterin
         return true;
     }
 
-    
     /**
      * XXX add doc
-     *
+     * 
      */
     private Dataset originalData = null;
+
     /**
      * XXX add doc
-     *
+     * 
      */
     public Dataset[] executeClustering(Dataset data) {
         this.originalData = data;
@@ -162,36 +163,36 @@ public class DensityBasedSpatialClustering extends AbstractDensityBasedClusterin
         }
 
         for (DataObject dataObject : dataset) {
-            //System.out.println("Loop...");
+            // System.out.println("Loop...");
             if (dataObject.clusterIndex == DataObject.UNCLASSIFIED) {
-                //System.out.println("Starting to expand...");
+                // System.out.println("Starting to expand...");
                 if (expandCluster(dataObject)) {
-                    //System.out.println("Found cluster, new ID: "+clusterID);
+                    // System.out.println("Found cluster, new ID: "+clusterID);
                     clusterID++;
 
                 }
             }
         }
 
-        Dataset[] clusters = new Dataset[clusterID+1];
-        System.out.println("Number of clusters: "+clusterID);
+        Dataset[] clusters = new Dataset[clusterID + 1];
+        // System.out.println("Number of clusters: "+clusterID);
         for (int i = 0; i < clusters.length; i++) {
             clusters[i] = new SimpleDataset();
         }
-        int noiseCount=0;
-        int notKnownCount=0;
+        int noiseCount = 0;
+        int notKnownCount = 0;
         for (DataObject dataObject : dataset) {
-            if(dataObject.clusterIndex>=0)
+            if (dataObject.clusterIndex >= 0)
                 clusters[dataObject.clusterIndex].addInstance(dataObject.instance);
-            if(DataObject.NOISE==dataObject.clusterIndex){
+            if (DataObject.NOISE == dataObject.clusterIndex) {
                 clusters[clusterID].addInstance(dataObject.instance);
                 noiseCount++;
             }
-            if(DataObject.UNCLASSIFIED==dataObject.clusterIndex)
+            if (DataObject.UNCLASSIFIED == dataObject.clusterIndex)
                 notKnownCount++;
         }
-        System.out.println("Noise data items: "+noiseCount);
-        System.out.println("Unknown data items: "+notKnownCount);
+        // System.out.println("Noise data items: "+noiseCount);
+        // System.out.println("Unknown data items: "+notKnownCount);
         return clusters;
     }
 
