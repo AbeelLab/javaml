@@ -420,8 +420,10 @@ public class Ant implements Clusterer {
                         probDropC = probDrop(stimToDrop, n2);
                     }
                 } else {
-                    System.out.println("::MAIN:: failure: selected heap is empty!!!");
+                    clusters.remove(heap);
+                    System.out.println("empty heap found");
                 }
+                System.out.println("generating rg");
                 // generate random drop probability value.
                 randomProb = rg.nextDouble();
                 // drop instance if random prob <= probDrop
@@ -514,6 +516,7 @@ public class Ant implements Clusterer {
                 }
             }
         }
+        
         // System.out.println("iterations: " + j);
         Dataset[] output = new Dataset[clusters.size()];
         // System.out.println("::MAIN:: clusters.size()" + clusters.size());
@@ -526,7 +529,7 @@ public class Ant implements Clusterer {
             for (int k = 0; k < getCluster.size(); k++) {
                 output[i].addInstance(getCluster.get(k));
             }
-        }
+        }    
         return output;
     }
 }
