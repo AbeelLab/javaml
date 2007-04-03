@@ -60,6 +60,8 @@ import net.sf.javaml.distance.EuclideanDistance;
  *            anymore. this parameter needs to be higher for bigger datasets.
  *            when maxFailMovesPick is reached, the algorithm will stop.
  * 
+ * @param maxNumberMaxFailDrops
+ * 
  * @author Andreas De Rijcke
  * 
  */
@@ -70,17 +72,15 @@ public class Ant implements Clusterer {
      * @param iterations
      * @param maxFailMovesDrop
      * @param maxFailMovesPick
+     * @param maxNumberMaxFailDrops
      */
-    public Ant(int iterations, int maxFailMovesDrop, int maxFailMovesPick) {
+    public Ant(int iterations, int maxFailMovesDrop, int maxFailMovesPick, int maxNumberMaxFailDrops) {
         this.iterations = iterations;
         this.maxFailMovesDrop = maxFailMovesDrop;
         this.maxFailMovesPick = maxFailMovesPick;
+        this.maxNumberMaxFailDrops = maxNumberMaxFailDrops;
     }
 
-    /*
-     * schockaert's method
-     * 
-     */
     /**
      * XXX add doc
      */
@@ -119,7 +119,7 @@ public class Ant implements Clusterer {
     /**
      * XXX add doc
      */
-    private double failMovesDrop, failMovesPick, failMovesGlobal, maxFailMovesDrop, maxFailMovesPick;
+    private int failMovesDrop, failMovesPick, failMovesGlobal, maxFailMovesDrop, maxFailMovesPick, numberMaxFailDrops, maxNumberMaxFailDrops;
 
     // tuning parameters with standard values
     /**
@@ -384,6 +384,7 @@ public class Ant implements Clusterer {
         failMovesDrop = 0;
         failMovesPick = 0;
         failMovesGlobal = 0;
+        numberMaxFailDrops = 0;
         heap.clear();
         // first, load ant with instance from a random heap and remove instance/
         // heap from clusters
@@ -423,7 +424,6 @@ public class Ant implements Clusterer {
                     clusters.remove(heap);
                     System.out.println("empty heap found");
                 }
-                System.out.println("generating rg");
                 // generate random drop probability value.
                 randomProb = rg.nextDouble();
                 // drop instance if random prob <= probDrop
@@ -437,6 +437,7 @@ public class Ant implements Clusterer {
                     failMovesDrop++;
                     failMovesGlobal++;
                 }
+                
                 if (failMovesDrop >= maxFailMovesDrop) {
                     Vector<Instance> newHeap = new Vector<Instance>();
                     for (int i = 0; i < carried.size(); i++) {
@@ -445,7 +446,12 @@ public class Ant implements Clusterer {
                     clusters.add(newHeap);
                     failMovesDrop = 0;
                     carried = null;
+                    numberMaxFailDrops++;
                 }
+                if (numberMaxFailDrops >= maxNumberMaxFailDrops) {
+                	stopSign = 1;
+                }
+                
             }
 
             // pick instance/heap
