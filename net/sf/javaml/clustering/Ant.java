@@ -119,13 +119,13 @@ public class Ant implements Clusterer {
     /**
      * XXX add doc
      */
-    private int failMovesDrop, failMovesPick, failMovesGlobal, maxFailMovesDrop, maxFailMovesPick, numberMaxFailDrops, maxNumberMaxFailDrops;
+    private int failMovesDrop, failMovesPick, maxFailMovesDrop, maxFailMovesPick, numberMaxFailDrops, maxNumberMaxFailDrops;
 
     // tuning parameters with standard values
     /**
      * XXX add doc
      */
-    private double m1 = 5.0, m2 = 5.0;
+    private double m1 = 2.0, m2 = 2.0;
 
     /**
      * XXX add doc
@@ -383,7 +383,6 @@ public class Ant implements Clusterer {
         maxDist = maxDist(data);
         failMovesDrop = 0;
         failMovesPick = 0;
-        failMovesGlobal = 0;
         numberMaxFailDrops = 0;
         heap.clear();
         // first, load ant with instance from a random heap and remove instance/
@@ -435,7 +434,6 @@ public class Ant implements Clusterer {
                     carried = null;
                 } else {
                     failMovesDrop++;
-                    failMovesGlobal++;
                 }
                 
                 if (failMovesDrop >= maxFailMovesDrop) {
@@ -449,9 +447,9 @@ public class Ant implements Clusterer {
                     numberMaxFailDrops++;
                 }
                 if (numberMaxFailDrops >= maxNumberMaxFailDrops) {
+                	System.out.println("-----------numberMaxFailDrops too high: STOP");
                 	stopSign = 1;
-                }
-                
+                }               
             }
 
             // pick instance/heap
@@ -497,9 +495,9 @@ public class Ant implements Clusterer {
                             tmp.add(heap.get(indexLeastSimInstance));
                             carried = tmp;
                             heap.remove(indexLeastSimInstance);
+                            failMovesPick = 0;
                         } else {
                             failMovesPick++;
-                            failMovesGlobal++;
                         }
                     } else if (probPickI < probPickH) {
                         // pick instance if randomProb <= propPick
@@ -510,19 +508,22 @@ public class Ant implements Clusterer {
                             carried = tmp;
                             clusters.remove(heap);
                             heap.clear();
+                            failMovesPick = 0;
                         } else {
                             failMovesPick++;
-                            failMovesGlobal++;
                         }
                     }
                     // if fail moves to pick grows to high, stop algorithm
+                    
                     if (failMovesPick >= maxFailMovesPick) {
+                    	System.out.println("-----------failMovesPick too high: STOP");
                         stopSign = 1;
                     }
                 }
             }
         }
-        
+        //System.out.println("failMovesPick: "+failMovesPick);
+        //System.out.println("numberMaxFailDrops: "+numberMaxFailDrops);
         // System.out.println("iterations: " + j);
         Dataset[] output = new Dataset[clusters.size()];
         // System.out.println("::MAIN:: clusters.size()" + clusters.size());
