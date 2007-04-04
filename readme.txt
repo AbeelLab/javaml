@@ -20,6 +20,7 @@ information regarding the status of all algorithms in the release.
 version ~ date ~ revision
 0.0.1 ~ 2007-03-21 ~ 323
 0.0.2 ~ 2007-03-28 ~ 371
+0.0.3 ~ 2007-04-04 ~ 412
 
 1. Algorithms
 =============
@@ -68,7 +69,7 @@ bundled with the library.
 
 3. Requirements
 ===============
-The library is coded for Java 1.5.0 so you will need and JDK that is at least
+The library is coded for Java 1.5.0 so you will need a JDK that is at least
 version 1.5.0.
 
 4. Contact

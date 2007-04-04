@@ -3,6 +3,5 @@
 	<classpathentry kind="src" path=""/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="commons-math-1.1.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/AndreasThesis"/>
 	<classpathentry kind="output" path=""/>
 </classpath>
