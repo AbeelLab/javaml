@@ -125,7 +125,7 @@ public class Ant implements Clusterer {
     /**
      * XXX add doc
      */
-    private double m1 = 2.0, m2 = 2.0;
+    private double m1 = 5.0, m2 = 5.0;
 
     /**
      * XXX add doc
