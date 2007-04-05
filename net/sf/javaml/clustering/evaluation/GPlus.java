@@ -37,39 +37,45 @@ import net.sf.javaml.distance.DistanceMeasure;
  */
 
 public class GPlus implements ClusterEvaluation {
-    public GPlus(DistanceMeasure dm) {
-        this.dm = dm;
-    }
+	public GPlus(DistanceMeasure dm) {
+		this.dm = dm;
+	}
 
-    private DistanceMeasure dm ;
+	private DistanceMeasure dm;
 
 	public double score(Dataset[] datas) {
-		double maxIntraDist[] = new double[datas.length];
+		double maxIntraDist;
 		double sMin = 0;
 		double fw = 0, fb = 0;
 		double nd;
-		
+
+		// find max intra cluster distance
+		maxIntraDist = Double.MIN_VALUE;
 		for (int i = 0; i < datas.length; i++) {
-			maxIntraDist[i] = Double.MIN_VALUE;
 			for (int j = 0; j < datas[i].size(); j++) {
 				Instance x = datas[i].getInstance(j);
-				// calculate max intra cluster distance
 				for (int k = j + 1; k < datas[i].size(); k++) {
 					fw++;
 					Instance y = datas[i].getInstance(k);
 					double distance = dm.calculateDistance(x, y);
-					if (maxIntraDist[i] < distance) {
-						maxIntraDist[i] = distance;
+					if (maxIntraDist < distance) {
+						maxIntraDist = distance;
 					}
 				}
-				// search for min inter cluster distance
-				// count sMin
+			}
+		}
+
+		// search for number of inter cluster distances smaller dan max
+		// intra cluster distance = sMin
+		for (int i = 0; i < datas.length; i++) {
+			for (int j = 0; j < datas[i].size(); j++) {
+				Instance x = datas[i].getInstance(j);
 				for (int k = i + 1; k < datas.length; k++) {
 					for (int l = 0; l < datas[k].size(); l++) {
 						Instance y = datas[k].getInstance(l);
 						fb++;
 						double distance = dm.calculateDistance(x, y);
-						if (distance < maxIntraDist[i]) {
+						if (distance < maxIntraDist) {
 							sMin++;
 						}
 					}
@@ -78,12 +84,13 @@ public class GPlus implements ClusterEvaluation {
 		}
 		nd = fw + fb;
 		sMin = fb;
-		double gPlus = sMin / nd;//(2 * sMin) / (nd * (nd - 1));
+		// /double gPlus = sMin / nd;
+		double gPlus = (2 * sMin) / (nd * (nd - 1));
 		return gPlus;
 	}
 
 	public boolean compareScore(double score1, double score2) {
-		// should be maximized: range = [0,x] with x= fb/nd
-		return score2 > score1;
+		// should be minimized: range = [0,x] with x= fb/nd
+		return score2 < score1;
 	}
 }
