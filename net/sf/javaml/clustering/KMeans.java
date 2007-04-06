@@ -77,7 +77,7 @@ public class KMeans implements Clusterer {
      * clusters, a default random generator and using the Euclidean distance.
      */
     public KMeans() {
-        this(2, 100);
+        this(4, 100);
     }
 
     /**

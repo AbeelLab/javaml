@@ -32,6 +32,7 @@ import net.sf.javaml.core.DatasetTools;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.SimpleDataset;
 import net.sf.javaml.distance.DistanceMeasure;
+import net.sf.javaml.distance.EuclideanDistance;
 
 /**
  * Implementation of the K-medoids algorithm
@@ -56,6 +57,10 @@ public class KMedoids implements Clusterer {
      * XXX doc
      */
     private int maxIterations;
+    
+    public KMedoids(){
+        this(new EuclideanDistance(),4,100);
+    }
     /**
      * XXX doc
      */

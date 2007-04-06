@@ -67,6 +67,14 @@ import net.sf.javaml.distance.EuclideanDistance;
  */
 public class Ant implements Clusterer {
     /**
+     * XXX DOC
+     *
+     */
+    public Ant(){
+        //TODO create default constructor
+        throw new RuntimeException("Constructor is not yet implemented");
+    }
+    /**
      * XXX add docu
      * 
      * @param iterations

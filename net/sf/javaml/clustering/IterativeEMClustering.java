@@ -47,6 +47,13 @@ public class IterativeEMClustering implements Clusterer {
 
     /**
      * XXX DOC
+     * @param ce
+     */
+    public IterativeEMClustering(ClusterEvaluation ce){
+        this(ce,2,6);
+    }
+    /**
+     * XXX DOC
      * 
      * @param dm
      * @param ce

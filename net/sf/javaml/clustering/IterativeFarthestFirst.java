@@ -27,6 +27,7 @@ package net.sf.javaml.clustering;
 import net.sf.javaml.clustering.evaluation.ClusterEvaluation;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.distance.DistanceMeasure;
+import net.sf.javaml.distance.EuclideanDistance;
 
 /**
  * XXX DOC
@@ -50,6 +51,10 @@ public class IterativeFarthestFirst implements Clusterer {
      */
     private int min, max;
 
+    
+    public IterativeFarthestFirst(ClusterEvaluation ce){
+        this(new EuclideanDistance(),ce,2,6);
+    }
     /**
      * XXX DOC
      * 

@@ -27,6 +27,7 @@ package net.sf.javaml.clustering;
 import net.sf.javaml.clustering.evaluation.ClusterEvaluation;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.distance.DistanceMeasure;
+import net.sf.javaml.distance.EuclideanDistance;
 
 /**
  * This class implements an extension of KMeans, combining Iterative- en
@@ -75,6 +76,10 @@ public class IterativeMultiKMeans implements Clusterer {
      */
     private DistanceMeasure dm;
 
+    
+    public IterativeMultiKMeans(ClusterEvaluation ce){
+        this(2,6,100,10,new EuclideanDistance(),ce);
+    }
     /**
      * XXX add doc
      * 

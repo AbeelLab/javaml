@@ -567,7 +567,18 @@ public class EMClustering implements Clusterer {
 
         return llk;
     }
-
+/** 
+ * XXX DOC
+ *
+ */
+    public EMClustering(){
+        this(4);
+    }
+  
+    /**
+     * XXX DOC
+     * @param numClusters
+     */
     public EMClustering(int numClusters) {
         this.m_num_clusters = numClusters;
     }

@@ -32,6 +32,7 @@ import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.SimpleDataset;
 import net.sf.javaml.distance.DistanceMeasure;
+import net.sf.javaml.distance.EuclideanDistance;
 
 /**
  * Cluster data using the FarthestFirst algorithm.<br/> <br/> For more
@@ -132,6 +133,13 @@ public class FarthestFirst implements Clusterer {
      */
     private Random rg;
 
+    
+    /**
+     * XXX DOC
+     */
+    public FarthestFirst(){
+        this(4,new EuclideanDistance());
+    }
     /**
      * XXX DOC
      * 
