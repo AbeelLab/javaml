@@ -563,8 +563,7 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
      * XXX DOC
      */
     public AdaptiveQualityBasedClustering() {
-        // TODO create default constructor
-        throw new RuntimeException("Constructor is not yet defined");
+       this(1000,100,100,0.95, 0.05);
     }
 
     /**

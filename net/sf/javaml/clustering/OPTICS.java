@@ -220,19 +220,7 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer 
         }
     }
 
-    /**
-     * Returns a description of the clusterer
-     * 
-     * @return the clusterer as string
-     */
-    public String toString() {
-        StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append("OPTICS clustering results\n"
-                + "============================================================================================\n\n");
-        stringBuffer.append("Clustered DataObjects: " + dataset.size() + "\n");
-        stringBuffer.append("Epsilon: " + epsilon + "; minPoints: " + minPoints + "\n");
-       return stringBuffer.toString() + "\n";
-    }
+    
 
     private int clusterID = 0;
 

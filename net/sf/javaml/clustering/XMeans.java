@@ -1073,53 +1073,5 @@ public class XMeans implements Clusterer {
         return bestCluster;
     }
 
-    /**
-     * Return a string describing this clusterer.
-     * 
-     * @return a description of the clusterer as a string
-     */
-    public String toString() {
-        StringBuffer temp = new StringBuffer();
-
-        temp.append("\nXMeans\n======\n");
-
-        temp.append("Requested iterations            : " + m_MaxIterations + "\n");
-        temp.append("Iterations performed            : " + m_IterationCount + "\n");
-        temp.append("kMeans did not converge\n");
-        temp.append("  but was stopped by max-loops " + m_KMeansStopped + " times (max kMeans-iter) = \n\n");
-        temp.append("Splits prepared                 : " + m_NumSplits + "\n");
-        temp.append("Splits performed                : " + m_NumSplitsDone + "\n");
-        temp.append("Cutoff factor                   : " + m_CutOffFactor + "\n");
-        double perc;
-        if (m_NumSplitsDone > 0)
-            perc = (((double) m_NumSplitsStillDone) / ((double) m_NumSplitsDone)) * 100.0;
-        else
-            perc = 0.0;
-        NumberFormat nf = NumberFormat.getInstance();
-        nf.setMaximumFractionDigits(2);
-        temp.append("Percentage of splits accepted \n" + "by cutoff factor                : " + nf.format(perc)
-                + " %\n");
-        temp.append("------\n");
-
-        temp.append("Cutoff factor                   : " + m_CutOffFactor + "\n");
-        temp.append("------\n");
-        temp.append("\nCluster centers                 : " + m_NumClusters + " centers\n");
-        for (int i = 0; i < m_NumClusters; i++) {
-            temp.append("\nCluster " + i + "\n           ");
-            for (int j = 0; j < m_ClusterCenters[0].size(); j++) {
-                // if (m_ClusterCenters.attribute(j).isNominal()) {
-                // temp.append(" " + m_ClusterCenters.attribute(j).value((int)
-                // m_ClusterCenters.instance(i).value(j)));
-                // } else {
-                temp.append(" " + m_ClusterCenters[i].getValue(j));
-                // }
-            }
-        }
-        nf.setMaximumFractionDigits(6);
-        if (m_Mle != null)
-            temp.append("\n\nDistortion: " + nf.format(ArrayOperations.sum(m_Mle)) + "\n");
-        temp.append("BIC-Value : " + nf.format(bic) + "\n");
-        return temp.toString();
-    }
-
+    
 }

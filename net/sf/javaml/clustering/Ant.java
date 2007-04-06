@@ -72,7 +72,7 @@ public class Ant implements Clusterer {
      */
     public Ant(){
         //TODO create default constructor
-        throw new RuntimeException("Constructor is not yet implemented");
+       // throw new RuntimeException("Constructor is not yet implemented");
     }
     /**
      * XXX add docu
