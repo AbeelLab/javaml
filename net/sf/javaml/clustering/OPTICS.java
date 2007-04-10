@@ -81,11 +81,11 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer 
      *         list with candidates from the epsilon-range-query
      *         (EpsilonRange_ListElements)
      */
-    public List k_nextNeighbourQuery(int k, double epsilon, DataObject dataObject) {
+    private List<Object> k_nextNeighbourQuery(int k, double epsilon, DataObject dataObject) {
         // Iterator iterator = dataObjectIterator();
 
-        List return_List = new ArrayList();
-        List nextNeighbours_List = new ArrayList();
+        List<Object> return_List = new ArrayList<Object>();
+        List<Object> nextNeighbours_List = new ArrayList<Object>();
         List<EpsilonRange_ListElement> epsilonRange_List = new ArrayList<EpsilonRange_ListElement>();
 
         PriorityQueue priorityQueue = new PriorityQueue();
@@ -139,7 +139,7 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer 
      *         calculated coreDistance
      */
     private List coreDistance(int minPoints, double epsilon, DataObject dataObject) {
-        List list = k_nextNeighbourQuery(minPoints, epsilon, dataObject);
+        List<Object> list = k_nextNeighbourQuery(minPoints, epsilon, dataObject);
 
         if (((List) list.get(1)).size() < minPoints) {
             list.add(new Double(DataObject.UNDEFINED));
@@ -271,12 +271,12 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer 
         /**
          * Used to store the binary heap
          */
-        private ArrayList queue;
+        private ArrayList<UpdateQueueElement> queue;
 
         /**
          * Used to get efficient access to the stored Objects
          */
-        private TreeMap objectPositionsInHeap;
+        private TreeMap<String,Integer> objectPositionsInHeap;
 
         // *****************************************************************************************************************
         // constructors
@@ -289,8 +289,8 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer 
          * shrinking.
          */
         public UpdateQueue() {
-            queue = new ArrayList();
-            objectPositionsInHeap = new TreeMap();
+            queue = new ArrayList<UpdateQueueElement>();
+            objectPositionsInHeap = new TreeMap<String,Integer>();
         }
 
         // *****************************************************************************************************************
@@ -549,7 +549,7 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer 
         /**
          * Used to store the binary heap
          */
-        private ArrayList queue;
+        private ArrayList<PriorityQueueElement> queue;
 
         // *****************************************************************************************************************
         // constructors
@@ -561,7 +561,7 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer 
          * highest priority is always in the root.
          */
         public PriorityQueue() {
-            queue = new ArrayList();
+            queue = new ArrayList<PriorityQueueElement>();
         }
 
         // *****************************************************************************************************************
@@ -598,7 +598,7 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer 
             int a = size();
             int c = a / 2;
 
-            PriorityQueueElement recentlyInsertedElement = (PriorityQueueElement) queue.get(a - 1);
+            PriorityQueueElement recentlyInsertedElement = queue.get(a - 1);
 
             while (c > 0 && getPriority(c - 1) < recentlyInsertedElement.getPriority()) {
                 queue.set(a - 1, queue.get(c - 1)); // shift parent-node down
@@ -615,7 +615,7 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer 
             int a = 1;
             int c = 2 * a; // descendant
 
-            PriorityQueueElement priorityQueueElement = (PriorityQueueElement) queue.get(a - 1);
+            PriorityQueueElement priorityQueueElement = queue.get(a - 1);
 
             if (c < size() && (getPriority(c) > getPriority(c - 1)))
                 c++;
