@@ -222,7 +222,6 @@ public class Ant implements Clusterer {
         double sim1 = dm.calculateDistance(heap.getInstance(0), meanH);
         int index = 0;
         for (int i = 1; i < heap.size(); i++) {
-            // Instance x = heap.get(i);
             double sim2 = dm.calculateDistance(heap.getInstance(i), meanH);
             if (sim2 > sim1) {
                 sim1 = sim2;
@@ -250,7 +249,7 @@ public class Ant implements Clusterer {
     }
 
     /**
-     * calculates Lukasiewicz t-norm of avg(carried heap L) and the similarity
+     * Calculates Lukasiewicz t-norm of avg(carried heap L) and the similarity
      * between clustercentra heap L and heap H.
      * 
      * @param Vector
@@ -267,7 +266,7 @@ public class Ant implements Clusterer {
     }
 
     /**
-     * finds stimulus value for drop/pick action
+     * Finds stimulus value for drop/pick action
      * 
      * @param double
      *            avg(heap H)
@@ -302,7 +301,7 @@ public class Ant implements Clusterer {
     }
 
     /**
-     * probability to pick 1 instance from heap H or whole heap [0,1]
+     * Probability to pick 1 instance from heap H or whole heap [0,1]
      * 
      * @param stimI =
      *            stimulus to pick 1 instance.
