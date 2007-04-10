@@ -17,7 +17,7 @@
  * along with the Java Machine Learning API; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * 
- * Copyright (C) 2001 Mark Hall
+ * Copyright (c) 2001 Mark Hall
  * Copyright (c) 2006-2007, Thomas Abeel
  * 
  * Project: http://sourceforge.net/projects/java-ml/
@@ -26,18 +26,13 @@
 package net.sf.javaml.clustering;
 
 import java.io.Serializable;
-import java.util.Enumeration;
-import java.util.Random;
 import java.util.Vector;
 
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.SimpleDataset;
-import net.sf.javaml.distance.NormalizedEuclideanDistance;
 import net.sf.javaml.filter.Filter;
 import net.sf.javaml.filter.NormalizeMean;
-import net.sf.javaml.filter.NormalizeMidrange;
-import net.sf.javaml.utils.MathUtils;
 
 /**
  * Class implementing the Cobweb and Classit clustering algorithms.<br/> <br/>
@@ -105,15 +100,15 @@ public class Cobweb implements Clusterer {
         private double max = Double.NaN;
 
         /**
-         * Adds a value to the observed values
-         * 
-         * @param value
-         *            the observed value
-         */
-        private void add(double value) {
-
-            add(value, 1);
-        }
+//         * Adds a value to the observed values
+//         * 
+//         * @param value
+//         *            the observed value
+//         */
+//        private void add(double value) {
+//
+//            add(value, 1);
+//        }
 
         /**
          * Adds a value that has been seen n times to the observed values
@@ -137,16 +132,16 @@ public class Cobweb implements Clusterer {
             }
         }
 
-        /**
-         * Removes a value to the observed values (no checking is done that the
-         * value being removed was actually added).
-         * 
-         * @param value
-         *            the observed value
-         */
-        private void subtract(double value) {
-            subtract(value, 1);
-        }
+//        /**
+//         * Removes a value to the observed values (no checking is done that the
+//         * value being removed was actually added).
+//         * 
+//         * @param value
+//         *            the observed value
+//         */
+//        private void subtract(double value) {
+//            subtract(value, 1);
+//        }
 
         /**
          * Subtracts a value that has been seen n times from the observed values
@@ -256,30 +251,30 @@ public class Cobweb implements Clusterer {
 
     private class AttributeStats {
 
-        /** The number of int-like values */
-        private int intCount = 0;
-
-        /** The number of real-like values (i.e. have a fractional part) */
-        private int realCount = 0;
-
-        /** The number of missing values */
-        private int missingCount = 0;
-
-        /** The number of distinct values */
-        private int distinctCount = 0;
-
-        /** The number of values that only appear once */
-        private int uniqueCount = 0;
-
-        /** The total number of values (i.e. number of instances) */
-        private int totalCount = 0;
+//        /** The number of int-like values */
+//        private int intCount = 0;
+//
+//        /** The number of real-like values (i.e. have a fractional part) */
+//        private int realCount = 0;
+//
+//        /** The number of missing values */
+//        private int missingCount = 0;
+//
+//        /** The number of distinct values */
+//        private int distinctCount = 0;
+//
+//        /** The number of values that only appear once */
+//        private int uniqueCount = 0;
+//
+//        /** The total number of values (i.e. number of instances) */
+//        private int totalCount = 0;
 
         /** Stats on numeric value distributions */
         // perhaps Stats should be moved from weka.experiment to weka.core
         Stats numericStats;
 
         /** Counts of each nominal value */
-        private int[] nominalCounts;
+       // private int[] nominalCounts;
 
         // /**
         // * Updates the counters for one more observed distinct value.
@@ -899,7 +894,7 @@ public class Cobweb implements Clusterer {
                 throw new RuntimeException("assignClusterNums: tree not built correctly!");
             }
 
-            m_clusterNum = cl_num[0];
+            this.m_clusterNum = cl_num[0];
             cl_num[0]++;
             if (m_children != null) {
                 for (int i = 0; i < m_children.size(); i++) {
@@ -1129,8 +1124,7 @@ public class Cobweb implements Clusterer {
         // System.out.println(tmp.toString());
         // init "m_numberOfClusters"
         // numberOfClusters();
-        // TODO return clusters;
-
+       
         Vector<Dataset> clusters = new Vector<Dataset>();
         createClusters(m_cobwebTree, clusters);
         Dataset[] out = new Dataset[clusters.size()];
