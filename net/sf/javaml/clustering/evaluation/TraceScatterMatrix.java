@@ -44,7 +44,7 @@ import net.sf.javaml.distance.DistanceMeasure;
 
 public class TraceScatterMatrix implements ClusterEvaluation {
 	public TraceScatterMatrix(DistanceMeasure dm) {
-		this.dm = new CosineSimilarity();
+		this.dm = dm;
 	}
 
 	private DistanceMeasure dm = new CosineSimilarity();
