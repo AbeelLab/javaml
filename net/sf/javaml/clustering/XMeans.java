@@ -26,7 +26,6 @@
  */
 package net.sf.javaml.clustering;
 
-import java.text.NumberFormat;
 import java.util.Random;
 
 import net.sf.javaml.core.Dataset;
@@ -57,7 +56,7 @@ import net.sf.javaml.utils.MathUtils;
  */
 public class XMeans implements Clusterer {
     /**
-     * XXX add doc
+     * A reference to the original data.
      */
     private Dataset data = null;
 
