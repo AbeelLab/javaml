@@ -33,6 +33,7 @@ import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.SimpleDataset;
 import net.sf.javaml.distance.CosineSimilarity;
 import net.sf.javaml.distance.DistanceMeasure;
+import net.sf.javaml.distance.EuclideanDistance;
 
 /**
  * E_1 from the Zhao 2001 paper 
@@ -65,7 +66,7 @@ public class TraceScatterMatrix implements ClusterEvaluation {
        
         // calculate centroids of each cluster
         for (int i = 0; i < clusters.length; i++) {
-            clusterCentroid = DatasetTools.getCentroid(clusters[i], dm);
+            clusterCentroid = DatasetTools.getCentroid(clusters[i], new EuclideanDistance());
             clusterCentroids.add(clusterCentroid);
             clusterSizes.add(clusters[i].size());
         }
@@ -78,7 +79,7 @@ public class TraceScatterMatrix implements ClusterEvaluation {
                 data.addInstance(clusters[i].getInstance(j));
             }
         }
-        overAllCentroid = DatasetTools.getCentroid(data, dm);
+        overAllCentroid = DatasetTools.getCentroid(data, new EuclideanDistance());
         // calculate trace of the between-cluster scatter matrix.
         double sum = 0;
         for (int i = 0; i < clusterCentroids.size(); i++) {
