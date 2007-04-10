@@ -26,14 +26,15 @@
 
 package net.sf.javaml.clustering;
 
-import java.util.Vector;
 import java.util.Random;
+import java.util.Vector;
+
 import net.sf.javaml.core.Dataset;
+import net.sf.javaml.core.DatasetTools;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.SimpleDataset;
-import net.sf.javaml.core.SimpleInstance;
 import net.sf.javaml.distance.DistanceMeasure;
-import net.sf.javaml.distance.EuclideanDistance;
+import net.sf.javaml.distance.NormalizedEuclideanSimilarity;
 
 /**
  * 
@@ -63,17 +64,19 @@ import net.sf.javaml.distance.EuclideanDistance;
  * @param maxNumberMaxFailDrops
  * 
  * @author Andreas De Rijcke
+ * @author Thomas Abeel
  * 
  */
 public class Ant implements Clusterer {
     /**
      * XXX DOC
-     *
+     * 
      */
-    public Ant(){
-        //TODO create default constructor
-       // throw new RuntimeException("Constructor is not yet implemented");
+    public Ant() {
+        // TODO create 'good' default constructor
+        this(3500, 5, 5, 1250);
     }
+
     /**
      * XXX add docu
      * 
@@ -92,7 +95,7 @@ public class Ant implements Clusterer {
     /**
      * XXX add doc
      */
-    private Vector<Instance> heap = new Vector<Instance>();
+   // private Vector<Instance> heap = new Vector<Instance>();
 
     /**
      * XXX add doc
@@ -102,7 +105,7 @@ public class Ant implements Clusterer {
     /**
      * XXX add doc
      */
-    private Vector<Vector<Instance>> clusters = new Vector<Vector<Instance>>();
+    private Vector<Dataset> clusters = new Vector<Dataset>();
 
     /**
      * XXX add doc
@@ -112,22 +115,23 @@ public class Ant implements Clusterer {
     /**
      * XXX add doc
      */
-    private DistanceMeasure dm = new EuclideanDistance();
+    private DistanceMeasure dm;
 
     /**
      * XXX add doc
      */
-    private int randomHeap, iterations, instanceLength;
+    private int randomHeap, iterations;
 
     /**
      * XXX add doc
      */
-    private double maxDist, randomProb;
+    private double randomProb;
 
     /**
      * XXX add doc
      */
-    private int failMovesDrop, failMovesPick, maxFailMovesDrop, maxFailMovesPick, numberMaxFailDrops, maxNumberMaxFailDrops;
+    private int failMovesDrop, failMovesPick, maxFailMovesDrop, maxFailMovesPick, numberMaxFailDrops,
+            maxNumberMaxFailDrops;
 
     // tuning parameters with standard values
     /**
@@ -178,52 +182,14 @@ public class Ant implements Clusterer {
             { 0.0625, 0.0625, 0.0625, 0.3125, 0.6875 }, };
 
     /**
-     * TODO delete methode
-     * this method will be availeble in distance measure itself
-     * calculates max distance between all instances in the given dataset.
-     */
-    private double maxDist(Dataset data) {
-        Instance min = data.getMinimumInstance();
-        Instance max = data.getMaximumInstance();
-        double maxDist = dm.calculateDistance(min, max);
-        return maxDist;
-    }
-
-    /**
      * calculates mean instance of a heap H
      * 
      * @param Vector
      *            <Instance> heap
      * @return mean instance
      */
-    private Instance meanH(Vector<Instance> heap) {
-        Instance in;
-        float[] sumVector = new float[instanceLength];
-        for (int i = 0; i < heap.size(); i++) {
-            in = heap.get(i);
-            for (int j = 0; j < instanceLength; j++) {
-                sumVector[j] += in.getValue(j);
-            }
-        }
-        for (int j = 0; j < instanceLength; j++) {
-            sumVector[j] /= heap.size();
-        }
-        Instance meanH = new SimpleInstance(sumVector);
-        return meanH;
-    }
-
-    /**
-     * TODO delete methode
-     * this method will be availeble in distance measure itself
-     * calculates similarity E between 2 instances [0,1](100% sim: E=1, 0% sim:
-     * E=0)
-     * 
-     * @param Instance,Instance
-     * @return double similarity
-     */
-    private double similarity(Instance instance1, Instance instance2) {
-        double similarity = 1 - (dm.calculateDistance(instance1, instance2) / maxDist);
-        return similarity;
+    private Instance meanH(Dataset heap) {
+        return DatasetTools.getCentroid(heap, dm);
     }
 
     /**
@@ -233,11 +199,11 @@ public class Ant implements Clusterer {
      *            <Instance> heap
      * @return double minSimilar
      */
-    private double minSimilarity(Vector<Instance> heap) {
+    private double minSimilarity(Dataset heap) {
         Instance meanH = meanH(heap);
-        double minSimilar = similarity(heap.get(0), meanH);
+        double minSimilar = dm.calculateDistance(heap.getInstance(0), meanH);
         for (int i = 1; i < heap.size(); i++) {
-            double sim = similarity(heap.get(i), meanH);
+            double sim = dm.calculateDistance(heap.getInstance(i), meanH);
             minSimilar = Math.min(minSimilar, sim);
         }
         return minSimilar;
@@ -251,16 +217,16 @@ public class Ant implements Clusterer {
      * 
      * @return index of least similar instance
      */
-    private int leastSim(Vector<Instance> heap) {
+    private int leastSim(Dataset heap) {
         Instance meanH = meanH(heap);
-        double sim1 = similarity(heap.get(0), meanH);
+        double sim1 = dm.calculateDistance(heap.getInstance(0), meanH);
         int index = 0;
         for (int i = 1; i < heap.size(); i++) {
-            Instance x = heap.get(i);
-            double sim2 = similarity(x, meanH);
+            // Instance x = heap.get(i);
+            double sim2 = dm.calculateDistance(heap.getInstance(i), meanH);
             if (sim2 > sim1) {
                 sim1 = sim2;
-                index = heap.indexOf(x);
+                index = i;
             }
         }
         return index;
@@ -273,11 +239,11 @@ public class Ant implements Clusterer {
      *            <Instance> heap
      * @return double average similarity of heap
      */
-    private double avg(Vector<Instance> heap) {
+    private double avg(Dataset heap) {
         double avg = 0;
         Instance meanH = meanH(heap);
         for (int i = 0; i < heap.size(); i++) {
-            avg += similarity(heap.get(i), meanH);
+            avg += dm.calculateDistance(heap.getInstance(i), meanH);
         }
         avg /= heap.size();
         return avg;
@@ -291,10 +257,10 @@ public class Ant implements Clusterer {
      *            <Instance> heap carried, Vector<Instance> heap
      * @return double tW
      */
-    private double tW(Vector<Instance> heapCarried, Vector<Instance> heapH) {
+    private double tW(Dataset heapCarried, Dataset heapH) {
         Instance meanCarried = meanH(heapCarried);
         Instance meanH = meanH(heapH);
-        double similarity = similarity(meanCarried, meanH);
+        double similarity = dm.calculateDistance(meanCarried, meanH);
         double avgCarried = avg(heapCarried);
         double tW = Math.max(0, similarity + avgCarried - 1);
         return tW;
@@ -330,7 +296,7 @@ public class Ant implements Clusterer {
         } else if (i == 3) {
             stimulus = stimDrop[indexParam2][indexParam1];
         } else {
-            System.out.println("failure: no stimulus calculated!!!");
+            throw new RuntimeException("failure: no stimulus calculated!!!");
         }
         return stimulus;
     }
@@ -376,117 +342,113 @@ public class Ant implements Clusterer {
      */
     // main
     public Dataset[] executeClustering(Dataset data) {
+        dm = new NormalizedEuclideanSimilarity(data);
         if (data.size() == 0) {
             throw new RuntimeException("The dataset should not be empty");
         }
-        // add one instances to one heap, add all heap to clusters.
+        // add one instance to a cluster
         for (int i = 0; i < data.size(); i++) {
-            Vector<Instance> tmpHeap = new Vector<Instance>();
+            Dataset tmpHeap = new SimpleDataset();
             Instance in = data.getInstance(i);
-            tmpHeap.add(in);
+            tmpHeap.addInstance(in);
             clusters.add(tmpHeap);
         }
-        // set initial parameters
-        instanceLength = data.getInstance(0).size();
-        maxDist = maxDist(data);
         failMovesDrop = 0;
         failMovesPick = 0;
         numberMaxFailDrops = 0;
-        heap.clear();
         // first, load ant with instance from a random heap and remove instance/
-        // heap from clusters
         randomHeap = rg.nextInt(clusters.size());
-        heap = clusters.get(randomHeap);
-        carried.add(heap.get(0));
-        clusters.remove(heap);
-        heap.clear();
-
+       // heap = getVector(clusters.get(randomHeap));
+        carried.add(clusters.get(randomHeap).getInstance(0));
+        clusters.remove(randomHeap);
+        
         // main algorithm
-        int j = 0, stopSign = 0;
-        while (j < iterations && stopSign == 0) {
+        int j = 0;
+        boolean stopSign = false;
+        while (j < iterations && !stopSign) {
             j++;
             // drop instance / heap
-            while (carried != null && stopSign == 0) {
+            while (carried != null && !stopSign) {
                 double probDropC = 0;
                 // move ant to random heap with carried instance
                 randomHeap = rg.nextInt(clusters.size());
-                heap = clusters.get(randomHeap);
+                //heap = getVector(clusters.get(randomHeap));
                 // calculated drop probability
-                if (heap.size() == 1) {
+                if (clusters.get(randomHeap).size() == 1) {
                     if (carried.size() == 1) {
-                        probDropC = Math.pow(similarity(heap.get(0), carried.get(0)), 5);
-                    } else {
+                        probDropC = Math.pow(dm.calculateDistance(clusters.get(randomHeap).getInstance(0), carried.get(0)), 5);
+                    } else {// never add a large heap to a cluster with a single
+                            // element
                         probDropC = 0;
                     }
-                } else if (heap.size() > 1) {
-                    double avgHeap = avg(heap);
-                    double tW = tW(carried, heap);
+                } else if (clusters.get(randomHeap).size() > 1) {
+                    //Dataset heapData = new SimpleDataset(heap);
+                    Dataset carriedData = new SimpleDataset(carried);
+                    double avgHeap = avg(clusters.get(randomHeap));
+                    double tW = tW(carriedData, clusters.get(randomHeap));
                     double stimToDrop = stimulus(avgHeap, tW, 3);
                     if (carried.size() == 1) {
                         probDropC = probDrop(stimToDrop, n1);
                     } else {
                         probDropC = probDrop(stimToDrop, n2);
                     }
-                } else {
-                    clusters.remove(heap);
-                    System.out.println("empty heap found");
+                } else {// should never happen
+                    // clusters.remove(heap);
+                    throw new RuntimeException("empty heap found");
                 }
                 // generate random drop probability value.
                 randomProb = rg.nextDouble();
                 // drop instance if random prob <= probDrop
                 if (randomProb <= probDropC) {
                     for (int i = 0; i < carried.size(); i++) {
-                        heap.add(carried.get(i));
+                        clusters.get(randomHeap).addInstance(carried.get(i));
                     }
                     failMovesDrop = 0;
                     carried = null;
                 } else {
                     failMovesDrop++;
                 }
-                
+
                 if (failMovesDrop >= maxFailMovesDrop) {
-                    Vector<Instance> newHeap = new Vector<Instance>();
-                    for (int i = 0; i < carried.size(); i++) {
-                        newHeap.add(carried.get(i));
-                    }
-                    clusters.add(newHeap);
+                   Dataset newHeap = new SimpleDataset(carried);
+                   clusters.add(newHeap);
                     failMovesDrop = 0;
                     carried = null;
                     numberMaxFailDrops++;
                 }
                 if (numberMaxFailDrops >= maxNumberMaxFailDrops) {
-                	System.out.println("-----------numberMaxFailDrops too high: STOP");
-                	stopSign = 1;
-                }               
+                    System.out.println("-----------numberMaxFailDrops too high: STOP");
+                    stopSign = true;
+                }
             }
-
-            // pick instance/heap
-            while (carried == null && stopSign == 0) {
+            /*
+             * PICK UP AN INSTANCE OR A HEAP
+             * 
+             * If this fails too often, the algorithm terminates.
+             * 
+             */
+            while (carried == null && !stopSign) {
                 // move to other random heap
                 randomHeap = rg.nextInt(clusters.size());
-                heap = clusters.get(randomHeap);
-                if (heap.size() == 1) {
+                //heap = getVector(clusters.get(randomHeap));
+                if (clusters.get(randomHeap).size() == 1) {
                     // pick instance from heap and remove heap from clusters
-                    Vector<Instance> tmp = new Vector<Instance>();
-                    tmp.add(heap.firstElement());
-                    carried = tmp;
-                    clusters.remove(heap);
-                    heap.clear();
+                    carried=new Vector<Instance>();
+                    carried.add(clusters.get(randomHeap).getInstance(0));
+                    clusters.remove(randomHeap);
                     failMovesPick = 0;
-                } else if (heap.size() == 2) {
+                } else if (clusters.get(randomHeap).size() == 2) {
                     // pick 1 instance and remove from heap
-                    Vector<Instance> tmp = new Vector<Instance>();
-                    tmp.add(heap.firstElement());
-                    carried = tmp;
-                    // other option is to make random choice between instance 1
-                    // or 2.
-                    heap.remove(tmp.elementAt(0));
+                    carried=new Vector<Instance>();
+                    int randomIndex=rg.nextInt(2);
+                    carried.add(clusters.get(randomHeap).getInstance(randomIndex));
+                    clusters.set(randomHeap, DatasetTools.removeInstance(clusters.get(randomHeap), randomIndex));
                     failMovesPick = 0;
-                } else if (heap.size() > 2) {
+                } else if (clusters.get(randomHeap).size() > 2) {
                     // calculate stimulus and pick probability for picking 1
                     // instance or heap
-                    double averageSim = avg(heap);
-                    double minSim = minSimilarity(heap);
+                    double averageSim = avg(clusters.get(randomHeap));
+                    double minSim = minSimilarity(clusters.get(randomHeap));
                     double stimI = stimulus(averageSim, minSim, 1);
                     double stimH = stimulus(averageSim, minSim, 2);
                     double probPickI = probPick(stimI, stimH, 1);
@@ -498,11 +460,11 @@ public class Ant implements Clusterer {
                         // pick instance if randomProb <= propPick
                         if (randomProb <= probPickI) {
                             // pick least similar instance and remove from heap
-                            int indexLeastSimInstance = leastSim(heap);
-                            Vector<Instance> tmp = new Vector<Instance>();
-                            tmp.add(heap.get(indexLeastSimInstance));
-                            carried = tmp;
-                            heap.remove(indexLeastSimInstance);
+                            int indexLeastSimInstance = leastSim(clusters.get(randomHeap));
+                            carried = new Vector<Instance>();
+                            carried.add(clusters.get(randomHeap).getInstance(indexLeastSimInstance));
+                            // carried = tmp;
+                            clusters.set(randomHeap, DatasetTools.removeInstance(clusters.get(randomHeap),indexLeastSimInstance));
                             failMovesPick = 0;
                         } else {
                             failMovesPick++;
@@ -511,40 +473,34 @@ public class Ant implements Clusterer {
                         // pick instance if randomProb <= propPick
                         if (randomProb <= probPickH) {
                             // pick heap and remove from clusters
-                            Vector<Instance> tmp = new Vector<Instance>();
-                            tmp.addAll(heap);
-                            carried = tmp;
-                            clusters.remove(heap);
-                            heap.clear();
+                            carried = new Vector<Instance>();
+                            for(int i=0;i<clusters.get(randomHeap).size();i++){
+                                carried.add(clusters.get(randomHeap).getInstance(i));
+                            }
+                            clusters.remove(randomHeap);
+                            
                             failMovesPick = 0;
                         } else {
                             failMovesPick++;
                         }
                     }
                     // if fail moves to pick grows to high, stop algorithm
-                    
+
                     if (failMovesPick >= maxFailMovesPick) {
-                    	System.out.println("-----------failMovesPick too high: STOP");
-                        stopSign = 1;
+                        System.out.println("-----------failMovesPick too high: STOP");
+                        stopSign = true;
                     }
                 }
             }
-        }
-        //System.out.println("failMovesPick: "+failMovesPick);
-        //System.out.println("numberMaxFailDrops: "+numberMaxFailDrops);
-        // System.out.println("iterations: " + j);
-        Dataset[] output = new Dataset[clusters.size()];
-        // System.out.println("::MAIN:: clusters.size()" + clusters.size());
-        for (int i = 0; i < clusters.size(); i++) {
-            output[i] = new SimpleDataset();
-            Vector<Instance> getCluster = new Vector<Instance>();
-            getCluster = clusters.get(i);
-            // System.out.println("::MAIN:: cluster size: " +
-            // getCluster.size());
-            for (int k = 0; k < getCluster.size(); k++) {
-                output[i].addInstance(getCluster.get(k));
+            if(clusters.size()==1){
+                System.out.println("Merged all data in iteration: "+j);
+                stopSign=true;
             }
-        }    
+        }
+        Dataset[] output = new Dataset[clusters.size()];
+        for (int i = 0; i < output.length; i++) {
+            output[i] = clusters.get(i);
+        }
         return output;
-    }
+       }
 }

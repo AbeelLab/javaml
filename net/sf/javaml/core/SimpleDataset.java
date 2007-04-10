@@ -35,6 +35,21 @@ public class SimpleDataset implements Dataset {
     /**
      * XXX doc
      */
+    public SimpleDataset(){
+        
+    }
+    
+    /**
+     * XXX doc
+     */
+    public SimpleDataset(Vector<Instance>data){
+        for(Instance in:data){
+            this.addInstance(in);
+        }
+    }
+    /**
+     * XXX doc
+     */
     private Vector<Instance> instances = new Vector<Instance>();
     /**
      * XXX doc
@@ -84,21 +99,6 @@ public class SimpleDataset implements Dataset {
         instances.remove(i);
         recalculate();
     }
-//    /**
-//     * XX doc
-//     */
-//    public void removeInstance(int index) {
-//        instances.remove(index);
-//        recalculate();
-//    }
-//    /**
-//     * XX doc
-//     */
-//    public void clear() {
-//        instances.removeAllElements();
-//        lowArray = null;
-//        highArray = null;
-//    }
     /**
      * XXX doc
      */

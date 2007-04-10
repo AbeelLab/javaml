@@ -141,5 +141,24 @@ final public class DatasetTools {
 
         return epsilonRange_List;
     }
+    
+    /**
+     * Removes an instance from a dataset and returns the resulting dataset.
+     * 
+     * XXX DOC
+     * 
+     * @param data
+     * @param index
+     * @return
+     */
+    public static Dataset removeInstance(Dataset data,int index){
+        Dataset out=new SimpleDataset();
+        for(int i=0;i<data.size();i++){
+            if(i!=index)
+                out.addInstance(data.getInstance(i));
+        }
+        return out;
+        
+    }
 
 }
