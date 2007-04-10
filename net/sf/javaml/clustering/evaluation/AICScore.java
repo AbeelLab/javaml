@@ -29,7 +29,7 @@ import net.sf.javaml.core.Dataset;
 import net.sf.javaml.utils.*;
 
 /**
- * TODO check code
+ * XXX doc
  * 
  * @author Andreas De Rijcke
  * @author Thomas Abeel
@@ -47,39 +47,6 @@ public class AICScore implements ClusterEvaluation {
 		double aic = -2 * l + 2 * k;
 		return aic;
 	}
-
-	/*
-	 * public double score(Clusterer c, Dataset data) { Dataset[] datas = new
-	 * Dataset[c.getNumberOfClusters()]; for (int i = 0; i <
-	 * c.getNumberOfClusters(); i++) { datas[i] = new SimpleDataset(); } for
-	 * (int i = 0; i < data.size(); i++) { Instance in = data.getInstance(i);
-	 * datas[c.predictCluster(in)].addInstance(in); } // calculate centroids int
-	 * instanceLength = data.getInstance(0).size(); double[][] sumPosition = new
-	 * double[c.getNumberOfClusters()][instanceLength]; int[] countPosition =
-	 * new int[c.getNumberOfClusters()]; for (int i = 0; i < data.size(); i++) {
-	 * Instance in = data.getInstance(i); int predictedIndex =
-	 * c.predictCluster(in); for (int j = 0; j < instanceLength; j++) {
-	 * 
-	 * sumPosition[predictedIndex][j] += in.getWeight() in.getValue(j); }
-	 * countPosition[predictedIndex]++; } // DistanceMeasure Instance[]
-	 * centroids = new Instance[c.getNumberOfClusters()]; for (int i = 0; i <
-	 * c.getNumberOfClusters(); i++) { float[] tmp = new float[instanceLength];
-	 * for (int j = 0; j < instanceLength; j++) { tmp[j] = (float)
-	 * sumPosition[i][j] / countPosition[i]; } centroids[i] = new
-	 * SimpleInstance(tmp); } // calculate bic double k =
-	 * c.getNumberOfClusters(); double overAllVariance = 0, overAllLoglike = 0,
-	 * aic = 0; for (int i = 0; i < k; i++) { // calculate cluster variances
-	 * double s = datas[i].size(), sum = 0; DistanceMeasure dm =
-	 * DistanceMeasureFactory .getEuclideanDistanceMeasure(); for (int j = 0; j <
-	 * s; j++) { sum = 0; sum += dm.calculateDistance(datas[i].getInstance(j),
-	 * centroids[i]); } double variance = sum / s; overAllVariance += variance; //
-	 * calculate cluster loglikes double loglike = (-s / 2) * (Math.log(2 *
-	 * Math.PI)) - ((s * instanceLength) / 2) * (Math.log(variance)) + s
-	 * (Math.log(s)) - s * (Math.log(data.size())) - (s - k) / 2; overAllLoglike +=
-	 * Math.abs(loglike); } overAllVariance /= k; double p = (k - 1) +
-	 * instanceLength * k + overAllVariance; aic = -2*overAllLoglike+2*p;;
-	 * return aic; }
-	 */
 
 	public boolean compareScore(double score1, double score2) {
 		// should be minimalized
