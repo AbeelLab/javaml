@@ -27,6 +27,7 @@ package net.sf.javaml.clustering.evaluation;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.DatasetTools;
 import net.sf.javaml.core.Instance;
+import net.sf.javaml.distance.CosineSimilarity;
 import net.sf.javaml.distance.DistanceMeasure;
 
 /**
@@ -36,15 +37,15 @@ import net.sf.javaml.distance.DistanceMeasure;
  */
 public class SumOfCentroidSimilarities implements ClusterEvaluation {
 
-	public SumOfCentroidSimilarities(DistanceMeasure dm) {
-		this.dm = dm;
-	}
-
-	private DistanceMeasure dm;
-
+    /**
+     * XXX DOC
+     */
+	private DistanceMeasure dm=new CosineSimilarity();
+    /**
+     * XXX DOC
+     */
 	public double score(Dataset[] datas) {
 
-		// cdm=DistanceMeasureFactory.getEuclideanDistanceMeasure();
 		Instance[] centroids = new Instance[datas.length];
 		for (int i = 0; i < datas.length; i++) {
 			centroids[i] = DatasetTools.getCentroid(datas[i], dm);
@@ -59,7 +60,9 @@ public class SumOfCentroidSimilarities implements ClusterEvaluation {
 		}
 		return sum;
 	}
-
+    /**
+     * XXX DOC
+     */
 	public boolean compareScore(double score1, double score2) {
 		// TODO check right condition or code
 		// should be minimized; in paper: maxed!!

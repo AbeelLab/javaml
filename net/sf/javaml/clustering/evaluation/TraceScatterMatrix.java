@@ -28,68 +28,57 @@ package net.sf.javaml.clustering.evaluation;
 import java.util.Vector;
 
 import net.sf.javaml.core.Dataset;
+import net.sf.javaml.core.DatasetTools;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.SimpleDataset;
-import net.sf.javaml.core.SimpleInstance;
 import net.sf.javaml.distance.CosineSimilarity;
 import net.sf.javaml.distance.DistanceMeasure;
 
 /**
- * E_1 from the Zhao 2001 paper
+ * E_1 from the Zhao 2001 paper 
  * 
- * Distance measure has to be CosineSimilarity TODO uitleg
+ * XXX DOC 
+ * 
+ * Distance measure has to be
+ * CosineSimilarity 
+ * 
+ * TODO uitleg
  * 
  * @author Andreas De Rijcke
  */
 
 public class TraceScatterMatrix implements ClusterEvaluation {
-	public TraceScatterMatrix(DistanceMeasure dm) {
-		this.dm = dm;
-	}
 
-	private DistanceMeasure dm = new CosineSimilarity();
+    /**
+     * XXX DOC
+     */
+    private DistanceMeasure dm = new CosineSimilarity();
 
-	public Instance mean(Dataset cluster, int instanceLength) {
-		Instance in;
-		float[] sumVector = new float[instanceLength];
-		for (int i = 0; i < cluster.size(); i++) {
-			in = cluster.getInstance(i);
-			for (int j = 0; j < instanceLength; j++) {
-				sumVector[j] += in.getValue(j);
-			}
-		}
-		for (int j = 0; j < instanceLength; j++) {
-			sumVector[j] /= cluster.size();
-		}
-		Instance mean = new SimpleInstance(sumVector);
-		return mean;
-	}
-
-	public double score(Dataset[] clusters) {
-		Instance clusterCentroid;
-		Instance overAllCentroid;
-		Vector<Instance> clusterCentroids =new Vector<Instance>();
-		Vector<Integer> clusterSizes =new Vector<Integer>();
-		// TODO check why trouble here: array index out of range
-		int instanceLength = clusters[0].getInstance(0).size();
-        
+    /**
+     * XXX DOC
+     */
+    public double score(Dataset[] clusters) {
+        Instance clusterCentroid;
+        Instance overAllCentroid;
+        Vector<Instance> clusterCentroids = new Vector<Instance>();
+        Vector<Integer> clusterSizes = new Vector<Integer>();
+       
         // calculate centroids of each cluster
-        for (int i =0; i<clusters.length; i++){
-        	clusterCentroid = mean(clusters[i], instanceLength);
-        	clusterCentroids.add(clusterCentroid);
-        	clusterSizes.add(clusters[i].size());
+        for (int i = 0; i < clusters.length; i++) {
+            clusterCentroid = DatasetTools.getCentroid(clusters[i], dm);
+            clusterCentroids.add(clusterCentroid);
+            clusterSizes.add(clusters[i].size());
         }
-        
+
         // calculate centroid all instances
         // firs put all cluster back together
         Dataset data = new SimpleDataset();
-        for (int i =0; i<clusters.length; i++){
-        	for(int j = 0; j < clusters[i].size(); j++) {
-        		data.addInstance(clusters[i].getInstance(j));  
-        	}
+        for (int i = 0; i < clusters.length; i++) {
+            for (int j = 0; j < clusters[i].size(); j++) {
+                data.addInstance(clusters[i].getInstance(j));
+            }
         }
-        overAllCentroid = mean(data, instanceLength);    
-        
+        overAllCentroid = DatasetTools.getCentroid(data, dm);
         // calculate trace of the between-cluster scatter matrix.
         double sum = 0;
         for (int i = 0; i < clusterCentroids.size(); i++) {
@@ -99,8 +88,11 @@ public class TraceScatterMatrix implements ClusterEvaluation {
         return sum;
     }
 
-	public boolean compareScore(double score1, double score2) {
-		// should be minimized
-		return score2 < score1;
-	}
+    /**
+     * XXX DOC
+     */
+    public boolean compareScore(double score1, double score2) {
+        // should be minimized
+        return score2 < score1;
+    }
 }

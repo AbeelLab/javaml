@@ -25,6 +25,7 @@
 package net.sf.javaml.clustering.evaluation;
 
 import net.sf.javaml.core.Dataset;
+import net.sf.javaml.distance.CosineSimilarity;
 import net.sf.javaml.distance.DistanceMeasure;
 
 /**
@@ -34,11 +35,14 @@ import net.sf.javaml.distance.DistanceMeasure;
  * @author Andreas De Rijcke
  */
 public class SumOfAveragePairwiseSimilarities implements ClusterEvaluation{
-    public SumOfAveragePairwiseSimilarities(DistanceMeasure dm) {
-        this.dm = dm;
-    }
-
-    private DistanceMeasure dm;
+    
+    /**
+     * XXX DOC
+     */
+    private DistanceMeasure dm=new CosineSimilarity();
+    /**
+     * XXX DOC
+     */
     public double score(Dataset[] datas) {
        
         double sum=0;
@@ -54,7 +58,9 @@ public class SumOfAveragePairwiseSimilarities implements ClusterEvaluation{
         }
        return sum;
     }
-
+    /**
+     * XXX DOC
+     */
     public boolean compareScore(double score1, double score2) {
         // TODO check right condition or code
     	//should be minimized; in paper: maxed!!

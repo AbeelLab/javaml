@@ -27,7 +27,6 @@
 package net.sf.javaml.clustering.evaluation;
 
 import net.sf.javaml.core.Dataset;
-import net.sf.javaml.distance.DistanceMeasure;
 
 /**
  * H_2 from the Zhao 2001 paper
@@ -38,21 +37,20 @@ import net.sf.javaml.distance.DistanceMeasure;
  */
 
 public class HybridCentroidSimilarity implements ClusterEvaluation {
-
-    public HybridCentroidSimilarity(DistanceMeasure dm) {
-        this.dm = dm;
-    }
-
-    private DistanceMeasure dm;
+    /**
+     * XXX DOC
+     */
     public double score(Dataset[] datas) {
-        ClusterEvaluation ceTop = new SumOfCentroidSimilarities(dm);// I_2
+        ClusterEvaluation ceTop = new SumOfCentroidSimilarities();// I_2
         double sum = ceTop.score(datas);
-        ClusterEvaluation ce = new TraceScatterMatrix(dm);// E_1
+        ClusterEvaluation ce = new TraceScatterMatrix();// E_1
         sum /= ce.score(datas);
 
         return sum;
     }
-
+    /**
+     * XXX DOC
+     */
     public boolean compareScore(double score1, double score2) {
         // should be maxed
         return score2 > score1;
