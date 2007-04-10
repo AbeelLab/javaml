@@ -90,25 +90,12 @@ public class Cobweb implements Clusterer {
         /** The std deviation of values at the last calculateDerived() call */
         private double stdDev = Double.NaN;
 
-        /** The mean of values at the last calculateDerived() call */
-        private double mean = Double.NaN;
-
         /** The minimum value seen, or Double.NaN if no values seen */
         private double min = Double.NaN;
 
         /** The maximum value seen, or Double.NaN if no values seen */
         private double max = Double.NaN;
 
-        /**
-//         * Adds a value to the observed values
-//         * 
-//         * @param value
-//         *            the observed value
-//         */
-//        private void add(double value) {
-//
-//            add(value, 1);
-//        }
 
         /**
          * Adds a value that has been seen n times to the observed values
@@ -131,18 +118,6 @@ public class Cobweb implements Clusterer {
                 max = value;
             }
         }
-
-//        /**
-//         * Removes a value to the observed values (no checking is done that the
-//         * value being removed was actually added).
-//         * 
-//         * @param value
-//         *            the observed value
-//         */
-//        private void subtract(double value) {
-//            subtract(value, 1);
-//        }
-
         /**
          * Subtracts a value that has been seen n times from the observed values
          * 
@@ -164,196 +139,19 @@ public class Cobweb implements Clusterer {
          */
         private void calculateDerived() {
 
-            mean = Double.NaN;
             stdDev = Double.NaN;
             if (count > 0) {
-                mean = sum / count;
-                stdDev = Double.POSITIVE_INFINITY;
+               stdDev = Double.POSITIVE_INFINITY;
                 if (count > 1) {
                     stdDev = sumSq - (sum * sum) / count;
                     stdDev /= (count - 1);
                     if (stdDev < 0) {
-                        // System.err.println("Warning: stdDev value = " +
-                        // stdDev
-                        // + " -- rounded to zero.");
-                        stdDev = 0;
+                       stdDev = 0;
                     }
                     stdDev = Math.sqrt(stdDev);
                 }
             }
         }
-
-        // /**
-        // * Returns a string summarising the stats so far.
-        // *
-        // * @return the summary string
-        // */
-        // private String toString() {
-        //
-        // calculateDerived();
-        // return
-        // "Count " + Utils.doubleToString(count, 8) + '\n'
-        // + "Min " + Utils.doubleToString(min, 8) + '\n'
-        // + "Max " + Utils.doubleToString(max, 8) + '\n'
-        // + "Sum " + Utils.doubleToString(sum, 8) + '\n'
-        // + "SumSq " + Utils.doubleToString(sumSq, 8) + '\n'
-        // + "Mean " + Utils.doubleToString(mean, 8) + '\n'
-        // + "StdDev " + Utils.doubleToString(stdDev, 8) + '\n';
-        // }
-
-        // /**
-        // * Tests the paired stats object from the command line.
-        // * reads line from stdin, expecting two values per line.
-        // *
-        // * @param args ignored.
-        // */
-        // private static void main(String [] args) {
-        //
-        // try {
-        // Stats ps = new Stats();
-        // java.io.LineNumberReader r = new java.io.LineNumberReader(
-        // new java.io.InputStreamReader(System.in));
-        // String line;
-        // while ((line = r.readLine()) != null) {
-        // line = line.trim();
-        // if (line.equals("") || line.startsWith("@") || line.startsWith("%"))
-        // {
-        // continue;
-        // }
-        // java.util.StringTokenizer s
-        // = new java.util.StringTokenizer(line, " ,\t\n\r\f");
-        // int count = 0;
-        // double v1 = 0;
-        // while (s.hasMoreTokens()) {
-        // double val = (new Double(s.nextToken())).doubleValue();
-        // if (count == 0) {
-        // v1 = val;
-        // } else {
-        // System.err.println("MSG: Too many values in line \""
-        // + line + "\", skipped.");
-        // break;
-        // }
-        // count++;
-        // }
-        // if (count == 1) {
-        // ps.add(v1);
-        // }
-        // }
-        // ps.calculateDerived();
-        // System.err.println(ps);
-        // } catch (Exception ex) {
-        // ex.printStackTrace();
-        // System.err.println(ex.getMessage());
-        // }
-        // }
-
-    } // Stats
-
-    private class AttributeStats {
-
-//        /** The number of int-like values */
-//        private int intCount = 0;
-//
-//        /** The number of real-like values (i.e. have a fractional part) */
-//        private int realCount = 0;
-//
-//        /** The number of missing values */
-//        private int missingCount = 0;
-//
-//        /** The number of distinct values */
-//        private int distinctCount = 0;
-//
-//        /** The number of values that only appear once */
-//        private int uniqueCount = 0;
-//
-//        /** The total number of values (i.e. number of instances) */
-//        private int totalCount = 0;
-
-        /** Stats on numeric value distributions */
-        // perhaps Stats should be moved from weka.experiment to weka.core
-        Stats numericStats;
-
-        /** Counts of each nominal value */
-       // private int[] nominalCounts;
-
-        // /**
-        // * Updates the counters for one more observed distinct value.
-        // *
-        // * @param value the value that has just been seen
-        // * @param count the number of times the value appeared
-        // */
-        // protected void addDistinct(double value, int count) {
-        //      
-        // if (count > 0) {
-        // if (count == 1) {
-        // uniqueCount++;
-        // }
-        // if (MathUtils.eq(value, (double)((int)value))) {
-        // intCount += count;
-        // } else {
-        // realCount += count;
-        // }
-        // if (nominalCounts != null) {
-        // nominalCounts[(int)value] = count;
-        // }
-        // if (numericStats != null) {
-        // numericStats.add(value, count);
-        // numericStats.calculateDerived();
-        // }
-        // }
-        // distinctCount++;
-        // }
-
-        // /**
-        // * Returns a human readable representation of this AttributeStats
-        // instance.
-        // *
-        // * @return a String represtinging these AttributeStats.
-        // */
-        // private String toString() {
-        //
-        // StringBuffer sb = new StringBuffer();
-        // sb.append(Utils.padLeft("Type", 4)).append(Utils.padLeft("Nom", 5));
-        // sb.append(Utils.padLeft("Int", 5)).append(Utils.padLeft("Real", 5));
-        // sb.append(Utils.padLeft("Missing", 12));
-        // sb.append(Utils.padLeft("Unique", 12));
-        // sb.append(Utils.padLeft("Dist", 6));
-        // if (nominalCounts != null) {
-        // sb.append(' ');
-        // for (int i = 0; i < nominalCounts.length; i++) {
-        // sb.append(Utils.padLeft("C[" + i + "]", 5));
-        // }
-        // }
-        // sb.append('\n');
-        //
-        // long percent;
-        // percent = Math.round(100.0 * intCount / totalCount);
-        // if (nominalCounts != null) {
-        // sb.append(Utils.padLeft("Nom", 4)).append(' ');
-        // sb.append(Utils.padLeft("" + percent, 3)).append("% ");
-        // sb.append(Utils.padLeft("" + 0, 3)).append("% ");
-        // } else {
-        // sb.append(Utils.padLeft("Num", 4)).append(' ');
-        // sb.append(Utils.padLeft("" + 0, 3)).append("% ");
-        // sb.append(Utils.padLeft("" + percent, 3)).append("% ");
-        // }
-        // percent = Math.round(100.0 * realCount / totalCount);
-        // sb.append(Utils.padLeft("" + percent, 3)).append("% ");
-        // sb.append(Utils.padLeft("" + missingCount, 5)).append(" /");
-        // percent = Math.round(100.0 * missingCount / totalCount);
-        // sb.append(Utils.padLeft("" + percent, 3)).append("% ");
-        // sb.append(Utils.padLeft("" + uniqueCount, 5)).append(" /");
-        // percent = Math.round(100.0 * uniqueCount / totalCount);
-        // sb.append(Utils.padLeft("" + percent, 3)).append("% ");
-        // sb.append(Utils.padLeft("" + distinctCount, 5)).append(' ');
-        // if (nominalCounts != null) {
-        // for (int i = 0; i < nominalCounts.length; i++) {
-        // sb.append(Utils.padLeft("" + nominalCounts[i], 5));
-        // }
-        // }
-        // sb.append('\n');
-        // return sb.toString();
-        // }
     }
 
     /**
@@ -362,15 +160,11 @@ public class Cobweb implements Clusterer {
      * @see Serializable
      */
     private class CNode {
-        /**
-         * Cluster number of this node
-         */
-        private int m_clusterNum = -1;
 
         /**
          * Within cluster attribute statistics
          */
-        private AttributeStats[] m_attStats;
+        private Stats[] m_attStats;
 
         /**
          * Number of attributes
@@ -391,11 +185,6 @@ public class Cobweb implements Clusterer {
          * Total instances at this node
          */
         private double m_totalInstances = 0.0;
-
-        // /**
-        // * Cluster number of this node
-        // */
-        // private int m_clusterNum = -1;
 
         /**
          * Creates an empty <code>CNode</code> instance.
@@ -418,8 +207,7 @@ public class Cobweb implements Clusterer {
         private CNode(int numAttributes, Instance leafInstance) {
             this(numAttributes);
             if (m_clusterInstances == null) {
-                m_clusterInstances = new SimpleDataset();// (leafInstance.dataset(),
-                // 1);
+                m_clusterInstances = new SimpleDataset();
             }
             m_clusterInstances.addInstance(leafInstance);
             updateStats(leafInstance, false);
@@ -742,11 +530,7 @@ public class Cobweb implements Clusterer {
          */
         private double categoryUtility() {
 
-            // if (m_children == null) {
-            // throw new Exception("categoryUtility: No children!");
-            // }
-
-            double totalCU = 0;
+               double totalCU = 0;
 
             for (int i = 0; i < m_children.size(); i++) {
                 CNode child = m_children.elementAt(i);
@@ -770,48 +554,12 @@ public class Cobweb implements Clusterer {
 
             double sum = 0;
             for (int i = 0; i < m_numAttributes; i++) {
-                // if (m_clusterInstances.attribute(i).isNominal()) {
-                // for (int j = 0; j <
-                // m_clusterInstances.attribute(i).numValues(); j++) {
-                // double x = child.getProbability(i, j);
-                // double y = getProbability(i, j);
-                // sum += (x * x) - (y * y);
-                // }
-                // } else {
-                // numeric attribute
-                sum += ((m_normal / child.getStandardDev(i)) - (m_normal / getStandardDev(i)));
-
-                // }
-            }
+               sum += ((m_normal / child.getStandardDev(i)) - (m_normal / getStandardDev(i)));
+   }
             return (child.m_totalInstances / m_totalInstances) * sum;
         }
 
-        // /**
-        // * Returns the probability of a value of a nominal attribute in this
-        // * node
-        // *
-        // * @param attIndex
-        // * the index of the attribute
-        // * @param valueIndex
-        // * the index of the value of the attribute
-        // * @return the probability
-        // * @throws Exception
-        // * if the requested attribute is not nominal
-        // */
-        // private double getProbability(int attIndex, int valueIndex) {
-        //
-        // // if (!m_clusterInstances.attribute(attIndex).isNominal()) {
-        // // throw new Exception("getProbability: attribute is not nominal");
-        // // }
-        //
-        // if (m_attStats[attIndex].totalCount <= 0) {
-        // return 0;
-        // }
-        //
-        // return (double) m_attStats[attIndex].nominalCounts[valueIndex] /
-        // (double) m_attStats[attIndex].totalCount;
-        // }
-
+     
         /**
          * Returns the standard deviation of a numeric attribute
          * 
@@ -822,12 +570,8 @@ public class Cobweb implements Clusterer {
          *             if an error occurs
          */
         private double getStandardDev(int attIndex) {
-            // if (!m_clusterInstances.attribute(attIndex).isNumeric()) {
-            // throw new Exception("getStandardDev: attribute is not numeric");
-            // }
-
-            m_attStats[attIndex].numericStats.calculateDerived();
-            double stdDev = m_attStats[attIndex].numericStats.stdDev;
+            m_attStats[attIndex].calculateDerived();
+            double stdDev = m_attStats[attIndex].stdDev;
             if (Double.isNaN(stdDev) || Double.isInfinite(stdDev)) {
                 return m_acuity;
             }
@@ -847,35 +591,20 @@ public class Cobweb implements Clusterer {
         private void updateStats(Instance updateInstance, boolean delete) {
 
             if (m_attStats == null) {
-                m_attStats = new AttributeStats[m_numAttributes];
+                m_attStats = new Stats[m_numAttributes];
                 for (int i = 0; i < m_numAttributes; i++) {
-                    m_attStats[i] = new AttributeStats();
-                    // if (m_clusterInstances.attribute(i).isNominal()) {
-                    // m_attStats[i].nominalCounts = new
-                    // int[m_clusterInstances.attribute(i).numValues()];
-                    // } else {
-                    m_attStats[i].numericStats = new Stats();
-                    // }
+                    m_attStats[i] = new Stats();
+                  
                 }
             }
             for (int i = 0; i < m_numAttributes; i++) {
-                // if (!updateInstance.isMissing(i)) {
                 double value = updateInstance.getValue(i);
-                // if (m_clusterInstances.attribute(i).isNominal()) {
-                // m_attStats[i].nominalCounts[(int) value] += (delete) ? (-1.0
-                // * updateInstance.weight())
-                // : updateInstance.weight();
-                // m_attStats[i].totalCount += (delete) ? (-1.0 *
-                // updateInstance.weight()) : updateInstance
-                // .weight();
-                // } else {
                 if (delete) {
-                    m_attStats[i].numericStats.subtract(value, updateInstance.getWeight());
+                    m_attStats[i].subtract(value, updateInstance.getWeight());
                 } else {
-                    m_attStats[i].numericStats.add(value, updateInstance.getWeight());
+                    m_attStats[i].add(value, updateInstance.getWeight());
                 }
-                // }
-                // }
+               
             }
             m_totalInstances += (delete) ? (-1.0 * updateInstance.getWeight()) : (updateInstance.getWeight());
         }
@@ -894,7 +623,7 @@ public class Cobweb implements Clusterer {
                 throw new RuntimeException("assignClusterNums: tree not built correctly!");
             }
 
-            this.m_clusterNum = cl_num[0];
+            //this.m_clusterNum = cl_num[0];
             cl_num[0]++;
             if (m_children != null) {
                 for (int i = 0; i < m_children.size(); i++) {
@@ -904,116 +633,9 @@ public class Cobweb implements Clusterer {
             }
         }
 
-        // /**
-        // * Recursively build a string representation of the Cobweb tree
-        // *
-        // * @param depth
-        // * depth of this node in the tree
-        // * @param text
-        // * holds the string representation
-        // */
-        // private void dumpTree(int depth, StringBuffer text) {
-        //
-        // if (depth == 0)
-        // determineNumberOfClusters();
-        //
-        // if (m_children == null) {
-        // text.append("\n");
-        // for (int j = 0; j < depth; j++) {
-        // text.append("| ");
-        // }
-        // text.append("leaf " + m_clusterNum + " [" + m_clusterInstances.size()
-        // + "]");
-        // } else {
-        // for (int i = 0; i < m_children.size(); i++) {
-        // text.append("\n");
-        // for (int j = 0; j < depth; j++) {
-        // text.append("| ");
-        // }
-        // text.append("node " + m_clusterNum + " [" + m_clusterInstances.size()
-        // + "]");
-        // ((CNode) m_children.elementAt(i)).dumpTree(depth + 1, text);
-        // }
-        // }
-        // }
+       
 
-        // /**
-        // * Returns the instances at this node as a string. Appends the cluster
-        // * number of the child that each instance belongs to.
-        // *
-        // * @return a <code>String</code> value
-        // * @throws Exception
-        // * if an error occurs
-        // */
-        // private String dumpData() throws Exception {
-        // if (m_children == null) {
-        // return m_clusterInstances.toString();
-        // }
-        //
-        // // construct instances string with cluster numbers attached
-        // CNode tempNode = new CNode(m_numAttributes);
-        // tempNode.m_clusterInstances = new Instances(m_clusterInstances, 1);
-        // for (int i = 0; i < m_children.size(); i++) {
-        // tempNode.addChildNode((CNode) m_children.elementAt(i));
-        // }
-        // Instances tempInst = tempNode.m_clusterInstances;
-        // tempNode = null;
-        //
-        // Add af = new Add();
-        // af.setAttributeName("Cluster");
-        // String labels = "";
-        // for (int i = 0; i < m_children.size(); i++) {
-        // CNode temp = (CNode) m_children.elementAt(i);
-        // labels += ("C" + temp.m_clusterNum);
-        // if (i < m_children.size() - 1) {
-        // labels += ",";
-        // }
-        // }
-        // af.setNominalLabels(labels);
-        // af.setInputFormat(tempInst);
-        // tempInst = Filter.useFilter(tempInst, af);
-        // tempInst.setRelationName("Cluster " + m_clusterNum);
-        //
-        // int z = 0;
-        // for (int i = 0; i < m_children.size(); i++) {
-        // CNode temp = (CNode) m_children.elementAt(i);
-        // for (int j = 0; j < temp.m_clusterInstances.numInstances(); j++) {
-        // tempInst.instance(z).setValue(m_numAttributes, (double) i);
-        // z++;
-        // }
-        // }
-        // return tempInst.toString();
-        // }
-
-        // /**
-        // * Recursively generate the graph string for the Cobweb tree.
-        // *
-        // * @param text
-        // * holds the graph string
-        // * @throws Exception
-        // * if generation fails
-        // */
-        // private void graphTree(StringBuffer text) throws Exception {
-        //
-        // text.append("N" + m_clusterNum + " [label=\"" + ((m_children == null)
-        // ? "leaf " : "node ") + m_clusterNum
-        // + " " + " (" + m_clusterInstances.numInstances() + ")\" "
-        // + ((m_children == null) ? "shape=box style=filled " : "")
-        // + (m_saveInstances ? "data =\n" + dumpData() + "\n,\n" : "") +
-        // "]\n");
-        // if (m_children != null) {
-        // for (int i = 0; i < m_children.size(); i++) {
-        // CNode temp = (CNode) m_children.elementAt(i);
-        // text.append("N" + m_clusterNum + "->" + "N" + temp.m_clusterNum +
-        // "\n");
-        // }
-        //
-        // for (int i = 0; i < m_children.size(); i++) {
-        // CNode temp = (CNode) m_children.elementAt(i);
-        // temp.graphTree(text);
-        // }
-        // }
-        // }
+       
     }
 
     /**
@@ -1119,12 +741,7 @@ public class Cobweb implements Clusterer {
         System.out.println("Clusters: " + m_numberOfClusters);
         System.out.println("Size at root: " + m_cobwebTree.m_clusterInstances.size());
         printNode(m_cobwebTree, 0);
-        // StringBuffer tmp=new StringBuffer();
-        // m_cobwebTree.dumpTree(0, tmp);
-        // System.out.println(tmp.toString());
-        // init "m_numberOfClusters"
-        // numberOfClusters();
-       
+      
         Vector<Dataset> clusters = new Vector<Dataset>();
         createClusters(m_cobwebTree, clusters);
         Dataset[] out = new Dataset[clusters.size()];
