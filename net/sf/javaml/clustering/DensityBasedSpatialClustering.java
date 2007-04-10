@@ -29,7 +29,6 @@ import java.util.Vector;
 
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.SimpleDataset;
-import net.sf.javaml.distance.DistanceMeasure;
 import net.sf.javaml.distance.NormalizedEuclideanDistance;
 
 /**
@@ -43,13 +42,13 @@ public class DensityBasedSpatialClustering extends AbstractDensityBasedClusterin
     /**
      * Specifies the radius for a range-query
      */
-    private double epsilon = 0.02;
+    private double epsilon;
 
     /**
      * Specifies the density (the range-query must contain at least minPoints
      * instances)
      */
-    private int minPoints = 6;
+    private int minPoints;
 
     /**
      * Holds the current clusterID
@@ -61,15 +60,15 @@ public class DensityBasedSpatialClustering extends AbstractDensityBasedClusterin
      * 
      */
     public DensityBasedSpatialClustering() {
-
+        this(0.1,6);
     }
 
     /**
      * XXX add doc
      * 
      */
-    public DensityBasedSpatialClustering(double epsilon, int minPoints, DistanceMeasure dm) {
-        this.dm = dm;
+    public DensityBasedSpatialClustering(double epsilon, int minPoints) {
+        
         this.epsilon = epsilon;
         this.minPoints = minPoints;
     }
@@ -116,8 +115,7 @@ public class DensityBasedSpatialClustering extends AbstractDensityBasedClusterin
         for (int j = 0; j < seedList.size(); j++) {
             // System.out.println("Add neighbours, seedList size: " +
             // seedList.size());
-            if (seedList.size() > 10000)
-                System.exit(-1);
+          
             DataObject seedListDataObject = seedList.get(j);
             List<DataObject> seedListDataObject_Neighbourhood = epsilonRangeQuery(epsilon, seedListDataObject);
 
@@ -174,8 +172,8 @@ public class DensityBasedSpatialClustering extends AbstractDensityBasedClusterin
             }
         }
 
-        Dataset[] clusters = new Dataset[clusterID + 1];
-        // System.out.println("Number of clusters: "+clusterID);
+        Dataset[] clusters = new Dataset[clusterID];
+         System.out.println("Number of clusters: "+clusterID);
         for (int i = 0; i < clusters.length; i++) {
             clusters[i] = new SimpleDataset();
         }
@@ -185,14 +183,14 @@ public class DensityBasedSpatialClustering extends AbstractDensityBasedClusterin
             if (dataObject.clusterIndex >= 0)
                 clusters[dataObject.clusterIndex].addInstance(dataObject.instance);
             if (DataObject.NOISE == dataObject.clusterIndex) {
-                clusters[clusterID].addInstance(dataObject.instance);
+               // clusters[clusterID].addInstance(dataObject.instance);
                 noiseCount++;
             }
             if (DataObject.UNCLASSIFIED == dataObject.clusterIndex)
                 notKnownCount++;
         }
-        // System.out.println("Noise data items: "+noiseCount);
-        // System.out.println("Unknown data items: "+notKnownCount);
+         System.out.println("Noise data items: "+noiseCount);
+         System.out.println("Unknown data items: "+notKnownCount);
         return clusters;
     }
 
