@@ -1,0 +1,22 @@
+This files contains some basic information about the development of the Java-ML library
+
+1. Future Milestones
+====================
+0.1.0 --> the library should have a set of validated clustering algorithms with 
+evaluation criteria and datasets.
+
+0.2.0 --> the library should include several implementations of SVMs
+
+0.3.0 --> the library should include several features selection techniques
+
+0.4.0 --> the library should support missing values
+
+0.5.0 --> the library should include several implementations of Neural Nets
+
+1.0.0 --> the library should have a set of validated machine learning algorithms 
+including but not limited to: clustering, classifiers, features selection 
+(filters). This should at least cover the algorithms that are available in 
+WEKA. By this release the interfaces should be stable and backward compatibility
+should be maintained from this point forward.
+
+
