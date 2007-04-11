@@ -3,7 +3,9 @@ of the library. The Java-ML library is licensed under GNU-GPL.
 
 More elaborate documentation can be found on the documentation website for 
 the project:
-http://java-ml.sourceforge.net/
+http://java-ml.sourceforge.net/ or http://www.abeel.be/java-ml/
+
+or in the API documentation http://www.abeel.be/java-ml/api/
 
 +-----------------+
 | 0. Releases     |
@@ -21,6 +23,7 @@ version ~ date ~ revision
 0.0.1 ~ 2007-03-21 ~ 323
 0.0.2 ~ 2007-03-28 ~ 371
 0.0.3 ~ 2007-04-04 ~ 412
+0.0.4 ~ 2007-04-11 ~ 457
 
 1. Algorithms
 =============
@@ -66,6 +69,9 @@ none yet
 ===============
 The library requires the commons-math library of the Jakarta project which is 
 bundled with the library.
+
+For the SVN download you will also need JUnit 4.0 to compile the unit tests.
+
 
 3. Requirements
 ===============
