@@ -26,6 +26,7 @@ package net.sf.javaml.clustering;
 
 import net.sf.javaml.clustering.evaluation.ClusterEvaluation;
 import net.sf.javaml.core.Dataset;
+import net.sf.javaml.distance.EuclideanDistance;
 
 /**
  * XXX DOC
@@ -43,28 +44,27 @@ public class IterativeEMClustering implements Clusterer {
     /**
      * XXX DOC
      */
-    private int min, max;
+    private int kMin, kMax;
 
     /**
-     * XXX DOC
-     * @param ce
+     * default constructor
+     * @param ClusterEvaluation ce
      */
     public IterativeEMClustering(ClusterEvaluation ce){
-        this(ce,2,6);
+        this(2,6, ce);
     }
     /**
      * XXX DOC
      * 
-     * @param dm
-     * @param ce
-     * @param min
-     * @param max
+     * @param kMin
+     * @param kMax
+     * @param ClusterEvaluation ce
      */
-    public IterativeEMClustering(ClusterEvaluation ce, int min, int max) {
+    public IterativeEMClustering(int kMin, int kMax,ClusterEvaluation ce) {
         super();
+        this.kMin = kMin;
+        this.kMax = kMax;
         this.ce = ce;
-        this.min = min;
-        this.max = max;
     }
 
     /**
@@ -72,12 +72,12 @@ public class IterativeEMClustering implements Clusterer {
      */
     public Dataset[] executeClustering(Dataset data) {
 
-        EMClustering emc = new EMClustering(min);
+        EMClustering emc = new EMClustering(kMin, 100, new EuclideanDistance());
         Dataset[] bestClusters = emc.executeClustering(data);
         double bestScore = ce.score(bestClusters);
 
-        for (int i = min + 1; i <= max; i++) {
-            emc = new EMClustering(i);
+        for (int i = kMin + 1; i <= kMax; i++) {
+            emc = new EMClustering(i, 100, new EuclideanDistance());
             Dataset[] tmp = emc.executeClustering(data);
             double tmpScore = ce.score(tmp);
             if (ce.compareScore(bestScore, tmpScore)) {

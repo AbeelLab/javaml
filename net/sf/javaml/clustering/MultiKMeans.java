@@ -68,11 +68,21 @@ public class MultiKMeans implements Clusterer {
      */
 	private ClusterEvaluation ce;
     
+	/**
+     * default constructor
+     * @param ClusterEvaluation ce
+     */
     public MultiKMeans(ClusterEvaluation ce){
         this(4,100,10,new EuclideanDistance(),ce);
     }
     /**
      * XXX add doc
+     * 
+     * @param clusters
+     * @param iterations
+     * @param repeats
+     * @param DistanceMeasure dm
+     * @param ClusterEvaluation ce
      */
 	public MultiKMeans(int clusters, int iterations, int repeats,
 			DistanceMeasure dm, ClusterEvaluation ce) {

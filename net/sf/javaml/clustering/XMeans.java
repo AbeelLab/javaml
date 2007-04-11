@@ -67,7 +67,7 @@ public class XMeans implements Clusterer {
     private double[] m_Mle = null;
 
     /** maximum overall iterations */
-    private int m_MaxIterations = 5;
+    private int m_MaxIterations;
 
     /**
      * maximum iterations to perform Kmeans part if negative, iterations are not
@@ -84,13 +84,13 @@ public class XMeans implements Clusterer {
     private int m_NumClusters = 2;
 
     /** min number of clusters to generate */
-    private int m_MinNumClusters = 2;
+    private int m_MinNumClusters;
 
     /** max number of clusters to generate */
-    private int m_MaxNumClusters = 10;
+    private int m_MaxNumClusters;
 
     /** the distance function used */
-    private DistanceMeasure dm = new EuclideanDistance();
+    private DistanceMeasure dm;
 
     /** cluster centers */
     private Instance[] m_ClusterCenters;
@@ -131,7 +131,31 @@ public class XMeans implements Clusterer {
 
     /** Number of splits accepted just because of cutoff factor */
     private int m_NumSplitsStillDone = 0;
-
+    
+    /**
+     * default constructor
+     */
+    public XMeans(){
+    	this(5, 2, 10, new EuclideanDistance());
+    }
+    
+    /**
+     * XXX doc
+     * 
+     * @param m_MaxIterations
+     * @param m_MinNumClusters
+     * @param m_MaxNumClusters
+     * @param DistanceMeasure dm
+     * 
+     */
+    public XMeans(int m_MaxIterations, int m_MinNumClusters, int m_MaxNumClusters,DistanceMeasure dm){
+    	this.m_MaxIterations = m_MaxIterations;
+    	this.m_MinNumClusters = m_MinNumClusters;
+    	this.m_MaxNumClusters = m_MaxNumClusters;
+    	this.dm = dm;    	
+    }
+    
+    
     /**
      * Generates the X-Means clusterer.
      * 

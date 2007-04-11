@@ -49,26 +49,29 @@ public class IterativeFarthestFirst implements Clusterer {
     /**
      * XXX DOC
      */
-    private int min, max;
+    private int kMin, kMax;
 
-    
+    /**
+     * default constructor
+     * @param ClusterEvaluation ce
+     * 
+     */
     public IterativeFarthestFirst(ClusterEvaluation ce){
-        this(new EuclideanDistance(),ce,2,6);
+        this(2,6, new EuclideanDistance(),ce);
     }
     /**
      * XXX DOC
      * 
-     * @param dm
-     * @param ce
-     * @param min
-     * @param max
+     * @param kMin
+     * @param kMax
+     * @param DistanceMeasure dm
+     * @param ClusterEvaluation ce
      */
-    public IterativeFarthestFirst(DistanceMeasure dm, ClusterEvaluation ce, int min, int max) {
-        super();
+    public IterativeFarthestFirst(int kMin, int kMax, DistanceMeasure dm, ClusterEvaluation ce) {
+        this.kMin = kMin;
+        this.kMax = kMax;
         this.dm = dm;
         this.ce = ce;
-        this.min = min;
-        this.max = max;
     }
 
     /**
@@ -76,11 +79,11 @@ public class IterativeFarthestFirst implements Clusterer {
      */
     public Dataset[] executeClustering(Dataset data) {
 
-        FarthestFirst ff = new FarthestFirst(min, dm);
+        FarthestFirst ff = new FarthestFirst(kMin, dm);
         Dataset[] bestClusters = ff.executeClustering(data);
         double bestScore = ce.score(bestClusters);
 
-        for (int i = min + 1; i <= max; i++) {
+        for (int i = kMin + 1; i <= kMax; i++) {
             ff = new FarthestFirst(i, dm);
             Dataset[] tmp = ff.executeClustering(data);
             double tmpScore = ce.score(tmp);
@@ -88,7 +91,6 @@ public class IterativeFarthestFirst implements Clusterer {
                 bestScore = tmpScore;
                 bestClusters = tmp;
             }
-
         }
         return bestClusters;
     }

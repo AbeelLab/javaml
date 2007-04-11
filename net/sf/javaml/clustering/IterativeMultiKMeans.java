@@ -76,10 +76,27 @@ public class IterativeMultiKMeans implements Clusterer {
      */
     private DistanceMeasure dm;
 
-    
+    /**
+     * default constructor
+     * @param ClusterEvaluation ce
+     */
     public IterativeMultiKMeans(ClusterEvaluation ce){
         this(2,6,100,10,new EuclideanDistance(),ce);
     }
+    
+
+    /**
+     * XXX add doc
+     * 
+     * @param kMin
+     * @param kMax
+     * @param ClusterEvaluation ce
+     * 
+     */
+    public IterativeMultiKMeans(int kMin, int kMax, ClusterEvaluation ce) {
+    	this(kMin,kMax,100,10,new EuclideanDistance(),ce);
+    }
+    
     /**
      * XXX add doc
      * 
@@ -87,8 +104,8 @@ public class IterativeMultiKMeans implements Clusterer {
      * @param kMax
      * @param iterations
      * @param repeats
-     * @param dm
-     * @param ce
+     * @param DistanceMeasure dm
+     * @param ClusterEvaluation ce
      */
     public IterativeMultiKMeans(int kMin, int kMax, int iterations, int repeats, DistanceMeasure dm,
             ClusterEvaluation ce) {

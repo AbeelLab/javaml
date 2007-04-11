@@ -135,7 +135,7 @@ public class FarthestFirst implements Clusterer {
 
     
     /**
-     * XXX DOC
+     * default constructor
      */
     public FarthestFirst(){
         this(4,new EuclideanDistance());
@@ -144,7 +144,7 @@ public class FarthestFirst implements Clusterer {
      * XXX DOC
      * 
      * @param numClusters
-     * @param dm
+     * @param DistanceMeasure dm
      */
     public FarthestFirst(int numClusters, DistanceMeasure dm) {
         super();

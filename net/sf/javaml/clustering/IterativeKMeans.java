@@ -78,13 +78,35 @@ public class IterativeKMeans implements Clusterer {
      */
     private int iterations;
 
-    
+    /**
+     * default constructor
+     * @param ClusterEvaluation ce
+     */
     public IterativeKMeans(ClusterEvaluation ce){
         this(2,6,100,new EuclideanDistance(),ce);
     }
     
     /**
      * XXX add doc
+     * 
+     * @param kMin
+     * @param kMax
+     * @param ClusterEvaluation ce
+     * 
+     */
+    public IterativeKMeans(int kMin, int kMax, ClusterEvaluation ce) {
+    	this(kMin,kMax,100,new EuclideanDistance(),ce);
+    }
+    
+    /**
+     * XXX add doc
+     * 
+     * @param kMin
+     * @param kMax
+     * @param interations
+     * @param DistanceMeasure dm
+     * @param ClusterEvaluation ce
+     * 
      */
     public IterativeKMeans(int kMin, int kMax, int iterations, DistanceMeasure dm, ClusterEvaluation ce) {
         this.kMin = kMin;

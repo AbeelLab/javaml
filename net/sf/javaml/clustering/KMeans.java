@@ -72,19 +72,20 @@ public class KMeans implements Clusterer {
      */
     private DistanceMeasure dm;
 
-    /**
-     * Constuct a default Simple K-means clusterer with 100 iterations, 2
-     * clusters, a default random generator and using the Euclidean distance.
-     */
-    public KMeans() {
-        this(4, 100);
-    }
 
     /**
      * The centroids of the different clusters.
      */
     private Instance[] centroids;
 
+    /**
+     * Constuct a default Simple K-means clusterer with 100 iterations, 2
+     * clusters, a default random generator and using the Euclidean distance.
+     */
+    public KMeans() {
+    	this(4, 100);
+    }
+    
     /**
      * Create a new Simple K-means clusterer with the given number of clusters
      * and iterations. The internal random generator is a new one based upon the

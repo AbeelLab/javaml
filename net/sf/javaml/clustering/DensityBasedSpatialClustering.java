@@ -56,7 +56,7 @@ public class DensityBasedSpatialClustering extends AbstractDensityBasedClusterin
     private int clusterID;
 
     /**
-     * XXX add doc
+     * default constructor
      * 
      */
     public DensityBasedSpatialClustering() {
@@ -65,6 +65,9 @@ public class DensityBasedSpatialClustering extends AbstractDensityBasedClusterin
 
     /**
      * XXX add doc
+     * 
+     * @param epsilon
+     * @param minPoints
      * 
      */
     public DensityBasedSpatialClustering(double epsilon, int minPoints) {

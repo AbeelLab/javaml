@@ -57,14 +57,30 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer 
     /**
      * Specifies the radius for a range-query
      */
-    private double epsilon = 0.1;
+    private double epsilon;
 
     /**
      * Specifies the density (the range-query must contain at least minPoints
      * DataObjects)
      */
-    private int minPoints = 6;
+    private int minPoints;
 
+    /**
+     * default constructor
+     */
+    public OPTICS(){
+    	this(0.1, 6);
+    }
+    
+    /**
+     * @param epsilon
+     * @param minPoints
+     */
+    public OPTICS(double epsilon, int minPoints){
+    	this.epsilon = epsilon;
+    	this.minPoints = minPoints;
+    }
+    
     /**
      * Emits the k next-neighbours and performs an epsilon-range-query at the
      * parallel. The returned list contains two elements: At index=0 --> list

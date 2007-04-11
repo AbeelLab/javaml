@@ -69,7 +69,7 @@ import net.sf.javaml.distance.NormalizedEuclideanSimilarity;
  */
 public class Ant implements Clusterer {
     /**
-     * XXX DOC
+     * default constructor
      * 
      */
     public Ant() {

@@ -58,17 +58,25 @@ public class KMedoids implements Clusterer {
      */
     private int maxIterations;
     
+    /**
+     * default constructor
+     */
     public KMedoids(){
-        this(new EuclideanDistance(),4,100);
+        this(4,100, new EuclideanDistance());
     }
     /**
      * XXX doc
+     * 
+     * @param numberOfClusters
+     * @param maxIterations
+     * @param DistanceMeasure dm
+     * 
      */
-    public KMedoids(DistanceMeasure dm, int numberOfClusters, int maxIterations) {
+    public KMedoids(int numberOfClusters, int maxIterations,DistanceMeasure dm) {
         super();
+        this.numberOfClusters = numberOfClusters;
         this.maxIterations = maxIterations;
         this.dm = dm;
-        this.numberOfClusters = numberOfClusters;
         rg = new Random(System.currentTimeMillis());
     }
     /**

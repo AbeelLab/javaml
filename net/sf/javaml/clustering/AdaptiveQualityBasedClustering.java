@@ -552,7 +552,7 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
     }
 
     /**
-     * XXX DOC
+     * default constructor
      */
     public AdaptiveQualityBasedClustering() {
        this(1000,50,200,0.95);
