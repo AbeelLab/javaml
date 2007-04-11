@@ -44,13 +44,12 @@ public class GPlus implements ClusterEvaluation {
 	private DistanceMeasure dm;
 
 	public double score(Dataset[] datas) {
-		double maxIntraDist;
+		double maxIntraDist = Double.MIN_VALUE;
 		double sMin = 0;
 		double fw = 0, fb = 0;
 		double nd;
 
-		// find max intra cluster distance
-		maxIntraDist = Double.MIN_VALUE;
+		// calculate max intra cluster distance
 		for (int i = 0; i < datas.length; i++) {
 			for (int j = 0; j < datas[i].size(); j++) {
 				Instance x = datas[i].getInstance(j);
@@ -65,8 +64,8 @@ public class GPlus implements ClusterEvaluation {
 			}
 		}
 
-		// search for number of inter cluster distances smaller dan max
-		// intra cluster distance = sMin
+		// calculate inter cluster distances
+		// count sMin
 		for (int i = 0; i < datas.length; i++) {
 			for (int j = 0; j < datas[i].size(); j++) {
 				Instance x = datas[i].getInstance(j);
@@ -83,8 +82,6 @@ public class GPlus implements ClusterEvaluation {
 			}
 		}
 		nd = fw + fb;
-		sMin = fb;
-		// /double gPlus = sMin / nd;
 		double gPlus = (2 * sMin) / (nd * (nd - 1));
 		return gPlus;
 	}
