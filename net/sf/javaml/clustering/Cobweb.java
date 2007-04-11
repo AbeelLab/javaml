@@ -724,7 +724,7 @@ public class Cobweb implements Clusterer {
         String tabs = "";
         for (int i = 0; i < level; i++)
             tabs += "\t";
-        System.out.println(tabs + "" + x.m_clusterInstances.size());
+        //System.out.println(tabs + "" + x.m_clusterInstances.size());
         if (x.m_children != null) {
             for (CNode y : x.m_children) {
                 printNode(y, level + 1);
@@ -737,7 +737,7 @@ public class Cobweb implements Clusterer {
     public Dataset[] executeClustering(Dataset data) {
 
         data = filter.filterDataset(data);
-        System.out.println(data);
+        //System.out.println(data);
         m_numberOfClusters = -1;
         m_cobwebTree = null;
         m_numberSplits = 0;
@@ -746,9 +746,9 @@ public class Cobweb implements Clusterer {
             updateClusterer(data.getInstance(i));
         }
         determineNumberOfClusters();
-        System.out.println("Datapoints: " + data.size());
-        System.out.println("Clusters: " + m_numberOfClusters);
-        System.out.println("Size at root: " + m_cobwebTree.m_clusterInstances.size());
+        //System.out.println("Datapoints: " + data.size());
+        //System.out.println("Clusters: " + m_numberOfClusters);
+        //System.out.println("Size at root: " + m_cobwebTree.m_clusterInstances.size());
         printNode(m_cobwebTree, 0);
       
         Vector<Dataset> clusters = new Vector<Dataset>();

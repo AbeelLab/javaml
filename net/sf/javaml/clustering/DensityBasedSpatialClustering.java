@@ -173,7 +173,7 @@ public class DensityBasedSpatialClustering extends AbstractDensityBasedClusterin
         }
 
         Dataset[] clusters = new Dataset[clusterID];
-         System.out.println("Number of clusters: "+clusterID);
+        //System.out.println("Number of clusters: "+clusterID);
         for (int i = 0; i < clusters.length; i++) {
             clusters[i] = new SimpleDataset();
         }
@@ -189,8 +189,8 @@ public class DensityBasedSpatialClustering extends AbstractDensityBasedClusterin
             if (DataObject.UNCLASSIFIED == dataObject.clusterIndex)
                 notKnownCount++;
         }
-         System.out.println("Noise data items: "+noiseCount);
-         System.out.println("Unknown data items: "+notKnownCount);
+         //System.out.println("Noise data items: "+noiseCount);
+         //System.out.println("Unknown data items: "+notKnownCount);
         return clusters;
     }
 
