@@ -378,27 +378,7 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
      */
     private int maxIterMain = 50;
 
-    /**
-     * XXX add doc
-     * 
-     */
-    private int minInstances = 2;
-
-    /**
-     * XXX add doc
-     * 
-     */
-    private double significanceLevel = 0.95;
-
-    /**
-     * XXX add doc
-     * 
-     * stop criterion: standard when rest datasize is < ...% of initial.
-     * 
-     */
-    double percent;
-
-    // internal tuning parameters
+    // internal tuning parameters with standard value as given by De Smet et al.
     /**
      * XXX add doc
      * 
@@ -409,7 +389,7 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
      * XXX add doc
      * 
      */
-    private int maxIterEM = 50;
+    private int maxIterEM = 200;
 
     /**
      * XXX add doc
@@ -417,18 +397,30 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
      */
     private double div = 1.0 / 30.0;
 
-    // 1 / 30;
     /**
      * XXX add doc
      * 
      */
     private double accurRad = 0.1;
-
+    
     /**
      * XXX add doc
      * 
      */
+    private int minInstances = 2;
+    
+    /**
+     * XXX add doc
+     * 
+     */
+    private double significanceLevel = 0.95;
+    
+
     // other variables
+    /**
+     * XXX add doc
+     * 
+     */
     private int instanceLength;
 
     /**
@@ -563,7 +555,7 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
      * XXX DOC
      */
     public AdaptiveQualityBasedClustering() {
-       this(1000,100,100,0.95, 0.05);
+       this(1000,50,200,0.95);
     }
 
     /**
@@ -577,18 +569,14 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
      *            maximum iterations of EM algorithm
      * @param double
      *            significanceLevel
-     * @param double
-     *            percentage of data left when main algorithm has to stop
      * 
      */
 
-    public AdaptiveQualityBasedClustering(int maxIterMain, int maxIter, int maxIterEM, double significanceLevel,
-            double percent) {
+    public AdaptiveQualityBasedClustering(int maxIterMain, int maxIter, int maxIterEM, double significanceLevel) {
         this.maxIterMain = maxIterMain;
         this.maxIter = maxIter;
         this.maxIterEM = maxIterEM;
         this.significanceLevel = significanceLevel;
-        this.percent = percent;
     }
 
     /**
@@ -598,7 +586,6 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
     // main
     public Dataset[] executeClustering(Dataset data) {
         instanceLength = data.getInstance(0).size();
-        double initDatasizeStopCrit = data.size() * percent;
         // normalize dataset
         Dataset dataNorm = normMean.filterDataset(data);
         // convert dataset of instances to vector of instances
@@ -701,7 +688,7 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
                     all.removeAll(cluster);
                     cluster.clear();
                     cluster.addAll(all);
-                    if (cluster.size() <= initDatasizeStopCrit) {
+                    if (cluster.size() <= 2) {
                         endSign = 0;
                     }
                     newMean = mean(cluster, instanceLength);
