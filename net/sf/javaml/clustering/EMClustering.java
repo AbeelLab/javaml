@@ -78,7 +78,7 @@ public class EMClustering implements Clusterer {
     private int m_num_attribs;
 
     /** maximum iterations to perform */
-    private int m_max_iterations = 100;
+    private int m_max_iterations;
 
     /**
      * Initialise estimators and storage.
@@ -572,15 +572,16 @@ public class EMClustering implements Clusterer {
  *
  */
     public EMClustering(){
-        this(4);
+        this(4, 100);
     }
   
     /**
      * XXX DOC
      * @param numClusters
      */
-    public EMClustering(int numClusters) {
+    public EMClustering(int numClusters, int m_max_iterations) {
         this.m_num_clusters = numClusters;
+        this.m_max_iterations = m_max_iterations;
     }
 
     public Dataset[] executeClustering(Dataset data) {
