@@ -37,31 +37,30 @@ import net.sf.javaml.distance.DistanceMeasure;
  */
 public class Gamma implements ClusterEvaluation {
 
-    public Gamma(DistanceMeasure dm) {
-        this.dm = dm;
-    }
+	public Gamma(DistanceMeasure dm) {
+		this.dm = dm;
+	}
 
-    private DistanceMeasure dm ;
+	private DistanceMeasure dm;
 
 	public double score(Dataset[] datas) {
-		double maxIntraDist[] = new double[datas.length];
-		double sPlus = 0,sMin = 0;
-		
+		double maxIntraDist = Double.MIN_VALUE;
+		double sPlus = 0, sMin = 0;
+
 		// calculate max intra cluster distance
 		for (int i = 0; i < datas.length; i++) {
-			maxIntraDist[i] = Double.MIN_VALUE;
 			for (int j = 0; j < datas[i].size(); j++) {
 				Instance x = datas[i].getInstance(j);
 				for (int k = j + 1; k < datas[i].size(); k++) {
 					Instance y = datas[i].getInstance(k);
 					double distance = dm.calculateDistance(x, y);
-					if (maxIntraDist[i] < distance) {
-						maxIntraDist[i] = distance;
+					if (maxIntraDist < distance) {
+						maxIntraDist = distance;
 					}
 				}
 			}
 		}
-		// search for min inter cluster distance
+		// calculate inter cluster distances
 		// count sPlus and sMin
 		for (int i = 0; i < datas.length; i++) {
 			for (int j = 0; j < datas[i].size(); j++) {
@@ -70,10 +69,10 @@ public class Gamma implements ClusterEvaluation {
 					for (int l = 0; l < datas[k].size(); l++) {
 						Instance y = datas[k].getInstance(l);
 						double distance = dm.calculateDistance(x, y);
-						if (distance < maxIntraDist[i]) {
+						if (distance < maxIntraDist) {
 							sMin++;
 						}
-						if (distance > maxIntraDist[i]) {
+						if (distance > maxIntraDist) {
 							sPlus++;
 						}
 					}
@@ -86,7 +85,7 @@ public class Gamma implements ClusterEvaluation {
 	}
 
 	public boolean compareScore(double score1, double score2) {
-		// should be maximized. range = [-1,1] 
+		// should be maximized. range = [-1,1]
 		return score2 > score1;
 	}
 }
