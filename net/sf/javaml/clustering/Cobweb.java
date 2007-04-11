@@ -643,6 +643,15 @@ public class Cobweb implements Clusterer {
      */
     private static final double m_normal = 1.0 / (2 * Math.sqrt(Math.PI));
 
+    public Cobweb(){
+        this(0.5,0.01);
+    }
+    
+    public Cobweb(double acuity,double cutoff){
+        this.m_acuity=acuity;
+        this.m_cutoff=cutoff*m_normal;
+    }
+    
     /**
      * Acuity (minimum standard deviation).
      */
