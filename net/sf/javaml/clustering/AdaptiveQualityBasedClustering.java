@@ -339,7 +339,7 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
                 pcr = pcr(prcpc, pr);
                 sm = pcr.size();
                 if (sm == 0 || sm == Double.POSITIVE_INFINITY || sm == Double.NEGATIVE_INFINITY) {
-                    //System.out.println("SM value not valid.");
+                    System.out.println("'SM value not valid.");
                     varianceEst = null;
                     return 0;
                 }
@@ -617,7 +617,7 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
             cluster = newCluster(cluster, ck, rad);
             if (cluster.size() <= minInstances) {
                 nonvalidcluster = 1;
-                //System.out.println("step 1: non valid cluster found ");
+                System.out.println("'step 1: non valid cluster found ");
             } else {
                 nonvalidcluster = 0;
             }
@@ -656,7 +656,7 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
             // System.out.println("step 2 : new var " + variance + " new pc " +
             // pc+ " new pb " + pb);
             if (pc == 0 & varianceEst == null) {
-                //System.out.println("EM algorithm did not converge.");
+                System.out.println("'EM algorithm did not converge.");
                 return null;
             }
             // calculation new radius
@@ -673,7 +673,7 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
             double tmp2 = 2 * variance * variance * tmp;
             // System.out.println("step 2 : tmp " + tmp + " tmp2 " + tmp2);
             if (tmp2 < 0) {
-                System.out.println("step 2 : tmp2 kleiner dan 0");
+                System.out.println("'step 2 : tmp2 kleiner dan 0");
                 return null;
             }
             rk = Math.sqrt(tmp2);

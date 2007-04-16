@@ -404,6 +404,8 @@ public class Ant implements Clusterer {
                     }
                     failMovesDrop = 0;
                     carried = null;
+                    numberMaxFailDrops = 0;
+                    
                 } else {
                     failMovesDrop++;
                 }
@@ -416,7 +418,7 @@ public class Ant implements Clusterer {
                     numberMaxFailDrops++;
                 }
                 if (numberMaxFailDrops >= maxNumberMaxFailDrops) {
-                    System.out.println("-----------numberMaxFailDrops too high: STOP");
+                    System.out.println("'numberMaxFailDrops too high: STOP");
                     stopSign = true;
                 }
             }
@@ -486,13 +488,13 @@ public class Ant implements Clusterer {
                     // if fail moves to pick grows to high, stop algorithm
 
                     if (failMovesPick >= maxFailMovesPick) {
-                        System.out.println("-----------failMovesPick too high: STOP");
+                        System.out.println("'failMovesPick too high: STOP");
                         stopSign = true;
                     }
                 }
             }
             if(clusters.size()==1){
-                System.out.println("Merged all data in iteration: "+j);
+                System.out.println("'Merged all data in iteration: "+j);
                 stopSign=true;
             }
         }
