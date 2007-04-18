@@ -68,9 +68,10 @@ public class RBFKernelSimilarity extends AbstractSimilarity {
         }
         return result;
     }
-/**
- * XXX DOC
- */
+
+    /**
+     * XXX DOC
+     */
     public double calculateDistance(Instance x, Instance y) {
         if (x.equals(y))
             return 1.0;
@@ -78,16 +79,18 @@ public class RBFKernelSimilarity extends AbstractSimilarity {
         return result;
 
     }
-/**
- * XXX DOC
- */
+
+    /**
+     * XXX DOC
+     */
     public double getMaximumDistance(Dataset data) {
         // TODO implement
         throw new UnsupportedOperationException("Method not implemented");
     }
-/**
- * XXX DOC
- */
+
+    /**
+     * XXX DOC
+     */
     public double getMinimumDistance(Dataset data) {
         // TODO implement
         throw new UnsupportedOperationException("Method not implemented");
