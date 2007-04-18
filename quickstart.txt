@@ -6,6 +6,7 @@ get you under way.
 | 1. Creating a dataset                        |
 | 2. Creating and using a clustering algorithm |
 +----------------------------------------------+
+
 1. Creating a dataset
 =====================
 The code snippter below will create a two-dimensional dataset with four clusters of 

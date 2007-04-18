@@ -24,6 +24,7 @@ version ~ date ~ revision
 0.0.2 ~ 2007-03-28 ~ 371
 0.0.3 ~ 2007-04-04 ~ 412
 0.0.4 ~ 2007-04-11 ~ 457
+0.0.5 ~ 2007-04-18 ~ 525
 
 1. Algorithms
 =============
@@ -42,8 +43,8 @@ net.sf.classification.svm.SMOPlatt
 net.sf.classification.evaluation.CrossValidation
 net.sf.clustering.CAST
 
-1.2. Working implementation (work on small test)
-------------------------------------------------
+1.2. Working implementation (work on a small test)
+--------------------------------------------------
 net.sf.clustering.mcl.MCL
 net.sf.clustering.AdaptiveQualityBasedClustering
 net.sf.clustering.Ant
