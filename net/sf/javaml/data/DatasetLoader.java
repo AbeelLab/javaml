@@ -86,7 +86,9 @@ public class DatasetLoader {
                     values[i] = Float.parseFloat(arr[i]);
                 } catch (NumberFormatException e) {
                     System.err.println("Invalid data on line " + lineCount + " column " + i);
-                    throw new RuntimeException("Invalid data file");
+                    System.err.println("Line:"+ line);
+                    System.err.println("Offending input: "+arr[i]);
+                    throw new RuntimeException("Invalid data file "+f);
                 }
             }
             out.addInstance(new SimpleInstance(values));
