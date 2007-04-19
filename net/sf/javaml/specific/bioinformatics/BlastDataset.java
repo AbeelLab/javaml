@@ -81,14 +81,20 @@ public class BlastDataset extends AbstractDistance implements Dataset {
             mapping = new HashMap<String, Integer>();
             genes = new Vector<GeneInstance>();
             while (line != null) {
+                
                 String[] arr = line.split("\t");
-                if (!mapping.containsKey(arr[0])) {
-                    genes.add(new GeneInstance(arr[0]));
-                    mapping.put(arr[0], index++);
-                }
-                if (!mapping.containsKey(arr[1])) {
-                    genes.add(new GeneInstance(arr[1]));
-                    mapping.put(arr[1], index++);
+                try {
+                    Integer.parseInt(arr[2]);
+                    if (!mapping.containsKey(arr[0])) {
+                        genes.add(new GeneInstance(arr[0]));
+                        mapping.put(arr[0], index++);
+                    }
+                    if (!mapping.containsKey(arr[1])) {
+                        genes.add(new GeneInstance(arr[1]));
+                        mapping.put(arr[1], index++);
+                    }
+                } catch (RuntimeException e) {
+                    //column with index 2 is not an int, this is probably a header line, ignore
                 }
                 line = in.readLine();
             }
@@ -100,6 +106,8 @@ public class BlastDataset extends AbstractDistance implements Dataset {
             while (line != null) {
 
                 String[] arr = line.split("\t");
+                try {
+                    Integer.parseInt(arr[2]);
                 int x = mapping.get(arr[0]);
                 int y = mapping.get(arr[1]);
                 float dist = calculateDist(arr[10]);
@@ -109,6 +117,10 @@ public class BlastDataset extends AbstractDistance implements Dataset {
                     minDistance = dist;
                 distances.put(new Point(x, y), dist);
                 // distances[y][x] = dist;
+                
+                } catch (RuntimeException e) {
+                    //column with index 2 is not an int, this is probably a header line, ignore
+                }
                 line = in.readLine();
 
             }
