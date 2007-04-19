@@ -35,15 +35,25 @@ import java.util.zip.GZIPInputStream;
 
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.distance.DistanceMeasure;
+import net.sf.javaml.distance.AbstractDistance;
 
-public class BlastDataset implements Dataset, DistanceMeasure {
+public class BlastDataset extends AbstractDistance implements Dataset {
+    /**
+     * The mapping of gene names to indices in the mapping
+     */
+    private HashMap<String, Integer> mapping;
 
-    HashMap<String, Integer> mapping;
+    /**
+     * The collection of gene instances, they have the same index as in the
+     * mapping
+     */
+    private Vector<GeneInstance> genes;
 
-    Vector<GeneInstance> genes;
-
-    HashMap<Point,Float> distances;
+    /**
+     * The mapping of two gene indices to a distance. This distance is a
+     * derivative of the BLAST e-value.
+     */
+    private HashMap<Point, Float> distances;
 
     /**
      * The distance is calculated from the absolute value of the exponent of the
@@ -62,21 +72,16 @@ public class BlastDataset implements Dataset, DistanceMeasure {
      */
     public BlastDataset(File blastResult, int distanceExponent) {
         try {
-            long time=System.currentTimeMillis();
-            long fileSize=blastResult.length();
             this.distanceExponent = distanceExponent;
             // first run, assigning IDs
             BufferedReader in = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(
                     blastResult))));
             String line = in.readLine();
             int index = 0;
-            System.out.println("First run");
             mapping = new HashMap<String, Integer>();
-            genes=new Vector<GeneInstance>();
+            genes = new Vector<GeneInstance>();
             while (line != null) {
-
                 String[] arr = line.split("\t");
-
                 if (!mapping.containsKey(arr[0])) {
                     genes.add(new GeneInstance(arr[0]));
                     mapping.put(arr[0], index++);
@@ -85,47 +90,33 @@ public class BlastDataset implements Dataset, DistanceMeasure {
                     genes.add(new GeneInstance(arr[1]));
                     mapping.put(arr[1], index++);
                 }
-
                 line = in.readLine();
             }
             in.close();
             // second run, calculating distances
             in = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(blastResult))));
             line = in.readLine();
-            System.out.println("Second run");
-            System.out.println("Matrix size: " + mapping.size() + "x" + mapping.size());
-            distances = new HashMap<Point,Float>();
-//            for(int i=0;i<mapping.size();i++){
-//                for(int j=0;j<mapping.size();j++){
-//                    distances[i][j]=1;
-//                }
-//            }
+            distances = new HashMap<Point, Float>();
             while (line != null) {
 
                 String[] arr = line.split("\t");
                 int x = mapping.get(arr[0]);
                 int y = mapping.get(arr[1]);
                 float dist = calculateDist(arr[10]);
-                if(dist>maxDistance)
-                    maxDistance=dist;
-                if(dist<minDistance)
-                    minDistance=dist;
-                distances.put(new Point(x,y), dist);
-               // distances[y][x] = dist;
+                if (dist > maxDistance)
+                    maxDistance = dist;
+                if (dist < minDistance)
+                    minDistance = dist;
+                distances.put(new Point(x, y), dist);
+                // distances[y][x] = dist;
                 line = in.readLine();
 
             }
             in.close();
-            System.out.println("Data loaded");
 
-            time=System.currentTimeMillis()-time;
-            System.out.println("Loaded "+fileSize+" bytes in "+time+" ms.");
-            double s=time/(1000.0*60);
-            double mb=fileSize/(1024.0*1024.0);
-            System.out.println("Gzip Loadspeed: "+(mb/s)+" Mb/min");
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
+            throw new RuntimeException("Construction of the BlastDataset failed!");
         }
 
     }
@@ -134,9 +125,7 @@ public class BlastDataset implements Dataset, DistanceMeasure {
 
     private float calculateDist(String string) {
         double value = Double.parseDouble(string);
-
-        value = 1/Math.pow(Math.abs(Math.log10(value)), 1.0 / distanceExponent);
-        //System.out.println(string + "\t" + value);
+        value = 1 / Math.pow(Math.abs(Math.log10(value)), 1.0 / distanceExponent);
         return (float) value;
     }
 
@@ -156,40 +145,36 @@ public class BlastDataset implements Dataset, DistanceMeasure {
     }
 
     public Instance getMaximumInstance() {
-        // TODO implement
-        throw new UnsupportedOperationException("Method not implemented");
+        throw new UnsupportedOperationException("A BlastDataset has no MaximumInstance");
     }
 
     public Instance getMinimumInstance() {
-        // TODO implement
-        throw new UnsupportedOperationException("Method not implemented");
+        throw new UnsupportedOperationException("A BlastDataset has no MinimumInstance");
     }
 
     public int size() {
         return mapping.size();
     }
 
-    private double maxDistance=0;
-    private double minDistance=1;
+    private double maxDistance = 0;
+
+    private double minDistance = 1;
+
     public double calculateDistance(Instance i, Instance j) {
         int x = mapping.get(i);
         int y = mapping.get(j);
-        Point a=new Point(x,y);
-        Point b=new Point(y,x);
-        if(distances.containsKey(a))
+        Point a = new Point(x, y);
+        Point b = new Point(y, x);
+        if (distances.containsKey(a))
             return distances.get(a);
-        else if(distances.containsKey(b))
+        else if (distances.containsKey(b))
             return distances.get(b);
-        else 
+        else
             return 1;
     }
 
-    public boolean compare(double x, double y) {
-        return x < y;
-    }
-
     public double getMaximumDistance(Dataset data) {
-       return maxDistance;
+        return maxDistance;
     }
 
     public double getMinimumDistance(Dataset data) {
