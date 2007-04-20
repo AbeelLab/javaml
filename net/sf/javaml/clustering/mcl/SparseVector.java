@@ -142,7 +142,9 @@ public class SparseVector extends HashMap<Integer, Double> {
     public double normalise(double newsum) {
         double sum = sum();
         double invsum = newsum / sum;
-        for (int i : keySet()) {
+        Set<Integer> keys=new HashSet<Integer>();
+        keys.addAll(keySet());
+        for (int i : keys) {
             mult(i, invsum);
         }
         return sum;
