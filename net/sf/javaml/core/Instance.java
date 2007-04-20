@@ -25,11 +25,23 @@
 
 package net.sf.javaml.core;
 
-
 public interface Instance {
 
+    /**
+     * This method will convert the instance to a value array. If this is not
+     * supported by the implementation, <code>null</code> should be returned.
+     * 
+     * @return
+     */
     public float[] toArray();
 
+    /**
+     * This method returns the value at a given index. If the implementation
+     * does not support positional access, an arbitrary value can be returned.
+     * 
+     * @param index
+     * @return
+     */
     public float getValue(int index);
 
     /**
@@ -49,6 +61,7 @@ public interface Instance {
 
     /**
      * This method return the number of values (attributes) this instance has.
+     * 
      * @return the number of values
      */
     public int size();

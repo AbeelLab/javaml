@@ -46,7 +46,7 @@ public interface Dataset {
      * @return
      */
     public Instance getInstance(int index);
-    
+
     /**
      * Get the index of a certain instance.
      * 
@@ -55,20 +55,6 @@ public interface Dataset {
      * @return
      */
     public int getIndex(Instance inst);
-
-//    /**
-//     * Return the instance with the given index and remove it from the dataset.
-//     * 
-//     * @param index
-//     *            the index of the instance to be deleted
-//     */
-//    public void removeInstance(int index);
-
-//    /**
-//     * Remove all instances from the dataset.
-//     * 
-//     */
-//    public void clear();
 
     /**
      * Returns the size of the dataset
@@ -81,6 +67,9 @@ public interface Dataset {
      * Get the 'minimum instance' of this dataset. This is a virtual instance
      * with for each index the lowest value found in the dataset.
      * 
+     * If this method is not supported by the implementation, the method should
+     * return null.
+     * 
      * @return an instance with for every index it's lowest value, null if the
      *         dataset is empty
      */
@@ -90,6 +79,8 @@ public interface Dataset {
      * Get the 'maximum instance' of this dataset. This is a virtual instance
      * with for each index the highest value found in the dataset.
      * 
+     * If this method is not supported by the implementation, the method should
+     * return null.
      * 
      * @return an instance with for every index it's highest value, null if the
      *         dataset is empty

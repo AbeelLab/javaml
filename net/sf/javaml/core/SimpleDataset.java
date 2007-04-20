@@ -26,35 +26,40 @@
 package net.sf.javaml.core;
 
 import java.util.Vector;
+
 /**
  * XXX write doc
+ * 
  * @author Thomas Abeel
- *
+ * 
  */
 public class SimpleDataset implements Dataset {
     /**
      * XXX doc
      */
-    public SimpleDataset(){
-        
+    public SimpleDataset() {
+
     }
-    
+
     /**
      * XXX doc
      */
-    public SimpleDataset(Vector<Instance>data){
-        for(Instance in:data){
+    public SimpleDataset(Vector<Instance> data) {
+        for (Instance in : data) {
             this.addInstance(in);
         }
     }
+
     /**
      * XXX doc
      */
     private Vector<Instance> instances = new Vector<Instance>();
+
     /**
      * XXX doc
      */
     private float[] lowArray, highArray;
+
     /**
      * XXX doc
      */
@@ -68,49 +73,7 @@ public class SimpleDataset implements Dataset {
             return false;
         } else {
             instances.add(instance);
-            for (int i = 0; i < instance.size(); i++) {
-                if (instance.getValue(i) < lowArray[i]) {
-                    lowArray[i] = instance.getValue(i);
-                }
-                if (instance.getValue(i) > highArray[i]) {
-                    highArray[i] = instance.getValue(i);
-                }
-            }
-            return true;
-        }
-
-    }
-    /**
-     * XXX doc
-     */
-    public int getIndex(Instance i) {
-        return instances.indexOf(i);
-    }
-    /**
-     * XXX doc
-     */
-    public Instance getInstance(int index) {
-        return instances.get(index);
-    }
-    /**
-     * XXX doc
-     */
-    public void removeInstance(Instance i) {
-        instances.remove(i);
-        recalculate();
-    }
-    /**
-     * XXX doc
-     */
-    private void recalculate() {
-        if (instances.size() == 0) {
-            lowArray = null;
-            highArray = null;
-        } else {
-            lowArray = instances.get(0).toArray();
-            highArray = instances.get(0).toArray();
-            for (int j = 1; j < instances.size(); j++) {
-                Instance instance = instances.get(j);
+            if (lowArray != null && highArray != null) {
                 for (int i = 0; i < instance.size(); i++) {
                     if (instance.getValue(i) < lowArray[i]) {
                         lowArray[i] = instance.getValue(i);
@@ -120,27 +83,52 @@ public class SimpleDataset implements Dataset {
                     }
                 }
             }
+            return true;
         }
 
     }
+
+    /**
+     * XXX doc
+     */
+    public int getIndex(Instance i) {
+        return instances.indexOf(i);
+    }
+
+    /**
+     * XXX doc
+     */
+    public Instance getInstance(int index) {
+        return instances.get(index);
+    }
+
     /**
      * XXX doc
      */
     public int size() {
         return instances.size();
     }
+
     /**
      * XXX doc
      */
     public Instance getMaximumInstance() {
-        return new SimpleInstance(highArray);
+        if (highArray != null)
+            return new SimpleInstance(highArray);
+        else
+            return null;
     }
+
     /**
      * XXX doc
      */
     public Instance getMinimumInstance() {
-        return new SimpleInstance(lowArray);
+        if (lowArray != null)
+            return new SimpleInstance(lowArray);
+        else
+            return null;
     }
+
     /**
      * XXX doc
      */
@@ -157,5 +145,4 @@ public class SimpleDataset implements Dataset {
         return out;
     }
 
-    
 }

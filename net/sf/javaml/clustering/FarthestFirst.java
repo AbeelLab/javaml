@@ -103,7 +103,7 @@ public class FarthestFirst implements Clusterer {
     private void updateMinDistance(double[] minDistance, boolean[] selected, Instance center) {
         for (int i = 0; i < selected.length; i++)
             if (!selected[i]) {
-                double d = dm.calculateDistance(center, data.getInstance(i));// instance(i));
+                double d = dm.calculateDistance(center, data.getInstance(i));
                 if (d < minDistance[i])
                     minDistance[i] = d;
             }
@@ -147,7 +147,6 @@ public class FarthestFirst implements Clusterer {
      * @param DistanceMeasure dm
      */
     public FarthestFirst(int numClusters, DistanceMeasure dm) {
-        super();
         m_NumClusters = numClusters;
         this.dm = dm;
         this.rg = new Random(System.currentTimeMillis());
@@ -171,6 +170,7 @@ public class FarthestFirst implements Clusterer {
         centroids[0] = data.getInstance(firstI);
         selected[firstI] = true;
 
+        System.out.println(data);
         updateMinDistance(minDistance, selected, data.getInstance(firstI));
 
         if (m_NumClusters > n)

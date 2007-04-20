@@ -48,7 +48,7 @@ public class GeneInstance implements Instance {
     }
 
     public float getValue(int index) {
-        throw new UnsupportedOperationException("This method is not applicable for a GeneInstance.");
+        return 0;
     }
 
     public float getWeight() {
@@ -64,11 +64,11 @@ public class GeneInstance implements Instance {
     }
 
     public int size() {
-        throw new UnsupportedOperationException("This method is not applicable for a GeneInstance.");
+        return 0;
     }
 
     public float[] toArray() {
-        throw new UnsupportedOperationException("This method is not applicable for a GeneInstance.");
+        return null;
     }
 
 }

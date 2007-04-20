@@ -304,7 +304,7 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
          */
         // calculates sD (checked)
         private double sD(double dimD) {
-            double sD = Math.pow(2 * Math.PI, (dimD / 2)) / gammaF.gamma(dimD / 2);
+            double sD = Math.pow(2.0 * Math.PI, (dimD / 2.0)) / gammaF.gamma(dimD / 2.0);
             return sD;
         }
 
