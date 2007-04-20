@@ -70,6 +70,7 @@ public class BlastResult extends AbstractDistance implements Dataset {
             int index = 0;
             mapping = new HashMap<String, Integer>();
             genes = new Vector<GeneInstance>();
+            distances=new HashMap<Point,Double>();
             while (line != null) {
 
                 String[] arr = line.split("\t");
