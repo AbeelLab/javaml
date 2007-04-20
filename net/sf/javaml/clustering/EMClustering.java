@@ -101,9 +101,6 @@ public class EMClustering implements Clusterer {
 			ClusterEvaluation ce = new SumOfSquaredErrors(dm);
 			Dataset[] tmp = sk.executeClustering(data);
 			double score = ce.score(tmp);
-			// sk.setSeed(m_rr.nextInt());
-			// sk.setNumClusters(m_num_clusters);
-			// sk.buildClusterer(inst);
 			if (score < bestSqE) {
 				bestSqE = score;
 				best = tmp;

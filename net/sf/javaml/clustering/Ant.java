@@ -38,10 +38,12 @@ import net.sf.javaml.distance.NormalizedEuclideanSimilarity;
 
 /**
  * 
- * This class implements an Ant Based Clustering Algorithm based on some ideas
+ * This class implements an Ant Based Clustering Algorithm based on ideas
  * from papers by Handl et al. and Schockaert et al.
  * 
- * XXX add references XXX add pseudocode
+ * XXX add references 
+ * 
+ * XXX add pseudocode
  * 
  * The distance measure should be normalized in the interval [0,1].
  * 
@@ -91,11 +93,6 @@ public class Ant implements Clusterer {
         this.maxFailMovesPick = maxFailMovesPick;
         this.maxNumberMaxFailDrops = maxNumberMaxFailDrops;
     }
-
-    /**
-     * XXX add doc
-     */
-   // private Vector<Instance> heap = new Vector<Instance>();
 
     /**
      * XXX add doc
@@ -381,7 +378,6 @@ public class Ant implements Clusterer {
                         probDropC = 0;
                     }
                 } else if (clusters.get(randomHeap).size() > 1) {
-                    //Dataset heapData = new SimpleDataset(heap);
                     Dataset carriedData = new SimpleDataset(carried);
                     double avgHeap = avg(clusters.get(randomHeap));
                     double tW = tW(carriedData, clusters.get(randomHeap));
@@ -488,13 +484,13 @@ public class Ant implements Clusterer {
                     // if fail moves to pick grows to high, stop algorithm
 
                     if (failMovesPick >= maxFailMovesPick) {
-                        System.out.println("'failMovesPick too high: STOP");
+                        System.err.println("'failMovesPick too high: STOP");
                         stopSign = true;
                     }
                 }
             }
             if(clusters.size()==1){
-                System.out.println("'Merged all data in iteration: "+j);
+                System.err.println("'Merged all data in iteration: "+j);
                 stopSign=true;
             }
         }

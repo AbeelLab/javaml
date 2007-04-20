@@ -96,7 +96,6 @@ public class Cobweb implements Clusterer {
         /** The maximum value seen, or Double.NaN if no values seen */
         private double max = Double.NaN;
 
-
         /**
          * Adds a value that has been seen n times to the observed values
          * 
@@ -118,6 +117,7 @@ public class Cobweb implements Clusterer {
                 max = value;
             }
         }
+
         /**
          * Subtracts a value that has been seen n times from the observed values
          * 
@@ -141,12 +141,12 @@ public class Cobweb implements Clusterer {
 
             stdDev = Double.NaN;
             if (count > 0) {
-               stdDev = Double.POSITIVE_INFINITY;
+                stdDev = Double.POSITIVE_INFINITY;
                 if (count > 1) {
                     stdDev = sumSq - (sum * sum) / count;
                     stdDev /= (count - 1);
                     if (stdDev < 0) {
-                       stdDev = 0;
+                        stdDev = 0;
                     }
                     stdDev = Math.sqrt(stdDev);
                 }
@@ -530,7 +530,7 @@ public class Cobweb implements Clusterer {
          */
         private double categoryUtility() {
 
-               double totalCU = 0;
+            double totalCU = 0;
 
             for (int i = 0; i < m_children.size(); i++) {
                 CNode child = m_children.elementAt(i);
@@ -554,12 +554,11 @@ public class Cobweb implements Clusterer {
 
             double sum = 0;
             for (int i = 0; i < m_numAttributes; i++) {
-               sum += ((m_normal / child.getStandardDev(i)) - (m_normal / getStandardDev(i)));
-   }
+                sum += ((m_normal / child.getStandardDev(i)) - (m_normal / getStandardDev(i)));
+            }
             return (child.m_totalInstances / m_totalInstances) * sum;
         }
 
-     
         /**
          * Returns the standard deviation of a numeric attribute
          * 
@@ -594,7 +593,7 @@ public class Cobweb implements Clusterer {
                 m_attStats = new Stats[m_numAttributes];
                 for (int i = 0; i < m_numAttributes; i++) {
                     m_attStats[i] = new Stats();
-                  
+
                 }
             }
             for (int i = 0; i < m_numAttributes; i++) {
@@ -604,7 +603,7 @@ public class Cobweb implements Clusterer {
                 } else {
                     m_attStats[i].add(value, updateInstance.getWeight());
                 }
-               
+
             }
             m_totalInstances += (delete) ? (-1.0 * updateInstance.getWeight()) : (updateInstance.getWeight());
         }
@@ -623,7 +622,7 @@ public class Cobweb implements Clusterer {
                 throw new RuntimeException("assignClusterNums: tree not built correctly!");
             }
 
-            //this.m_clusterNum = cl_num[0];
+            // this.m_clusterNum = cl_num[0];
             cl_num[0]++;
             if (m_children != null) {
                 for (int i = 0; i < m_children.size(); i++) {
@@ -633,24 +632,21 @@ public class Cobweb implements Clusterer {
             }
         }
 
-       
-
-       
     }
 
     /**
      * Normal constant.
      */
     private static final double m_normal = 1.0 / (2 * Math.sqrt(Math.PI));
-    
+
     /**
      * default constructor
      * 
      */
-    public Cobweb(){
-        this(0.5,0.01);
+    public Cobweb() {
+        this(0.5, 0.01);
     }
-    
+
     /**
      * XXX DOC
      * 
@@ -658,11 +654,11 @@ public class Cobweb implements Clusterer {
      * @param cutoff
      * 
      */
-    public Cobweb(double acuity,double cutoff){
-        this.m_acuity=acuity;
-        this.m_cutoff=cutoff*m_normal;
+    public Cobweb(double acuity, double cutoff) {
+        this.m_acuity = acuity;
+        this.m_cutoff = cutoff * m_normal;
     }
-    
+
     /**
      * Acuity (minimum standard deviation).
      */
@@ -731,24 +727,11 @@ public class Cobweb implements Clusterer {
         }
     }
 
-    private void printNode(CNode x, int level) {
-        String tabs = "";
-        for (int i = 0; i < level; i++)
-            tabs += "\t";
-        //System.out.println(tabs + "" + x.m_clusterInstances.size());
-        if (x.m_children != null) {
-            for (CNode y : x.m_children) {
-                printNode(y, level + 1);
-            }
-        }
-    }
-
     private Filter filter = new NormalizeMean();
 
     public Dataset[] executeClustering(Dataset data) {
 
         data = filter.filterDataset(data);
-        //System.out.println(data);
         m_numberOfClusters = -1;
         m_cobwebTree = null;
         m_numberSplits = 0;
@@ -757,11 +740,8 @@ public class Cobweb implements Clusterer {
             updateClusterer(data.getInstance(i));
         }
         determineNumberOfClusters();
-        //System.out.println("Datapoints: " + data.size());
-        //System.out.println("Clusters: " + m_numberOfClusters);
-        //System.out.println("Size at root: " + m_cobwebTree.m_clusterInstances.size());
-        printNode(m_cobwebTree, 0);
-      
+        // printNode(m_cobwebTree, 0);
+
         Vector<Dataset> clusters = new Vector<Dataset>();
         createClusters(m_cobwebTree, clusters);
         Dataset[] out = new Dataset[clusters.size()];
