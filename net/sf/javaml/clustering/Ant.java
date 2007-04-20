@@ -76,9 +76,12 @@ public class Ant implements Clusterer {
      */
     public Ant() {
         // TODO create 'good' default constructor
-        this(3500, 5, 5, 1250);
+        this(null);
     }
 
+    public Ant(DistanceMeasure dm){
+        this(dm,3500,5,5,1250);
+    }
     /**
      * XXX add docu
      * 
@@ -87,7 +90,8 @@ public class Ant implements Clusterer {
      * @param maxFailMovesPick
      * @param maxNumberMaxFailDrops
      */
-    public Ant(int iterations, int maxFailMovesDrop, int maxFailMovesPick, int maxNumberMaxFailDrops) {
+    public Ant(DistanceMeasure dm,int iterations, int maxFailMovesDrop, int maxFailMovesPick, int maxNumberMaxFailDrops) {
+        this.dm=dm;
         this.iterations = iterations;
         this.maxFailMovesDrop = maxFailMovesDrop;
         this.maxFailMovesPick = maxFailMovesPick;
@@ -338,7 +342,8 @@ public class Ant implements Clusterer {
      */
     // main
     public Dataset[] executeClustering(Dataset data) {
-        dm = new NormalizedEuclideanSimilarity(data);
+        if(dm==null)
+            dm = new NormalizedEuclideanSimilarity(data);
         if (data.size() == 0) {
             throw new RuntimeException("The dataset should not be empty");
         }
