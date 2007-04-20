@@ -24,6 +24,7 @@
  */
 package net.sf.javaml.clustering;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 
@@ -178,20 +179,16 @@ public class DensityBasedSpatialClustering extends AbstractDensityBasedClusterin
 
         }
 
+        Collections.shuffle(dataset);//make clustering algorithm random
         for (DataObject dataObject : dataset) {
-            // System.out.println("Loop...");
             if (dataObject.clusterIndex == DataObject.UNCLASSIFIED) {
-                // System.out.println("Starting to expand...");
                 if (expandCluster(dataObject)) {
-                    // System.out.println("Found cluster, new ID: "+clusterID);
                     clusterID++;
-
                 }
             }
         }
 
         Dataset[] clusters = new Dataset[clusterID];
-        // System.out.println("Number of clusters: "+clusterID);
         for (int i = 0; i < clusters.length; i++) {
             clusters[i] = new SimpleDataset();
         }
@@ -201,14 +198,11 @@ public class DensityBasedSpatialClustering extends AbstractDensityBasedClusterin
             if (dataObject.clusterIndex >= 0)
                 clusters[dataObject.clusterIndex].addInstance(dataObject.instance);
             if (DataObject.NOISE == dataObject.clusterIndex) {
-                // clusters[clusterID].addInstance(dataObject.instance);
                 noiseCount++;
             }
             if (DataObject.UNCLASSIFIED == dataObject.clusterIndex)
                 notKnownCount++;
         }
-//         System.out.println("Noise data items: "+noiseCount);
-//         System.out.println("Unknown data items: "+notKnownCount);
         return clusters;
     }
 
