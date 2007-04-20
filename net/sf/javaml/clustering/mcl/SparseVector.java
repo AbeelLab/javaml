@@ -29,7 +29,9 @@
 package net.sf.javaml.clustering.mcl;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 /**
  * SparseVector represents a sparse vector.
@@ -43,8 +45,11 @@ import java.util.Iterator;
  */
 public class SparseVector extends HashMap<Integer, Double> {
 
-    private static final long serialVersionUID = 1L;
-
+    
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 8101876335024188425L;
     private int length = 0;
 
     /**
@@ -235,7 +240,9 @@ public class SparseVector extends HashMap<Integer, Double> {
      * @param s
      */
     public void hadamardPower(double s) {
-        for (int i : keySet()) {
+        Set<Integer>keys= new HashSet<Integer>();
+        keys.addAll(keySet());
+        for (int i : keys) {
             put(i, Math.pow(get(i), s));
         }
     }
