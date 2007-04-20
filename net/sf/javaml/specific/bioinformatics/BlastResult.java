@@ -1,5 +1,5 @@
 /**
- * BlastDataset.java
+ * BlastResult.java
  *
  * This file is part of the Java Machine Learning API
  * 
@@ -24,24 +24,24 @@
  */
 package net.sf.javaml.specific.bioinformatics;
 
+
+
 import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
+import java.io.FileReader;
 import java.util.HashMap;
 import java.util.Vector;
-import java.util.zip.GZIPInputStream;
 
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.distance.AbstractDistance;
 
-public class BlastDataset extends AbstractDistance implements Dataset {
+public class BlastResult extends AbstractDistance implements Dataset {
     /**
      * The mapping of gene names to indices in the mapping
      */
-    private HashMap<String, Integer> mapping;
+     private HashMap<String, Integer> mapping;
 
     /**
      * The collection of gene instances, they have the same index as in the
@@ -53,35 +53,25 @@ public class BlastDataset extends AbstractDistance implements Dataset {
      * The mapping of two gene indices to a distance. This distance is a
      * derivative of the BLAST e-value.
      */
-    private HashMap<Point, Float> distances;
+     private HashMap<Point, Double> distances;
 
+    
     /**
-     * The distance is calculated from the absolute value of the exponent of the
-     * e-value from the Blast output using the following formula:
-     * 
-     * =1/POWER(exponent e-value;1/distanceExponent)
-     * 
-     * The higher the distanceExponent, the more strict the distance measure
-     * becomes.
-     * 
-     * As a default value we suggest setting this parameter to 5.
+     * XXX DOC
      * 
      * @param blastResult
-     *            the result of a blast. This file should be a gzip file.
+     *            the result of a blast.
      * @param distanceExponent
      */
-    public BlastDataset(File blastResult, int distanceExponent) {
+    public BlastResult(File blastResult) {
         try {
-            this.distanceExponent = distanceExponent;
-            // first run, assigning IDs
-            BufferedReader in = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(
-                    blastResult))));
+            BufferedReader in = new BufferedReader(new FileReader(blastResult));
             String line = in.readLine();
             int index = 0;
             mapping = new HashMap<String, Integer>();
             genes = new Vector<GeneInstance>();
             while (line != null) {
-                
+
                 String[] arr = line.split("\t");
                 try {
                     Integer.parseInt(arr[2]);
@@ -93,52 +83,38 @@ public class BlastDataset extends AbstractDistance implements Dataset {
                         genes.add(new GeneInstance(arr[1]));
                         mapping.put(arr[1], index++);
                     }
+                    int x = mapping.get(arr[0]);
+                    int y = mapping.get(arr[1]);
+                    double dist = calculateDist(arr[10]);
+                    if (dist > maxDistance)
+                        maxDistance = dist;
+                    if (dist < minDistance)
+                        minDistance = dist;
+                    if(!distances.containsKey(new Point(x,y))&&!distances.containsKey(new Point(y,x))){
+                        distances.put(new Point(x, y), dist);
+                    }
                 } catch (RuntimeException e) {
-                    //column with index 2 is not an int, this is probably a header line, ignore
+                    // column with index 2 is not an int, this is probably a
+                    // header line, ignore
                 }
                 line = in.readLine();
             }
             in.close();
-            // second run, calculating distances
-            in = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(blastResult))));
-            line = in.readLine();
-            distances = new HashMap<Point, Float>();
-            while (line != null) {
-
-                String[] arr = line.split("\t");
-                try {
-                    Integer.parseInt(arr[2]);
-                int x = mapping.get(arr[0]);
-                int y = mapping.get(arr[1]);
-                float dist = calculateDist(arr[10]);
-                if (dist > maxDistance)
-                    maxDistance = dist;
-                if (dist < minDistance)
-                    minDistance = dist;
-                distances.put(new Point(x, y), dist);
-                // distances[y][x] = dist;
-                
-                } catch (RuntimeException e) {
-                    //column with index 2 is not an int, this is probably a header line, ignore
-                }
-                line = in.readLine();
-
-            }
-            in.close();
+            
 
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException("Construction of the BlastDataset failed!");
+            throw new RuntimeException("Construction of the BlastResult dataset failed!");
         }
 
     }
 
-    private int distanceExponent;
-
-    private float calculateDist(String string) {
+   private double calculateDist(String string) {
         double value = Double.parseDouble(string);
-        value = 1 / Math.pow(Math.abs(Math.log10(value)), 1.0 / distanceExponent);
-        return (float) value;
+        return value;
+        // value = 1 / Math.pow(Math.abs(Math.log10(value)), 1.0 /
+        // distanceExponent);
+        // return (float) value;
     }
 
     public boolean addInstance(Instance i) {
@@ -157,11 +133,11 @@ public class BlastDataset extends AbstractDistance implements Dataset {
     }
 
     public Instance getMaximumInstance() {
-        throw new UnsupportedOperationException("A BlastDataset has no MaximumInstance");
+        throw new UnsupportedOperationException("A BlastDataset2TestImplementation has no MaximumInstance");
     }
 
     public Instance getMinimumInstance() {
-        throw new UnsupportedOperationException("A BlastDataset has no MinimumInstance");
+        throw new UnsupportedOperationException("A BlastDataset2TestImplementation has no MinimumInstance");
     }
 
     public int size() {
@@ -171,6 +147,16 @@ public class BlastDataset extends AbstractDistance implements Dataset {
     private double maxDistance = 0;
 
     private double minDistance = 1;
+
+    
+
+    public double getMaximumDistance(Dataset data) {
+        return maxDistance;
+    }
+
+    public double getMinimumDistance(Dataset data) {
+        return minDistance;
+    }
 
     public double calculateDistance(Instance i, Instance j) {
         int x = mapping.get(i);
@@ -183,14 +169,6 @@ public class BlastDataset extends AbstractDistance implements Dataset {
             return distances.get(b);
         else
             return 1;
-    }
-
-    public double getMaximumDistance(Dataset data) {
-        return maxDistance;
-    }
-
-    public double getMinimumDistance(Dataset data) {
-        return minDistance;
     }
 
 }
