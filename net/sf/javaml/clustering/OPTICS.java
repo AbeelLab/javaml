@@ -276,7 +276,7 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer 
             }
 
         }
-        Dataset[] clusters = new Dataset[clusterID + 1];
+        Dataset[] clusters = new Dataset[clusterID];
         for (int i = 0; i < clusters.length; i++) {
             clusters[i] = new SimpleDataset();
         }
