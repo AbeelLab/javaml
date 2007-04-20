@@ -1,5 +1,5 @@
 /**
- * MarkovClustering.java, 22-nov-2006
+ * MarkovClustering.java
  *
  * This file is part of the Java Machine Learning API
  * 
@@ -17,10 +17,10 @@
  * along with the Java Machine Learning API; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * 
- * Copyright (c) 2006, Thomas Abeel
- * 
  * based on work from Gregor Heinrich, Arbylon (http://www.arbylon.net/projects/).
+
  * Copyright (c) 2006 Gregor Heinrich. All rights reserved.
+ * Copyright (c) 2006-2007, Thomas Abeel
  * 
  * Project: http://sourceforge.net/projects/java-ml/
  * 
@@ -95,7 +95,6 @@ public class MarkovClustering {
     public SparseMatrix run(SparseMatrix a, double maxResidual, double pGamma, double loopGain, double maxZero) {
         // add cycles
         addLoops(a, loopGain);
-        System.out.println(a.toString());
         a.normaliseRows();
         double residual = 1.;
         int i = 0;
@@ -105,7 +104,6 @@ public class MarkovClustering {
             i++;
             a = expand(a);
             residual = inflate(a, pGamma, maxZero);
-            System.out.println("iteration " + i + " residual energy = " + residual);
         }
         return a;
 

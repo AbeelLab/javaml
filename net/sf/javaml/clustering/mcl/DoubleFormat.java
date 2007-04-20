@@ -44,28 +44,6 @@ import java.util.Arrays;
  */
 public class DoubleFormat {
 
-    public static void main(String[] args) {
-
-        // test();
-        run();
-    }
-
-    private static void run() {
-        double[] a = new double[] {10229876.3, 1022.9876, 0.9876, 0.00009876,
-            0.0987678, 99.987678, 9.87604E9, 9.976E10};
-
-        for (int i = 12; i > 5; i--) {
-
-            System.out.println("\nlength = " + i + " : ");
-            for (int j = 0; j < a.length; j++) {
-                System.out.println("[" + DoubleFormat.format(a[j], 6, i)
-                    + "] <= (" + a[j] + ")");
-                System.out.println("[" + DoubleFormat.format(-a[j], 6, i)
-                    + "] <= (" + -a[j] + ")");
-            }
-        }
-    }
-
     /**
      * Format the number x with n significant digits.
      * 
@@ -113,7 +91,6 @@ public class DoubleFormat {
         int pad = 0;
 
         ExpDouble d = new ExpDouble(x, ndigits);
-        // System.out.println(d.debug());
         int len = d.strlen();
         pad = strlen - len;
         if (pad >= 0) {

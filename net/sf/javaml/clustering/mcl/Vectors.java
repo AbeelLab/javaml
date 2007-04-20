@@ -88,7 +88,6 @@ public class Vectors {
         double[] out = new double[(int) Math.floor((end - start) / step) + 1];
         for (int i = 0; i < out.length; i++) {
             out[i] = start + step * i;
-            // System.out.println(step * i + " " + i);
         }
         return out;
     }
@@ -501,7 +500,6 @@ public class Vectors {
         for (int i = 0; i < x.length - 1; i++) {
             b.append(format(x[i])).append(" ");
         }
-        System.out.println("array length vector:" +x.length);
         b.append(format(x[x.length - 1]));
         return b.toString();
     }
@@ -524,7 +522,6 @@ public class Vectors {
         if (x == null)
             return "null";
         StringBuffer b = new StringBuffer();
-        System.out.println("array length array:" +x.length);
         for (int i = 0; i < x.length - 1; i++) {
             b.append(print(x[i])).append("\n");
         }

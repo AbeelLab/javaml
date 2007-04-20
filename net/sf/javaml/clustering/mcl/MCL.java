@@ -83,41 +83,12 @@ public class MCL implements Clusterer {
     private double maxZero = 0.001;
 
     public Dataset[] executeClustering(Dataset data) {
-        // XXX MCL requires a similarity as a distance measure
-        // convert dataset to matrix of distances
-        //
-        // double[][] dataConverted = new double[data.size()][data.size()];
-        // double sum=0;
-        // for (int i = 0; i < data.size(); i++) {
-        // for (int j = 0; j < data.size(); j++) {
-        // double distance = dm.calculateDistance(data.getInstance(i),
-        // data.getInstance(j));
-        // if (i == j) {
-        // dataConverted[i][i] = distance;
-        // } else {
-        // dataConverted[i][j] = distance;
-        // dataConverted[j][i] = distance;
-        // }
-        // sum+=distance/(data.size()*data.size());
-        // }
-        //                
-        // }
-        // System.out.println("Cut-off distance="+sum);
-        // sum=0.85;
-        // for (int i = 0; i < data.size(); i++) {
-        // for (int j = 0; j < data.size(); j++) {
-        // if(dataConverted[i][j]<sum)
-        // dataConverted[i][j]=0;
-        // }
-        // }
-        // System.out.println("dataset converted");
         SparseMatrix dataSparseMatrix = new SparseMatrix();
         for (int i = 0; i < data.size(); i++) {
             for (int j = 0; j <= i; j++) {
                 Instance x = data.getInstance(i);
                 Instance y = data.getInstance(j);
-                // XXX hack to work with a distance measure
-                double dist = 1 - dm.calculateDistance(x, y);
+                double dist = dm.calculateDistance(x, y);
                 if (dist > maxZero)
                     dataSparseMatrix.add(i, j, dm.calculateDistance(x, y));
             }
@@ -125,12 +96,9 @@ public class MCL implements Clusterer {
 
         MarkovClustering mcl = new MarkovClustering();
         SparseMatrix matrix = mcl.run(dataSparseMatrix, maxResidual, pGamma, loopGain, maxZero);
-        System.out.println("mcl run finished");
-
+        
         // convert matrix to output dataset:
         int[] sparseMatrixSize = matrix.getSize();
-        // System.out.println("sparseMatrixSize: " + sparseMatrixSize[0]);
-
         // find number of attractors (non zero values) in diagonal
         int attractors = 0;
         for (int i = 0; i < sparseMatrixSize[0]; i++) {
@@ -139,8 +107,6 @@ public class MCL implements Clusterer {
                 attractors++;
             }
         }
-        System.out.println("# attractors: " + attractors);
-        System.out.print("final cluster size: ");
         // create cluster for each attractor with value close to 1
         Vector<Vector<Instance>> finalClusters = new Vector<Vector<Instance>>();
 
@@ -148,22 +114,16 @@ public class MCL implements Clusterer {
             Vector<Instance> cluster = new Vector<Instance>();
             double val = matrix.get(i, i);
             if (val >= 0.98) {
-                // System.out.println("valid attractor found");
                 for (int j = 0; j < sparseMatrixSize[0]; j++) {
                     double value = matrix.get(j, i);
                     if (value != 0) {
                         cluster.add(data.getInstance(j));
-                        // System.out.println("instance added");
                     }
                 }
-                System.out.print(cluster.size() + ", ");
                 finalClusters.add(cluster);
             }
         }
-        System.out.println();
-        // System.out.println("finalClusterssize: "+ finalClusters.size());
-
-        // System.out.println("start data adding to dataset");
+       
         Dataset[] output = new Dataset[finalClusters.size()];
         for (int i = 0; i < finalClusters.size(); i++) {
             output[i] = new SimpleDataset();

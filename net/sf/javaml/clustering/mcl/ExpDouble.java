@@ -40,19 +40,6 @@ public class ExpDouble {
 
     private static double log10 = Math.log(10);
 
-    public static void main(String[] args) {
-        double[] x = new double[] {0, -1.0099638, 3.56, 30, -300.04, -45383487,
-            9.998, 34598E12};
-        for (int i = 0; i < x.length; i++) {
-            ExpDouble a = new ExpDouble(x[i], 5);
-            a.round(3);
-            System.out.println(a.debug());
-            a.round(1);
-            System.out.println(a.toExpString());
-        }
-
-    }
-
     /**
      * Creates an ExpDouble from a double, with the specified number of digits.
      * 
