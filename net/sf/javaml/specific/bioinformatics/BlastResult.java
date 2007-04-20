@@ -134,11 +134,11 @@ public class BlastResult extends AbstractDistance implements Dataset {
     }
 
     public Instance getMaximumInstance() {
-        throw new UnsupportedOperationException("A BlastDataset2TestImplementation has no MaximumInstance");
+        return null;
     }
 
     public Instance getMinimumInstance() {
-        throw new UnsupportedOperationException("A BlastDataset2TestImplementation has no MinimumInstance");
+        return null;
     }
 
     public int size() {
