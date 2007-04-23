@@ -663,21 +663,17 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
             double dimD = dimension - 2;
             double sD = em.sD(dimD);
             double sD1 = em.sD(dimD + 1);
-            // System.out.println("step 2 : sD " + sD + " sD1 " + sD1);
-            double c1 = sD / Math.pow((2 * Math.PI * variance * variance), dimD / 2);
-            double c2 = sD / (sD1 * Math.pow(dimD + 1, dimD / 2));
-            double c3 = Math.abs(1 - (1 / significanceLevel));
-            // System.out.println("step 2 : c1 " + c1 + " c2 " + c2 + " c3 " +
-            // c3);
-            double tmp = Math.log(pb * c2 / (pc * c1 * c3));
-            double tmp2 = 2 * variance * variance * tmp;
-            // System.out.println("step 2 : tmp " + tmp + " tmp2 " + tmp2);
-            if (tmp2 < 0) {
-                System.out.println("'step 2 : tmp2 kleiner dan 0");
-                return null;
+            double cc=sD*(1/(Math.pow(2*Math.PI*variance,dimD/2)));
+            double cb=(sD/(sD1*Math.pow(Math.sqrt(dimD+1),dimD)));
+             double lo=(significanceLevel/(1-significanceLevel))*((pb*cb)/(pc*cc));
+             if (lo < 0) {
+                throw new RuntimeException("AQBC:EM: Impossible to calculate radius!");
             }
-            rk = Math.sqrt(tmp2);
-            // System.out.println("step 2 : new rk " + rk);
+            double dis=-2*variance*Math.log(lo);
+            if(dis<0){
+                throw new RuntimeException("AQBC:EM: Impossible to calculate radius!"); 
+            }
+            rk=Math.sqrt(dis);
 
             if (Math.abs((rk - rk_prelim) / rk_prelim) < accurRad) {
                 cluster = newCluster(cluster, ck, rk);
