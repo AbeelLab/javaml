@@ -60,6 +60,7 @@ net.sf.clustering.KMeans
 net.sf.clustering.KMedoids
 net.sf.clustering.MultiKMeans
 net.sf.clustering.OPTICS
+net.sf.clustering.SOM
 net.sf.clustering.XMeans
 
 1.3 Mature algorithms (thoroughly tested) 
