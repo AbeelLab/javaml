@@ -170,7 +170,6 @@ public class FarthestFirst implements Clusterer {
         centroids[0] = data.getInstance(firstI);
         selected[firstI] = true;
 
-        System.out.println(data);
         updateMinDistance(minDistance, selected, data.getInstance(firstI));
 
         if (m_NumClusters > n)
