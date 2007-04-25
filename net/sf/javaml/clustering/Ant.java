@@ -80,7 +80,7 @@ public class Ant implements Clusterer {
     }
 
     public Ant(DistanceMeasure dm){
-        this(dm,3500,5,5,1250);
+        this(3500,5,5,1250, dm);
     }
     /**
      * XXX add docu
@@ -89,13 +89,14 @@ public class Ant implements Clusterer {
      * @param maxFailMovesDrop
      * @param maxFailMovesPick
      * @param maxNumberMaxFailDrops
+     * @param distancemeasure
      */
-    public Ant(DistanceMeasure dm,int iterations, int maxFailMovesDrop, int maxFailMovesPick, int maxNumberMaxFailDrops) {
-        this.dm=dm;
+    public Ant(int iterations, int maxFailMovesDrop, int maxFailMovesPick, int maxNumberMaxFailDrops, DistanceMeasure dm) {
         this.iterations = iterations;
         this.maxFailMovesDrop = maxFailMovesDrop;
         this.maxFailMovesPick = maxFailMovesPick;
         this.maxNumberMaxFailDrops = maxNumberMaxFailDrops;
+        this.dm=dm;
     }
 
     /**
