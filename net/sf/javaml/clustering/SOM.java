@@ -990,15 +990,96 @@ public class SOM implements Clusterer {
         }
     }
 
+    enum GridType {
+
+        HEXAGONAL("hexa"), RECTANGLES("rect");
+        private String tag;
+
+        private GridType(String tag) {
+            this.tag = tag;
+        }
+
+        public String toString() {
+            return tag;
+        }
+    }
+
+    enum NeighbourhoodFunction {
+        GAUSSIAN("gaussian"), STEP("step");
+        private String tag;
+
+        private NeighbourhoodFunction(String tag) {
+            this.tag = tag;
+        }
+
+        public String toString() {
+            return tag;
+        }
+    }
+
+    enum LearningType {
+        EXPONENTIAL("exponential"), INVERSE("inverse"), LINEAR("linear");
+        private String tag;
+
+        private LearningType(String tag) {
+            this.tag = tag;
+        }
+
+        public String toString() {
+            return tag;
+        }
+    }
+
+    public SOM() {
+        this(4, 4, GridType.HEXAGONAL, 10000, 0.1, 1, LearningType.LINEAR, NeighbourhoodFunction.STEP);
+    }
+
+    private GridType gridType;
+
+    private LearningType learningType;
+
+    private NeighbourhoodFunction neighbourhoodFunction;
+
+    private int xdim, ydim, iterations, initialRadius;
+
+    private double learningRate;
+
+    // public SOM(GridType gridType, LearningType learningType,
+    // NeighbourhoodFunction neighbourhoodFunction, int xdim, int ydim, int
+    // iterations, double learningRate, double initialRadius) {
+    // super();
+    // this.gridType = gridType;
+    // this.learningType = learningType;
+    // this.neighbourhoodFunction = neighbourhoodFunction;
+    // this.xdim = xdim;
+    // this.ydim = ydim;
+    // this.iterations = iterations;
+    // this.learningRate = learningRate;
+    // this.initialRadius = initialRadius;
+    // }
+
+    public SOM(int xdim, int ydim, GridType grid, int iterations, double learningRate, int initialRadius,
+            LearningType learning, NeighbourhoodFunction nbf) {
+        this.gridType = grid;
+        this.learningType = learning;
+        this.neighbourhoodFunction = nbf;
+        this.xdim = xdim;
+        this.ydim = ydim;
+        this.iterations = iterations;
+        this.learningRate = learningRate;
+        this.initialRadius = initialRadius;
+    }
+
     public Dataset[] executeClustering(Dataset data) {
 
         // hexa || rect
-        WeightVectors wV = new WeightVectors(2, 2, data.getInstance(0).size(), "hexa");
+        WeightVectors wV = new WeightVectors(xdim, ydim, data.getInstance(0).size(), gridType.toString());
         InputVectors iV = convertDataset(data);
         JSomTraining jst = new JSomTraining(wV, iV);
         // exponential || inverse || linear
         // gaussian || step
-        jst.setTrainingInstructions(100000, 0.1, 1, "inverse", "gaussian");
+        jst.setTrainingInstructions(iterations, learningRate, initialRadius, learningType.toString(),
+                neighbourhoodFunction.toString());
         WeightVectors out = jst.doTraining();
         // System.out.println(out);
         // System.out.println(iV);
