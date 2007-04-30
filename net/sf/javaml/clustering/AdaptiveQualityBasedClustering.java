@@ -57,133 +57,6 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
          * XXX add doc
          * 
          */
-        // dimension - 2
-        private double dimD;
-
-        /**
-         * XXX add doc
-         * 
-         */
-        // Pc
-        private double pc;
-
-        /**
-         * XXX add doc
-         * 
-         */
-        // optimized Pc
-        private double pcOp;
-
-        /**
-         * XXX add doc
-         * 
-         */
-        // pb
-        private double pb;
-
-        /**
-         * XXX add doc
-         * 
-         */
-        // optimized Pb
-        private double pbOp;
-
-        /**
-         * XXX add doc
-         * 
-         */
-        private double sD;
-
-        /**
-         * XXX add doc
-         * 
-         */
-        private double sD1;
-
-        /**
-         * XXX add doc
-         * 
-         */
-        private double sm;
-
-        /**
-         * XXX add doc
-         * 
-         */
-        private double variance;
-
-        /**
-         * XXX add doc
-         * 
-         */
-        // optimized variance
-        private double varianceOp;
-
-        /**
-         * XXX add doc
-         * 
-         */
-        // p(r|C)
-        private Vector<Double> prc = new Vector<Double>();
-
-        /**
-         * XXX add doc
-         * 
-         */
-        // p(r|B)
-        private Vector<Double> prb = new Vector<Double>();
-
-        /**
-         * XXX add doc
-         * 
-         */
-        // p(r|C)*Pc
-        private Vector<Double> prcpc = new Vector<Double>();
-
-        /**
-         * XXX add doc
-         * 
-         */
-        // p(r|B)*Pb
-        private Vector<Double> prbpb = new Vector<Double>();
-
-        /**
-         * XXX add doc
-         * 
-         */
-        // p(r)
-        private Vector<Double> pr = new Vector<Double>();
-
-        /**
-         * XXX add doc
-         * 
-         */
-        // p(C|r)
-        private Vector<Double> pcr = new Vector<Double>();
-
-        /**
-         * XXX add doc
-         * 
-         */
-        // all distances between cluster centroid and Instance < rk_prelim
-        private Vector<Double> clusterDist = new Vector<Double>();
-
-        /**
-         * XXX add doc
-         * 
-         */
-        private DistanceMeasure dm = new EuclideanDistance();
-
-        /**
-         * XXX add doc
-         * 
-         */
-        private GammaFunction gammaF = new GammaFunction();
-
-        /**
-         * XXX add doc
-         * 
-         */
         // calculates first variance ( = sigma^ 2) estimate for a number of
         // instances (checked)
         private double var(Vector<Instance> cluster, double dimD, int instanceLength) {
@@ -304,7 +177,8 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
          */
         // calculates sD (checked)
         private double sD(double dimD) {
-            double sD = Math.pow(2.0 * Math.PI, (dimD / 2.0)) / gammaF.gamma(dimD / 2.0);
+            GammaFunction gf = new GammaFunction();
+            double sD = Math.pow(2.0 * Math.PI, (dimD / 2.0)) / gf.gamma(dimD / 2.0);
             return sD;
         }
 
@@ -314,37 +188,38 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
          */
         // main algorithm
         private double em(int maxIter, Vector<Instance> dataset, Vector<Instance> cluster, Instance ck,
-                double rk_prelim, double dimension, int instanceLength, Vector<Double> varianceEst) {
-            dimD = dimension - 2;
+                double rk_prelim, int dimension, Vector<Double> varianceEst) {
+            double dimD = dimension - 2;
             // for each instances in cluster: calculate distance to ck
-            clusterDist.clear();
+            Vector<Double> clusterDist = new Vector<Double>();
             for (int i = 0; i < cluster.size(); i++) {
                 double distance = dm.calculateDistance(cluster.get(i), ck);
                 clusterDist.add(distance);
             }
             // first estimate for pc, pb
             double clusterSize = cluster.size();
-            pc = clusterSize / dataset.size();
-            pb = 1 - pc;
+            double pc = clusterSize / dataset.size();
+            double pb = 1 - pc;
             // variance = var(cluster, clusterDist, dimD);
-            variance = var(cluster, dimD, instanceLength);
-            sD = sD(dimD);
-            sD1 = sD(dimD + 1);
+            double variance = var(cluster, dimD, dimension);
+            double sD = sD(dimD);
+            double sD1 = sD(dimD + 1);
             for (int i = 0; i < maxIter; i++) {
-                prc = prc(variance, clusterDist, sD, dimD);
-                prb = prb(variance, clusterDist, sD, sD1, dimD);
-                prcpc = prxpx(prc, pc);
-                prbpb = prxpx(prb, pb);
-                pr = pr(prcpc, prbpb);
-                pcr = pcr(prcpc, pr);
-                sm = pcr.size();
+                Vector<Double> prc = prc(variance, clusterDist, sD, dimD);
+                Vector<Double> prb = prb(variance, clusterDist, sD, sD1, dimD);
+                Vector<Double> prcpc = prxpx(prc, pc);
+                Vector<Double> prbpb = prxpx(prb, pb);
+                Vector<Double> pr = pr(prcpc, prbpb);
+                Vector<Double> pcr = pcr(prcpc, pr);
+                double sm = pcr.size();
                 if (sm == 0 || sm == Double.POSITIVE_INFINITY || sm == Double.NEGATIVE_INFINITY) {
                     System.out.println("'SM value not valid.");
                     varianceEst = null;
                     return 0;
                 }
-                varianceOp = varOp(cluster, pcr, dimD, sm, instanceLength);
-                pcOp = sm / dataset.size();
+                double varianceOp = varOp(cluster, pcr, dimD, sm, dimension);
+                double pcOp = sm / dataset.size();
+                double pbOp = 1 - pcOp;
                 if (pcOp >= 1) {
                     pc = 1;
                     varianceEst.add(variance);
@@ -354,7 +229,7 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
                     varianceEst.add(variance);
                     return pc;
                 }
-                pbOp = 1 - pcOp;
+
                 /*
                  * if ( Math.abs(varianceOp - variance) < cdif &
                  * Math.abs(pcOp-pc)< cdif){ System.out.println("No or
@@ -372,104 +247,35 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
 
     // user defined parameters
 
-    /**
-     * XXX add doc
-     * 
-     */
-    private int maxIterMain = 50;
+   
 
-    // internal tuning parameters with standard value as given by De Smet et al.
-    /**
-     * XXX add doc
-     * 
-     */
-    private int maxIter = 50;
-
-    /**
-     * XXX add doc
-     * 
-     */
-    private int maxIterEM = 200;
-
-    /**
-     * XXX add doc
-     * 
-     */
-    private double div = 1.0 / 30.0;
+//    /**
+//     * XX add doc
+//     * 
+//     * Default in the paper: 1/30
+//     * 
+//     * Dependent on the dataset size: 1/5 for 2500 samples, 1/10 for 5000
+//     * samples, 1/20 for 10000 samples
+//     */
+//    private double div = 1.0 / 20.0;
 
     /**
      * XXX add doc
      * 
      */
     private double accurRad = 0.1;
-    
+
     /**
      * XXX add doc
      * 
      */
-    private int minInstances = 2;
-    
+    private int minInstances = 20;
+
     /**
      * XXX add doc
      * 
      */
     private double significanceLevel = 0.95;
-    
-
-    // other variables
-    /**
-     * XXX add doc
-     * 
-     */
-    private int instanceLength;
-
-    /**
-     * XXX add doc
-     * 
-     */
-    private double dimension;
-
-    /**
-     * XXX add doc
-     * 
-     */
-    private double rk_prelim;
-
-    /**
-     * XXX add doc
-     * 
-     */
-    private double rk;
-
-    /**
-     * XXX add doc
-     * 
-     */
-    private double rad;
-
-    /**
-     * XXX add doc
-     * 
-     */
-    private double deltarad;
-
-    /**
-     * XXX add doc
-     * 
-     */
-    private double variance;
-
-    /**
-     * XXX add doc
-     * 
-     */
-    private Instance ck;
-
-    /**
-     * XXX add doc
-     * 
-     */
-    private Instance newMean;
 
     /**
      * XXX add doc
@@ -481,7 +287,7 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
      * XXX add doc
      * 
      */
-    private DistanceMeasure dm = new EuclideanDistance();
+    private DistanceMeasure dm;
 
     /**
      * XXX add doc
@@ -555,28 +361,23 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
      * default constructor
      */
     public AdaptiveQualityBasedClustering() {
-       this(1000,50,200,0.95);
+        this(0.95, new EuclideanDistance());
     }
 
     /**
      * XXX add doc
      * 
-     * @param int
-     *            maximum iterations of main algorithm
-     * @param int
-     *            maximum iterations to find a cluster
-     * @param int
-     *            maximum iterations of EM algorithm
+     * @param distance
+     * 
      * @param double
      *            significanceLevel
      * 
      */
 
-    public AdaptiveQualityBasedClustering(int maxIterMain, int maxIter, int maxIterEM, double significanceLevel) {
-        this.maxIterMain = maxIterMain;
-        this.maxIter = maxIter;
-        this.maxIterEM = maxIterEM;
+    public AdaptiveQualityBasedClustering(double significanceLevel, DistanceMeasure distance) {
+
         this.significanceLevel = significanceLevel;
+        this.dm = distance;
     }
 
     /**
@@ -585,7 +386,13 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
      */
     // main
     public Dataset[] executeClustering(Dataset data) {
-        instanceLength = data.getInstance(0).size();
+        int maxIterMain = data.size()/100;
+
+        // internal tuning parameters with standard value as given by De Smet et al.
+        int maxIter = data.size()/200;
+        int maxIterEM = data.size()/200;
+
+        // int instanceLength = data.getInstance(0).size();
         // normalize dataset
         Dataset dataNorm = normMean.filterDataset(data);
         // convert dataset of instances to vector of instances
@@ -598,16 +405,15 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
             cluster.add(in);
         }
 
-        // initiation
-
         // calculate preliminary estimate of radius
-        dimension = dataNorm.getInstance(0).size();
-        rk_prelim = Math.sqrt((dimension - 1) / 2);
+        int dimension = dataNorm.getInstance(0).size();
+        double rk_prelim = Math.sqrt((dimension - 1) / 2);
 
         // initiate clustercenter, radius and calculated deltarad
-        ck = mean(cluster, instanceLength);
-        rad = maxDist(cluster, ck);
-        deltarad = (rad - rk_prelim) * div;
+        Instance ck = mean(cluster, dimension);
+        double rad = maxDist(cluster, ck);
+        double div=500.0/data.size();
+        double deltarad = (rad - rk_prelim) * div;
         rad = rad - deltarad;
 
         int iterator = 1, endSign = 1, nonvalidcluster = 0;
@@ -622,7 +428,7 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
                 nonvalidcluster = 0;
             }
             if (nonvalidcluster == 0) {
-                newMean = mean(cluster, instanceLength);
+                Instance newMean = mean(cluster, dimension);
                 rad = maxDist(cluster, newMean);
                 // move cluster center to new mean
                 ck = newMean;
@@ -634,7 +440,7 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
                         // System.out.println("step 1: new rad " + rad);
                     }
                     cluster = newCluster(cluster, ck, rad);
-                    newMean = mean(cluster, instanceLength);
+                    newMean = mean(cluster, dimension);
                     double distCkNewMean = dm.calculateDistance(ck, newMean);
                     if (distCkNewMean == 0) {
                         stop++;
@@ -650,9 +456,9 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
 
             // temporarily vector for variance calculation via EM
             Vector<Double> varianceEst = new Vector<Double>();
-            double pc = em.em(maxIterEM, all, cluster, ck, rk_prelim, dimension, instanceLength, varianceEst);
+            double pc = em.em(maxIterEM, all, cluster, ck, rk_prelim, dimension, varianceEst);
             double pb = 1 - pc;
-            variance = varianceEst.get(0);
+            double variance = varianceEst.get(0);
             // System.out.println("step 2 : new var " + variance + " new pc " +
             // pc+ " new pb " + pb);
             if (pc == 0 & varianceEst == null) {
@@ -663,17 +469,17 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
             double dimD = dimension - 2;
             double sD = em.sD(dimD);
             double sD1 = em.sD(dimD + 1);
-            double cc=sD*(1/(Math.pow(2*Math.PI*variance,dimD/2)));
-            double cb=(sD/(sD1*Math.pow(Math.sqrt(dimD+1),dimD)));
-             double lo=(significanceLevel/(1-significanceLevel))*((pb*cb)/(pc*cc));
-             if (lo < 0) {
+            double cc = sD * (1 / (Math.pow(2 * Math.PI * variance, dimD / 2)));
+            double cb = (sD / (sD1 * Math.pow(Math.sqrt(dimD + 1), dimD)));
+            double lo = (significanceLevel / (1 - significanceLevel)) * ((pb * cb) / (pc * cc));
+            if (lo < 0) {
                 throw new RuntimeException("AQBC:EM: Impossible to calculate radius!");
             }
-            double dis=-2*variance*Math.log(lo);
-            if(dis<0){
-                throw new RuntimeException("AQBC:EM: Impossible to calculate radius!"); 
+            double dis = -2 * variance * Math.log(lo);
+            if (dis < 0) {
+                throw new RuntimeException("AQBC:EM: Impossible to calculate radius!");
             }
-            rk=Math.sqrt(dis);
+            double rk = Math.sqrt(dis);
 
             if (Math.abs((rk - rk_prelim) / rk_prelim) < accurRad) {
                 cluster = newCluster(cluster, ck, rk);
@@ -687,7 +493,7 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
                     if (cluster.size() <= 2) {
                         endSign = 0;
                     }
-                    newMean = mean(cluster, instanceLength);
+                    Instance newMean = mean(cluster, dimension);
                     ck = newMean;
                     rad = maxDist(cluster, ck);
 
@@ -695,7 +501,7 @@ public class AdaptiveQualityBasedClustering implements Clusterer {
 
                     cluster.clear();
                     cluster.addAll(all);
-                    newMean = mean(cluster, instanceLength);
+                    Instance newMean = mean(cluster, dimension);
                     ck = newMean;
                     rad = maxDist(cluster, ck);
                 }
