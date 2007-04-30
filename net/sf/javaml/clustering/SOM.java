@@ -1031,7 +1031,7 @@ public class SOM implements Clusterer {
     }
 
     public SOM() {
-        this(4, 4, GridType.HEXAGONAL, 10000, 0.1, 1, LearningType.LINEAR, NeighbourhoodFunction.STEP);
+        this(5, 2, GridType.HEXAGONAL, 10000, 0.1, 1, LearningType.LINEAR, NeighbourhoodFunction.STEP);
     }
 
     private GridType gridType;
@@ -1043,20 +1043,6 @@ public class SOM implements Clusterer {
     private int xdim, ydim, iterations, initialRadius;
 
     private double learningRate;
-
-    // public SOM(GridType gridType, LearningType learningType,
-    // NeighbourhoodFunction neighbourhoodFunction, int xdim, int ydim, int
-    // iterations, double learningRate, double initialRadius) {
-    // super();
-    // this.gridType = gridType;
-    // this.learningType = learningType;
-    // this.neighbourhoodFunction = neighbourhoodFunction;
-    // this.xdim = xdim;
-    // this.ydim = ydim;
-    // this.iterations = iterations;
-    // this.learningRate = learningRate;
-    // this.initialRadius = initialRadius;
-    // }
 
     public SOM(int xdim, int ydim, GridType grid, int iterations, double learningRate, int initialRadius,
             LearningType learning, NeighbourhoodFunction nbf) {
