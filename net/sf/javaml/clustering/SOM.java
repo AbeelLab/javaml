@@ -25,6 +25,7 @@
  */
 package net.sf.javaml.clustering;
 
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
@@ -990,7 +991,7 @@ public class SOM implements Clusterer {
         }
     }
 
-    enum GridType {
+    public enum GridType {
 
         HEXAGONAL("hexa"), RECTANGLES("rect");
         private String tag;
@@ -1004,7 +1005,7 @@ public class SOM implements Clusterer {
         }
     }
 
-    enum NeighbourhoodFunction {
+    public enum NeighbourhoodFunction {
         GAUSSIAN("gaussian"), STEP("step");
         private String tag;
 
@@ -1017,7 +1018,7 @@ public class SOM implements Clusterer {
         }
     }
 
-    enum LearningType {
+    public enum LearningType {
         EXPONENTIAL("exponential"), INVERSE("inverse"), LINEAR("linear");
         private String tag;
 
@@ -1056,6 +1057,24 @@ public class SOM implements Clusterer {
         this.initialRadius = initialRadius;
     }
 
+    public class GridDataset{
+        public Dataset data;
+        public double x,y;
+        public GridDataset(Dataset data, double x, double y) {
+            super();
+            this.data = data;
+            this.x = x;
+            this.y = y;
+        }
+        
+    }
+    
+    private GridDataset[] labeledClustering;
+    
+    public GridDataset[] getLabeledClustering(){
+        return labeledClustering;
+    }
+    
     public Dataset[] executeClustering(Dataset data) {
 
         // hexa || rect
@@ -1067,16 +1086,27 @@ public class SOM implements Clusterer {
         jst.setTrainingInstructions(iterations, learningRate, initialRadius, learningType.toString(),
                 neighbourhoodFunction.toString());
         WeightVectors out = jst.doTraining();
-        // System.out.println(out);
-        // System.out.println(iV);
+        
+       //  System.out.println(iV);
         JSomLabeling labels = new JSomLabeling(out, iV);
         out = labels.doLabeling();
+        //System.out.println(out);
         Dataset[] clusters = new Dataset[wV.size()];
+        Point2D.Double[] locations=new Point2D.Double[wV.size()];
+        for(int i=0;i<out.size();i++){
+            Point2D.Double tmp=new Point2D.Double(out.get(i).getLocation()[0],out.get(i).getLocation()[1]);
+            locations[i]=tmp;
+//            out.get(i).getLocation()[0];
+        }
         for (int i = 0; i < clusters.length; i++) {
             clusters[i] = new SimpleDataset();
         }
         for (int i = 0; i < data.size(); i++) {
             clusters[labels.resolveIndexOfWinningNeuron(iV.getNodeValuesAt(i))].addInstance(data.getInstance(i));
+        }
+        labeledClustering=new GridDataset[clusters.length];
+        for(int i=0;i<labeledClustering.length;i++){
+            labeledClustering[i]=new GridDataset(clusters[i],locations[i].x,locations[i].y);
         }
         // System.out.println(out);
         return clusters;
