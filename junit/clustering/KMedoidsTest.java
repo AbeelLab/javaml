@@ -22,11 +22,10 @@
  * Project: http://sourceforge.net/projects/java-ml/
  * 
  */
-package junit.distance;
+package junit.clustering;
 
 import junit.framework.Assert;
-import net.sf.javaml.clustering.IterativeKMeans;
-import net.sf.javaml.clustering.evaluation.AICScore;
+import net.sf.javaml.clustering.KMedoids;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.SimpleDataset;
 import net.sf.javaml.core.SimpleInstance;
@@ -34,7 +33,7 @@ import net.sf.javaml.core.SimpleInstance;
 import org.junit.Test;
 
 
-public class IterativeKMeansTest {
+public class KMedoidsTest {
 
     
     /**
@@ -63,7 +62,7 @@ public class IterativeKMeansTest {
         add(data,13,14);
         add(data,14,13);
         
-        IterativeKMeans km=new IterativeKMeans(new AICScore());
+        KMedoids km=new KMedoids();
         int count=0;
         for(int i=0;i<100;i++){
             Dataset[]clusters=km.executeClustering(data);

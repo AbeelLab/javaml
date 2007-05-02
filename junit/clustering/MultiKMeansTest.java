@@ -22,10 +22,10 @@
  * Project: http://sourceforge.net/projects/java-ml/
  * 
  */
-package junit.distance;
+package junit.clustering;
 
 import junit.framework.Assert;
-import net.sf.javaml.clustering.IterativeMultiKMeans;
+import net.sf.javaml.clustering.MultiKMeans;
 import net.sf.javaml.clustering.evaluation.AICScore;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.SimpleDataset;
@@ -34,7 +34,7 @@ import net.sf.javaml.core.SimpleInstance;
 import org.junit.Test;
 
 
-public class IterativeMultiKMeansTest {
+public class MultiKMeansTest {
 
     
     /**
@@ -63,7 +63,7 @@ public class IterativeMultiKMeansTest {
         add(data,13,14);
         add(data,14,13);
         
-        IterativeMultiKMeans km=new IterativeMultiKMeans(new AICScore());
+        MultiKMeans km=new MultiKMeans(new AICScore());
         int count=0;
         for(int i=0;i<100;i++){
             Dataset[]clusters=km.executeClustering(data);

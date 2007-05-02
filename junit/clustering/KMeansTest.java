@@ -22,7 +22,7 @@
  * Project: http://sourceforge.net/projects/java-ml/
  * 
  */
-package junit.distance;
+package junit.clustering;
 
 import junit.framework.Assert;
 import net.sf.javaml.clustering.KMeans;
