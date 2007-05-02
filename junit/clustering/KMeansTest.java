@@ -32,53 +32,99 @@ import net.sf.javaml.core.SimpleInstance;
 
 import org.junit.Test;
 
-
 public class KMeansTest {
 
-    
+    @Test
+    public void testAdvancedZeroClusters() {
+        Dataset data = new SimpleDataset();
+        add(data, 2, 2);
+        add(data, 2, 3);
+        add(data, 3, 2);
+        add(data, 3, 3);
+
+        add(data, 2, 13);
+        add(data, 2, 14);
+        add(data, 3, 13);
+        add(data, 3, 14);
+
+        add(data, 13, 2);
+        add(data, 14, 3);
+        add(data, 13, 2);
+        add(data, 14, 3);
+
+        add(data, 13, 13);
+        add(data, 14, 14);
+        add(data, 13, 14);
+        add(data, 14, 13);
+
+        int count = 0;
+        for (int i = 0; i < 100; i++) {
+            for (int iter = 5; iter < 100; iter += 5) {
+                for (int size = 2; size <= 6; size++) {
+                    KMeans km = new KMeans(size, iter);
+                    Dataset[] clusters = km.executeClustering(data);
+                    for (int j = 0; j < clusters.length; j++) {
+                        if (clusters[j].size() == 0)
+                            count++;
+                    }
+                    if(count>0){//Failure
+                        System.out.println("Iterations: "+iter);
+                        System.out.println("Clusters: "+size);
+                        System.out.println("RunIndex: "+i);
+                        
+                    }
+                    Assert.assertEquals(0, count);
+                    
+                }
+            }
+
+        }
+
+    }
+
     /**
      * Test to detect zero size clusters
      */
     @Test
-    public void testZeroClusters(){
-        Dataset data=new SimpleDataset();
-        add(data,2,2);
-        add(data,2,3);
-        add(data,3,2);
-        add(data,3,3);
-        
-        add(data,2,13);
-        add(data,2,14);
-        add(data,3,13);
-        add(data,3,14);
-        
-        add(data,13,2);
-        add(data,14,3);
-        add(data,13,2);
-        add(data,14,3);
-        
-        add(data,13,13);
-        add(data,14,14);
-        add(data,13,14);
-        add(data,14,13);
-        
-        KMeans km=new KMeans();
-        int count=0;
-        for(int i=0;i<100;i++){
-            Dataset[]clusters=km.executeClustering(data);
-            for(int j=0;j<clusters.length;j++){
-                if(clusters[j].size()==0)
+    public void testDefaultZeroClusters() {
+        Dataset data = new SimpleDataset();
+        add(data, 2, 2);
+        add(data, 2, 3);
+        add(data, 3, 2);
+        add(data, 3, 3);
+
+        add(data, 2, 13);
+        add(data, 2, 14);
+        add(data, 3, 13);
+        add(data, 3, 14);
+
+        add(data, 13, 2);
+        add(data, 14, 3);
+        add(data, 13, 2);
+        add(data, 14, 3);
+
+        add(data, 13, 13);
+        add(data, 14, 14);
+        add(data, 13, 14);
+        add(data, 14, 13);
+
+        KMeans km = new KMeans();
+        int count = 0;
+        for (int i = 0; i < 100; i++) {
+            Dataset[] clusters = km.executeClustering(data);
+            for (int j = 0; j < clusters.length; j++) {
+                if (clusters[j].size() == 0)
                     count++;
             }
         }
-        
+
         Assert.assertEquals(0, count);
-        
+
     }
-    
-    private void add(Dataset data,float x,float y){
-        float[] values={x,y};
-        SimpleInstance in=new SimpleInstance(values);
+
+    private void add(Dataset data, float x, float y) {
+        float[] values = { x, y };
+        SimpleInstance in = new SimpleInstance(values);
         data.addInstance(in);
     }
 }

@@ -148,7 +148,8 @@ public class KMeans implements Clusterer {
 
         int iterationCount = 0;
         boolean centroidsChanged = true;
-        while (iterationCount < this.numberOfIterations && centroidsChanged) {
+        boolean randomCentroids=true;
+        while (randomCentroids ||(iterationCount < this.numberOfIterations && centroidsChanged)) {
             iterationCount++;
             // Assign each object to the group that has the closest centroid.
             int[] assignment = new int[data.size()];
@@ -181,6 +182,7 @@ public class KMeans implements Clusterer {
                 countPosition[assignment[i]]++;
             }
             centroidsChanged = false;
+            randomCentroids=false;
             for (int i = 0; i < this.numberOfClusters; i++) {
                 if (countPosition[i] > 0) {
                     float[] tmp = new float[instanceLength];
@@ -199,7 +201,7 @@ public class KMeans implements Clusterer {
                         randomInstance[j] = (float) (min.getValue(j) + rg.nextDouble() * dist);
 
                     }
-                    centroidsChanged = true;
+                    randomCentroids = true;
                     this.centroids[i] = new SimpleInstance(randomInstance);
                 }
 
