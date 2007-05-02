@@ -199,6 +199,7 @@ public class KMeans implements Clusterer {
                         randomInstance[j] = (float) (min.getValue(j) + rg.nextDouble() * dist);
 
                     }
+                    centroidsChanged = true;
                     this.centroids[i] = new SimpleInstance(randomInstance);
                 }
 
