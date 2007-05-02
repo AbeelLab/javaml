@@ -29,6 +29,7 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
+import java.util.Vector;
 
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.SimpleDataset;
@@ -1091,25 +1092,39 @@ public class SOM implements Clusterer {
         JSomLabeling labels = new JSomLabeling(out, iV);
         out = labels.doLabeling();
         //System.out.println(out);
-        Dataset[] clusters = new Dataset[wV.size()];
+        Vector<Dataset> clusters = new Vector<Dataset>();
         Point2D.Double[] locations=new Point2D.Double[wV.size()];
         for(int i=0;i<out.size();i++){
             Point2D.Double tmp=new Point2D.Double(out.get(i).getLocation()[0],out.get(i).getLocation()[1]);
             locations[i]=tmp;
 //            out.get(i).getLocation()[0];
         }
-        for (int i = 0; i < clusters.length; i++) {
-            clusters[i] = new SimpleDataset();
+        for (int i = 0; i < wV.size(); i++) {
+            clusters.add(new SimpleDataset());
         }
         for (int i = 0; i < data.size(); i++) {
-            clusters[labels.resolveIndexOfWinningNeuron(iV.getNodeValuesAt(i))].addInstance(data.getInstance(i));
+            clusters.get(labels.resolveIndexOfWinningNeuron(iV.getNodeValuesAt(i))).addInstance(data.getInstance(i));
         }
-        labeledClustering=new GridDataset[clusters.length];
+        labeledClustering=new GridDataset[clusters.size()];
         for(int i=0;i<labeledClustering.length;i++){
-            labeledClustering[i]=new GridDataset(clusters[i],locations[i].x,locations[i].y);
+            labeledClustering[i]=new GridDataset(clusters.get(i),locations[i].x,locations[i].y);
         }
-        // System.out.println(out);
-        return clusters;
+        
+        // Filter empty clusters out;
+        int nonEmptyClusterCount=0;
+        for(int i=0;i<clusters.size();i++){
+            if(clusters.get(i).size()>0)
+                nonEmptyClusterCount++;
+        }
+        Dataset[]output=new Dataset[nonEmptyClusterCount];
+        int index=0;
+        for(Dataset tmp:clusters){
+            if(tmp.size()>0){
+                output[index]=tmp;
+                index++;
+            }
+        }
+        return output;
 
     }
 
