@@ -48,6 +48,8 @@ import net.sf.javaml.core.SimpleInstance;
  */
 public class NormalizeMidrange implements Filter {
 
+    private static final double EPSILON=1.0e-6;
+    
     /**
      * A normalization filter to the interval [-1,1]
      * 
@@ -92,12 +94,12 @@ public class NormalizeMidrange implements Filter {
 
     private Instance filter(Instance tmpInstance) {
         float[] instance = tmpInstance.toArray();
-        // FIXME if an attribute always has the same value, the range is zero
-        // and you will divide by zero. This should be fixed such that those
-        // values that are always the same are mapped to the midrange value.
-
         for (int j = 0; j < instance.length; j++) {
-            instance[j] = ((instance[j] - midrange[j]) / (range[j] / normalRange)) + normalMiddle;
+            if(range[j]<EPSILON){
+                instance[j]=normalMiddle;
+            }else{                
+                instance[j] = ((instance[j] - midrange[j]) / (range[j] / normalRange)) + normalMiddle;
+            }
         }
         return new SimpleInstance(instance, tmpInstance.getWeight(), tmpInstance.isClassSet(), tmpInstance
                 .getClassValue());
