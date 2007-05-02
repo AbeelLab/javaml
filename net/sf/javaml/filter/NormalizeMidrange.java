@@ -37,9 +37,9 @@ import net.sf.javaml.core.SimpleInstance;
  * For example midrange 0 and range 2 would yield a dataset within the range
  * [-1,1].
  * 
- * Each attribute of each instance is normalized seperately. For instance if
- * you have three instances {-1;10}, {1,15} and {0,20} and you normalize with
- * midrange 0 and range 2, you would get {-1,-1}, {1,0} and {0,1}. 
+ * Each attribute of each instance is normalized seperately. For instance if you
+ * have three instances {-1;10}, {1,15} and {0,20} and you normalize with
+ * midrange 0 and range 2, you would get {-1,-1}, {1,0} and {0,1}.
  * 
  * The default is normalization in the interval [-1,1].
  * 
@@ -80,7 +80,7 @@ public class NormalizeMidrange implements Filter {
         for (int i = 0; i < instanceLength; i++) {
             range[i] = max.getValue(i) - min.getValue(i);
             midrange[i] = (max.getValue(i) + min.getValue(i)) / 2;
-         }
+        }
         for (int i = 0; i < data.size(); i++) {
             Instance tmpInstance = data.getInstance(i);
             out.addInstance(this.filter(tmpInstance));
@@ -92,6 +92,10 @@ public class NormalizeMidrange implements Filter {
 
     private Instance filter(Instance tmpInstance) {
         float[] instance = tmpInstance.toArray();
+        // FIXME if an attribute always has the same value, the range is zero
+        // and you will divide by zero. This should be fixed such that those
+        // values that are always the same are mapped to the midrange value.
+
         for (int j = 0; j < instance.length; j++) {
             instance[j] = ((instance[j] - midrange[j]) / (range[j] / normalRange)) + normalMiddle;
         }
@@ -99,16 +103,17 @@ public class NormalizeMidrange implements Filter {
                 .getClassValue());
     }
 
-    public Instance unfilterInstance(Instance tmpInstance){
+    public Instance unfilterInstance(Instance tmpInstance) {
         float[] instance = tmpInstance.toArray();
         for (int j = 0; j < instance.length; j++) {
-            //instance[j] = ((instance[j] - midrange[j]) / (range[j] / normalRange)) + normalMiddle;
-            instance[j]=instance[j]*(range[j]/normalRange)+midrange[j];
+            // instance[j] = ((instance[j] - midrange[j]) / (range[j] /
+            // normalRange)) + normalMiddle;
+            instance[j] = instance[j] * (range[j] / normalRange) + midrange[j];
         }
         return new SimpleInstance(instance, tmpInstance.getWeight(), tmpInstance.isClassSet(), tmpInstance
                 .getClassValue());
     }
-    
+
     public Instance filterInstance(Instance instance) {
         if (!constructed) {
             throw new RuntimeException(
