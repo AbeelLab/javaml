@@ -141,7 +141,7 @@ final public class DatasetTools {
 
         return epsilonRange_List;
     }
-    
+
     /**
      * Removes an instance from a dataset and returns the resulting dataset.
      * 
@@ -151,14 +151,27 @@ final public class DatasetTools {
      * @param index
      * @return
      */
-    public static Dataset removeInstance(Dataset data,int index){
-        Dataset out=new SimpleDataset();
-        for(int i=0;i<data.size();i++){
-            if(i!=index)
+    public static Dataset removeInstance(Dataset data, int index) {
+        Dataset out = new SimpleDataset();
+        for (int i = 0; i < data.size(); i++) {
+            if (i != index)
                 out.addInstance(data.getInstance(i));
         }
         return out;
-        
+
+    }
+
+    /**
+     * This method will merge all the data from the two datasets in to the first
+     * one.
+     * 
+     * @param data
+     * @param added
+     */
+    public static void merge(Dataset data, Dataset added) {
+       for(int i=0;i<added.size();i++){
+           data.addInstance(added.getInstance(i));
+        }
     }
 
 }
