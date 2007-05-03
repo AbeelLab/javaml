@@ -617,10 +617,29 @@ public class EMClustering implements Clusterer {
 				}
 			}
 		}
-		return clusters;
+        Dataset[]out=filter(clusters);
+        
+		return out;
 	}
 
-	/**
+	private Dataset[] filter(Dataset[] clusters) {
+        int count=0;
+        for(int i=0;i<clusters.length;i++){
+            if(clusters[i].size()==0)
+                count++;
+        }
+        Dataset[]out=new Dataset[clusters.length-count];
+        int index=0;
+        for(Dataset tmp:clusters){
+            if(tmp.size()>0){
+                out[index]=tmp;
+                index++;
+            }
+        }
+        return out;
+    }
+
+    /**
 	 * The minimum probability an instance should have before it belongs to a
 	 * cluster.
 	 */
