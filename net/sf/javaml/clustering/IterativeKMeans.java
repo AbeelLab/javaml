@@ -83,7 +83,7 @@ public class IterativeKMeans implements Clusterer {
      * @param ClusterEvaluation ce
      */
     public IterativeKMeans(ClusterEvaluation ce){
-        this(2,6,100,new EuclideanDistance(),ce);
+        this(2,10,100,new EuclideanDistance(),ce);
     }
     
     /**
