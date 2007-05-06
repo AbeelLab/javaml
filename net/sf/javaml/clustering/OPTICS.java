@@ -283,8 +283,9 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer 
         int noiseCount = 0;
         int notKnownCount = 0;
         for (DataObject dataObject : dataset) {
-            if (dataObject.clusterIndex >= 0)
+            if (dataObject.clusterIndex >= 0){
                 clusters[dataObject.clusterIndex].addInstance(dataObject.instance);
+            }
             if (DataObject.NOISE == dataObject.clusterIndex) {
                 // clusters[clusterID].addInstance(dataObject.instance);
                 noiseCount++;
@@ -292,7 +293,21 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer 
             if (DataObject.UNCLASSIFIED == dataObject.clusterIndex)
                 notKnownCount++;
         }
-        return clusters;
+        int count=0;
+        for(Dataset d:clusters){
+        	if(d.size()>=minPoints)
+        		count++;
+        }
+        Dataset[]out=new Dataset[count];
+        int index=0;
+        for(Dataset d:clusters){
+        	if(d.size()>=minPoints){
+        		out[index]=d;
+        		index++;
+        	}
+        }
+        
+        return out;
 
     }
 
