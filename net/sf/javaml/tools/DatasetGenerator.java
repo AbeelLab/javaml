@@ -33,9 +33,10 @@ import net.sf.javaml.core.SimpleInstance;
 @Deprecated
 public class DatasetGenerator {
 
+    private static Random rg = new Random(System.currentTimeMillis());
+    
     public static Dataset createClusterDataset(int clusters, int itemsInCluster, int spaceWidth, int clusterWidth) {
         Dataset out = new SimpleDataset();
-        Random rg = new Random(System.currentTimeMillis());
         for (int i = 0; i < clusters; i++) {
             int x = rg.nextInt(spaceWidth);
             int y = rg.nextInt(spaceWidth);
@@ -71,7 +72,7 @@ public class DatasetGenerator {
 //        System.out.println(space * large+"\t"+space * small);
 //        System.out.println(space * large+"\t"+space * large);
         
-        Random rg = new Random(System.currentTimeMillis());
+        
         for (int i = 0; i < itemsPerCluster; i++) {
 
             // lower left
@@ -104,26 +105,33 @@ public class DatasetGenerator {
 //        System.out.println(space * large+"\t"+space * small);
 //        System.out.println(space * large+"\t"+space * large);
         
-        Random rg = new Random(System.currentTimeMillis());
         for (int i = 0; i < itemsPerCluster; i++) {
 
             // lower left
-            float[] vec1 = {space*small, (float) ((rg.nextGaussian() * clusterSpread)  + space * small),
+            float[] vec1 = {0.5f, (float) ((rg.nextGaussian() * clusterSpread)  + space * small),
                     (float) ((rg.nextGaussian() * clusterSpread)  + space * small) };
             out.addInstance(new SimpleInstance(vec1));
 //            // upper left
-            float[] vec2 = {space*large, (float) ((rg.nextGaussian() * clusterSpread)  + space * small),
+            float[] vec2 = {0.0f, (float) ((rg.nextGaussian() * clusterSpread)  + space * small),
                     (float) ((rg.nextGaussian() * clusterSpread)  + space * large) };
             out.addInstance(new SimpleInstance(vec2));
 //            // lower righ
-            float[] vec3 = { space*large,(float) ((rg.nextGaussian() * clusterSpread)  + space * large),
+            float[] vec3 = {0.5f,(float) ((rg.nextGaussian() * clusterSpread)  + space * large),
                     (float) ((rg.nextGaussian() * clusterSpread)  + space * small) };
             out.addInstance(new SimpleInstance(vec3));
 //            // upper right
-            float[] vec4= {space*small, (float) ((rg.nextGaussian() * clusterSpread)  + space * large),
+            float[] vec4= {0.0f, (float) ((rg.nextGaussian() * clusterSpread)  + space * large),
                     (float) ((rg.nextGaussian() * clusterSpread)  + space * large) };
             out.addInstance(new SimpleInstance(vec4));
       }
+//        System.out.print("[");
+//        for(int i=0;i<out.size();i++){
+//            System.out.print(out.getInstance(i).getValue(0)+","+out.getInstance(i).getValue(1)+","+out.getInstance(i).getValue(2));
+//            if(i<out.size()-1){
+//                System.out.print(";");
+//            }
+//        }
+//        System.out.println("]");
         return out;
     }
 }
