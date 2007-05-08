@@ -212,8 +212,8 @@ public class KMeans implements Clusterer {
         for (int i = 0; i < centroids.length; i++)
             output[i] = new SimpleDataset();
         for (int i = 0; i < data.size(); i++) {
-            int tmpCluster = -1;
-            double minDistance = Double.MAX_VALUE;
+            int tmpCluster = 0;
+            double minDistance = dm.calculateDistance(centroids[0], data.getInstance(i));
             for (int j = 0; j < centroids.length; j++) {
                 double dist = dm.calculateDistance(centroids[j], data.getInstance(i));
                 if (dm.compare(dist, minDistance)) {
