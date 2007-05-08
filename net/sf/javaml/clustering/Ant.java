@@ -153,7 +153,7 @@ public class Ant implements Clusterer {
      * XXX add doc
      */
     // matrix representation of fig 4.1. [i][j], i = row, j = row element
-    private double[][] similarityRanges = { { 0, 0.125, 0.375, 0.625, 0.875, 1 }, { 4.0, 3.0, 2.0, 1.0, 0.0, 0.0 } };
+    private double[][] similarityRanges = { { 0, 0.125, 0.375, 0.625, 0.875, 1.0 }, { 4.0, 3.0, 2.0, 1.0, 0.0, 0.0 } };
 
     /**
      * XXX add doc
@@ -280,10 +280,16 @@ public class Ant implements Clusterer {
         int indexParam1 = 0;
         int indexParam2 = 0;
         for (int j = 0; j < 6; j++) {
-            if (param1 > similarityRanges[0][j] && param1 < similarityRanges[0][j + 1]) {
+        	if (param1> 1.0){
+        		indexParam1 = 0;
+        	}   		
+        	else if (param1 > similarityRanges[0][j] && param1 < similarityRanges[0][j + 1]) {
                 indexParam1 = (int) similarityRanges[1][j];
             }
-            if (param2 > similarityRanges[0][j] && param2 < similarityRanges[0][j + 1]) {
+        	if (param2> 1.0){
+        		indexParam2 = 0;
+        	}   	
+        	else if (param2 > similarityRanges[0][j] && param2 < similarityRanges[0][j + 1]) {
                 indexParam2 = (int) similarityRanges[1][j];
             }
         }
@@ -353,7 +359,7 @@ public class Ant implements Clusterer {
             tmpHeap.addInstance(in);
             clusters.add(tmpHeap);
         }
-        iterations = data.size()*200;
+        iterations = data.size()*500;
         failMovesDrop = 0;
         failMovesPick = 0;
         numberMaxFailDrops = 0;
@@ -419,7 +425,7 @@ public class Ant implements Clusterer {
                     numberMaxFailDrops++;
                 }
                 if (numberMaxFailDrops >= maxNumberMaxFailDrops) {
-                    System.out.println("'numberMaxFailDrops too high: STOP");
+                    System.err.println("'numberMaxFailDrops too high: STOP");
                     stopSign = true;
                 }
             }
