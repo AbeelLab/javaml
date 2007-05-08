@@ -154,9 +154,9 @@ public class KMeans implements Clusterer {
             // Assign each object to the group that has the closest centroid.
             int[] assignment = new int[data.size()];
             for (int i = 0; i < data.size(); i++) {
-                int tmpCluster = -1;
-                double minDistance = Double.MAX_VALUE;
-                for (int j = 0; j < centroids.length; j++) {
+                int tmpCluster = 0;
+                double minDistance = dm.calculateDistance(centroids[0], data.getInstance(i));
+                for (int j = 1; j < centroids.length; j++) {
                     double dist = dm.calculateDistance(centroids[j], data.getInstance(i));
                     if (dm.compare(dist, minDistance)) {
                         minDistance = dist;
