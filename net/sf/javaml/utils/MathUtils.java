@@ -94,4 +94,38 @@ public class MathUtils {
     public static boolean gt(double a, double b) {
         return (a - b > epsilon);
     }
+
+    /**
+     * XXX DOC
+     * 
+     * @param me1
+     * @param me2
+     * @return
+     */
+    public static boolean eq(float[] me1, float[] me2) {
+        if(me1.length!=me2.length)
+            return false;
+        for(int i=0;i<me1.length;i++){
+            if(me1[i]!=me2[i])
+                return false;
+        }
+        return true;
+    }
+
+    /**
+     * XXX DOC
+     * 
+     * @param array
+     * @return
+     */
+    public static float min(float[] array) {
+        float min=array[0];
+        for(int i=1;i<array.length;i++){
+           if(array[i]<min)
+                min=array[i];
+        }
+        return min;
+    }
+
+    
 }
