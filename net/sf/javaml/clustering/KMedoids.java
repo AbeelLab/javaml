@@ -24,7 +24,6 @@
  */
 package net.sf.javaml.clustering;
 
-
 import java.util.Random;
 
 import net.sf.javaml.core.Dataset;
@@ -45,40 +44,46 @@ public class KMedoids implements Clusterer {
      * XXX doc
      */
     private DistanceMeasure dm;
+
     /**
      * XXX doc
      */
     private int numberOfClusters;
+
     /**
      * XXX doc
      */
     private Random rg;
+
     /**
      * XXX doc
      */
     private int maxIterations;
-    
+
     /**
      * default constructor
      */
-    public KMedoids(){
-        this(4,100, new EuclideanDistance());
+    public KMedoids() {
+        this(4, 100, new EuclideanDistance());
     }
+
     /**
      * XXX doc
      * 
      * @param numberOfClusters
      * @param maxIterations
-     * @param DistanceMeasure dm
+     * @param DistanceMeasure
+     *            dm
      * 
      */
-    public KMedoids(int numberOfClusters, int maxIterations,DistanceMeasure dm) {
+    public KMedoids(int numberOfClusters, int maxIterations, DistanceMeasure dm) {
         super();
         this.numberOfClusters = numberOfClusters;
         this.maxIterations = maxIterations;
         this.dm = dm;
         rg = new Random(System.currentTimeMillis());
     }
+
     /**
      * XXX doc
      */
@@ -86,7 +91,7 @@ public class KMedoids implements Clusterer {
         Instance[] medoids = new Instance[numberOfClusters];
         Dataset[] output = new SimpleDataset[numberOfClusters];
         for (int i = 0; i < numberOfClusters; i++) {
-            int random=rg.nextInt(data.size());
+            int random = rg.nextInt(data.size());
             medoids[i] = data.getInstance(random);
         }
 
@@ -99,7 +104,15 @@ public class KMedoids implements Clusterer {
             changed = recalculateMedoids(assignment, medoids, output, data);
 
         }
-        return output;
+        if (count == maxIterations) {
+            // HACK: in this case there can be empty clusters. When the number of
+            // iterations is set too low or the number of clusters too high, it
+            // may not be possible for the algorithm to find enough non empty
+            // clusters within the maximum number of iterations.
+            return DatasetTools.filterEmpty(output);
+        } else {
+            return output;
+        }
     }
 
     /**

@@ -174,4 +174,30 @@ final public class DatasetTools {
         }
     }
 
+    /**
+     * Filter out all the empty datasets in an array.
+     * 
+     * XXX DOC
+     * 
+     * @param input
+     * @return
+     */
+    public static Dataset[] filterEmpty(Dataset[] input) {
+//      Filter empty clusters out;
+        int nonEmptyClusterCount=0;
+        for(int i=0;i<input.length;i++){
+            if(input[i].size()>0)
+                nonEmptyClusterCount++;
+        }
+        Dataset[]output=new Dataset[nonEmptyClusterCount];
+        int index=0;
+        for(Dataset tmp:input){
+            if(tmp.size()>0){
+                output[index]=tmp;
+                index++;
+            }
+        }
+        return output;
+    }
+
 }

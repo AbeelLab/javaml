@@ -29,6 +29,7 @@ import net.sf.javaml.clustering.KMedoids;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.SimpleDataset;
 import net.sf.javaml.core.SimpleInstance;
+import net.sf.javaml.distance.DynamicTimeWarpingSimilarity;
 
 import org.junit.Test;
 
@@ -66,6 +67,14 @@ public class KMedoidsTest {
         int count=0;
         for(int i=0;i<100;i++){
             Dataset[]clusters=km.executeClustering(data);
+            for(int j=0;j<clusters.length;j++){
+                if(clusters[j].size()==0)
+                    count++;
+            }
+        }
+        KMedoids km2=new KMedoids(16,10,new DynamicTimeWarpingSimilarity());
+        for(int i=0;i<10;i++){
+            Dataset[]clusters=km2.executeClustering(data);
             for(int j=0;j<clusters.length;j++){
                 if(clusters[j].size()==0)
                     count++;
