@@ -1,40 +1,69 @@
-<project name="Java Machine Learning API" default="dist" basedir=".">
-    <description>
+<project name="Java Machine Learning API" default="build" basedir=".">
+	<description>
         The Java Machine Learning API build file.
     </description>
-  <!-- set global properties for this build -->
-  <property name="src" location="."/>
-  <property name="build" location="build"/>
-  <property name="dist"  location="dist"/>
-	
-	
-	
-  <target name="init">
-    <!-- Create the time stamp -->
-    <tstamp/>
-    <!-- Create the build directory structure used by compile -->
-    <mkdir dir="${build}"/>
-  </target>
+	<!-- set global properties for this build -->
+	<property name="src" location="." />
+	<property name="build" location="build" />
+	<property name="dist" location="dist" />
+	<property name="version" value="0.0.8" />
 
-  <target name="compile" depends="init"
-        description="compile the source " >
-    <!-- Compile the java code from ${src} into ${build} -->
-    <javac classpath="junit-4.3.1.jar:commons-math-1.1.jar" srcdir="${src}" destdir="${build}"/>
-  </target>
+	<taskdef resource="svntask.properties" classpath="junit-4.3.1.jar:commons-math-1.1.jar:svnant.jar:svnClientAdapter.jar:svnjavahl.jar" />
 
-  <target name="dist" depends="compile"
-        description="generate the distribution" >
-    <!-- Create the distribution directory -->
-    <mkdir dir="${dist}"/>
+	<target name="javadoc">
+		<javadoc packagenames="net.sf.javaml.*" sourcepath="${src}" defaultexcludes="yes" destdir="${dist}/doc" author="true" version="true" use="true" windowtitle="Java Machine Learning Libary ${version}">
+			<doctitle>
+				<![CDATA[<h1>Java Machine Learning Libary ${version} - ${DSTAMP}</h1>]]></doctitle>
+		<bottom>
+			<![CDATA[<i>Copyright &#169; 2006-2007 Thomas Abeel All Rights Reserved.</i>]]></bottom>
 
-    <!-- Put everything in ${build} into the MyProject-${DSTAMP}.jar file -->
-    <jar jarfile="${dist}/javaml-${DSTAMP}.jar" basedir="${build}"/>
-  </target>
+</javadoc>
+</target>
 
-  <target name="clean"
-        description="clean up" >
-    <!-- Delete the ${build} and ${dist} directory trees -->
-    <delete dir="${build}"/>
-    <delete dir="${dist}"/>
-  </target>
+<target name="build" depends="dist,javadoc">
+<delete dir="${build}" />
+<copy todir="${dist}">
+	<fileset dir="${src}">
+		<include name="*.txt" />
+	</fileset>
+</copy>
+<copy file="commons-math-1.1.jar" todir="${dist}/" />
+
+</target>
+
+
+<target name="init" depends="clean">
+<!-- Create the time stamp -->
+<tstamp />
+<!-- Create the build directory structure used by compile -->
+<mkdir dir="${build}" />
+</target>
+
+<target name="compile" depends="init" description="compile the source ">
+<!-- Compile the java code from ${src} into ${build} -->
+<javac classpath="junit-4.3.1.jar:commons-math-1.1.jar" srcdir="${src}" destdir="${build}" />
+</target>
+
+<target name="dist" depends="compile" description="generate the distribution">
+<!-- Create the distribution directory -->
+<mkdir dir="${dist}" />
+
+<!-- Put everything in ${build} into the javaml-${version}.jar file -->
+<jar jarfile="${dist}/javaml-${version}.jar" basedir="${build}" />
+
+<!-- Copy source files and pack them into the javaml-${version}-src.jar -->
+<mkdir dir="${build}/src" />
+<copy todir="${build}/src">
+	<fileset dir="${src}">
+		<include name="**/*.java" />
+	</fileset>
+</copy>
+<jar jarfile="${dist}/javaml-${version}-src.jar" basedir="${build}/src" />
+</target>
+
+<target name="clean" description="clean up">
+<!-- Delete the ${build} and ${dist} directory trees -->
+<delete dir="${build}" />
+<delete dir="${dist}" />
+</target>
 </project>
