@@ -39,11 +39,12 @@ import org.apache.commons.math.stat.descriptive.moment.Mean;
 import org.apache.commons.math.stat.descriptive.moment.StandardDeviation;
 
 /**
- * Based on an implementation of the Adaptive Quality Based Clustering algorithm
- * by Smet et al.
+ * 
+ * This class implements the Adaptive Quality-based Clustering Algorithm, based
+ * on the implementation in MATLAB by De Smet et al., ESAT - SCD (SISTA),
+ * K.U.Leuven, Belgium.
  * 
  * @author Thomas Abeel
- * 
  */
 public class AQBC implements Clusterer {
     private float RADNW;
@@ -67,6 +68,11 @@ public class AQBC implements Clusterer {
 
     private Dataset data;
 
+    /**
+     * XXX write doc
+     * 
+     * FIXME remove output on the console
+     */
     public Dataset[] executeClustering(Dataset data) {
         this.data = data;
         // dm=new NormalizedEuclideanDistance(data);
@@ -243,6 +249,24 @@ public class AQBC implements Clusterer {
     private void removeInstances(Vector<TaggedInstance> sp, Vector<TaggedInstance> q) {
         sp.removeAll(q);
 
+    }
+
+    /**
+     * XXX write doc
+     * 
+     * @param significance
+     */
+    public AQBC(double significance) {
+        this.S = (float) significance;
+    }
+
+    /**
+     * XXX write doc
+     * 
+     * default constructor
+     */
+    public AQBC() {
+        this(0.95);
     }
 
     private Vector<Dataset> clusters = new Vector<Dataset>();
