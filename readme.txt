@@ -27,6 +27,7 @@ version ~ date ~ revision
 0.0.5 ~ 2007-04-18 ~ 525
 0.0.6 ~ 2007-04-27 ~ 581
 0.0.7 ~ 2007-05-02 ~ 601
+0.0.8 ~ 2007-05-09 ~ 656
 
 1. Algorithms
 =============
@@ -48,7 +49,7 @@ net.sf.clustering.CAST
 1.2. Working implementation (work on a small test)
 --------------------------------------------------
 net.sf.clustering.mcl.MCL
-net.sf.clustering.AdaptiveQualityBasedClustering
+net.sf.clustering.AQBC
 net.sf.clustering.Ant
 net.sf.clustering.Cobweb
 net.sf.clustering.DensityBasedSpatialClustering

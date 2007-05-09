@@ -5,17 +5,16 @@
 	<!-- set global properties for this build -->
 	<property name="src" location="." />
 	<property name="build" location="build" />
-	<property name="dist" location="dist" />
 	<property name="version" value="0.0.8" />
+	<property name="dist" location="javaml-${version}" />
 
-	<taskdef resource="svntask.properties" classpath="junit-4.3.1.jar:commons-math-1.1.jar:svnant.jar:svnClientAdapter.jar:svnjavahl.jar" />
 
 	<target name="javadoc">
-		<javadoc packagenames="net.sf.javaml.*" sourcepath="${src}" defaultexcludes="yes" destdir="${dist}/doc" author="true" version="true" use="true" windowtitle="Java Machine Learning Libary ${version}">
+		<javadoc packagenames="net.sf.javaml.*" sourcepath="${src}" defaultexcludes="yes" destdir="${dist}/doc" author="true" version="true" use="true" windowtitle="Java Machine Learning Library ${version}">
 			<doctitle>
-				<![CDATA[<h1>Java Machine Learning Libary ${version} - ${DSTAMP}</h1>]]></doctitle>
+				<![CDATA[<h1>Java Machine Learning Library ${version} - ${TODAY_LOCAL}</h1>]]></doctitle>
 		<bottom>
-			<![CDATA[<i>Copyright &#169; 2006-2007 Thomas Abeel All Rights Reserved.</i>]]></bottom>
+			<![CDATA[<i>Copyright &#169; 2006-2007 - Thomas Abeel - All Rights Reserved.</i>]]></bottom>
 
 </javadoc>
 </target>
@@ -34,7 +33,9 @@
 
 <target name="init" depends="clean">
 <!-- Create the time stamp -->
-<tstamp />
+<tstamp>
+	<format property="TODAY_LOCAL" pattern="yyyy-MM-dd" />
+</tstamp>
 <!-- Create the build directory structure used by compile -->
 <mkdir dir="${build}" />
 </target>
