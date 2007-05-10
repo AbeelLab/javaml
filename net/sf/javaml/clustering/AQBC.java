@@ -80,6 +80,7 @@ public class AQBC implements Clusterer {
         // Filter filter=new NormalizeMean();
         // data=filter.filterDataset(data);
         Vector<TaggedInstance> SP = normalize(data);
+        System.out.println("Remaining datapoints = "+SP.size());
         // Vector<Instance> SP = new Vector<Instance>();
         // for (int i = 0; i < norm.size(); i++) {
         // SP.add(data.getInstance(i));
@@ -91,8 +92,7 @@ public class AQBC implements Clusterer {
         int BPR = 0;
         int RRES = 0;
         int BPRTH = 10;
-        // int samples = data.size();
-
+        
         double REITERTHR = 0.1;
         E = data.getInstance(0).size();
         // int D = E - 2;
@@ -112,7 +112,7 @@ public class AQBC implements Clusterer {
                 System.out.println("Starting EM");
                 boolean emConverged = exp_max(SP, ME, EXTTRESH2, S);
                 if (emConverged) {
-                    System.out.println("EM converged!!!");
+                    System.out.println("EM converged, predicting radius...");
                     // System.exit(-1);
                     NRNOCONV = 0;
                     if (Math.abs(RADNW - EXTTRESH) / EXTTRESH < REITERTHR) {
@@ -157,14 +157,11 @@ public class AQBC implements Clusterer {
                         }
                     } else {
                         System.out.println("No convergence: Algorithm aborted - NRNOCONV exceeded!");
-                        // return null;
                         break;
                     }
                 }
                 if (TOOFEWPOINTS == TFPTH) {
                     System.out.println("No more significant clusters found: Algorithms aborted!");
-                    // throw new RuntimeException("No more significant clusters
-                    // found: Algorithms aborted!");
                     break;
                 }
             }
@@ -177,14 +174,17 @@ public class AQBC implements Clusterer {
         return output;
     }
 
+    /**
+     * Normalizes the data to mean 0 and standard deviation 1. This method
+     * discards all instances that cannot be normalized, i.e. they have the same
+     * value for all attributes.
+     * 
+     * @param data
+     * @return
+     */
     private Vector<TaggedInstance> normalize(Dataset data) {
         Vector<TaggedInstance> out = new Vector<TaggedInstance>();
-        // Instance MU=mean(data);
-        // System.out.println("MU = "+MU);
-        //       
-        // Instance SIGM=std(data);
-        // System.out.println("SIGM = "+SIGM);
-
+       
         for (int i = 0; i < data.size(); i++) {
             float[] old = data.getInstance(i).toArray();
             double[] conv = new double[old.length];
@@ -199,46 +199,20 @@ public class AQBC implements Clusterer {
             StandardDeviation std = new StandardDeviation();
             double SIGM = std.evaluate(conv, MU);
             // System.out.println("SIGM = "+SIGM);
-            float[] val = new float[old.length];
-            for (int j = 0; j < old.length; j++) {
-                val[j] = (float) ((old[j] - MU) / SIGM);
+            if (!MathUtils.eq(SIGM, 0)) {
+                float[] val = new float[old.length];
+                for (int j = 0; j < old.length; j++) {
+                    val[j] = (float) ((old[j] - MU) / SIGM);
 
+                }
+                // System.out.println("VAL "+i+" = "+Arrays.toString(val));
+                out.add(new TaggedInstance(new SimpleInstance(val), i));
             }
-            out.add(new TaggedInstance(new SimpleInstance(val), i));
         }
+        // System.out.println("FIRST = "+out.get(0));
+        
         return out;
     }
-
-    // private Instance std(Dataset data) {
-    // float[]out=new float[data.getInstance(0).size()];
-    // for(int i=0;i<out.length;i++){//for each attribute
-    // double[]tmp=new double[data.size()];
-    // for(int j=0;j<data.size();j++){
-    // tmp[j]=data.getInstance(j).getValue(i);
-    // }
-    // StandardDeviation std=new StandardDeviation();
-    // out[i]=(float)std.evaluate(tmp);
-    // }
-    //        
-    // return new SimpleInstance(out);
-    // }
-    //
-    // private Instance mean(Dataset data) {
-    //       
-    // float[]sum=new float[data.getInstance(0).size()];
-    // for(int j=0;j<data.size();j++){
-    // Instance tmp=data.getInstance(j);
-    // for(int i=0;i<sum.length;i++){
-    // sum[i]+=tmp.getValue(i);
-    // }
-    //           
-    // }
-    // for(int i=0;i<sum.length;i++){
-    // sum[i]/=data.size();
-    // }
-    // return new SimpleInstance(sum);
-    //       
-    // }
 
     /**
      * Remove the instances in q from sp
@@ -384,20 +358,7 @@ public class AQBC implements Clusterer {
             float PB_new = 1 - PC_new;
             if (Math.abs(VAR_new - VAR) < CDIF && Math.abs(PC_new - PC) < CDIF) {
                 CONV = true;
-            } else {
-                // System.out.println("Iteration: "+i);
-                // System.out.println("\tPRC = "+Arrays.toString(prc));
-                // System.out.println("\tPCR = "+Arrays.toString(pcr));
-                // System.out.println("\tSM = "+SM);
-                // System.out.println("\tsamples = "+samples);
-                // System.out.println("\tPC = "+PC);
-                // System.out.println("\tPC_new = "+PC_new);
-                // System.out.println("\tPCdif = "+Math.abs(PC_new - PC));
-                // System.out.println("\tVAR = "+VAR);
-                // System.out.println("\tVAR_new = "+VAR_new);
-                // System.out.println("\tVARdif = "+Math.abs(VAR_new - VAR));
-
-            }
+            } 
             PC = PC_new;
             PB = PB_new;
             VAR = VAR_new;
@@ -563,9 +524,10 @@ public class AQBC implements Clusterer {
         float[] CE = new float[samples];
         int MAXITER = 100;
         float NRWAN = 30;
+        // System.out.println("FIRSTA = "+A.get(0));
         float[] ME1 = mean(A);
         // System.out.println("A = "+A);
-        // System.out.println("ME1 = "+Arrays.toString(ME1));
+       // System.out.println("ME1 = " + Arrays.toString(ME1));
         // System.out.println("EXTTRESH = "+EXTTRESH);
         float[] DMI = calculateDistances(A, ME1);
         // System.out.println("DMI = "+Arrays.toString(DMI));
@@ -585,7 +547,8 @@ public class AQBC implements Clusterer {
                 CE[i] = 1;
             EXTTRESH2 += 0.000001;
             System.out.println("Cluster center localisation did not reach preliminary estimate of radius!");
-            return true;
+            return true;// TODO check if it should really be true, false is more
+            // logical
 
         }
         float DELTARAD = (EXTTRESH2 - EXTTRESH) / NRWAN;
@@ -595,7 +558,7 @@ public class AQBC implements Clusterer {
             EXTTRESH2 = (RADPR + MDIS) / 2;
         }
         Vector<Integer> Q = findLower(DMI, EXTTRESH2);
-        for (int i = 0; i < MAXITER; i++) {
+        for (int i = 0; Q.size() != 0 && i < MAXITER; i++) {
             float[] ME2 = mean(select(A, Q));
             if (MathUtils.eq(ME1, ME2) && MathUtils.eq(RADPR, EXTTRESH2)) {
                 ME = ME2;
@@ -616,7 +579,9 @@ public class AQBC implements Clusterer {
             ME1 = ME2;
 
         }
-        System.err.println("Preliminary cluster location did not converge");
+        System.out.println("Preliminary cluster location did not converge");
+        // System.out.println("\t DMI = "+Arrays.toString(DMI));
+        System.out.println("\t EXTTRESH2 = " + EXTTRESH2);
         return false;
     }
 
@@ -654,12 +619,21 @@ public class AQBC implements Clusterer {
     }
 
     private float[] mean(Vector<TaggedInstance> a) {
-        float[] out = new float[a.get(0).size()];
+        double[] out = new double[a.get(0).size()];
         for (int i = 0; i < a.size(); i++) {
+            // System.out.println("Instance "+i+" = "+a.get(i));
             for (int j = 0; j < a.get(0).size(); j++)
-                out[j] += a.get(i).getValue(j) / a.size();
+                out[j] += a.get(i).getValue(j);
         }
-        return out;
+        // System.out.println("OUT = "+Arrays.toString(out));
+        for (int j = 0; j < a.get(0).size(); j++) {
+            out[j] /= a.size();
+        }
+        float[] tmp = new float[out.length];
+        for (int j = 0; j < out.length; j++) {
+            tmp[j] = (float) out[j];
+        }
+        return tmp;
 
     }
 
