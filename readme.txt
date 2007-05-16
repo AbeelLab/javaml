@@ -1,5 +1,6 @@
-The Java-ML readme documentation. This document covers the basic documentation 
-of the library. The Java-ML library is licensed under GNU-GPL.
+The Java Machine Learning Library readme documentation. This document covers the 
+basic documentation of the library. The Java Machine Learning Library is 
+licensed under GNU-GPL.
 
 More elaborate documentation can be found on the documentation website for 
 the project:
@@ -28,6 +29,7 @@ version ~ date ~ revision
 0.0.6 ~ 2007-04-27 ~ 581
 0.0.7 ~ 2007-05-02 ~ 601
 0.0.8 ~ 2007-05-09 ~ 656
+0.0.9 ~ 2007-05-16 ~ 660
 
 1. Algorithms
 =============
