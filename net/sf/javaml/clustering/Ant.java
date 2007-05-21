@@ -80,7 +80,7 @@ public class Ant implements Clusterer {
     }
 
     public Ant(DistanceMeasure dm){
-        this(5,50,100, dm);
+        this(5,50,500, dm);
     }
     /**
      * XXX add docu
