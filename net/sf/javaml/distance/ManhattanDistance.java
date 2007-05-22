@@ -61,8 +61,7 @@ public class ManhattanDistance extends AbstractDistance {
      * Returns the theoretical maximum distance for the given dataset. This is
      * based on the virtual Min and Max instances of the dataset.
      * 
-     * @see Dataset.getMinimumInstance();
-     * @see Dataset.getMaximumInstance();
+     * @see Dataset
      * 
      * @param data
      *            the dataset for which the maximal possible distance should be
