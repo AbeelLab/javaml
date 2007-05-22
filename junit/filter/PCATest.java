@@ -36,11 +36,6 @@ import net.sf.javaml.filter.PrincipalComponentsAnalysis;
 
 import org.junit.Test;
 
-import weka.attributeSelection.PrincipalComponents;
-import weka.core.Attribute;
-import weka.core.FastVector;
-import weka.core.Instances;
-
 public class PCATest {
 
     Random rg = new Random(4);
@@ -49,38 +44,15 @@ public class PCATest {
     public void testRemove() throws Exception {
 
         float[] vals1 = { 1, 2, 3.5f, 4, 1 };
-        double[] vals1d = { 1, 2, 3.5, 4, 1 };
         float[] vals2 = { 1, 2, 4, 4, 2 };
-        double[] vals2d = { 1, 2, 4, 4, 2 };
         float[] vals3 = { 1, 2, 4.5f, 4, 3 };
-        double[] vals3d = { 1, 2, 4.5, 4, 3 };
         float[] vals4 = { 1, 2, 3.7f, 4, 4 };
-        double[] vals4d = { 1, 2, 3.7, 4, 4 };
         float[] vals5 = { 1, 2, 4.1f, 4, 5 };
-        double[] vals5d = { 1, 2, 4.1, 4, 5 };
         float[] vals6 = { 1, 2, 3.9f, 4, 6 };
-        double[] vals6d = { 1, 2, 3.9, 4, 6 };
+       
+      
 
-        FastVector atts = new FastVector();
-        // - numeric
-        atts.addElement(new Attribute("att1"));
-        atts.addElement(new Attribute("att2"));
-        atts.addElement(new Attribute("att3"));
-        atts.addElement(new Attribute("att4"));
-        atts.addElement(new Attribute("att5"));
-
-        Instances dat = new Instances("Relation", atts, 0);
-        dat.add(new weka.core.Instance(1.0, vals1d));
-        dat.add(new weka.core.Instance(1.0, vals2d));
-        dat.add(new weka.core.Instance(1.0, vals3d));
-        dat.add(new weka.core.Instance(1.0, vals4d));
-        dat.add(new weka.core.Instance(1.0, vals5d));
-        dat.add(new weka.core.Instance(1.0, vals6d));
-        PrincipalComponents pc = new PrincipalComponents();
-        pc.setNormalize(true);
-        pc.setTransformBackToOriginal(true);
-        pc.setVarianceCovered(1.0);
-        pc.buildEvaluator(dat);
+        
 
         Dataset data = new SimpleDataset();
         Instance inst = new SimpleInstance(vals1);
@@ -102,14 +74,12 @@ public class PCATest {
         Filter rem = new PrincipalComponentsAnalysis();
         Dataset out = rem.filterDataset(tmp);
         // System.out.println("JML "+out);
-        System.out.println("WEKA " + pc.transformedData());
         for (int i = 0; i < out.size(); i++) {
             System.out.println("JML: " + out.getInstance(i));
             System.out.println("JML back: " + rem.unfilterInstance(out.getInstance(i)));
         }
 
-        // FIXME instead of printing out the instances, we should check them
-        // whether they are the same using asserTrue.
+        
 
     }
 
