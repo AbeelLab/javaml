@@ -15,6 +15,7 @@ or in the API documentation http://www.abeel.be/java-ml/api/
 | 3. Requirements |
 | 4. Contact      |
 +-----------------+
+
 0. Releases
 ===========
 We do a weekly release each Wednesday. This document contains the last 
@@ -74,10 +75,19 @@ none yet
 
 2. Dependencies
 ===============
+* Jakarta commons-math
+----------------------
 The library requires the commons-math library of the Jakarta project which is 
 bundled with the library.
 
+* JUnit 4.0
+-----------
 For the SVN download you will also need JUnit 4.0 to compile the unit tests.
+
+* JAMA 1.0.2
+------------
+Since version 0.0.10 we have incorporated the JAMA version 1.0.2 into the library.
+
 
 
 3. Requirements
