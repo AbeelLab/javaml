@@ -17,7 +17,6 @@
  * along with the Java Machine Learning API; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * 
- * Copyright (c) 2001-2006, Michael Wurst
  * Copyright (c) 2006-2007, Thomas Abeel
  * 
  * Project: http://sourceforge.net/projects/java-ml/
@@ -29,53 +28,67 @@ import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 
 /**
- * The Manhattan distance.
+ * The Manhattan distance is the sum of the (absolute) differences of their
+ * coordinates. The taxicab metric is also known as rectilinear distance,
+ * Minkowski's L1 distance, city block distance, or Manhattan distance.
  * 
- * @author Michael Wurst
+ * 
+ * @linkplain http://en.wikipedia.org/wiki/Taxicab_geometry
+ * @linkplain http://www.nist.gov/dads/HTML/manhattanDistance.html
+ * @linkplain http://mathworld.wolfram.com/TaxicabMetric.html
+ * 
  * @author Thomas Abeel
  */
 public class ManhattanDistance extends AbstractDistance {
 
     /**
-     * XXX doc
+     * Calculates the Manhattan distance as the sum of the absolute differences
+     * of their coordinates.
+     * 
+     * @return the Manhattan distance between the two instances.
      */
     public double calculateDistance(Instance x, Instance y) {
-        float[] e1 = x.toArray();
-        float[] e2 = y.toArray();
+        if (x.size() != y.size())
+            throw new RuntimeException("Both instances should contain the same number of values.");
         double sum = 0.0;
-        int counter = 0;
-
-        for (int i = 0; i < e1.length; i++) {
-
-            if ((!Double.isNaN(e1[i])) && (!Double.isNaN(e2[i]))) {
-                sum = sum + Math.abs(e1[i] - e2[i]);
-                counter++;
-            }
-
+        for (int i = 0; i < x.size(); i++) {
+            sum += Math.abs(x.getValue(i) - y.getValue(i));
         }
-
-        double d = sum;
-
-        if (counter > 0)
-            return d;
-        else
-            return Double.NaN;
+        return sum;
     }
 
     /**
-     * XXX doc
+     * Returns the theoretical maximum distance for the given dataset. This is
+     * based on the virtual Min and Max instances of the dataset.
+     * 
+     * @see Dataset.getMinimumInstance();
+     * @see Dataset.getMaximumInstance();
+     * 
+     * @param data
+     *            the dataset for which the maximal possible distance should be
+     *            calculated.
+     * 
+     * @return the maximum possible distance between instances in the dataset
      */
     public double getMaximumDistance(Dataset data) {
-        // TODO implement
-        throw new UnsupportedOperationException("Not yet implemented");
+        Instance max = data.getMaximumInstance();
+        Instance min = data.getMinimumInstance();
+        return calculateDistance(min, max);
     }
 
     /**
-     * XXX doc
+     * Return the minimal Manhattan distance between two instances in the given
+     * dataset. This is always zero as the Manhattan distances cannot be
+     * negative and the distance between two equal instances is zero.
+     * 
+     * @param data
+     *            the dataset for which the minimal possible distance should be
+     *            calculated.
+     * @return the minimum possible Manhattan distance for the dataset, i.e.
+     *         zero
      */
     public double getMinimumDistance(Dataset data) {
-        // TODO implement
-        throw new UnsupportedOperationException("Not yet implemented");
+        return 0;
     }
 
 }
