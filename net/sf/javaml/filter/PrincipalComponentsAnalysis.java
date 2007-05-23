@@ -29,6 +29,7 @@ package net.sf.javaml.filter;
 import gov.nist.math.jama.EigenvalueDecomposition;
 import gov.nist.math.jama.Matrix;
 
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Vector;
@@ -91,12 +92,27 @@ public class PrincipalComponentsAnalysis implements Filter {
     private double[][] m_eTranspose;
 
     public PrincipalComponentsAnalysis() {
-        this(1.0);
+        this(0.95);
     }
 
     public PrincipalComponentsAnalysis(double m_cover) {
-        m_coverVariance = m_cover;
+        this(m_cover, false);
 
+    }
+
+    private boolean converBackToOriginalSpace = false;
+
+    private int maxComponents = -1;
+
+    public PrincipalComponentsAnalysis(double m_cover, boolean convertBack,int maxComponents) {
+        m_coverVariance = m_cover;
+        converBackToOriginalSpace = convertBack;
+        this.maxComponents = maxComponents;
+
+    }
+
+    public PrincipalComponentsAnalysis(double m_cover, boolean convertBack) {
+       this(m_cover,convertBack,-1);
     }
 
     private RemoveAttributes remAtt;
@@ -137,7 +153,7 @@ public class PrincipalComponentsAnalysis implements Filter {
         }
 
         m_numInstances = m_trainInstances.size();
-        m_numAttribs = m_trainInstances.getInstance(0).size();// numAttributes();
+        m_numAttribs = m_trainInstances.getInstance(0).size();
 
         fillCorrelation(m_trainInstances);
 
@@ -168,20 +184,20 @@ public class PrincipalComponentsAnalysis implements Filter {
                 m_eigenvalues[i] = 0.0;
             }
         }
-       
+
         m_sortedEigens = Utils.sort(m_eigenvalues);
         m_sumOfEigenValues = Utils.sum(m_eigenvalues);
 
         double[][] orderedVectors = new double[m_eigenvectors.length][m_eigenvectors[0].length];
 
-        // try converting back to the original space
-        for (int i = m_numAttribs ; i > (m_numAttribs - m_eigenvectors[0].length); i--) {
+        // sort eigenvector accor
+        for (int i = m_numAttribs; i > (m_numAttribs - m_eigenvectors[0].length); i--) {
             for (int j = 0; j < m_numAttribs; j++) {
-                orderedVectors[j][m_numAttribs - i] = m_eigenvectors[j][m_sortedEigens[i-1]];
+                orderedVectors[j][m_numAttribs - i] = m_eigenvectors[j][m_sortedEigens[i - 1]];
             }
         }
 
-        // transpose the matrix
+        // transpose the matrix for unfiltering of instances.
         nr = orderedVectors.length;
         nc = orderedVectors[0].length;
         m_eTranspose = new double[nc][nr];
@@ -190,13 +206,17 @@ public class PrincipalComponentsAnalysis implements Filter {
                 m_eTranspose[i][j] = orderedVectors[j][i];
             }
         }
-        
+
         Dataset out = new SimpleDataset();
         for (int k = 0; k < data.size(); k++) {
             // we need to use the original data as the call to filterInstance
             // will strip the unneeded attributes as defined in remAtt
             Instance tempInst = data.getInstance(k);
-            out.addInstance(filterInstance(tempInst));
+            if (!converBackToOriginalSpace) {
+                out.addInstance(filterInstance(tempInst));
+            } else {
+                out.addInstance(unfilterInstance(filterInstance(tempInst)));
+            }
         }
         return out;
     }
@@ -236,15 +256,23 @@ public class PrincipalComponentsAnalysis implements Filter {
     }
 
     public Instance filterInstance(Instance instance) {
-        instance = remAtt.filterInstance(instance);
-        float[] newVals = new float[m_numAttribs];
+        int numComponents = m_numAttribs;
+        if (maxComponents > 0) {
+            numComponents = maxComponents;
+        }
+        if (remAtt != null)
+            instance = remAtt.filterInstance(instance);
+        float[] newVals;
+
+        newVals = new float[numComponents];
+
         double cumulative = 0;
-        for (int i = m_numAttribs - 1; i >= 0; i--) {
+        for (int i = numComponents - 1; i >= 0; i--) {
             double tempval = 0.0;
-            for (int j = 0; j < m_numAttribs; j++) {
+            for (int j = 0; j < numComponents; j++) {
                 tempval += (m_eigenvectors[j][m_sortedEigens[i]] * instance.getValue(j));
             }
-            newVals[m_numAttribs - i - 1] = (float) tempval;
+            newVals[numComponents - i - 1] = (float) tempval;
             cumulative += m_eigenvalues[m_sortedEigens[i]];
             if ((cumulative / m_sumOfEigenValues) > m_coverVariance) {
                 break;
@@ -257,11 +285,18 @@ public class PrincipalComponentsAnalysis implements Filter {
         float[] newVals = new float[m_numAttribs];
         for (int i = 0; i < m_eTranspose[0].length; i++) {
             float tempval = 0;
-            for (int j = 0; j < m_eTranspose.length; j++) {
+            for (int j = 0; j < m_eTranspose.length &&j<instance.size(); j++) {
                 tempval += (m_eTranspose[j][i] * instance.getValue(j));
             }
             newVals[i] = tempval;
         }
         return new SimpleInstance(newVals, instance.getWeight(), instance.isClassSet(), instance.getClassValue());
+    }
+
+    public double[] getEigenValues() {
+        return m_eigenvalues;
+    }
+    public double[][]getEigenVectors(){
+        return m_eigenvectors;
     }
 }
