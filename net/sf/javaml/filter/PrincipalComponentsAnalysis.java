@@ -190,7 +190,7 @@ public class PrincipalComponentsAnalysis implements Filter {
 
         double[][] orderedVectors = new double[m_eigenvectors.length][m_eigenvectors[0].length];
 
-        // sort eigenvector accor
+        // sort eigenvector according to their eigenvalues
         for (int i = m_numAttribs; i > (m_numAttribs - m_eigenvectors[0].length); i--) {
             for (int j = 0; j < m_numAttribs; j++) {
                 orderedVectors[j][m_numAttribs - i] = m_eigenvectors[j][m_sortedEigens[i - 1]];
@@ -215,7 +215,7 @@ public class PrincipalComponentsAnalysis implements Filter {
             if (!converBackToOriginalSpace) {
                 out.addInstance(filterInstance(tempInst));
             } else {
-                out.addInstance(unfilterInstance(filterInstance(tempInst)));
+               out.addInstance(unfilterInstance(filterInstance(tempInst)));
             }
         }
         return out;
