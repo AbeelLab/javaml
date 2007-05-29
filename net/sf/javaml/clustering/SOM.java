@@ -33,6 +33,8 @@ import java.util.Vector;
 
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.SimpleDataset;
+import net.sf.javaml.core.SimpleInstance;
+import net.sf.javaml.distance.DistanceMeasure;
 
 /**
  * An implementation of the Self Organizing Maps algorithm as proposed by
@@ -48,19 +50,29 @@ import net.sf.javaml.core.SimpleDataset;
  * 
  */
 public class SOM implements Clusterer {
+    private DistanceMeasure dm;
+
+    /**
+     * Calculates the Euclidean distance between two vectors.
+     * 
+     * @param double[]
+     *            x - 1st vector.
+     * @param double[]
+     *            y - 2nd vector.
+     * @return double - returns the distance between two vectors, x and y
+     */
+    private double getDistance(double[] x, double[] y) {
+        return dm.calculateDistance(new SimpleInstance(x), new SimpleInstance(y));
+
+    }
+
     public class JSomMath {
 
         private double[] cacheVector; // cache vector for temporary storage.
 
         private int sizeVector; // size of the cache vector.
 
-        private double distCache; // distance cache.
-
         private double gaussianCache; // double cache for gaussian
-
-        // neighbourhood function operations.
-
-        private int distCacheSize; // cache for the length of the two vectors.
 
         /**
          * Constructor.
@@ -70,45 +82,29 @@ public class SOM implements Clusterer {
          */
         public JSomMath(int vectorSize) {
             cacheVector = new double[vectorSize];
-            for (int i = 0; i < vectorSize; i++) {
-                cacheVector[i] = 0.0;
-            }
             sizeVector = cacheVector.length;
         }
 
-        /**
-         * Calculates the Euclidean distance between two vectors.
-         * 
-         * @param double[]
-         *            x - 1st vector.
-         * @param double[]
-         *            y - 2nd vector.
-         * @return double - returns the distance between two vectors, x and y
-         */
-        public double getDistance(double[] x, double[] y) {
-            return Math.sqrt(getSquareDistance(x, y));
-        }
-
-        /**
-         * Calculates the square of Euclidean distance between two vectors. It
-         * is faster to calculate the square of Euclidean distance than the
-         * distance itself.
-         * 
-         * @param double[]
-         *            x - 1st vector.
-         * @param double[]
-         *            y - 2nd vector.
-         * @return double - returns the square of distance between x and y
-         *         vectors.
-         */
-        public double getSquareDistance(double[] x, double[] y) {
-            distCache = 0.0;
-            distCacheSize = x.length;
-            for (int i = 0; i < distCacheSize; i++) {
-                distCache += (x[i] - y[i]) * (x[i] - y[i]);
-            }
-            return distCache;
-        }
+        // /**
+        // * Calculates the square of Euclidean distance between two vectors. It
+        // * is faster to calculate the square of Euclidean distance than the
+        // * distance itself.
+        // *
+        // * @param double[]
+        // * x - 1st vector.
+        // * @param double[]
+        // * y - 2nd vector.
+        // * @return double - returns the square of distance between x and y
+        // * vectors.
+        // */
+        // private double getSquareDistance(double[] x, double[] y) {
+        // distCache = 0.0;
+        // distCacheSize = x.length;
+        // for (int i = 0; i < distCacheSize; i++) {
+        // distCache += (x[i] - y[i]) * (x[i] - y[i]);
+        // }
+        // return distCache;
+        // }
 
         /**
          * Calculates the exponential learning-rate parameter value.
@@ -979,10 +975,10 @@ public class SOM implements Clusterer {
          * index of the winning neuron.
          */
         private int resolveIndexOfWinningNeuron(double[] values) {
-            length = math.getSquareDistance(values, wVector.getNodeValuesAt(0));
+            length = getDistance(values, wVector.getNodeValuesAt(0));
             index = 0;
             for (int i = 1; i < wVectorSize; i++) {
-                lcache = math.getSquareDistance(values, wVector.getNodeValuesAt(i));
+                lcache = getDistance(values, wVector.getNodeValuesAt(i));
                 if (lcache < length) {
                     index = i;
                     length = lcache;
@@ -1058,24 +1054,26 @@ public class SOM implements Clusterer {
         this.initialRadius = initialRadius;
     }
 
-    public class GridDataset{
+    public class GridDataset {
         public Dataset data;
-        public double x,y;
+
+        public double x, y;
+
         public GridDataset(Dataset data, double x, double y) {
             super();
             this.data = data;
             this.x = x;
             this.y = y;
         }
-        
+
     }
-    
+
     private GridDataset[] labeledClustering;
-    
-    public GridDataset[] getLabeledClustering(){
+
+    public GridDataset[] getLabeledClustering() {
         return labeledClustering;
     }
-    
+
     public Dataset[] executeClustering(Dataset data) {
 
         // hexa || rect
@@ -1087,17 +1085,17 @@ public class SOM implements Clusterer {
         jst.setTrainingInstructions(iterations, learningRate, initialRadius, learningType.toString(),
                 neighbourhoodFunction.toString());
         WeightVectors out = jst.doTraining();
-        
-       //  System.out.println(iV);
+
+        // System.out.println(iV);
         JSomLabeling labels = new JSomLabeling(out, iV);
         out = labels.doLabeling();
-        //System.out.println(out);
+        // System.out.println(out);
         Vector<Dataset> clusters = new Vector<Dataset>();
-        Point2D.Double[] locations=new Point2D.Double[wV.size()];
-        for(int i=0;i<out.size();i++){
-            Point2D.Double tmp=new Point2D.Double(out.get(i).getLocation()[0],out.get(i).getLocation()[1]);
-            locations[i]=tmp;
-//            out.get(i).getLocation()[0];
+        Point2D.Double[] locations = new Point2D.Double[wV.size()];
+        for (int i = 0; i < out.size(); i++) {
+            Point2D.Double tmp = new Point2D.Double(out.get(i).getLocation()[0], out.get(i).getLocation()[1]);
+            locations[i] = tmp;
+            // out.get(i).getLocation()[0];
         }
         for (int i = 0; i < wV.size(); i++) {
             clusters.add(new SimpleDataset());
@@ -1105,22 +1103,22 @@ public class SOM implements Clusterer {
         for (int i = 0; i < data.size(); i++) {
             clusters.get(labels.resolveIndexOfWinningNeuron(iV.getNodeValuesAt(i))).addInstance(data.getInstance(i));
         }
-        labeledClustering=new GridDataset[clusters.size()];
-        for(int i=0;i<labeledClustering.length;i++){
-            labeledClustering[i]=new GridDataset(clusters.get(i),locations[i].x,locations[i].y);
+        labeledClustering = new GridDataset[clusters.size()];
+        for (int i = 0; i < labeledClustering.length; i++) {
+            labeledClustering[i] = new GridDataset(clusters.get(i), locations[i].x, locations[i].y);
         }
-        
+
         // Filter empty clusters out;
-        int nonEmptyClusterCount=0;
-        for(int i=0;i<clusters.size();i++){
-            if(clusters.get(i).size()>0)
+        int nonEmptyClusterCount = 0;
+        for (int i = 0; i < clusters.size(); i++) {
+            if (clusters.get(i).size() > 0)
                 nonEmptyClusterCount++;
         }
-        Dataset[]output=new Dataset[nonEmptyClusterCount];
-        int index=0;
-        for(Dataset tmp:clusters){
-            if(tmp.size()>0){
-                output[index]=tmp;
+        Dataset[] output = new Dataset[nonEmptyClusterCount];
+        int index = 0;
+        for (Dataset tmp : clusters) {
+            if (tmp.size() > 0) {
+                output[index] = tmp;
                 index++;
             }
         }
@@ -1134,13 +1132,9 @@ public class SOM implements Clusterer {
 
         private InputVectors iVector;
 
-        private double distCache;
-
         private double length;
 
         private double lcache;
-
-        private int distCacheSize;
 
         private int iSize; // the number of input vectors
 
@@ -1159,7 +1153,6 @@ public class SOM implements Clusterer {
         public JSomLabeling(WeightVectors wVector, InputVectors iVector) {
             this.wVector = wVector;
             this.iVector = iVector;
-            distCacheSize = wVector.getDimensionalityOfNodes();
             iSize = iVector.getCount();
             wSize = wVector.getCount();
         }
@@ -1186,10 +1179,10 @@ public class SOM implements Clusterer {
          * index of the winning neuron.
          */
         private int resolveIndexOfWinningNeuron(double[] values) {
-            length = getSquareDistance(values, wVector.getNodeValuesAt(0));
+            length = getDistance(values, wVector.getNodeValuesAt(0));
             index = 0;
             for (int i = 1; i < wSize; i++) {
-                lcache = getSquareDistance(values, wVector.getNodeValuesAt(i));
+                lcache = getDistance(values, wVector.getNodeValuesAt(i));
                 if (lcache < length) {
                     index = i;
                     length = lcache;
@@ -1198,42 +1191,35 @@ public class SOM implements Clusterer {
             return index;
         }
 
-        /**
-         * Calculates the square of Euclidean distance between two vectors. It
-         * is faster to calculate the square of Euclidean distance than the
-         * distance itself.
-         * 
-         * @param double[]
-         *            x - 1st vector.
-         * @param double[]
-         *            y - 2nd vector.
-         * @return double - returns the square of distance between x and y
-         *         vectors.
-         */
-        private double getSquareDistance(double[] x, double[] y) {
-            distCache = 0.0;
-            for (int i = 0; i < distCacheSize; i++) {
-                distCache += (x[i] - y[i]) * (x[i] - y[i]);
-            }
-            return distCache;
-        }
+        // /**
+        // * Calculates the square of Euclidean distance between two vectors. It
+        // * is faster to calculate the square of Euclidean distance than the
+        // * distance itself.
+        // *
+        // * @param double[]
+        // * x - 1st vector.
+        // * @param double[]
+        // * y - 2nd vector.
+        // * @return double - returns the square of distance between x and y
+        // * vectors.
+        // */
+        // private double getSquareDistance(double[] x, double[] y) {
+        // distCache = 0.0;
+        // for (int i = 0; i < distCacheSize; i++) {
+        // distCache += (x[i] - y[i]) * (x[i] - y[i]);
+        // }
+        // return distCache;
+        // }
     }
 
     private InputVectors convertDataset(Dataset data) {
         InputVectors iVS = new InputVectors();
         for (int i = 0; i < data.size(); i++) {
-            double[] values = toDouble(data.getInstance(i).toArray());
+            double[] values = data.getInstance(i).toArray();
             SomNode tmp = new SomNode("node_" + i, values);
             iVS.add(tmp);
         }
         return iVS;
-    }
-
-    private double[] toDouble(float[] fs) {
-        double[] out = new double[fs.length];
-        for (int i = 0; i < fs.length; i++)
-            out[i] = fs[i];
-        return out;
     }
 
 }
