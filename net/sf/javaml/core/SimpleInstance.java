@@ -30,13 +30,13 @@ public class SimpleInstance implements Instance {
 
     private int hashCode = 0;
 
-    private float[] values = null;;
+    private double[] values = null;;
 
     private boolean classSet = false;
 
     private int classValue = 0;
 
-    private float weight = 1;
+    private double weight = 1;
 
     /**
      * Copy constructor, this makes a deep copy of the Instance
@@ -79,29 +79,29 @@ public class SimpleInstance implements Instance {
         return out + "]";
     }
 
-    public SimpleInstance(float[] values) {
+    public SimpleInstance(double[] values) {
         this(values, 1.0f);
     }
 
-    public SimpleInstance(float[] values, float weight) {
+    public SimpleInstance(double[] values, float weight) {
         this(values, weight, false, 0);
     }
 
-    public SimpleInstance(float[] values, float weight, boolean classSet, int classValue) {
-        this.values = new float[values.length];
+    public SimpleInstance(double[] values, double weight, boolean classSet, int classValue) {
+        this.values = new double[values.length];
         System.arraycopy(values, 0, this.values, 0, values.length);
 
         this.weight = weight;
         this.classSet = classSet;
         this.classValue = classValue;
-        for (float f : values) {
+        for (double f : values) {
             hashCode += f;
         }
 
     }
 
    
-    public float getValue(int index) {
+    public double getValue(int index) {
         return values[index];
     }
 
@@ -117,7 +117,7 @@ public class SimpleInstance implements Instance {
         return instance.size() == this.size();
     }
 
-    public float getWeight() {
+    public double getWeight() {
         return this.weight;
     }
 
@@ -130,8 +130,8 @@ public class SimpleInstance implements Instance {
         return values.length;
     }
 
-    public float[] toArray() {
-        float[] out = new float[values.length];
+    public double[] toArray() {
+        double[] out = new double[values.length];
         System.arraycopy(this.values, 0, out, 0, this.values.length);
         return out;
     }

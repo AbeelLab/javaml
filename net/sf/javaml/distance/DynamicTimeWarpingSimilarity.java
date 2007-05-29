@@ -70,8 +70,8 @@ public class DynamicTimeWarpingSimilarity extends AbstractSimilarity {
      * XXX DOC
      */
     public double calculateDistance(Instance x, Instance y) {
-        float[] e1 = x.toArray();
-        float[] e2 = y.toArray();
+        double[] e1 = x.toArray();
+        double[] e2 = y.toArray();
         ArrayList<Double> l1 = new ArrayList<Double>();
         ArrayList<Double> l2 = new ArrayList<Double>();
         int i, j;

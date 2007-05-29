@@ -47,11 +47,11 @@ public class GeneInstance implements Instance {
         return 0;
     }
 
-    public float getValue(int index) {
+    public double getValue(int index) {
         return 0;
     }
 
-    public float getWeight() {
+    public double getWeight() {
         return 1;
     }
 
@@ -67,7 +67,7 @@ public class GeneInstance implements Instance {
         return 0;
     }
 
-    public float[] toArray() {
+    public double[] toArray() {
         return null;
     }
 

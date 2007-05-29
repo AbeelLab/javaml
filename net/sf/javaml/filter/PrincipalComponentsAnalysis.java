@@ -222,7 +222,7 @@ public class PrincipalComponentsAnalysis implements Filter {
     }
 
     private int numDistinctValues(int index, Dataset data) {
-        Set<Float> set = new HashSet<Float>();
+        Set<Double> set = new HashSet<Double>();
         for (int i = 0; i < data.size(); i++) {
             set.add(data.getInstance(i).getValue(index));
         }
@@ -262,9 +262,7 @@ public class PrincipalComponentsAnalysis implements Filter {
         }
         if (remAtt != null)
             instance = remAtt.filterInstance(instance);
-        float[] newVals;
-
-        newVals = new float[numComponents];
+        double[] newVals= new double[numComponents];
 
         double cumulative = 0;
         for (int i = numComponents - 1; i >= 0; i--) {
@@ -272,7 +270,7 @@ public class PrincipalComponentsAnalysis implements Filter {
             for (int j = 0; j < numComponents; j++) {
                 tempval += (m_eigenvectors[j][m_sortedEigens[i]] * instance.getValue(j));
             }
-            newVals[numComponents - i - 1] = (float) tempval;
+            newVals[numComponents - i - 1] =  tempval;
             cumulative += m_eigenvalues[m_sortedEigens[i]];
             if ((cumulative / m_sumOfEigenValues) > m_coverVariance) {
                 break;
@@ -282,7 +280,7 @@ public class PrincipalComponentsAnalysis implements Filter {
     }
 
     public Instance unfilterInstance(Instance instance) {
-        float[] newVals = new float[m_numAttribs];
+        double[] newVals = new double[m_numAttribs];
         for (int i = 0; i < m_eTranspose[0].length; i++) {
             float tempval = 0;
             for (int j = 0; j < m_eTranspose.length &&j<instance.size(); j++) {

@@ -137,7 +137,7 @@ public class KMeans implements Clusterer {
         this.centroids = new Instance[numberOfClusters];
         int instanceLength = data.getInstance(0).size();
         for (int j = 0; j < numberOfClusters; j++) {
-            float[] randomInstance = new float[instanceLength];
+            double[] randomInstance = new double[instanceLength];
             for (int i = 0; i < instanceLength; i++) {
                 double dist = Math.abs(max.getValue(i) - min.getValue(i));
                 randomInstance[i] = (float) (min.getValue(i) + rg.nextDouble() * dist);
@@ -185,7 +185,7 @@ public class KMeans implements Clusterer {
             randomCentroids=false;
             for (int i = 0; i < this.numberOfClusters; i++) {
                 if (countPosition[i] > 0) {
-                    float[] tmp = new float[instanceLength];
+                    double[] tmp = new double[instanceLength];
                     for (int j = 0; j < instanceLength; j++) {
                         tmp[j] = (float) sumPosition[i][j] / countPosition[i];
                     }
@@ -195,7 +195,7 @@ public class KMeans implements Clusterer {
                         centroids[i] = newCentroid;
                     }
                 } else {
-                    float[] randomInstance = new float[instanceLength];
+                    double[] randomInstance = new double[instanceLength];
                     for (int j = 0; j < instanceLength; j++) {
                         double dist = Math.abs(max.getValue(j) - min.getValue(j));
                         randomInstance[j] = (float) (min.getValue(j) + rg.nextDouble() * dist);

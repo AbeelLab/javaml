@@ -553,7 +553,7 @@ public class XMeans implements Clusterer {
 
         for (int i = 0; i < centers.length; i++) {
             double val;
-            float[] centerValues = centers[i].toArray();
+            double[] centerValues = centers[i].toArray();
             for (int j = 0; j < centers[i].size(); j++) {
 
                 val = meanOrMode(data, instOfCent[i], j);
@@ -587,7 +587,7 @@ public class XMeans implements Clusterer {
      */
     private void recomputeCentersFast(Instance[] centers, int[][] instOfCentIndexes) {
         for (int i = 0; i < centers.length; i++) {
-            float[] centerValues = centers[i].toArray();
+            double[] centerValues = centers[i].toArray();
             double val;
             for (int j = 0; j < centerValues.length; j++) {
                 val = meanOrMode(data, instOfCentIndexes[i], j);
@@ -867,20 +867,20 @@ public class XMeans implements Clusterer {
      */
     private Instance[] splitCenter(Random rg, Instance center, double variance) {
         m_NumSplits++;
-        float[] randomValues = new float[center.size()];
+        double[] randomValues = new double[center.size()];
         ArrayOperations.fillRandom(randomValues, rg);
         Instance[] children = new Instance[2];
 
         ArrayOperations.changeLength(Math.sqrt(variance), randomValues);
 
         // add random vector to center
-        float[] centerValues = center.toArray();
+        double[] centerValues = center.toArray();
         centerValues = ArrayOperations.add(centerValues, randomValues);
         children[0] = new SimpleInstance(centerValues, center.getWeight(), center.isClassSet(), center.getClassValue());
         ;
         // substract random vector to center
         centerValues = center.toArray();
-        randomValues = new float[center.size()];
+        randomValues = new double[center.size()];
         ArrayOperations.fillRandom(randomValues, rg);
         centerValues = ArrayOperations.substract(centerValues, randomValues);
         children[1] = new SimpleInstance(centerValues, center.getWeight(), center.isClassSet(), center.getClassValue());

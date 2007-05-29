@@ -79,7 +79,7 @@ public class DatasetLoader {
         while (line != null) {
 
             String[] arr = line.split("\t");
-            float[] values = new float[arr.length];
+            double[] values = new double[arr.length];
 
             for (int i = 0; i < arr.length; i++) {
                 try {
@@ -146,7 +146,7 @@ public class DatasetLoader {
         while (line != null) {
 
             String[] arr = line.split("\t");
-            float[] values = new float[arr.length - 1];
+            double[] values = new double[arr.length - 1];
             int classValue = -1;
             for (int i = 0; i < arr.length; i++) {
                 try {

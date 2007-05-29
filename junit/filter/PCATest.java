@@ -43,12 +43,12 @@ public class PCATest {
     @Test
     public void testRemove() throws Exception {
 
-        float[] vals1 = { 1, 2, 3.5f, 4, 1 };
-        float[] vals2 = { 1, 2, 4, 4, 2 };
-        float[] vals3 = { 1, 2, 4.5f, 4, 3 };
-        float[] vals4 = { 1, 2, 3.7f, 4, 4 };
-        float[] vals5 = { 1, 2, 4.1f, 4, 5 };
-        float[] vals6 = { 1, 2, 3.9f, 4, 6 };
+        double[] vals1 = { 1, 2, 3.5f, 4, 1 };
+        double[] vals2 = { 1, 2, 4, 4, 2 };
+        double[] vals3 = { 1, 2, 4.5f, 4, 3 };
+        double[] vals4 = { 1, 2, 3.7f, 4, 4 };
+        double[] vals5 = { 1, 2, 4.1f, 4, 5 };
+        double[] vals6 = { 1, 2, 3.9f, 4, 6 };
        
       
 

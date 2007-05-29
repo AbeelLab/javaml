@@ -58,7 +58,7 @@ public class SimpleDataset implements Dataset {
     /**
      * XXX doc
      */
-    private float[] lowArray, highArray;
+    private double[] lowArray, highArray;
 
     /**
      * XXX doc

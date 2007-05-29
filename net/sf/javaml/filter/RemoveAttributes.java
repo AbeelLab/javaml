@@ -68,7 +68,7 @@ public class RemoveAttributes implements Filter {
     }
 
     public Instance filterInstance(Instance instance) {
-        float[] newVals = new float[instance.size() - count];
+        double[] newVals = new double[instance.size() - count];
         int index = 0;
         for (int i = 0; i < instance.size(); i++) {
             if (i>=binIndices.length||!binIndices[i]) {

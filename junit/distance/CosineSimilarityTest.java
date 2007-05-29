@@ -37,8 +37,8 @@ public class CosineSimilarityTest {
 
     @Test
     public void testCalculateDistance() {
-        float[]data={1,1,1};
-        float[]data2={0,2,4};
+        double[]data={1,1,1};
+        double[]data2={0,2,4};
         Instance a=new SimpleInstance(data);
         Instance b=new SimpleInstance(data2);
         CosineSimilarity cs=new CosineSimilarity();

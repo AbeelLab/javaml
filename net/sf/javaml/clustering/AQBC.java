@@ -47,7 +47,7 @@ import org.apache.commons.math.stat.descriptive.moment.StandardDeviation;
  * @author Thomas Abeel
  */
 public class AQBC implements Clusterer {
-    private float RADNW;
+    private double RADNW;
 
     private int E;
 
@@ -96,8 +96,8 @@ public class AQBC implements Clusterer {
         double REITERTHR = 0.1;
         E = data.getInstance(0).size();
         // int D = E - 2;
-        float R = (float) Math.sqrt(E - 1);
-        float EXTTRESH = R / 2.0f;
+        double R =  Math.sqrt(E - 1);
+        double EXTTRESH = R / 2.0f;
         int MINNRGENES = 2;
         int cluster = 0;
 
@@ -186,7 +186,7 @@ public class AQBC implements Clusterer {
         Vector<TaggedInstance> out = new Vector<TaggedInstance>();
        
         for (int i = 0; i < data.size(); i++) {
-            float[] old = data.getInstance(i).toArray();
+            double[] old = data.getInstance(i).toArray();
             double[] conv = new double[old.length];
             for (int j = 0; j < old.length; j++) {
                 conv[j] = old[j];
@@ -200,7 +200,7 @@ public class AQBC implements Clusterer {
             double SIGM = std.evaluate(conv, MU);
             // System.out.println("SIGM = "+SIGM);
             if (!MathUtils.eq(SIGM, 0)) {
-                float[] val = new float[old.length];
+                double[] val = new double[old.length];
                 for (int j = 0; j < old.length; j++) {
                     val[j] = (float) ((old[j] - MU) / SIGM);
 
@@ -264,7 +264,7 @@ public class AQBC implements Clusterer {
 
     private DistanceMeasure dm;
 
-    private Vector<TaggedInstance> retrieveInstances(Vector<TaggedInstance> sp, float[] me2, double radnw2) {
+    private Vector<TaggedInstance> retrieveInstances(Vector<TaggedInstance> sp, double[] me2, double radnw2) {
         Instance tmp = new SimpleInstance(me2);
         Vector<TaggedInstance> out = new Vector<TaggedInstance>();
         for (TaggedInstance inst : sp) {
@@ -275,18 +275,18 @@ public class AQBC implements Clusterer {
     }
 
     // modifies: RADNW
-    private boolean exp_max(Vector<TaggedInstance> AS, float[] CK, double QUAL, double S) {
+    private boolean exp_max(Vector<TaggedInstance> AS, double[] CK, double QUAL, double S) {
 
-        float D = E - 2;
+        double D = E - 2;
         double R = Math.sqrt(E - 1);
         // System.out.println("CK= "+Arrays.toString(CK));
-        float[] RD = calculateDistances(AS, CK);
+        double[] RD = calculateDistances(AS, CK);
         // System.out.println("RD = "+Arrays.toString(RD));
         int samples = RD.length;
         int MAXITER = 500;
         double CDIF = 0.001;
 
-        float count = 0;// float sum = 0;
+        double count = 0;// float sum = 0;
         for (int i = 0; i < RD.length; i++) {
             if (RD[i] < QUAL) {
                 count++;
@@ -295,8 +295,8 @@ public class AQBC implements Clusterer {
         }
         // System.out.println("count = "+count);
         // System.out.println("RD.length = "+RD.length);
-        float PC = count / RD.length;// sum / RD.length;
-        float PB = 1 - PC;
+        double PC = count / RD.length;// sum / RD.length;
+        double PB = 1 - PC;
         // System.out.println("PC = "+PC);
         // System.out.println("PB = "+PB);
         double tmpVAR = 0;
@@ -316,31 +316,31 @@ public class AQBC implements Clusterer {
         for (int i = 0; i < MAXITER && !CONV; i++) {
             // System.out.println("\tEM iteration: "+i);
             // System.out.println("\tVAR = "+VAR);
-            float[] prc = clusterdistrib(RD, VAR, D, R);
+            double[] prc = clusterdistrib(RD, VAR, D, R);
             // System.out.println("PRC = "+Arrays.toString(prc));
-            float[] prb = background(RD, D, R);
-            float[] prcpc = new float[prc.length];
+            double[] prb = background(RD, D, R);
+            double[] prcpc = new double[prc.length];
             for (int j = 0; j < prc.length; j++) {
                 prcpc[j] = prc[j] * PC;
             }
-            float[] prbpb = new float[prb.length];
+            double[] prbpb = new double[prb.length];
             for (int j = 0; j < prb.length; j++) {
                 prbpb[j] = prb[j] * PB;
             }
-            float[] pr = new float[prcpc.length];
+            double[] pr = new double[prcpc.length];
             for (int j = 0; j < prc.length; j++) {
                 pr[j] = prcpc[j] + prbpb[j];
             }
-            float[] pcr = new float[prcpc.length];
+            double[] pcr = new double[prcpc.length];
             for (int j = 0; j < prc.length; j++) {
                 pcr[j] = prcpc[j] / pr[j];
             }
-            float SM = 0;
+            double SM = 0;
             for (int j = 0; j < prc.length; j++) {
                 SM += pcr[j];
             }
             // System.out.println("\tSM = "+SM);
-            if (MathUtils.eq(SM, 0) || Float.isInfinite(SM)) {
+            if (MathUtils.eq(SM, 0) || Double.isInfinite(SM)) {
                 i = MAXITER;// will return from loop
             }
             float tmpVAR_new = 0;
@@ -348,14 +348,14 @@ public class AQBC implements Clusterer {
                 tmpVAR_new += RD[j] * RD[j] * pcr[j];
             }
             // System.out.println("tmpVAR_new = "+tmpVAR_new);
-            float VAR_new = (1 / D) * tmpVAR_new / SM;
+            double VAR_new = (1 / D) * tmpVAR_new / SM;
             // System.out.println("PCR = "+Arrays.toString(pcr));
             // System.out.println("\tVAR_new = "+VAR_new);
             // System.out.println("\tPC = "+PC);
 
-            float PC_new = SM / samples;
+            double PC_new = SM / samples;
             // System.out.println("\tPC_new = "+PC_new);
-            float PB_new = 1 - PC_new;
+            double PB_new = 1 - PC_new;
             if (Math.abs(VAR_new - VAR) < CDIF && Math.abs(PC_new - PC) < CDIF) {
                 CONV = true;
             } 
@@ -412,12 +412,12 @@ public class AQBC implements Clusterer {
      * @param R
      * @return
      */
-    private float[] background(float[] r, double D, double R) {
+    private double[] background(double[] r, double D, double R) {
         double SD = (2 * Math.pow(Math.PI, D / 2)) / (GammaFunction.gamma(D / 2));
         double SD1 = (2 * Math.pow(Math.PI, (D + 1) / 2)) / (GammaFunction.gamma((D + 1) / 2));
-        float[] out = new float[r.length];
+        double[] out = new double[r.length];
         for (int i = 0; i < out.length; i++) {
-            out[i] = (float) ((SD / (SD1 * (Math.pow(R, D)))) * (Math.pow(r[i], D - 1)));
+            out[i] =  ((SD / (SD1 * (Math.pow(R, D)))) * (Math.pow(r[i], D - 1)));
         }
         return out;
     }
@@ -431,12 +431,12 @@ public class AQBC implements Clusterer {
      * @param R
      * @return
      */
-    private float[] clusterdistrib(float[] r, double VAR, double D, double R) {
+    private double[] clusterdistrib(double[] r, double VAR, double D, double R) {
         // System.out.println("\t\tCD:VAR = "+VAR);
         // System.out.println("\t\tCD:D = "+D);
         // System.out.println("\t\tCD:R = "+R);
         // System.out.println("\t\tCD:r = "+Arrays.toString(r));
-        float[] out = new float[r.length];
+        double[] out = new double[r.length];
         if (MathUtils.eq(VAR, 0)) {
             // System.out.println("\t\tCD: VAR is considered ZERO !!!");
             for (int i = 0; i < r.length; i++) {
@@ -484,21 +484,21 @@ public class AQBC implements Clusterer {
      * @param ck
      * @return
      */
-    private float[] calculateDistances(Vector<TaggedInstance> as, float[] ck) {
+    private double[] calculateDistances(Vector<TaggedInstance> as, double[] ck) {
         // voor elke instance van AS, trek er CK van af
         // return de sqrt van de som de kwadraten van de attributen van het
         // verschil
-        float[] out = new float[as.size()];
+        double[] out = new double[as.size()];
         for (int i = 0; i < as.size(); i++) {
-            float[] values = as.get(i).toArray();
+            double[] values = as.get(i).toArray();
             // float[]dif=new float[values.length];
             float sum = 0;
             for (int j = 0; j < values.length; j++) {
                 // dif[j]=
-                float dif = values[j] - ck[j];
+                double dif = values[j] - ck[j];
                 sum += dif * dif;
             }
-            out[i] = (float) Math.sqrt(sum);
+            out[i] = Math.sqrt(sum);
         }
         // Instance tmp=new SimpleInstance(ck);
         // float[]out=new float[as.size()];
@@ -509,30 +509,30 @@ public class AQBC implements Clusterer {
     }
 
     // Significance level
-    private float S = 0.95f;
+    private double S = 0.95f;
 
-    private float EXTTRESH2;
+    private double EXTTRESH2;
 
-    private float[] ME;
+    private double[] ME;
 
     // modifies: CE,ME,EXTTRESH2
     /**
      * returns true if this step converged
      */
-    private boolean wan_shr_adap(Vector<TaggedInstance> A, float EXTTRESH) {
+    private boolean wan_shr_adap(Vector<TaggedInstance> A, double EXTTRESH) {
         int samples = A.size();
-        float[] CE = new float[samples];
+        double[] CE = new double[samples];
         int MAXITER = 100;
-        float NRWAN = 30;
+        double NRWAN = 30;
         // System.out.println("FIRSTA = "+A.get(0));
-        float[] ME1 = mean(A);
+        double[] ME1 = mean(A);
         // System.out.println("A = "+A);
        // System.out.println("ME1 = " + Arrays.toString(ME1));
         // System.out.println("EXTTRESH = "+EXTTRESH);
-        float[] DMI = calculateDistances(A, ME1);
+        double[] DMI = calculateDistances(A, ME1);
         // System.out.println("DMI = "+Arrays.toString(DMI));
-        float maxDMI = DMI[0];
-        float minDMI = DMI[0];
+        double maxDMI = DMI[0];
+        double minDMI = DMI[0];
         for (int i = 1; i < DMI.length; i++) {
             if (DMI[i] > maxDMI)
                 maxDMI = DMI[i];
@@ -540,7 +540,7 @@ public class AQBC implements Clusterer {
                 minDMI = DMI[i];
         }
         EXTTRESH2 = maxDMI;
-        float MDIS = minDMI;
+        double MDIS = minDMI;
         if (MathUtils.eq(MDIS, EXTTRESH2)) {
             ME = ME1;
             for (int i = 0; i < CE.length; i++)
@@ -551,15 +551,15 @@ public class AQBC implements Clusterer {
             // logical
 
         }
-        float DELTARAD = (EXTTRESH2 - EXTTRESH) / NRWAN;
-        float RADPR = EXTTRESH2;
+        double DELTARAD = (EXTTRESH2 - EXTTRESH) / NRWAN;
+        double RADPR = EXTTRESH2;
         EXTTRESH2 = EXTTRESH2 - DELTARAD;
         if (EXTTRESH2 <= MDIS) {
             EXTTRESH2 = (RADPR + MDIS) / 2;
         }
         Vector<Integer> Q = findLower(DMI, EXTTRESH2);
         for (int i = 0; Q.size() != 0 && i < MAXITER; i++) {
-            float[] ME2 = mean(select(A, Q));
+            double[] ME2 = mean(select(A, Q));
             if (MathUtils.eq(ME1, ME2) && MathUtils.eq(RADPR, EXTTRESH2)) {
                 ME = ME2;
                 for (Integer index : Q) {
@@ -592,7 +592,7 @@ public class AQBC implements Clusterer {
      * @param thres
      * @return
      */
-    private Vector<Integer> findLower(float[] array, float threshold) {
+    private Vector<Integer> findLower(double[] array, double threshold) {
         Vector<Integer> out = new Vector<Integer>();
         for (int i = 0; i < array.length; i++) {
             if (array[i] < threshold)
@@ -618,7 +618,7 @@ public class AQBC implements Clusterer {
         return out;
     }
 
-    private float[] mean(Vector<TaggedInstance> a) {
+    private double[] mean(Vector<TaggedInstance> a) {
         double[] out = new double[a.get(0).size()];
         for (int i = 0; i < a.size(); i++) {
             // System.out.println("Instance "+i+" = "+a.get(i));
@@ -629,11 +629,7 @@ public class AQBC implements Clusterer {
         for (int j = 0; j < a.get(0).size(); j++) {
             out[j] /= a.size();
         }
-        float[] tmp = new float[out.length];
-        for (int j = 0; j < out.length; j++) {
-            tmp[j] = (float) out[j];
-        }
-        return tmp;
+       return out;
 
     }
 

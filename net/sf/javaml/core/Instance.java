@@ -33,7 +33,7 @@ public interface Instance {
      * 
      * @return
      */
-    public float[] toArray();
+    public double[] toArray();
 
     /**
      * This method returns the value at a given index. If the implementation
@@ -42,7 +42,7 @@ public interface Instance {
      * @param index
      * @return
      */
-    public float getValue(int index);
+    public double getValue(int index);
 
     /**
      * This method return the class value of this instance. If the method
@@ -57,7 +57,7 @@ public interface Instance {
 
     public boolean isCompatible(Instance i);
 
-    public float getWeight();
+    public double getWeight();
 
     /**
      * This method return the number of values (attributes) this instance has.

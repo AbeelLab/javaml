@@ -58,15 +58,15 @@ public class NormalizeMidrange implements Filter {
         this(0, 2);
     }
 
-    private float normalMiddle, normalRange;
+    private double normalMiddle, normalRange;
 
     public NormalizeMidrange(double middle, double range) {
-        this.normalMiddle = (float) middle;
-        this.normalRange = (float) range;
+        this.normalMiddle =  middle;
+        this.normalRange =  range;
 
     }
 
-    private float[] range, midrange;
+    private double[] range, midrange;
 
     private boolean constructed = false;
 
@@ -77,8 +77,8 @@ public class NormalizeMidrange implements Filter {
         Instance max = data.getMaximumInstance();
         Instance min = data.getMinimumInstance();
         int instanceLength = data.getInstance(0).size();
-        this.midrange = new float[instanceLength];
-        this.range = new float[instanceLength];
+        this.midrange = new double[instanceLength];
+        this.range = new double[instanceLength];
         for (int i = 0; i < instanceLength; i++) {
             range[i] = max.getValue(i) - min.getValue(i);
             midrange[i] = (max.getValue(i) + min.getValue(i)) / 2;
@@ -93,7 +93,7 @@ public class NormalizeMidrange implements Filter {
     }
 
     private Instance filter(Instance tmpInstance) {
-        float[] instance = tmpInstance.toArray();
+        double[] instance = tmpInstance.toArray();
         for (int j = 0; j < instance.length; j++) {
             if(range[j]<EPSILON){
                 instance[j]=normalMiddle;
@@ -106,11 +106,9 @@ public class NormalizeMidrange implements Filter {
     }
 
     public Instance unfilterInstance(Instance tmpInstance) {
-        float[] instance = tmpInstance.toArray();
+        double[] instance = tmpInstance.toArray();
         for (int j = 0; j < instance.length; j++) {
-            // instance[j] = ((instance[j] - midrange[j]) / (range[j] /
-            // normalRange)) + normalMiddle;
-            instance[j] = instance[j] * (range[j] / normalRange) + midrange[j];
+           instance[j] = instance[j] * (range[j] / normalRange) + midrange[j];
         }
         return new SimpleInstance(instance, tmpInstance.getWeight(), tmpInstance.isClassSet(), tmpInstance
                 .getClassValue());

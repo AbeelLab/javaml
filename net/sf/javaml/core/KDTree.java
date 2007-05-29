@@ -1268,12 +1268,12 @@ public class KDTree {
 
             // get extreme point
 
-            float[] extremeValues = new float[candidate.size()];
+            double[] extremeValues = new double[candidate.size()];
             for (int i = 0; i < candidate.size(); i++) {
                 if ((competitor.getValue(i) - candidate.getValue(i)) > 0) {
-                    extremeValues[i] = (float) m_NodeRanges[i][R_MAX];
+                    extremeValues[i] =  m_NodeRanges[i][R_MAX];
                 } else {
-                    extremeValues[i] = (float) m_NodeRanges[i][R_MIN];
+                    extremeValues[i] =  m_NodeRanges[i][R_MIN];
                 }
             }
             Instance extreme = new SimpleInstance(extremeValues, candidate.getWeight(), candidate.isClassSet(),
@@ -1296,14 +1296,14 @@ public class KDTree {
         private double distanceToHrect(Instance x) {
             double distance = 0.0;
 
-            float[] closestPointValues = new float[x.size()];
+            double[] closestPointValues = new double[x.size()];
             boolean inside = true;
             for (int i = 0; i < x.size(); i++) {
                 if (x.getValue(i) < m_NodeRanges[i][R_MIN]) {
-                    closestPointValues[i] = (float) m_NodeRanges[i][R_MIN];
+                    closestPointValues[i] =  m_NodeRanges[i][R_MIN];
                     inside = false;
                 } else if (x.getValue(i) > m_NodeRanges[i][R_MAX]) {
-                    closestPointValues[i] = (float) m_NodeRanges[i][R_MAX];
+                    closestPointValues[i] =  m_NodeRanges[i][R_MAX];
                     inside = false;
                 }
             }

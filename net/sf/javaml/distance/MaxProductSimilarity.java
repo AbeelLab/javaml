@@ -41,8 +41,8 @@ public class MaxProductSimilarity extends AbstractSimilarity {
      * XXX doc
      */
     public double calculateDistance(Instance x, Instance y) {
-        float[] e1 = x.toArray();
-        float[] e2 = y.toArray();
+        double[] e1 = x.toArray();
+        double[] e2 = y.toArray();
         double max = Double.NEGATIVE_INFINITY;
 
         for (int i = 0; i < e1.length; i++) {

@@ -33,13 +33,13 @@ public class ArrayOperations {
      * @param s
      *            the scalar
      */
-    public static void scalarMultiply(double s, float[] array) {
+    public static void scalarMultiply(double s, double[] array) {
 
         if (array != null) {
             int n = array.length;
 
             for (int i = 0; i < n; i++) {
-                array[i] = (float) s * array[i];
+                array[i] =  s * array[i];
             }
         }
     }
@@ -51,9 +51,9 @@ public class ArrayOperations {
      * 
      * @return an array containing the sum.
      */
-    public static float[] add(float[] a, float[] b) {
+    public static double[] add(double[] a, double[] b) {
 
-        float[] out = new float[a.length];
+        double[] out = new double[a.length];
 
         for (int i = 0; i < a.length; i++) {
             out[i] = a[i] + b[i];
@@ -67,7 +67,7 @@ public class ArrayOperations {
      * 
      * @return the norm of the vector
      */
-    public static double norm(float[] array) {
+    public static double norm(double[] array) {
 
         if (array != null) {
             int n = array.length;
@@ -81,7 +81,7 @@ public class ArrayOperations {
             return 0.0;
     }
 
-    public static void changeLength(double len, float[] array) {
+    public static void changeLength(double len, double[] array) {
 
         double factor = norm(array);
         factor = len / factor;
@@ -249,9 +249,9 @@ public class ArrayOperations {
         return r;
     }
 
-    public static void fillRandom(float[] array, Random rg) {
+    public static void fillRandom(double[] array, Random rg) {
         for (int i = 0; i < array.length; i++) {
-            array[i] = (float) rg.nextDouble();
+            array[i] =  rg.nextDouble();
         }
 
     }
@@ -279,8 +279,8 @@ public class ArrayOperations {
      *            the second array
      * @return the substraction of the first minus the second array
      */
-    public static float[] substract(float[] a, float[] b) {
-        float[] out = new float[a.length];
+    public static double[] substract(double[] a, double[] b) {
+        double[] out = new double[a.length];
 
         for (int i = 0; i < a.length; i++) {
             out[i] = a[i] - b[i];

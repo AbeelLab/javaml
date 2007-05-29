@@ -41,8 +41,8 @@ public class DatasetGenerator {
             int x = rg.nextInt(spaceWidth);
             int y = rg.nextInt(spaceWidth);
             for (int j = 0; j < itemsInCluster; j++) {
-                float[] vec = { (float) rg.nextDouble() * clusterWidth + x,
-                        (float) rg.nextDouble() * clusterWidth + y };
+                double[] vec = {  rg.nextDouble() * clusterWidth + x,
+                        rg.nextDouble() * clusterWidth + y };
                 Instance instance = new SimpleInstance(vec);
                 out.addInstance(instance);
             }
@@ -76,19 +76,19 @@ public class DatasetGenerator {
         for (int i = 0; i < itemsPerCluster; i++) {
 
             // lower left
-            float[] vec1 = { (float) ((rg.nextGaussian() * clusterSpread)  + space * small),
+            double[] vec1 = { (float) ((rg.nextGaussian() * clusterSpread)  + space * small),
                     (float) ((rg.nextGaussian() * clusterSpread)  + space * small) };
             out.addInstance(new SimpleInstance(vec1));
 //            // upper left
-            float[] vec2 = { (float) ((rg.nextGaussian() * clusterSpread)  + space * small),
+            double[] vec2 = { (float) ((rg.nextGaussian() * clusterSpread)  + space * small),
                     (float) ((rg.nextGaussian() * clusterSpread)  + space * large) };
             out.addInstance(new SimpleInstance(vec2));
 //            // lower righ
-            float[] vec3 = { (float) ((rg.nextGaussian() * clusterSpread)  + space * large),
+            double[] vec3 = { (float) ((rg.nextGaussian() * clusterSpread)  + space * large),
                     (float) ((rg.nextGaussian() * clusterSpread)  + space * small) };
             out.addInstance(new SimpleInstance(vec3));
 //            // upper right
-            float[] vec4= { (float) ((rg.nextGaussian() * clusterSpread)  + space * large),
+            double[] vec4= { (float) ((rg.nextGaussian() * clusterSpread)  + space * large),
                     (float) ((rg.nextGaussian() * clusterSpread)  + space * large) };
             out.addInstance(new SimpleInstance(vec4));
       }
@@ -108,19 +108,19 @@ public class DatasetGenerator {
         for (int i = 0; i < itemsPerCluster; i++) {
 
             // lower left
-            float[] vec1 = {0.5f, (float) ((rg.nextGaussian() * clusterSpread)  + space * small),
+            double[] vec1 = {0.5f, (float) ((rg.nextGaussian() * clusterSpread)  + space * small),
                     (float) ((rg.nextGaussian() * clusterSpread)  + space * small) };
             out.addInstance(new SimpleInstance(vec1));
 //            // upper left
-            float[] vec2 = {0.0f, (float) ((rg.nextGaussian() * clusterSpread)  + space * small),
+            double[] vec2 = {0.0f, (float) ((rg.nextGaussian() * clusterSpread)  + space * small),
                     (float) ((rg.nextGaussian() * clusterSpread)  + space * large) };
             out.addInstance(new SimpleInstance(vec2));
 //            // lower righ
-            float[] vec3 = {0.5f,(float) ((rg.nextGaussian() * clusterSpread)  + space * large),
+            double[] vec3 = {0.5f,(float) ((rg.nextGaussian() * clusterSpread)  + space * large),
                     (float) ((rg.nextGaussian() * clusterSpread)  + space * small) };
             out.addInstance(new SimpleInstance(vec3));
 //            // upper right
-            float[] vec4= {0.0f, (float) ((rg.nextGaussian() * clusterSpread)  + space * large),
+            double[] vec4= {0.0f, (float) ((rg.nextGaussian() * clusterSpread)  + space * large),
                     (float) ((rg.nextGaussian() * clusterSpread)  + space * large) };
             out.addInstance(new SimpleInstance(vec4));
       }

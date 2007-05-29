@@ -52,9 +52,9 @@ public class ARFF {
         }
         while(line!=null){
             String[]arr=line.split(",");
-            float[]values=new float[arr.length-1];
+            double[]values=new double[arr.length-1];
             for(int i=0;i<arr.length-1;i++){
-                values[i]=Float.parseFloat(arr[i]);
+                values[i]=Double.parseDouble(arr[i]);
             }
             int classValue=Integer.parseInt(arr[arr.length-1]);
             out.addInstance(new SimpleInstance(values,1,true,classValue));

@@ -71,14 +71,14 @@ final public class DatasetTools {
      */
     public static Instance getStandardDeviation(Dataset data) {
         int numAttributes = data.getInstance(0).size();
-        float[] stdValues = new float[numAttributes];
+        double[] stdValues = new double[numAttributes];
         double[] attr = new double[data.size()];
         for (int i = 0; i < numAttributes; i++) {
             StandardDeviation std = new StandardDeviation();
             for (int j = 0; j < data.size(); j++) {
                 attr[j] = data.getInstance(j).getValue(i);
             }
-            stdValues[i] = (float) std.evaluate(attr);
+            stdValues[i] = std.evaluate(attr);
         }
         return new SimpleInstance(stdValues);
 
@@ -96,7 +96,7 @@ final public class DatasetTools {
         if (data.size() == 0)
             return null;
         int instanceLength = data.getInstance(0).size();
-        float[] sumPosition = new float[instanceLength];
+        double[] sumPosition = new double[instanceLength];
         for (int i = 0; i < data.size(); i++) {
             Instance in = data.getInstance(i);
             for (int j = 0; j < instanceLength; j++) {

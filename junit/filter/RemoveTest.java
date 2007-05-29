@@ -36,7 +36,7 @@ import org.junit.Test;
 public class RemoveTest {
     @Test
     public void testRemove(){
-        float[]vals={1,2,3,4,5,6};
+        double[]vals={1,2,3,4,5,6};
         Instance inst=new SimpleInstance(vals);
         Dataset data=new SimpleDataset();
         for(int i=0;i<10;i++){

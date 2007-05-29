@@ -57,7 +57,7 @@ public class NormalizeMidrangeTest {
     }
 
     private void add(Dataset data, float x, float y, float z) {
-        float[] values = { x, y, z };
+        double[] values = { x, y, z };
         SimpleInstance in = new SimpleInstance(values);
         data.addInstance(in);
     }

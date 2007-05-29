@@ -36,8 +36,8 @@ import org.junit.Test;
 public class CosineDistanceTest {
     @Test
     public void testCalculateDistance() {
-        float[]data={1,1,1};
-        float[]data2={0,2,4};
+        double[]data={1,1,1};
+        double[]data2={0,2,4};
         Instance a=new SimpleInstance(data);
         Instance b=new SimpleInstance(data2);
         CosineDistance cs=new CosineDistance();
