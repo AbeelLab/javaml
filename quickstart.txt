@@ -13,25 +13,25 @@ The code snippter below will create a two-dimensional dataset with four clusters
 objects, one in each corner.
 
 Dataset data = new SimpleDataset();
-float small=1.0f/4.0f;
-float large=3.0f/4.0f;
+double small=1.0f/4.0f;
+double large=3.0f/4.0f;
 Random rg = new Random(System.currentTimeMillis());
 for (int i = 0; i < itemsPerCluster; i++) {
     // lower left
-	float[] vec1 = { (float) ((rg.nextGaussian() * clusterSpread)  + space * small),
-    	(float) ((rg.nextGaussian() * clusterSpread)  + space * small) };
+	double[] vec1 = {  ((rg.nextGaussian() * clusterSpread)  + space * small),
+    	 ((rg.nextGaussian() * clusterSpread)  + space * small) };
     data.addInstance(new SimpleInstance(vec1));
 	// upper left
-    float[] vec2 = { (float) ((rg.nextGaussian() * clusterSpread)  + space * small),
-    	(float) ((rg.nextGaussian() * clusterSpread)  + space * large) };
+    double[] vec2 = {  ((rg.nextGaussian() * clusterSpread)  + space * small),
+    	 ((rg.nextGaussian() * clusterSpread)  + space * large) };
     data.addInstance(new SimpleInstance(vec2));
 	// lower righ
-    float[] vec3 = { (float) ((rg.nextGaussian() * clusterSpread)  + space * large),
-    	(float) ((rg.nextGaussian() * clusterSpread)  + space * small) };
+    double[] vec3 = {  ((rg.nextGaussian() * clusterSpread)  + space * large),
+    	 ((rg.nextGaussian() * clusterSpread)  + space * small) };
     data.addInstance(new SimpleInstance(vec3));
     // upper right
-    float[] vec4= { (float) ((rg.nextGaussian() * clusterSpread)  + space * large),
-    	(float) ((rg.nextGaussian() * clusterSpread)  + space * large) };
+    double[] vec4= {  ((rg.nextGaussian() * clusterSpread)  + space * large),
+    	 ((rg.nextGaussian() * clusterSpread)  + space * large) };
     data.addInstance(new SimpleInstance(vec4));
 }
 

@@ -5,12 +5,12 @@
 	<!-- set global properties for this build -->
 	<property name="src" location="." />
 	<property name="build" location="build" />
-	<property name="version" value="0.0.9" />
+	<property name="version" value="0.0.10" />
 	<property name="dist" location="javaml-${version}" />
 
 
 	<target name="javadoc">
-		<javadoc packagenames="net.sf.javaml.*" sourcepath="${src}" defaultexcludes="yes" destdir="${dist}/doc" author="true" version="true" use="true" windowtitle="Java Machine Learning Library ${version}">
+		<javadoc packagenames="net.sf.javaml.*,gov.nist.math.jama.*,nz.ac.waikato.cs.weka.*" sourcepath="${src}" defaultexcludes="yes" destdir="${dist}/doc" author="true" version="true" use="true" windowtitle="Java Machine Learning Library ${version}">
 			<doctitle>
 				<![CDATA[<h1>Java Machine Learning Library ${version} - ${TODAY_LOCAL}</h1>]]></doctitle>
 		<bottom>
