@@ -25,7 +25,9 @@
 
 package net.sf.javaml.core;
 
-public interface Instance {
+import java.io.Serializable;
+
+public interface Instance extends Serializable {
 
     /**
      * This method will convert the instance to a value array. If this is not

@@ -28,6 +28,11 @@ import net.sf.javaml.utils.MathUtils;
 
 public class SimpleInstance implements Instance {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -4602519840193131451L;
+
     private int hashCode = 0;
 
     private double[] values = null;;

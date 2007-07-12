@@ -53,6 +53,10 @@ public class AQBC implements Clusterer {
 
     class TaggedInstance extends SimpleInstance {
 
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 8990262697388049283L;
         private int tag;
 
         TaggedInstance(SimpleInstance i, int tag) {

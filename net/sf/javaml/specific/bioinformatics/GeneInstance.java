@@ -28,6 +28,10 @@ import net.sf.javaml.core.Instance;
 
 public class GeneInstance implements Instance {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -8665589309601582182L;
     private String name;
 
     public GeneInstance(String name) {
