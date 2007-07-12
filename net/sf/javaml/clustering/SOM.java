@@ -35,6 +35,7 @@ import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.SimpleDataset;
 import net.sf.javaml.core.SimpleInstance;
 import net.sf.javaml.distance.DistanceMeasure;
+import net.sf.javaml.distance.EuclideanDistance;
 
 /**
  * An implementation of the Self Organizing Maps algorithm as proposed by
@@ -50,7 +51,7 @@ import net.sf.javaml.distance.DistanceMeasure;
  * 
  */
 public class SOM implements Clusterer {
-    private DistanceMeasure dm;
+    private DistanceMeasure dm=new EuclideanDistance();
 
     /**
      * Calculates the Euclidean distance between two vectors.
