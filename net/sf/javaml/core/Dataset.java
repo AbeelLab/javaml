@@ -86,4 +86,10 @@ public interface Dataset {
      *         dataset is empty
      */
     public Instance getMaximumInstance();
+
+    /**
+     * Returns the number of different classes in the dataset. 
+     * @return
+     */
+    public int getNumClasses();
 }

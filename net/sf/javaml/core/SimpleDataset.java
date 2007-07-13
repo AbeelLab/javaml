@@ -25,6 +25,7 @@
 
 package net.sf.javaml.core;
 
+import java.util.HashSet;
 import java.util.Vector;
 
 /**
@@ -64,7 +65,9 @@ public class SimpleDataset implements Dataset {
      * XXX doc
      */
     public boolean addInstance(Instance instance) {
-
+        if (instance.isClassSet()) {
+            classValues.add(instance.getClassValue());
+        }
         if (instances.size() == 0) {
             lowArray = instance.toArray();
             highArray = instance.toArray();
@@ -143,6 +146,12 @@ public class SimpleDataset implements Dataset {
         }
 
         return out;
+    }
+
+    private HashSet<Integer> classValues = new HashSet<Integer>();
+
+    public int getNumClasses() {
+        return classValues.size();
     }
 
 }
