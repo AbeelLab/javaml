@@ -31,10 +31,12 @@ import java.util.Set;
 import net.sf.javaml.classification.Classifier;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
+import net.sf.javaml.core.Verbose;
 import net.sf.javaml.distance.DistanceMeasure;
 import net.sf.javaml.distance.RBFKernel;
 
-public class BinarySMO implements Classifier {
+public class BinarySMO extends Verbose implements Classifier {
+    
     /**
      * The complexity constant C. (default 1)
      */
@@ -123,13 +125,14 @@ public class BinarySMO implements Classifier {
         m_I4 = null;
 
         // Store the sum of weights
+        verbose("Storing the sum of weights...");
         m_sumOfWeights = 0;
         for (int i = 0; i < insts.size(); i++) {
             m_sumOfWeights += insts.getInstance(i).getWeight();
         }
         // /m_sumOfWeights = insts.sumOfWeights();
 
-        // Set class values
+        verbose("Setting class values...");
         m_class = new double[insts.size()];
         m_iUp = -1;
         m_iLow = -1;
@@ -146,6 +149,7 @@ public class BinarySMO implements Classifier {
             }
         }
 
+        verbose("Checking for missing classes...");
         // Check whether one or both classes are missing
         if ((m_iUp == -1) || (m_iLow == -1)) {
             if (m_iUp != -1) {
@@ -187,6 +191,7 @@ public class BinarySMO implements Classifier {
         m_errors[m_iUp] = -1;
 
         // Build up I1 and I4
+        verbose("Building I1 and I4...");
         for (int i = 0; i < m_class.length; i++) {
             if (m_class[i] == 1) {
                 m_I1.add(i);
@@ -196,6 +201,7 @@ public class BinarySMO implements Classifier {
         }
 
         // Loop to find all the support vectors
+        verbose("Search support vectors...");
         int numChanged = 0;
         boolean examineAll = true;
         while ((numChanged > 0) || examineAll) {

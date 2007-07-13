@@ -31,8 +31,11 @@ import net.sf.javaml.classification.Classifier;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.SimpleDataset;
+import net.sf.javaml.core.Verbose;
 
-public class CrossValidation {
+public class CrossValidation extends Verbose{
+
+  
 
     private Dataset data;
 
@@ -50,6 +53,7 @@ public class CrossValidation {
         this.data = data;
         this.positiveClassValue = positiveClassValue;
         // split data in positive and negative samples
+        verbose("Splitting positive and negative samples...");
         Vector<Integer> positiveSamples = new Vector<Integer>();
         Vector<Integer> negativeSamples = new Vector<Integer>();
         for (int i = 0; i < data.size(); i++) {
@@ -65,7 +69,7 @@ public class CrossValidation {
             throw new RuntimeException("There are not enough samples to perform " + folds
                     + "-fold cross validation on the dataset");
         }
-
+       verbose("Creating folds...");
         Vector<Vector<Integer>> positiveSets = new Vector<Vector<Integer>>();
         Vector<Vector<Integer>> negativeSets = new Vector<Vector<Integer>>();
         for (int i = 0; i < folds; i++) {
@@ -92,8 +96,9 @@ public class CrossValidation {
         }
         int tp = 0, tn = 0, fp = 0, fn = 0;
         for (int i = 0; i < folds; i++) {
+            verbose("Starting fold " + i);
             PerformanceMeasure pm = singleFold(positiveSets, negativeSets, i);
-            // System.out.println("Fold " + i + ":\t" + pm);
+            verbose("Results: " + i + ":\t" + pm);
             tp += pm.truePositives;
             tn += pm.trueNegatives;
             fp += pm.falsePositives;
@@ -119,8 +124,10 @@ public class CrossValidation {
                 }
             }
         }
+        verbose("Building classifier...");
         classifier.buildClassifier(training);
 
+        verbose("Testing positive data...");
         Vector<Integer> valPos = positiveSets.get(fold);
         int tp = 0, fn = 0;
         for (int i = 0; i < valPos.size(); i++) {
@@ -132,6 +139,7 @@ public class CrossValidation {
                 fn++;
             }
         }
+        verbose("Testing negative data...");
         int tn = 0, fp = 0;
         Vector<Integer> valNeg = negativeSets.get(fold);
         for (int i = 0; i < valNeg.size(); i++) {
