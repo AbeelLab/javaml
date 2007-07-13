@@ -22,7 +22,7 @@
  * Project: http://sourceforge.net/projects/java-ml/
  * 
  */
-package net.sf.javaml.specific.weka;
+package net.sf.javaml.tools.weka;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -41,7 +41,7 @@ public class ARFF {
     }
 
     public static Dataset readARFF(File file)throws IOException {
-//      FIXME hacked together solution;
+        //      FIXME hacked together solution;
         //skip everything empty or with @ in front
         //read all data and make the last one the classvalue
         BufferedReader in =new BufferedReader(new FileReader(file));
