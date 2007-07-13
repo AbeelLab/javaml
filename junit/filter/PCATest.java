@@ -75,8 +75,8 @@ public class PCATest {
         Dataset out = rem.filterDataset(tmp);
         // System.out.println("JML "+out);
         for (int i = 0; i < out.size(); i++) {
-            System.out.println("JML: " + out.getInstance(i));
-            System.out.println("JML back: " + rem.unfilterInstance(out.getInstance(i)));
+            System.out.println("PCATest-JML: " + out.getInstance(i));
+            System.out.println("PCATest-JML back: " + rem.unfilterInstance(out.getInstance(i)));
         }
 
         
