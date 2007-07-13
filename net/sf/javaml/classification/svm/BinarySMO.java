@@ -36,7 +36,7 @@ import net.sf.javaml.distance.DistanceMeasure;
 import net.sf.javaml.distance.RBFKernel;
 
 public class BinarySMO extends Verbose implements Classifier {
-    
+
     /**
      * The complexity constant C. (default 1)
      */
@@ -232,11 +232,13 @@ public class BinarySMO extends Verbose implements Classifier {
 
                 // This is the code for Modification 2 from Keerthi et al.'s
                 // paper
-                /*
-                 * boolean innerLoopSuccess = true; numChanged = 0; while
-                 * ((m_bUp < m_bLow - 2 * m_tol) && (innerLoopSuccess == true)) {
-                 * innerLoopSuccess = takeStep(m_iUp, m_iLow, m_errors[m_iLow]); }
-                 */
+
+                boolean innerLoopSuccess = true;
+                numChanged = 0;
+                while ((m_bUp < m_bLow - 2 * m_tol) && (innerLoopSuccess == true)) {
+                    innerLoopSuccess = takeStep(m_iUp, m_iLow, m_errors[m_iLow]);
+                }
+
             }
 
             if (examineAll) {
