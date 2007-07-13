@@ -26,7 +26,7 @@ package net.sf.javaml.classification;
 
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.utils.Optimization;
+import net.sf.javaml.utils.ActiveSetsOptimization;
 import nz.ac.waikato.cs.weka.Utils;
 
 /**
@@ -344,7 +344,7 @@ public class Logistic implements Classifier {
     // m_MaxIts = newMaxIts;
     // }
 
-    private class OptEng extends Optimization {
+    private class OptEng extends ActiveSetsOptimization {
         /** Weights of instances in the data */
         private double[] weights;
 
