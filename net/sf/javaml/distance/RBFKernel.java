@@ -35,11 +35,11 @@ import net.sf.javaml.core.Instance;
  * @author Thomas Abeel
  * 
  */
-public class RBFKernelSimilarity extends AbstractSimilarity {
+public class RBFKernel extends AbstractSimilarity {
 
     private double gamma = 0.01;
 
-    public RBFKernelSimilarity() {
+    public RBFKernel() {
         this(0.01);
     }
 
@@ -48,7 +48,7 @@ public class RBFKernelSimilarity extends AbstractSimilarity {
      * 
      * @param gamma
      */
-    public RBFKernelSimilarity(double gamma) {
+    public RBFKernel(double gamma) {
         this.gamma = gamma;
     }
 

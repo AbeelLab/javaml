@@ -32,7 +32,7 @@ public class RBFKernelDistance extends AbstractDistance {
     
     public double calculateDistance(Instance x, Instance y) {
         
-        return 1-new RBFKernelSimilarity().calculateDistance(x, y);
+        return 1-new RBFKernel().calculateDistance(x, y);
     }
 
     public double getMaximumDistance(Dataset data) {
