@@ -158,7 +158,7 @@ public class SimpleDataset implements Dataset {
     /**
      * Provides an iterator over all Instances in this Dataset.
      */
-    public Iterator iterator() {
+    public Iterator<Instance> iterator() {
        return instances.iterator();
     }
 

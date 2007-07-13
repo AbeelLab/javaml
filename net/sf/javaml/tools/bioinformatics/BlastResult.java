@@ -174,6 +174,7 @@ public class BlastResult extends AbstractDistance implements Dataset {
     /**
      * Gives an iterator over all genes in this BlastResult.
      */
+    @SuppressWarnings("unchecked")
     public Iterator iterator() {
         return genes.iterator();
     }
