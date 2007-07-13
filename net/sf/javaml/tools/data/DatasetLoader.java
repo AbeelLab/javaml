@@ -86,13 +86,13 @@ public class DatasetLoader {
                     values[i] = Float.parseFloat(arr[i]);
                 } catch (NumberFormatException e) {
                     System.err.println("Invalid data on line " + lineCount + " column " + i);
-                    System.err.println("Line:"+ line);
-                    System.err.println("Offending input: "+arr[i]);
-                    throw new RuntimeException("Invalid data file "+f);
+                    System.err.println("Line:" + line);
+                    System.err.println("Offending input: " + arr[i]);
+                    throw new RuntimeException("Invalid data file " + f);
                 }
             }
             out.addInstance(new SimpleInstance(values));
-            line=in.readLine();
+            line = in.readLine();
             while (line != null && line.length() == 0) {
                 lineCount++;
                 line = in.readLine();
@@ -125,7 +125,6 @@ public class DatasetLoader {
         while (line != null && line.length() == 0) {
             lineCount++;
             line = in.readLine();
-            System.err.println("Reading empty X");
         }
         Dataset out = new SimpleDataset();
 
@@ -178,7 +177,6 @@ public class DatasetLoader {
             while (line != null && line.length() == 0) {
                 lineCount++;
                 line = in.readLine();
-                System.err.println("Reading empty Y");
             }
 
         }
