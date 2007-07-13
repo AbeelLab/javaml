@@ -26,6 +26,7 @@
 package net.sf.javaml.core;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Vector;
 
 /**
@@ -152,6 +153,13 @@ public class SimpleDataset implements Dataset {
 
     public int getNumClasses() {
         return classValues.size();
+    }
+
+    /**
+     * Provides an iterator over all Instances in this Dataset.
+     */
+    public Iterator iterator() {
+       return instances.iterator();
     }
 
 }

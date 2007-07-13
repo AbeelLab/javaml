@@ -25,7 +25,7 @@
 
 package net.sf.javaml.core;
 
-public interface Dataset {
+public interface Dataset extends Iterable {
 
     /**
      * Add an instance to this dataset. The compatibility of the new item with

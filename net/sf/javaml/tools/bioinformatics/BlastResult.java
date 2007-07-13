@@ -24,13 +24,12 @@
  */
 package net.sf.javaml.tools.bioinformatics;
 
-
-
 import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Vector;
 
 import net.sf.javaml.core.Dataset;
@@ -41,7 +40,7 @@ public class BlastResult extends AbstractDistance implements Dataset {
     /**
      * The mapping of gene names to indices in the mapping
      */
-     private HashMap<String, Integer> mapping;
+    private HashMap<String, Integer> mapping;
 
     /**
      * The collection of gene instances, they have the same index as in the
@@ -53,9 +52,8 @@ public class BlastResult extends AbstractDistance implements Dataset {
      * The mapping of two gene indices to a distance. This distance is a
      * derivative of the BLAST e-value.
      */
-     private HashMap<Point, Double> distances;
+    private HashMap<Point, Double> distances;
 
-    
     /**
      * XXX DOC
      * 
@@ -70,7 +68,7 @@ public class BlastResult extends AbstractDistance implements Dataset {
             int index = 0;
             mapping = new HashMap<String, Integer>();
             genes = new Vector<GeneInstance>();
-            distances=new HashMap<Point,Double>();
+            distances = new HashMap<Point, Double>();
             while (line != null) {
 
                 String[] arr = line.split("\t");
@@ -91,7 +89,7 @@ public class BlastResult extends AbstractDistance implements Dataset {
                         maxDistance = dist;
                     if (dist < minDistance)
                         minDistance = dist;
-                    if(!distances.containsKey(new Point(x,y))&&!distances.containsKey(new Point(y,x))){
+                    if (!distances.containsKey(new Point(x, y)) && !distances.containsKey(new Point(y, x))) {
                         distances.put(new Point(x, y), dist);
                     }
                 } catch (RuntimeException e) {
@@ -101,7 +99,6 @@ public class BlastResult extends AbstractDistance implements Dataset {
                 line = in.readLine();
             }
             in.close();
-            
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -110,7 +107,7 @@ public class BlastResult extends AbstractDistance implements Dataset {
 
     }
 
-   private double calculateDist(String string) {
+    private double calculateDist(String string) {
         double value = Double.parseDouble(string);
         return value;
         // value = 1 / Math.pow(Math.abs(Math.log10(value)), 1.0 /
@@ -149,8 +146,6 @@ public class BlastResult extends AbstractDistance implements Dataset {
 
     private double minDistance = 1;
 
-    
-
     public double getMaximumDistance(Dataset data) {
         return maxDistance;
     }
@@ -174,6 +169,13 @@ public class BlastResult extends AbstractDistance implements Dataset {
 
     public int getNumClasses() {
         return 1;
+    }
+
+    /**
+     * Gives an iterator over all genes in this BlastResult.
+     */
+    public Iterator iterator() {
+        return genes.iterator();
     }
 
 }
