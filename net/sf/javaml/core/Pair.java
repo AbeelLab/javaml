@@ -42,13 +42,11 @@ public class Pair<S, T> {
     private T y;
 
     private int hashCode;
-    private String string;
-    
     public Pair(S x, T y) {
         this.x = x;
         this.y = y;
-        this.string="[" + x.toString() + ";" + y.toString() + "]";
-        this.hashCode=x.hashCode() * y.hashCode();
+        
+        this.hashCode=x.hashCode() + y.hashCode();
     }
 
     @Override
@@ -64,6 +62,6 @@ public class Pair<S, T> {
 
     @Override
     public String toString() {
-        return string;
+        return "[" + x.toString() + ";" + y.toString() + "]";
     }
 }
