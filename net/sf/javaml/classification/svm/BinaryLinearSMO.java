@@ -33,7 +33,6 @@ import net.sf.javaml.classification.Classifier;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.Verbose;
-import net.sf.javaml.distance.CachedDistance;
 import net.sf.javaml.distance.DistanceMeasure;
 import net.sf.javaml.distance.LinearKernel;
 
@@ -110,7 +109,7 @@ public class BinaryLinearSMO extends Verbose implements Classifier {
     
     public BinaryLinearSMO(){
         this.m_C=1.0;
-        this.m_kernel=new CachedDistance(new LinearKernel());
+        this.m_kernel=new LinearKernel();
     }
     
     public BinaryLinearSMO(double C,DistanceMeasure dm){
