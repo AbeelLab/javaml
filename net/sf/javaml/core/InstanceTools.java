@@ -24,16 +24,36 @@
  */
 package net.sf.javaml.core;
 
+import java.util.Random;
+
 public class InstanceTools {
 
-    
-    public static Instance normalizeMidrange(double normalMiddle,double normalRange,Instance min,Instance max,Instance instance){
-        double[] out=new double[instance.size()];
-        for(int i=0;i<out.length;i++){
-            double range=Math.abs(max.getValue(i)-min.getValue(i));
-            double middle=Math.abs(max.getValue(i)+min.getValue(i))/2;
-            out[i]=((instance.getValue(i)-middle)/range)*normalRange+normalMiddle;
+    public static Instance normalizeMidrange(double normalMiddle, double normalRange, Instance min, Instance max,
+            Instance instance) {
+        double[] out = new double[instance.size()];
+        for (int i = 0; i < out.length; i++) {
+            double range = Math.abs(max.getValue(i) - min.getValue(i));
+            double middle = Math.abs(max.getValue(i) + min.getValue(i)) / 2;
+            out[i] = ((instance.getValue(i) - middle) / range) * normalRange + normalMiddle;
         }
-        return new SimpleInstance(out,instance.getWeight(),instance.isClassSet(),instance.getClassValue());
+        return new SimpleInstance(out, instance.getWeight(), instance.isClassSet(), instance.getClassValue());
+    }
+
+    private static Random rg = new Random(System.currentTimeMillis());
+
+    /**
+     * Creates a random instance with the given number of attributes. The values
+     * of all attributes are between 0 and 1.
+     * 
+     * @param length
+     *            the number of attributes in the instance.
+     * @return a random instance
+     */
+    public static Instance randomInstance(int length) {
+        double[] values = new double[length];
+        for (int i = 0; i < values.length; i++) {
+            values[i] = rg.nextDouble();
+        }
+        return new SimpleInstance(values);
     }
 }
