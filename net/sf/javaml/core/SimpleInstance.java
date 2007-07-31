@@ -99,9 +99,8 @@ public class SimpleInstance implements Instance {
         this.weight = weight;
         this.classSet = classSet;
         this.classValue = classValue;
-        for (double f : values) {
-            hashCode += f;
-        }
+        this.hashCode=this.toString().hashCode();
+        
 
     }
 
