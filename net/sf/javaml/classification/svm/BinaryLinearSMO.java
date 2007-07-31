@@ -33,6 +33,7 @@ import net.sf.javaml.classification.Classifier;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.Verbose;
+import net.sf.javaml.distance.CachedDistance;
 import net.sf.javaml.distance.DistanceMeasure;
 import net.sf.javaml.distance.LinearKernel;
 
@@ -100,80 +101,23 @@ import net.sf.javaml.distance.LinearKernel;
  * 
  * <p/> <!-- technical-bibtex-end -->
  * 
- * <!-- options-start --> Valid options are: <p/>
- * 
- * <pre> -D
- *  If set, classifier is run in debug mode and
- *  may output additional info to the console</pre>
- * 
- * <pre> -no-checks
- *  Turns off all checks - use with caution!
- *  Turning them off assumes that data is purely numeric, doesn't
- *  contain any missing values, and has a nominal class. Turning them
- *  off also means that no header information will be stored if the
- *  machine is linear. Finally, it also assumes that no instance has
- *  a weight equal to 0.
- *  (default: checks on)</pre>
- * 
- * <pre> -C &lt;double&gt;
- *  The complexity constant C. (default 1)</pre>
- * 
- * <pre> -N
- *  Whether to 0=normalize/1=standardize/2=neither. (default 0=normalize)</pre>
- * 
- * <pre> -L &lt;double&gt;
- *  The tolerance parameter. (default 1.0e-3)</pre>
- * 
- * <pre> -P &lt;double&gt;
- *  The epsilon for round-off error. (default 1.0e-12)</pre>
- * 
- * <pre> -M
- *  Fit logistic models to SVM outputs. </pre>
- * 
- * <pre> -V &lt;double&gt;
- *  The number of folds for the internal
- *  cross-validation. (default -1, use training data)</pre>
- * 
- * <pre> -W &lt;double&gt;
- *  The random number seed. (default 1)</pre>
- * 
- * <pre> -K &lt;classname and parameters&gt;
- *  The Kernel to use.
- *  (default: weka.classifiers.functions.supportVector.PolyKernel)</pre>
- * 
- * <pre> 
- * Options specific to kernel weka.classifiers.functions.supportVector.PolyKernel:
- * </pre>
- * 
- * <pre> -D
- *  Enables debugging output (if available) to be printed.
- *  (default: off)</pre>
- * 
- * <pre> -no-checks
- *  Turns off all checks - use with caution!
- *  (default: checks on)</pre>
- * 
- * <pre> -C &lt;num&gt;
- *  The size of the cache (a prime number), 0 for full cache and 
- *  -1 to turn it off.
- *  (default: 250007)</pre>
- * 
- * <pre> -E &lt;num&gt;
- *  The Exponent to use.
- *  (default: 1.0)</pre>
- * 
- * <pre> -L
- *  Use lower-order terms.
- *  (default: no)</pre>
- * 
- * <!-- options-end -->
- * 
  * @author Eibe Frank (eibe@cs.waikato.ac.nz)
  * @author Shane Legg (shane@intelligenesis.net) (sparse vector code)
  * @author Stuart Inglis (stuart@reeltwo.com) (sparse vector code)
- * @version $Revision: 1.65 $
+ * @author Thomas Abeel (modification for Java-ML) 
  */
 public class BinaryLinearSMO extends Verbose implements Classifier {
+    
+    public BinaryLinearSMO(){
+        this.m_C=1.0;
+        this.m_kernel=new CachedDistance(new LinearKernel());
+    }
+    
+    public BinaryLinearSMO(double C,DistanceMeasure dm){
+        this.m_C=C;
+        this.m_kernel=dm;
+        
+    }
     /**
      * The complexity constant C. (default 1)
      */
@@ -197,7 +141,7 @@ public class BinaryLinearSMO extends Verbose implements Classifier {
     /**
      * Kernel to use
      */
-    private DistanceMeasure m_kernel = new LinearKernel();
+    private DistanceMeasure m_kernel =null;
 
     /** The Lagrange multipliers. */
     private double[] m_alpha;
