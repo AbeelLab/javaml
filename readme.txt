@@ -4,7 +4,7 @@ licensed under GNU-GPL.
 
 More elaborate documentation can be found on the documentation website for 
 the project:
-http://java-ml.sourceforge.net/ or http://www.abeel.be/java-ml/
+http://java-ml.sourceforge.net/ or http://www.abeel.be/
 
 or in the API documentation http://www.abeel.be/java-ml/api/
 
@@ -18,9 +18,6 @@ or in the API documentation http://www.abeel.be/java-ml/api/
 
 0. Releases
 ===========
-We do a weekly release each Wednesday. This document contains the last 
-information regarding the status of all algorithms in the release.
-
 version ~ date ~ revision
 0.0.1 ~ 2007-03-21 ~ 323
 0.0.2 ~ 2007-03-28 ~ 371
@@ -32,6 +29,7 @@ version ~ date ~ revision
 0.0.8 ~ 2007-05-09 ~ 656
 0.0.9 ~ 2007-05-16 ~ 660
 0.0.10 ~ 2007-05-30 ~ 681
+0.0.11 ~ 2007-07-11 ~ ...
 
 1. Algorithms
 =============
@@ -45,13 +43,16 @@ classes and other functions are not described here.
 
 1.1 First draft implementation. (may or may not work)
 -----------------------------------------------------
-net.sf.classification.svm.SMOKeerthi
-net.sf.classification.svm.SMOPlatt
-net.sf.classification.evaluation.CrossValidation
 net.sf.clustering.CAST
+net.sf.classification.Logistic
 
 1.2. Working implementation (work on a small test)
 --------------------------------------------------
+net.sf.classification.evaluation.CrossValidation
+net.sf.classification.svm.BinaryLinearSMO
+net.sf.classification.svm.BinarySMO
+
+
 net.sf.clustering.mcl.MCL
 net.sf.clustering.AQBC
 net.sf.clustering.Ant
