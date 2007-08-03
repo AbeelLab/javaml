@@ -392,10 +392,7 @@ public class BinaryLinearSMO extends Verbose implements Classifier {
         m_sparseWeights = null;
         m_sparseIndices = null;
 
-        // // init kernel
-        // m_kernel.buildKernel(m_data);
-
-        // Initialize error cache
+       // Initialize error cache
         m_errors = new double[m_data.size()];
         m_errors[m_iLow] = 1;
         m_errors[m_iUp] = -1;
@@ -414,7 +411,6 @@ public class BinaryLinearSMO extends Verbose implements Classifier {
         int numChanged = 0;
         boolean examineAll = true;
         while ((numChanged > 0) || examineAll) {
-//            verbose("Numchanged = "+numChanged+" "+examineAll);
             numChanged = 0;
             if (examineAll) {
                 for (int i = 0; i < m_alpha.length; i++) {
@@ -476,13 +472,6 @@ public class BinaryLinearSMO extends Verbose implements Classifier {
 
         // We don't need to store the class values either
         m_class = null;
-
-        // // Clean out training data
-        // if (!m_checksTurnedOff) {
-        // m_data = new Instances(m_data, 0);
-        // } else {
-        // m_data = null;
-        // }
 
         // Convert weight vector
         double[] sparseWeights = new double[m_weights.length];
