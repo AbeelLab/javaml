@@ -25,6 +25,7 @@
 
 package net.sf.javaml.core;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Vector;
@@ -35,7 +36,10 @@ import java.util.Vector;
  * @author Thomas Abeel
  * 
  */
-public class SimpleDataset implements Dataset {
+public class SimpleDataset implements Dataset,Serializable {
+   
+    private static final long serialVersionUID = -601979095191981395L;
+
     /**
      * XXX doc
      */
