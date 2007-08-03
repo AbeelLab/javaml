@@ -24,6 +24,8 @@
  */
 package net.sf.javaml.distance;
 
+import java.io.Serializable;
+
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 
@@ -44,7 +46,7 @@ import net.sf.javaml.core.Instance;
  * @author Thomas Abeel
  * 
  */
-public interface DistanceMeasure {
+public interface DistanceMeasure extends Serializable {
     /**
      * XXX add doc
      * 
