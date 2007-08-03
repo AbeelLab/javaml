@@ -37,6 +37,8 @@ import net.sf.javaml.distance.RBFKernel;
 
 public class BinarySMO extends Verbose implements Classifier {
 
+    private static final long serialVersionUID = -3186757526558912403L;
+
     /**
      * The complexity constant C. (default 1)
      */

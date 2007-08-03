@@ -90,6 +90,8 @@ import nz.ac.waikato.cs.weka.Utils;
  */
 public class Logistic implements Classifier {
 
+    private static final long serialVersionUID = -5428362109088506874L;
+
     /** The coefficients (optimized parameters) of the model */
     protected double[][] m_Par;
 
@@ -428,11 +430,11 @@ public class Logistic implements Classifier {
 
             for (int i = 0; i < cls.length; i++) { // ith instance
                 double[] num = new double[m_NumClasses - 1]; // numerator of
-                                                                // [-log(1+sum(exp))]'
+                // [-log(1+sum(exp))]'
                 int index;
                 for (int offset = 0; offset < m_NumClasses - 1; offset++) { // Which
-                                                                            // part
-                                                                            // of x
+                    // part
+                    // of x
                     double exp = 0.0;
                     index = offset * dim;
                     for (int j = 0; j < dim; j++)
@@ -442,7 +444,7 @@ public class Logistic implements Classifier {
 
                 double max = num[Utils.maxIndex(num)];
                 double denom = Math.exp(-max); // Denominator of
-                                                // [-log(1+sum(exp))]'
+                // [-log(1+sum(exp))]'
                 for (int offset = 0; offset < m_NumClasses - 1; offset++) {
                     num[offset] = Math.exp(num[offset] - max);
                     denom += num[offset];
@@ -452,8 +454,8 @@ public class Logistic implements Classifier {
                 // Update denominator of the gradient of -log(Posterior)
                 double firstTerm;
                 for (int offset = 0; offset < m_NumClasses - 1; offset++) { // Which
-                                                                            // part
-                                                                            // of x
+                    // part
+                    // of x
                     index = offset * dim;
                     firstTerm = weights[i] * num[offset];
                     for (int q = 0; q < dim; q++) {
@@ -562,21 +564,22 @@ public class Logistic implements Classifier {
             m_Data[i][0] = 1;
             int j = 1;
             for (int k = 0; k <= nR; k++) {
-               
-                    double x = current.getValue(k);
-                    m_Data[i][j] = x;
-                    xMean[j] += weights[i] * x;
-                    xSD[j] += weights[i] * x * x;
-                    j++;
-                
+
+                double x = current.getValue(k);
+                m_Data[i][j] = x;
+                xMean[j] += weights[i] * x;
+                xSD[j] += weights[i] * x * x;
+                j++;
+
             }
 
             // Class count
             sY[Y[i]]++;
         }
 
-//        if ((totWeights <= 1) && (nC > 1))
-//            throw new Exception("Sum of weights of instances less than 1, please reweight!");
+        // if ((totWeights <= 1) && (nC > 1))
+        // throw new Exception("Sum of weights of instances less than 1, please
+        // reweight!");
 
         xMean[0] = 0;
         xSD[0] = 1;
@@ -614,13 +617,13 @@ public class Logistic implements Classifier {
 
         double x[] = new double[(nR + 1) * nK];
         double[][] b = new double[2][x.length]; // Boundary constraints, N/A
-                                                // here
+        // here
 
         // Initialize
         for (int p = 0; p < nK; p++) {
             int offset = p * (nR + 1);
             x[offset] = Math.log(sY[p] + 1.0) - Math.log(sY[nK] + 1.0); // Null
-                                                                        // model
+            // model
             b[0][offset] = Double.NaN;
             b[1][offset] = Double.NaN;
             for (int q = 1; q <= nR; q++) {
@@ -677,23 +680,23 @@ public class Logistic implements Classifier {
      *            the instance for which distribution is computed
      * @return the distribution
      */
-    public double[] distributionForInstance(Instance instance)  {
+    public double[] distributionForInstance(Instance instance) {
 
-//        m_ReplaceMissingValues.input(instance);
-//        instance = m_ReplaceMissingValues.output();
-//        m_AttFilter.input(instance);
-//        instance = m_AttFilter.output();
-//        m_NominalToBinary.input(instance);
-//        instance = m_NominalToBinary.output();
+        // m_ReplaceMissingValues.input(instance);
+        // instance = m_ReplaceMissingValues.output();
+        // m_AttFilter.input(instance);
+        // instance = m_AttFilter.output();
+        // m_NominalToBinary.input(instance);
+        // instance = m_NominalToBinary.output();
 
         // Extract the predictor columns into an array
         double[] instDat = new double[m_NumPredictors + 1];
         int j = 1;
         instDat[0] = 1;
         for (int k = 0; k <= m_NumPredictors; k++) {
-//            if (k != m_ClassIndex) {
-                instDat[j++] = instance.getValue(k);
-//            }
+            // if (k != m_ClassIndex) {
+            instDat[j++] = instance.getValue(k);
+            // }
         }
 
         double[] distribution = evaluateProbability(instDat);
@@ -768,27 +771,27 @@ public class Logistic implements Classifier {
     }
 
     public int classifyInstance(Instance instance) {
-       double[] distribution=distributionForInstance(instance);
-       int index=0;
-       double bestProb=distribution[0];
-       for(int i=1;i<distribution.length;i++){
-           if(distribution[i]>bestProb){
-               bestProb=distribution[i];
-               index=i;
-           }
-       }
-       return index;
+        double[] distribution = distributionForInstance(instance);
+        int index = 0;
+        double bestProb = distribution[0];
+        for (int i = 1; i < distribution.length; i++) {
+            if (distribution[i] > bestProb) {
+                bestProb = distribution[i];
+                index = i;
+            }
+        }
+        return index;
     }
 
-//    /**
-//     * Main method for testing this class.
-//     * 
-//     * @param argv
-//     *            should contain the command line arguments to the scheme (see
-//     *            Evaluation)
-//     */
-//    public static void main(String[] argv) {
-//        runClassifier(new Logistic(), argv);
-//    }
+    // /**
+    // * Main method for testing this class.
+    // *
+    // * @param argv
+    // * should contain the command line arguments to the scheme (see
+    // * Evaluation)
+    // */
+    // public static void main(String[] argv) {
+    // runClassifier(new Logistic(), argv);
+    // }
 
 }

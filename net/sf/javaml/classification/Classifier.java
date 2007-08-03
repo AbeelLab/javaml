@@ -24,10 +24,12 @@
  */
 package net.sf.javaml.classification;
 
+import java.io.Serializable;
+
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 
-public interface Classifier {
+public interface Classifier extends Serializable {
     /**
      * Create a classifier from the given dataset.
      * 

@@ -107,6 +107,8 @@ import net.sf.javaml.distance.LinearKernel;
  */
 public class BinaryLinearSMO extends Verbose implements Classifier {
     
+    private static final long serialVersionUID = 1202307139516461728L;
+
     public BinaryLinearSMO(){
         this.m_C=1.0;
         this.m_kernel=new LinearKernel();
