@@ -33,9 +33,6 @@ import java.util.Vector;
 
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.SimpleDataset;
-import net.sf.javaml.core.SimpleInstance;
-import net.sf.javaml.distance.DistanceMeasure;
-import net.sf.javaml.distance.EuclideanDistance;
 
 /**
  * An implementation of the Self Organizing Maps algorithm as proposed by
@@ -51,8 +48,6 @@ import net.sf.javaml.distance.EuclideanDistance;
  * 
  */
 public class SOM implements Clusterer {
-    private DistanceMeasure dm=new EuclideanDistance();
-
     /**
      * Calculates the Euclidean distance between two vectors.
      * 
@@ -63,7 +58,11 @@ public class SOM implements Clusterer {
      * @return double - returns the distance between two vectors, x and y
      */
     private double getDistance(double[] x, double[] y) {
-        return dm.calculateDistance(new SimpleInstance(x), new SimpleInstance(y));
+        double sum = 0;
+        for (int i = 0; i < x.length; i++) {
+            sum += (y[i] - x[i]) * (y[i] - x[i]);
+        }
+        return Math.sqrt(sum);
 
     }
 
@@ -85,27 +84,6 @@ public class SOM implements Clusterer {
             cacheVector = new double[vectorSize];
             sizeVector = cacheVector.length;
         }
-
-        // /**
-        // * Calculates the square of Euclidean distance between two vectors. It
-        // * is faster to calculate the square of Euclidean distance than the
-        // * distance itself.
-        // *
-        // * @param double[]
-        // * x - 1st vector.
-        // * @param double[]
-        // * y - 2nd vector.
-        // * @return double - returns the square of distance between x and y
-        // * vectors.
-        // */
-        // private double getSquareDistance(double[] x, double[] y) {
-        // distCache = 0.0;
-        // distCacheSize = x.length;
-        // for (int i = 0; i < distCacheSize; i++) {
-        // distCache += (x[i] - y[i]) * (x[i] - y[i]);
-        // }
-        // return distCache;
-        // }
 
         /**
          * Calculates the exponential learning-rate parameter value.
