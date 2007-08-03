@@ -372,7 +372,7 @@ public class BinaryLinearSMO extends Verbose implements Classifier {
 
         // If machine is linear, reserve space for weights
         // if (m_KernelIsLinear) {
-        m_weights = new double[m_data.size()];
+        m_weights = new double[m_data.getInstance(0).size()];
         // } else {
         // m_weights = null;
         // }
