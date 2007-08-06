@@ -42,6 +42,10 @@ import net.sf.javaml.core.Pair;
  */
 public class CachedDistance implements DistanceMeasure {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 8794275694780229816L;
     private DistanceMeasure dm = null;
 
     public CachedDistance(DistanceMeasure dm) {

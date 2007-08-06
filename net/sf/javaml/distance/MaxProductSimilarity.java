@@ -38,6 +38,11 @@ import net.sf.javaml.core.Instance;
  */
 public class MaxProductSimilarity extends AbstractSimilarity {
     /**
+     * 
+     */
+    private static final long serialVersionUID = 3737968543405527283L;
+
+    /**
      * XXX doc
      */
     public double calculateDistance(Instance x, Instance y) {

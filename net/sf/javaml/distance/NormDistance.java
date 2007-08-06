@@ -50,6 +50,11 @@ import net.sf.javaml.core.Instance;
  */
 public class NormDistance extends AbstractDistance {
     /**
+     * 
+     */
+    private static final long serialVersionUID = 3431231902618783080L;
+
+    /**
      * XXX add doc
      */
     public NormDistance() {

@@ -42,6 +42,11 @@ import net.sf.javaml.core.Instance;
 public class ManhattanDistance extends AbstractDistance {
 
     /**
+     * 
+     */
+    private static final long serialVersionUID = 4954621120642494177L;
+
+    /**
      * Calculates the Manhattan distance as the sum of the absolute differences
      * of their coordinates.
      * 

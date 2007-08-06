@@ -37,6 +37,10 @@ import net.sf.javaml.core.Instance;
  */
 public class RBFKernel extends AbstractSimilarity {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -4365058705250608462L;
     private double gamma = 0.01;
 
     public RBFKernel() {

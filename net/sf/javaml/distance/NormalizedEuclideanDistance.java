@@ -40,6 +40,10 @@ import net.sf.javaml.core.InstanceTools;
  */
 public class NormalizedEuclideanDistance extends EuclideanDistance {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -6489071802740149683L;
     private Dataset data;
 
     public NormalizedEuclideanDistance(Dataset data) {

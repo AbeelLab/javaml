@@ -36,6 +36,10 @@ import net.sf.javaml.distance.AbstractSimilarity;
  */
 public class BlastSimilarity extends AbstractSimilarity {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 6861024088694827897L;
     private BlastResult data;
     public BlastSimilarity(BlastResult data){
         this.data=data;

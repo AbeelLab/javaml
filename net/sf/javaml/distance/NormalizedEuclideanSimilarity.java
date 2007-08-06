@@ -32,6 +32,10 @@ import net.sf.javaml.core.Instance;
  */
 public class NormalizedEuclideanSimilarity extends AbstractSimilarity {
     /**
+     * 
+     */
+    private static final long serialVersionUID = 3840902505037993972L;
+    /**
      * XXX DOC
      */
     private NormalizedEuclideanDistance dm;

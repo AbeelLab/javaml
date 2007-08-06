@@ -29,6 +29,10 @@ import net.sf.javaml.core.Instance;
 
 public class PolynomialKernel implements DistanceMeasure {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 113839833688979121L;
     private double exponent=1;
     
     public PolynomialKernel(double exponent){

@@ -46,6 +46,11 @@ import net.sf.javaml.core.Instance;
  */
 public class PearsonCorrelationCoefficient extends AbstractSimilarity {
     /**
+     * 
+     */
+    private static final long serialVersionUID = -5805322724874919246L;
+
+    /**
      * XXX DOC
      */
     public double calculateDistance(Instance a, Instance b) {

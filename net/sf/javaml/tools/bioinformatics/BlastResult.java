@@ -38,6 +38,11 @@ import net.sf.javaml.distance.AbstractDistance;
 
 public class BlastResult extends AbstractDistance implements Dataset {
     /**
+     * 
+     */
+    private static final long serialVersionUID = 716029920815914323L;
+
+    /**
      * The mapping of gene names to indices in the mapping
      */
     private HashMap<String, Integer> mapping;

@@ -41,6 +41,11 @@ import net.sf.javaml.core.Instance;
  */
 public class DynamicTimeWarpingSimilarity extends AbstractSimilarity {
     /**
+     * 
+     */
+    private static final long serialVersionUID = -8898553450277603746L;
+
+    /**
      * XXX DOC
      * 
      * @param i

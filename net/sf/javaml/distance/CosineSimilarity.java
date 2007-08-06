@@ -38,6 +38,11 @@ import net.sf.javaml.core.Instance;
  */
 public class CosineSimilarity extends AbstractSimilarity {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 330926456281777694L;
+
     public double calculateDistance(Instance x, Instance y) {
         if (x.size() != y.size()) {
             throw new RuntimeException("Both instances should contain the same number of values.");
