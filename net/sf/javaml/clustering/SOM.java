@@ -33,6 +33,9 @@ import java.util.Vector;
 
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.SimpleDataset;
+import net.sf.javaml.core.WrapperInstance;
+import net.sf.javaml.distance.DistanceMeasure;
+import net.sf.javaml.distance.EuclideanDistance;
 
 /**
  * An implementation of the Self Organizing Maps algorithm as proposed by
@@ -49,7 +52,9 @@ import net.sf.javaml.core.SimpleDataset;
  */
 public class SOM implements Clusterer {
     /**
-     * Calculates the Euclidean distance between two vectors.
+     * Calculates the distance between two vectors using the distance function
+     * that was supplied during creation of the SOM. If no distance measure was
+     * specified, the Euclidean Distance will be used by default.
      * 
      * @param double[]
      *            x - 1st vector.
@@ -58,12 +63,7 @@ public class SOM implements Clusterer {
      * @return double - returns the distance between two vectors, x and y
      */
     private double getDistance(double[] x, double[] y) {
-        double sum = 0;
-        for (int i = 0; i < x.length; i++) {
-            sum += (y[i] - x[i]) * (y[i] - x[i]);
-        }
-        return Math.sqrt(sum);
-
+        return dm.calculateDistance(new WrapperInstance(x), new WrapperInstance(y));
     }
 
     public class JSomMath {
@@ -1021,8 +1021,15 @@ public class SOM implements Clusterer {
 
     private double learningRate;
 
+    private DistanceMeasure dm;
+
     public SOM(int xdim, int ydim, GridType grid, int iterations, double learningRate, int initialRadius,
             LearningType learning, NeighbourhoodFunction nbf) {
+        this(xdim, ydim, grid, iterations, learningRate, initialRadius, learning, nbf, new EuclideanDistance());
+    }
+
+    public SOM(int xdim, int ydim, GridType grid, int iterations, double learningRate, int initialRadius,
+            LearningType learning, NeighbourhoodFunction nbf, DistanceMeasure dm) {
         this.gridType = grid;
         this.learningType = learning;
         this.neighbourhoodFunction = nbf;
@@ -1031,6 +1038,7 @@ public class SOM implements Clusterer {
         this.iterations = iterations;
         this.learningRate = learningRate;
         this.initialRadius = initialRadius;
+        this.dm = dm;
     }
 
     public class GridDataset {
