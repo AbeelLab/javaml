@@ -85,14 +85,11 @@ final public class DatasetTools {
     }
 
     /**
-     * Return the centroid of this cluster when using the given distance
-     * measure.
+     * Return the centroid of this cluster
      * 
-     * @param dm
-     *            the distance measure to use when calculating the centroid.
      * @return the centroid of this dataset
      */
-    public static Instance getCentroid(Dataset data, DistanceMeasure dm) {
+    public static Instance getCentroid(Dataset data) {
         if (data.size() == 0)
             return null;
         int instanceLength = data.getInstance(0).size();
@@ -169,8 +166,8 @@ final public class DatasetTools {
      * @param added
      */
     public static void merge(Dataset data, Dataset added) {
-       for(int i=0;i<added.size();i++){
-           data.addInstance(added.getInstance(i));
+        for (int i = 0; i < added.size(); i++) {
+            data.addInstance(added.getInstance(i));
         }
     }
 
@@ -183,17 +180,17 @@ final public class DatasetTools {
      * @return
      */
     public static Dataset[] filterEmpty(Dataset[] input) {
-//      Filter empty clusters out;
-        int nonEmptyClusterCount=0;
-        for(int i=0;i<input.length;i++){
-            if(input[i].size()>0)
+        // Filter empty clusters out;
+        int nonEmptyClusterCount = 0;
+        for (int i = 0; i < input.length; i++) {
+            if (input[i].size() > 0)
                 nonEmptyClusterCount++;
         }
-        Dataset[]output=new Dataset[nonEmptyClusterCount];
-        int index=0;
-        for(Dataset tmp:input){
-            if(tmp.size()>0){
-                output[index]=tmp;
+        Dataset[] output = new Dataset[nonEmptyClusterCount];
+        int index = 0;
+        for (Dataset tmp : input) {
+            if (tmp.size() > 0) {
+                output[index] = tmp;
                 index++;
             }
         }

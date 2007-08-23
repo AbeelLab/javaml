@@ -189,7 +189,7 @@ public class Ant implements Clusterer {
      * @return mean instance
      */
     private Instance meanH(Dataset heap) {
-        return DatasetTools.getCentroid(heap, dm);
+        return DatasetTools.getCentroid(heap);
     }
 
     /**

@@ -168,7 +168,7 @@ public class KMedoids implements Clusterer {
                 medoids[i] = data.getInstance(rg.nextInt(data.size()));
                 changed = true;
             } else {
-                Instance centroid = DatasetTools.getCentroid(output[i], dm);
+                Instance centroid = DatasetTools.getCentroid(output[i]);
                 Instance oldMedoid = medoids[i];
                 medoids[i] = DatasetTools.getClosest(data, dm, centroid);
                 if (!medoids[i].equals(oldMedoid))

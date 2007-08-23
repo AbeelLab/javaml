@@ -48,7 +48,7 @@ public class SumOfCentroidSimilarities implements ClusterEvaluation {
 
 		Instance[] centroids = new Instance[datas.length];
 		for (int i = 0; i < datas.length; i++) {
-			centroids[i] = DatasetTools.getCentroid(datas[i], dm);
+			centroids[i] = DatasetTools.getCentroid(datas[i]);
 		}
 		double sum = 0;
 		for (int i = 0; i < datas.length; i++) {
