@@ -39,6 +39,15 @@ public class BinarySMO extends Verbose implements Classifier {
 
     private static final long serialVersionUID = -3186757526558912403L;
 
+    
+    public BinarySMO(){
+        this(1.0);
+    }
+    
+    public BinarySMO(double C){
+        this.m_C=C;
+    }
+    
     /**
      * The complexity constant C. (default 1)
      */
