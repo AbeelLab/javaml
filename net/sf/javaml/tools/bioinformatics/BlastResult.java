@@ -184,4 +184,8 @@ public class BlastResult extends AbstractDistance implements Dataset {
         return genes.iterator();
     }
 
+    public void sort(int index) {
+      throw new UnsupportedOperationException("This method is not implemented for the Blast type dataset.");
+        
+    }
 }

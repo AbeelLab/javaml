@@ -92,4 +92,10 @@ public interface Dataset extends Iterable<Instance> {
      * @return
      */
     public int getNumClasses();
+    
+    /**
+     * Sorts the dataset according to the attribute with the given index.
+     * 
+     */
+    public void sort(int index);
 }

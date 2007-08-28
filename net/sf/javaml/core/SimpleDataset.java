@@ -36,8 +36,8 @@ import java.util.Vector;
  * @author Thomas Abeel
  * 
  */
-public class SimpleDataset implements Dataset,Serializable {
-   
+public class SimpleDataset implements Dataset, Serializable {
+
     private static final long serialVersionUID = -601979095191981395L;
 
     /**
@@ -163,7 +163,55 @@ public class SimpleDataset implements Dataset,Serializable {
      * Provides an iterator over all Instances in this Dataset.
      */
     public Iterator<Instance> iterator() {
-       return instances.iterator();
+        return instances.iterator();
+    }
+
+    /**
+     * Sort the dataset on the attribute of the given index.
+     * 
+     * @param index
+     *            index of the sorted attribute
+     */
+    public void sort(int index) {
+        quickSort(index, 0, this.size() - 1);
+    }
+
+    private void quickSort(int index, int left, int right) {
+        if (left < right) {
+            int middle = partition(index, left, right);
+            quickSort(index, left, middle);
+            quickSort(index, middle + 1, right);
+        }
+    }
+
+    private int partition(int index, int l, int r) {
+
+        double pivot = getInstance((l + r) / 2).getValue(index);
+
+        while (l < r) {
+            while ((getInstance(l).getValue(index) < pivot) && (l < r)) {
+                l++;
+            }
+            while ((getInstance(r).getValue(index) > pivot) && (l < r)) {
+                r--;
+            }
+            if (l < r) {
+                swap(l, r);
+                l++;
+                r--;
+            }
+        }
+        if ((l == r) && (getInstance(r).getValue(index) > pivot)) {
+            r--;
+        }
+
+        return r;
+    }
+
+    private void swap(int first, int second) {
+        Instance help = instances.elementAt(first);
+        instances.set(first, instances.get(second));// = m_Objects[second];
+        instances.set(second, help);// m_Objects[second] = help;
     }
 
 }
