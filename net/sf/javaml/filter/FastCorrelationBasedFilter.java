@@ -27,7 +27,6 @@
  */
 package net.sf.javaml.filter;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Vector;
 
@@ -135,7 +134,6 @@ public class FastCorrelationBasedFilter implements Filter {
                                                  */
         }
 
-//        System.out.println("suOrder: " + Arrays.toString(suOrder));
         /* Step 2: Heart of the FCBF algorithm */
 
         /* Initializing the valid array */
@@ -173,9 +171,6 @@ public class FastCorrelationBasedFilter implements Filter {
             if (valid[i] != 0)
                 validIndices.add(suOrder[i]);
 
-//        System.out.println("suOrder" + Arrays.toString(suOrder));
-//        System.out.println("suList" + Arrays.toString(suList));
-//        System.out.println("valid" + Arrays.toString(valid));
         Vector<Integer> toRemove = new Vector<Integer>();
         for (int i = 0; i < numAttrs; i++) {
             toRemove.add(i);
