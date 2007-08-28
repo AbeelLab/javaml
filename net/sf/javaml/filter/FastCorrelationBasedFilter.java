@@ -27,6 +27,7 @@
  */
 package net.sf.javaml.filter;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Vector;
 
@@ -36,7 +37,7 @@ import net.sf.javaml.utils.MathUtils;
 
 /**
  * This class is used to compute the required mathematical computations for the
- * FCBF algorithm. 
+ * FCBF algorithm.
  * 
  * @author Ravi Bhim,ASU.
  * @author Thomas Abeel
@@ -44,10 +45,20 @@ import net.sf.javaml.utils.MathUtils;
 
 public class FastCorrelationBasedFilter implements Filter {
 
+    public FastCorrelationBasedFilter() {
+        this(0.0);
+    }
+
+    private double threshold;
+
+    public FastCorrelationBasedFilter(double threshold) {
+        this.threshold = threshold;
+    }
+
     private Filter remove = null;
 
     public Dataset filterDataset(Dataset data) {
-        int[] toRemove = fcbf(data, 0);
+        int[] toRemove = fcbf(data);
         remove = new RemoveAttributes(toRemove);
         return remove.filterDataset(data);
 
@@ -77,7 +88,7 @@ public class FastCorrelationBasedFilter implements Filter {
      * @param delta
      *            Symmetrical Uncertainity threshold for filtering out features.
      */
-    private int[] fcbf(Dataset data, double delta) {
+    private int[] fcbf(Dataset data) {
         /*
          * STEP 1 a) Initialize the 'sulist', i.e the SU values of all the
          * features with respect to the class. b) Get the length of the valid
@@ -97,7 +108,7 @@ public class FastCorrelationBasedFilter implements Filter {
         for (int i = 0; i < numAttrs; i++) {
             /* Calculating Symmetrical Uncertainty with respect to the class */
             suList[i] = suListDup[i] = SU(data, i, numAttrs);
-            if (suList[i] > delta)
+            if (suList[i] > threshold)
                 len++;
         }
 
@@ -124,7 +135,7 @@ public class FastCorrelationBasedFilter implements Filter {
                                                  */
         }
 
-        // System.out.println("suOrder: "+Arrays.toString(suOrder));
+//        System.out.println("suOrder: " + Arrays.toString(suOrder));
         /* Step 2: Heart of the FCBF algorithm */
 
         /* Initializing the valid array */
@@ -156,11 +167,15 @@ public class FastCorrelationBasedFilter implements Filter {
             }
             fp = getNextElement(fp, len);
         }
-        
+
         Vector<Integer> validIndices = new Vector<Integer>();
         for (int i = 0; i < len; i++)
             if (valid[i] != 0)
                 validIndices.add(suOrder[i]);
+
+//        System.out.println("suOrder" + Arrays.toString(suOrder));
+//        System.out.println("suList" + Arrays.toString(suList));
+//        System.out.println("valid" + Arrays.toString(valid));
         Vector<Integer> toRemove = new Vector<Integer>();
         for (int i = 0; i < numAttrs; i++) {
             toRemove.add(i);
@@ -171,7 +186,7 @@ public class FastCorrelationBasedFilter implements Filter {
             out[i] = toRemove.get(i);
 
         return out;
-       
+
     } // end of fcbf()
 
     private int[] getDiff(Dataset data) {
