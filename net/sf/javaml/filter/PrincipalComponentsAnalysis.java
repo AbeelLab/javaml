@@ -126,11 +126,7 @@ public class PrincipalComponentsAnalysis implements Filter {
      *             if analysis fails
      */
     public Dataset filterDataset(Dataset data) {
-        // can evaluator handle data?
-        // getCapabilities().testWithFail(data);
-
         m_eigenvalues = null;
-        // m_outputNumAtts = -1;
         m_sumOfEigenValues = 0.0;
 
         // delete any attributes with only one distinct value or are all missing
