@@ -49,13 +49,17 @@ public class RemoveAttributes implements Filter {
      *            the indices of the columns that will be removed.
      */
     public RemoveAttributes(int[] indices) {
-        int max = indices[Utils.maxIndex(indices)];
-        binIndices = new boolean[max + 1];
-        count = 0;
-        for (int i = 0; i < indices.length; i++) {
-            if (!binIndices[indices[i]])
-                count++;
-            binIndices[indices[i]] = true;
+        if (indices.length > 0) {
+            int max = indices[Utils.maxIndex(indices)];
+            binIndices = new boolean[max + 1];
+            count = 0;
+            for (int i = 0; i < indices.length; i++) {
+                if (!binIndices[indices[i]])
+                    count++;
+                binIndices[indices[i]] = true;
+            }
+        }else{
+            binIndices=new boolean[0];
         }
     }
 
@@ -71,7 +75,7 @@ public class RemoveAttributes implements Filter {
         double[] newVals = new double[instance.size() - count];
         int index = 0;
         for (int i = 0; i < instance.size(); i++) {
-            if (i>=binIndices.length||!binIndices[i]) {
+            if (i >= binIndices.length || !binIndices[i]) {
                 newVals[index] = instance.getValue(i);
                 index++;
             }
