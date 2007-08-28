@@ -25,7 +25,6 @@
  */
 package net.sf.javaml.clustering;
 
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
@@ -277,7 +276,6 @@ public class SOM implements Clusterer {
          *            The SomNode object added.
          */
         public void addInputVector(SomNode node) {
-            // input.add(node);
             add(node);
         }
 
@@ -289,7 +287,6 @@ public class SOM implements Clusterer {
          * @return SomNode - returns the SomNode object at the specified index.
          */
         public SomNode getSomNodeAt(int index) {
-            // return ((SomNode) input.get(index));
             return ((SomNode) get(index));
         }
 
@@ -604,7 +601,7 @@ public class SOM implements Clusterer {
          */
         public SomNode(String label, double[] values) {
             this.label = label;
-            this.values = (double[]) values.clone();
+            this.values = values.clone();
             location = new double[1];
         }
 
@@ -620,8 +617,8 @@ public class SOM implements Clusterer {
          */
         public SomNode(double[] values, double[] location) {
             label = "";
-            this.values = (double[]) values.clone();
-            this.location = (double[]) location.clone();
+            this.values = values.clone();
+            this.location = location.clone();
         }
 
         /**
@@ -631,7 +628,7 @@ public class SOM implements Clusterer {
          *            values - Sets all the values for this node.
          */
         public void setValues(double[] values) {
-            this.values = (double[]) values.clone();
+            this.values = values.clone();
         }
 
         /**
@@ -640,7 +637,7 @@ public class SOM implements Clusterer {
          * @return double[] - Returns the numerical presentation of this node.
          */
         public double[] getValues() {
-            return ((double[]) values.clone());
+            return values.clone();
         }
 
         /**
@@ -678,7 +675,7 @@ public class SOM implements Clusterer {
          * @return double[] - Returns the location of this node if any.
          */
         public double[] getLocation() {
-            return ((double[]) location.clone());
+            return location.clone();
         }
 
         /**
@@ -693,10 +690,6 @@ public class SOM implements Clusterer {
     }
 
     public class JSomTraining {
-
-        private double length; // caching
-
-        private double lcache; // caching
 
         private int index; // caching
 
@@ -719,10 +712,6 @@ public class SOM implements Clusterer {
         // exponential | linear | inverse
 
         private double width; // initial "width" of training area
-
-        // private int xDim; // number of units in the x-direction
-        //
-        // private int yDim; // number of units in the y-direction
 
         private Random generator;
 
@@ -795,7 +784,6 @@ public class SOM implements Clusterer {
                 // inverse and gaussian
                 doGaussianInvAdaptation();
             }
-            // fireBatchEnd("Training phase");
             return wVector;
         }
 
@@ -815,13 +803,12 @@ public class SOM implements Clusterer {
                 // time.
                 exp = math.expLRP(n, lrate, steps);
                 input = iVector.getNodeValuesAt(generator.nextInt(iVectorSize));
-                index = resolveIndexOfWinningNeuron(input);
+                index = resolveIndexOfWinningNeuron(input, wVector);
                 wLocation = wVector.getNodeLocationAt(index);
                 for (int h = 0; h < wVectorSize; h++) {
                     wVector.setNodeValuesAt(h, math.bubbleAdaptation(input, wVector.getNodeValuesAt(h), wLocation,
                             wVector.getNodeLocationAt(h), wCache, exp));
                 }
-                // fireBatchProgress(n, steps);
             }
         }
 
@@ -841,13 +828,12 @@ public class SOM implements Clusterer {
                 // time.
                 lin = math.linLRP(n, lrate, steps);
                 input = iVector.getNodeValuesAt(generator.nextInt(iVectorSize));
-                index = resolveIndexOfWinningNeuron(input);
+                index = resolveIndexOfWinningNeuron(input, wVector);
                 wLocation = wVector.getNodeLocationAt(index);
                 for (int h = 0; h < wVectorSize; h++) {
                     wVector.setNodeValuesAt(h, math.bubbleAdaptation(input, wVector.getNodeValuesAt(h), wLocation,
                             wVector.getNodeLocationAt(h), wCache, lin));
                 }
-                // fireBatchProgress(n, steps);
             }
         }
 
@@ -869,13 +855,12 @@ public class SOM implements Clusterer {
                 // time.
                 inv = math.invLRP(n, lrate, A, A);
                 input = iVector.getNodeValuesAt(generator.nextInt(iVectorSize));
-                index = resolveIndexOfWinningNeuron(input);
+                index = resolveIndexOfWinningNeuron(input, wVector);
                 wLocation = wVector.getNodeLocationAt(index);
                 for (int h = 0; h < wVectorSize; h++) {
                     wVector.setNodeValuesAt(h, math.bubbleAdaptation(input, wVector.getNodeValuesAt(h), wLocation,
                             wVector.getNodeLocationAt(h), wCache, inv));
                 }
-                // fireBatchProgress(n, steps);
             }
         }
 
@@ -883,21 +868,19 @@ public class SOM implements Clusterer {
          * Does the Gaussian Exponential Adaptation to the Weight Vectors.
          */
         private void doGaussianExpAdaptation() {
-            double[] input;
-            double[] wLocation; // location of a winner node
-            double wCache; // width cache
-            double exp;
+            // update the weightvectors with random instances.
+            // the steps variable is the number of times this update is done
             for (int n = 0; n < steps; n++) {
-                wCache = math.gaussianWidth(width, n, steps);
-                exp = math.expLRP(n, lrate, steps);
-                input = iVector.getNodeValuesAt(generator.nextInt(iVectorSize));
-                index = resolveIndexOfWinningNeuron(input);
-                wLocation = wVector.getNodeLocationAt(index);
+                double wCache = math.gaussianWidth(width, n, steps);
+                double exp = math.expLRP(n, lrate, steps);
+                double[] input = iVector.getNodeValuesAt(generator.nextInt(iVectorSize));
+                index = resolveIndexOfWinningNeuron(input, wVector);
+                // winning node
+                double[] wLocation = wVector.getNodeLocationAt(index);
                 for (int h = 0; h < wVectorSize; h++) {
                     wVector.setNodeValuesAt(h, math.gaussianAdaptation(input, wVector.getNodeValuesAt(h), wLocation,
                             wVector.getNodeLocationAt(h), wCache, exp));
                 }
-                // fireBatchProgress(n, steps);
             }
         }
 
@@ -913,13 +896,12 @@ public class SOM implements Clusterer {
                 wCache = math.gaussianWidth(width, n, steps);
                 lin = math.linLRP(n, lrate, steps);
                 input = iVector.getNodeValuesAt(generator.nextInt(iVectorSize));
-                index = resolveIndexOfWinningNeuron(input);
+                index = resolveIndexOfWinningNeuron(input, wVector);
                 wLocation = wVector.getNodeLocationAt(index);
                 for (int h = 0; h < wVectorSize; h++) {
                     wVector.setNodeValuesAt(h, math.gaussianAdaptation(input, wVector.getNodeValuesAt(h), wLocation,
                             wVector.getNodeLocationAt(h), wCache, lin));
                 }
-                // fireBatchProgress(n, steps);
             }
         }
 
@@ -937,33 +919,13 @@ public class SOM implements Clusterer {
                 wCache = math.gaussianWidth(width, n, steps);
                 inv = math.invLRP(n, lrate, A, A);
                 input = iVector.getNodeValuesAt(generator.nextInt(iVectorSize));
-                index = resolveIndexOfWinningNeuron(input);
+                index = resolveIndexOfWinningNeuron(input, wVector);
                 wLocation = wVector.getNodeLocationAt(index);
                 for (int h = 0; h < wVectorSize; h++) {
                     wVector.setNodeValuesAt(h, math.gaussianAdaptation(input, wVector.getNodeValuesAt(h), wLocation,
                             wVector.getNodeLocationAt(h), wCache, inv));
                 }
-                // fireBatchProgress(n, steps);
             }
-        }
-
-        /*
-         * Finds the winning neuron for this input vector.
-         * 
-         * @param double[] values - values of an input vector. @return int -
-         * index of the winning neuron.
-         */
-        private int resolveIndexOfWinningNeuron(double[] values) {
-            length = getDistance(values, wVector.getNodeValuesAt(0));
-            index = 0;
-            for (int i = 1; i < wVectorSize; i++) {
-                lcache = getDistance(values, wVector.getNodeValuesAt(i));
-                if (lcache < length) {
-                    index = i;
-                    length = lcache;
-                }
-            }
-            return index;
         }
     }
 
@@ -1008,7 +970,7 @@ public class SOM implements Clusterer {
     }
 
     public SOM() {
-        this(5, 2, GridType.HEXAGONAL, 10000, 0.1, 1, LearningType.LINEAR, NeighbourhoodFunction.STEP);
+        this(2, 2, GridType.HEXAGONAL, 1000, 0.1, 8, LearningType.LINEAR, NeighbourhoodFunction.STEP);
     }
 
     private GridType gridType;
@@ -1055,14 +1017,7 @@ public class SOM implements Clusterer {
 
     }
 
-    private GridDataset[] labeledClustering;
-
-    public GridDataset[] getLabeledClustering() {
-        return labeledClustering;
-    }
-
     public Dataset[] executeClustering(Dataset data) {
-
         // hexa || rect
         WeightVectors wV = new WeightVectors(xdim, ydim, data.getInstance(0).size(), gridType.toString());
         InputVectors iV = convertDataset(data);
@@ -1073,27 +1028,12 @@ public class SOM implements Clusterer {
                 neighbourhoodFunction.toString());
         WeightVectors out = jst.doTraining();
 
-        // System.out.println(iV);
-        JSomLabeling labels = new JSomLabeling(out, iV);
-        out = labels.doLabeling();
-        // System.out.println(out);
         Vector<Dataset> clusters = new Vector<Dataset>();
-        Point2D.Double[] locations = new Point2D.Double[wV.size()];
-        for (int i = 0; i < out.size(); i++) {
-            Point2D.Double tmp = new Point2D.Double(out.get(i).getLocation()[0], out.get(i).getLocation()[1]);
-            locations[i] = tmp;
-            // out.get(i).getLocation()[0];
-        }
         for (int i = 0; i < wV.size(); i++) {
             clusters.add(new SimpleDataset());
         }
-        for (int i = 0; i < data.size(); i++) {
-            clusters.get(labels.resolveIndexOfWinningNeuron(iV.getNodeValuesAt(i))).addInstance(data.getInstance(i));
-        }
-        labeledClustering = new GridDataset[clusters.size()];
-        for (int i = 0; i < labeledClustering.length; i++) {
-            labeledClustering[i] = new GridDataset(clusters.get(i), locations[i].x, locations[i].y);
-        }
+
+        out = doLabeling(out, iV, data, clusters);
 
         // Filter empty clusters out;
         int nonEmptyClusterCount = 0;
@@ -1113,90 +1053,40 @@ public class SOM implements Clusterer {
 
     }
 
-    public class JSomLabeling {
+    /**
+     * Does the labeling phase.
+     * 
+     * @return WeightVectors - Returns the labeled weight vectors.
+     */
+    public WeightVectors doLabeling(WeightVectors wVector, InputVectors iVector, Dataset data, Vector<Dataset> clusters) {
 
-        private WeightVectors wVector;
-
-        private InputVectors iVector;
-
-        private double length;
-
-        private double lcache;
-
-        private int iSize; // the number of input vectors
-
-        private int wSize; // the number of weight vectors
-
-        private int index;
-
-        /**
-         * Constructor.
-         * 
-         * @param WeightVectors
-         *            wVector - weight vectors.
-         * @param InputVectors
-         *            iVector - input vectors.
-         */
-        public JSomLabeling(WeightVectors wVector, InputVectors iVector) {
-            this.wVector = wVector;
-            this.iVector = iVector;
-            iSize = iVector.getCount();
-            wSize = wVector.getCount();
+        for (int i = 0; i < data.size(); i++) {
+            int index = resolveIndexOfWinningNeuron(iVector.getNodeValuesAt(i), wVector);
+            clusters.get(index).addInstance(data.getInstance(i));
+            wVector.setNodeLabelAt(index, iVector.getNodeLabelAt(i));
         }
+        return wVector;
+    }
 
-        /**
-         * Does the labeling phase.
-         * 
-         * @return WeightVectors - Returns the labeled weight vectors.
-         */
-        public WeightVectors doLabeling() {
-            for (int i = 0; i < iSize; i++) {
-                wVector.setNodeLabelAt(resolveIndexOfWinningNeuron(iVector.getNodeValuesAt(i)), iVector
-                        .getNodeLabelAt(i));
+    /**
+     * Finds the winning neuron for this input vector. Determines the winning
+     * neuron by calculating the distance of two vectors.
+     * 
+     * @param double[]
+     *            values - values of an input vector.
+     * @return int - index of the winning neuron.
+     */
+    private int resolveIndexOfWinningNeuron(double[] values, WeightVectors wVector) {
+        double bestDistance = getDistance(values, wVector.getNodeValuesAt(0));
+        int index = 0;
+        for (int i = 1; i < wVector.size(); i++) {
+            double dist = getDistance(values, wVector.getNodeValuesAt(i));
+            if (dist < bestDistance) {
+                index = i;
+                bestDistance = dist;
             }
-            return wVector;
         }
-
-        /*
-         * Finds the winning neuron for this input vector. Determines the
-         * winning neuron by calculating the square of Eclidean distance of two
-         * vectors as it will give the same result as the Euclidean distance.
-         * 
-         * @param double[] values - values of an input vector. @return int -
-         * index of the winning neuron.
-         */
-        private int resolveIndexOfWinningNeuron(double[] values) {
-            length = getDistance(values, wVector.getNodeValuesAt(0));
-            index = 0;
-            for (int i = 1; i < wSize; i++) {
-                lcache = getDistance(values, wVector.getNodeValuesAt(i));
-                if (lcache < length) {
-                    index = i;
-                    length = lcache;
-                }
-            }
-            return index;
-        }
-
-        // /**
-        // * Calculates the square of Euclidean distance between two vectors. It
-        // * is faster to calculate the square of Euclidean distance than the
-        // * distance itself.
-        // *
-        // * @param double[]
-        // * x - 1st vector.
-        // * @param double[]
-        // * y - 2nd vector.
-        // * @return double - returns the square of distance between x and y
-        // * vectors.
-        // */
-        // private double getSquareDistance(double[] x, double[] y) {
-        // distCache = 0.0;
-        // for (int i = 0; i < distCacheSize; i++) {
-        // distCache += (x[i] - y[i]) * (x[i] - y[i]);
-        // }
-        // return distCache;
-        // }
+        return index;
     }
 
     private InputVectors convertDataset(Dataset data) {
