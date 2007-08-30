@@ -72,16 +72,17 @@ public class SimpleInstance implements Instance {
 
     @Override
     public String toString() {
-        // TODO optimize using StringBuffer;
-        String out = "[" + values[0];
+        StringBuffer out=new StringBuffer();
+        out.append("[" + values[0]);
         for (int i = 1; i < values.length; i++) {
-            out += ";" + values[i];
+            out.append(";" + values[i]);
         }
-        out += ";w:" + this.weight;
+        out.append(";w:" + this.weight);
         if (this.classSet) {
-            out += ";C:" + this.classValue;
+            out.append(";C:" + this.classValue);
         }
-        return out + "]";
+        out.append("]");
+        return out.toString();
     }
 
     public SimpleInstance(double[] values) {
