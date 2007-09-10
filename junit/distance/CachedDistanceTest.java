@@ -27,7 +27,7 @@ package junit.distance;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.InstanceTools;
 import net.sf.javaml.distance.CachedDistance;
-import net.sf.javaml.distance.DynamicTimeWarpingSimilarity;
+import net.sf.javaml.distance.dtw.DTWSimilarity;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -39,8 +39,8 @@ public class CachedDistanceTest {
     public void testCD(){
         Instance x=InstanceTools.randomInstance(250);
         Instance y=InstanceTools.randomInstance(250);
-        DynamicTimeWarpingSimilarity dm=new DynamicTimeWarpingSimilarity();
-        CachedDistance cd=new CachedDistance(new DynamicTimeWarpingSimilarity());
+        DTWSimilarity dm=new DTWSimilarity();
+        CachedDistance cd=new CachedDistance(new DTWSimilarity());
         double dist=dm.calculateDistance(x, y);
         double cached=cd.calculateDistance(x, y);
         Assert.assertEquals(dist,cached,0.000001);
