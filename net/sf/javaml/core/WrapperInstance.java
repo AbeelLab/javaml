@@ -25,7 +25,7 @@
 package net.sf.javaml.core;
 
 /**
- * The most basic instance imaginable.
+ * The most basic instance.
  * 
  * Only provides the very basics of an instance.
  * 
