@@ -50,6 +50,15 @@ public class Pair<S, T> {
         this.hashCode = (1 << x.hashCode()) + y.hashCode();
     }
 
+    public S x() {
+        return x;
+
+    }
+
+    public T y() {
+        return y;
+    }
+
     @Override
     public boolean equals(Object o) {
         Pair p = (Pair) o;
