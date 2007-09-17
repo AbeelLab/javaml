@@ -73,9 +73,16 @@ public class SimpleDataset implements Dataset, Serializable {
         if (instance.isClassSet()) {
             classValues.add(instance.getClassValue());
         }
-        if (instances.size() == 0) {
-            lowArray = instance.toArray();
-            highArray = instance.toArray();
+
+        // XXX this will not work for complex instances...
+        try {
+            if (instances.size() == 0) {
+                lowArray = instance.toArray();
+                highArray = instance.toArray();
+            }
+        } catch (RuntimeException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
         if (instances.size() > 0 && !instance.isCompatible(instances.get(0))) {
             return false;
@@ -173,6 +180,7 @@ public class SimpleDataset implements Dataset, Serializable {
      *            index of the sorted attribute
      */
     public void sort(int index) {
+        // XXX sorting is only done on the real part of the values
         quickSort(index, 0, this.size() - 1);
     }
 

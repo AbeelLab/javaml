@@ -35,6 +35,7 @@ public interface Instance extends Serializable {
      * 
      * @return
      */
+    @Deprecated
     public double[] toArray();
 
     /**
@@ -46,6 +47,12 @@ public interface Instance extends Serializable {
      */
     public double getValue(int index);
 
+    /**
+     * This method returns the complex values at a given index.
+     * 
+     */
+    public Complex getComplex(int index);
+    
     /**
      * This method return the class value of this instance. If the method
      * <code>isClassMissing</code> returns true, the output of this method is

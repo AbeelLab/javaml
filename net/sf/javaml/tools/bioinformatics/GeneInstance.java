@@ -24,6 +24,7 @@
  */
 package net.sf.javaml.tools.bioinformatics;
 
+import net.sf.javaml.core.Complex;
 import net.sf.javaml.core.Instance;
 
 public class GeneInstance implements Instance {
@@ -73,6 +74,10 @@ public class GeneInstance implements Instance {
 
     public double[] toArray() {
         return null;
+    }
+
+    public Complex getComplex(int index) {
+        return new Complex(getValue(index),0);
     }
 
 }

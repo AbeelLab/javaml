@@ -78,4 +78,8 @@ public class WrapperInstance implements Instance {
         return data;
     }
 
+    public Complex getComplex(int index) {
+        return new Complex(getValue(index),0);
+    }
+
 }

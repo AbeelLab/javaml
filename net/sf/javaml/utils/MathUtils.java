@@ -24,6 +24,8 @@
  */
 package net.sf.javaml.utils;
 
+import net.sf.javaml.core.Complex;
+
 /**
  * A class that provides some utility math methods. - Comparing doubles for
  * equality and order with a precision.
@@ -34,6 +36,18 @@ package net.sf.javaml.utils;
 public class MathUtils {
 
     private static final double epsilon = 1e-6;
+
+    /**
+     * Tests if a is equal to b.
+     * 
+     * @param a
+     *            a Complex number
+     * @param b
+     *            a Complex number
+     */
+    public static boolean eq(Complex a, Complex b) {
+        return eq(a.re, b.re) && eq(a.im, b.im);
+    }
 
     /**
      * Tests if a is equal to b.
@@ -103,10 +117,10 @@ public class MathUtils {
      * @return
      */
     public static boolean eq(double[] me1, double[] me2) {
-        if(me1.length!=me2.length)
+        if (me1.length != me2.length)
             return false;
-        for(int i=0;i<me1.length;i++){
-            if(!MathUtils.eq(me1[i],me2[i]))
+        for (int i = 0; i < me1.length; i++) {
+            if (!MathUtils.eq(me1[i], me2[i]))
                 return false;
         }
         return true;
@@ -119,13 +133,16 @@ public class MathUtils {
      * @return
      */
     public static double min(double[] array) {
-        double min=array[0];
-        for(int i=1;i<array.length;i++){
-           if(array[i]<min)
-                min=array[i];
+        double min = array[0];
+        for (int i = 1; i < array.length; i++) {
+            if (array[i] < min)
+                min = array[i];
         }
         return min;
     }
 
-    
+    public static double log2(double n) {
+        return Math.log(n) / Math.log(2);
+    }
+
 }
