@@ -98,7 +98,7 @@ import net.sf.javaml.distance.LinearKernel;
  * }
  * </pre>
  * 
- * <p/> <!-- technical-bibtex-end -->
+ * <p/>
  * 
  * @author Eibe Frank (eibe@cs.waikato.ac.nz)
  * @author Shane Legg (shane@intelligenesis.net) (sparse vector code)
@@ -110,8 +110,12 @@ public class BinaryLinearSMO extends Verbose implements Classifier {
     private static final long serialVersionUID = 1202307139516461728L;
 
     public BinaryLinearSMO(){
-        this.m_C=1.0;
-        this.m_kernel=new LinearKernel();
+        this(1.0);
+        
+    }
+    
+    public BinaryLinearSMO(double C){
+        this(C,new LinearKernel());
     }
     
     public BinaryLinearSMO(double C,DistanceMeasure dm){
