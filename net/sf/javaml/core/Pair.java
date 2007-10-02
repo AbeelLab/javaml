@@ -59,6 +59,7 @@ public class Pair<S, T> {
         return y;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public boolean equals(Object o) {
         Pair p = (Pair) o;
