@@ -80,8 +80,10 @@ public abstract class AbstractRealWaveletTransform implements Filter {
         double[][] rwt = new double[n][nscale];
         int kscale = 1;
         for (int jo = 1; jo <= noctave; jo++) {
-            for (int jv = 1; jv <= nvoice; jv++) {
+//             System.out.println("Scale: "+scale);
+            for (double jv = 1; jv <= nvoice; jv++) {
                 double qscale = scale * Math.pow(2, jv / nvoice);
+//                 System.out.println("\tQscale="+qscale);
                 double[] omega = new double[xi.length];
                 for (int i = 0; i < xi.length; i++) {
                     omega[i] = n * xi[i] / qscale;
@@ -100,6 +102,7 @@ public abstract class AbstractRealWaveletTransform implements Filter {
                     rwt[i][kscale - 1] = w.getValue(i);
                 }
                 kscale++;
+
             }
             scale *= 2;
         }
