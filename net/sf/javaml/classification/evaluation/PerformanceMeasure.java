@@ -91,10 +91,14 @@ public class PerformanceMeasure {
     /**
      * Constructs a new performance measure using the supplied arguments.
      * 
-     * @param tp the number of true positives
-     * @param tn the number of true negatives
-     * @param fp the number of false positives
-     * @param fn the number of false negatives
+     * @param tp
+     *            the number of true positives
+     * @param tn
+     *            the number of true negatives
+     * @param fp
+     *            the number of false positives
+     * @param fn
+     *            the number of false negatives
      */
     public PerformanceMeasure(double tp, double tn, double fp, double fn) {
         this.truePositives = tp;
@@ -150,13 +154,17 @@ public class PerformanceMeasure {
                         * (this.trueNegatives + this.falsePositives) * (this.falseNegatives + this.truePositives));
     }
 
-    public double getFMeasure(){
+    public double getFMeasure() {
         return getFMeasure(1);
     }
-    
+
     public double getFMeasure(int beta) {
-        return ((beta * beta + 1) * this.getPrecision() * this.getRecall())
+        double f = ((beta * beta + 1) * this.getPrecision() * this.getRecall())
                 / (beta * beta * this.getPrecision() + this.getRecall());
+        if (Double.isNaN(f))
+            return 0;
+        else
+            return f;
     }
 
     public double getQ9() {
