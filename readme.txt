@@ -30,6 +30,7 @@ version ~ date ~ revision
 0.0.9 ~ 2007-05-16 ~ 660
 0.0.10 ~ 2007-05-30 ~ 681
 0.0.11 ~ 2007-07-11 ~ ...
+0.0.12 ~ 2007-10-04 ~ 765
 
 1. Algorithms
 =============
@@ -52,7 +53,6 @@ net.sf.classification.evaluation.CrossValidation
 net.sf.classification.svm.BinaryLinearSMO
 net.sf.classification.svm.BinarySMO
 
-
 net.sf.clustering.mcl.MCL
 net.sf.clustering.AQBC
 net.sf.clustering.Ant
@@ -70,6 +70,22 @@ net.sf.clustering.MultiKMeans
 net.sf.clustering.OPTICS
 net.sf.clustering.SOM
 net.sf.clustering.XMeans
+
+net.sf.filter.NormalizeMidrange
+net.sf.filter.NormalizeMean
+net.sf.filter.PrincipalComponentAnalysis
+net.sf.filter.RemoveAttributes
+net.sf.filter.FastFourierTransform
+net.sf.filter.FastCorrelationBasedFilter
+
+net.sf.filter.discretize.EqualFrequencyBinning
+net.sf.filter.discretize.EqualWidthBinning
+net.sf.filter.discretize.OptimizedBinning
+
+net.sf.filter.wavelet.SombreroWavelet
+net.sf.filter.wavelet.GaussWavelet
+net.sf.filter.wavelet.DerGaussWavelet
+net.sf.filter.wavelet.MorletWavelet
 
 1.3 Mature algorithms (thoroughly tested) 
 -----------------------------------------
