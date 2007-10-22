@@ -48,8 +48,19 @@ public class SimpleInstance implements Instance {
      * 
      * @param instance
      */
+    @Deprecated
     public SimpleInstance(Instance instance) {
         this(instance.toArray(), instance.getWeight(), instance.isClassSet(), instance.getClassValue());
+
+    }
+
+    /**
+     * Copy constructor, this makes a deep copy of the Instance
+     * 
+     * @param instance
+     */
+    public SimpleInstance(SimpleInstance instance) {
+        this(instance.values, instance.getWeight(), instance.isClassSet(), instance.getClassValue());
 
     }
 
@@ -72,7 +83,7 @@ public class SimpleInstance implements Instance {
 
     @Override
     public String toString() {
-        StringBuffer out=new StringBuffer();
+        StringBuffer out = new StringBuffer();
         out.append("[" + values[0]);
         for (int i = 1; i < values.length; i++) {
             out.append(";" + values[i]);
@@ -100,12 +111,10 @@ public class SimpleInstance implements Instance {
         this.weight = weight;
         this.classSet = classSet;
         this.classValue = classValue;
-        this.hashCode=this.values.hashCode();
-        
+        this.hashCode = this.values.hashCode();
 
     }
 
-   
     public double getValue(int index) {
         return values[index];
     }
@@ -142,7 +151,7 @@ public class SimpleInstance implements Instance {
     }
 
     public Complex getComplex(int index) {
-        return new Complex(getValue(index),0);
+        return new Complex(getValue(index), 0);
     }
 
 }
