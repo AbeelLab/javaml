@@ -97,17 +97,34 @@ public class SimpleInstance implements Instance {
     }
 
     public SimpleInstance(double[] values) {
-        this(values, 1.0f);
+        this(values, 1.0);
     }
 
     public SimpleInstance(double[] values, double weight) {
         this(values, weight, false, 0);
     }
 
-    public SimpleInstance(double[] values, double weight, boolean classSet, int classValue) {
+    public SimpleInstance(double[] values, double weight, int classValue) {
+        this(values, weight, true, classValue);
+    }
+
+    /**
+     * Create a new instance that has the weight and class value of the old
+     * instance, but has new values.
+     * 
+     * @param values
+     *            the new values
+     * @param old
+     *            the instance from which to take the weight, and class
+     *            information.
+     */
+    public SimpleInstance(double[] values, Instance old) {
+        this(values, old.getWeight(), old.isClassSet(), old.getClassValue());
+    }
+
+    private SimpleInstance(double[] values, double weight, boolean classSet, int classValue) {
         this.values = new double[values.length];
         System.arraycopy(values, 0, this.values, 0, values.length);
-
         this.weight = weight;
         this.classSet = classSet;
         this.classValue = classValue;

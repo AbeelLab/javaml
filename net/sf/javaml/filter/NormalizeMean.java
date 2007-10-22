@@ -39,65 +39,58 @@ import net.sf.javaml.core.SimpleInstance;
  */
 public class NormalizeMean implements Filter {
 
-	private float[] mean=null;
+    private float[] mean = null;
 
-	private float[] std= null;
+    private float[] std = null;
 
-	public Dataset filterDataset(Dataset data) {
-		if (data.size() == 0)
-			return data;
-		int instanceLength = data.getInstance(0).size();
-		mean = new float[instanceLength];
-		std = new float[instanceLength];
-		for (int i = 0; i < instanceLength; i++) {
-			for (int j = 0; j < data.size(); j++) {
-				mean[i] += data.getInstance(j).getValue(i) / data.size();
-			}
-		}
-		for (int i = 0; i < instanceLength; i++) {
-			for (int j = 0; j < data.size(); j++) {
-				std[i] += (data.getInstance(j).getValue(i) - mean[i])
-						* (data.getInstance(j).getValue(i) - mean[i]);
-			}
-		}
-		for (int i = 0; i < instanceLength; i++) {
-			std[i] = (float) Math.sqrt(std[i] / (data.size() - 1));
-		}
-		Dataset out=new SimpleDataset();
-		for(int i=0;i<data.size();i++){
-			out.addInstance(filterInstance(data.getInstance(i)));
-		}
-		return out;
-	}
+    public Dataset filterDataset(Dataset data) {
+        if (data.size() == 0)
+            return data;
+        int instanceLength = data.getInstance(0).size();
+        mean = new float[instanceLength];
+        std = new float[instanceLength];
+        for (int i = 0; i < instanceLength; i++) {
+            for (int j = 0; j < data.size(); j++) {
+                mean[i] += data.getInstance(j).getValue(i) / data.size();
+            }
+        }
+        for (int i = 0; i < instanceLength; i++) {
+            for (int j = 0; j < data.size(); j++) {
+                std[i] += (data.getInstance(j).getValue(i) - mean[i]) * (data.getInstance(j).getValue(i) - mean[i]);
+            }
+        }
+        for (int i = 0; i < instanceLength; i++) {
+            std[i] = (float) Math.sqrt(std[i] / (data.size() - 1));
+        }
+        Dataset out = new SimpleDataset();
+        for (int i = 0; i < data.size(); i++) {
+            out.addInstance(filterInstance(data.getInstance(i)));
+        }
+        return out;
+    }
 
-	
-	
-	
-	public Instance filterInstance(Instance instance) {
-		if(mean==null||std==null)
-			throw new RuntimeException("You should first call filterDataset for this filter, some parameters are not yet set.");
-        double[] out=new double [instance.size()];
-		for(int i=0;i<out.length;i++){
-			out[i]=(instance.getValue(i)-mean[i])/std[i];
-		}
-		return new SimpleInstance(out, instance.getWeight(), instance.isClassSet(), instance
-                .getClassValue());
-		
-	}
+    public Instance filterInstance(Instance instance) {
+        if (mean == null || std == null)
+            throw new RuntimeException(
+                    "You should first call filterDataset for this filter, some parameters are not yet set.");
+        double[] out = new double[instance.size()];
+        for (int i = 0; i < out.length; i++) {
+            out[i] = (instance.getValue(i) - mean[i]) / std[i];
+        }
+        return new SimpleInstance(out, instance);
 
-
-
+    }
 
     public Instance unfilterInstance(Instance instance) {
-        if(mean==null||std==null)
-            throw new RuntimeException("You should first call filterDataset for this filter, some parameters are not yet set.");
-        double[] out=new double[instance.size()];
-        for(int i=0;i<out.length;i++){
-            //out[i]=(instance.getValue(i)-mean[i])/std[i];
-            out[i]=(instance.getValue(i)*std[i])+mean[i];
+        if (mean == null || std == null)
+            throw new RuntimeException(
+                    "You should first call filterDataset for this filter, some parameters are not yet set.");
+        double[] out = new double[instance.size()];
+        for (int i = 0; i < out.length; i++) {
+            // out[i]=(instance.getValue(i)-mean[i])/std[i];
+            out[i] = (instance.getValue(i) * std[i]) + mean[i];
         }
-        return new SimpleInstance(out, instance.getWeight(), instance.isClassSet(), instance
-                .getClassValue());
+        return new SimpleInstance(out, instance);
     }
 
 }

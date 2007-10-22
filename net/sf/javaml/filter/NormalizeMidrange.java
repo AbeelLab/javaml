@@ -48,8 +48,8 @@ import net.sf.javaml.core.SimpleInstance;
  */
 public class NormalizeMidrange implements Filter {
 
-    private static final double EPSILON=1.0e-6;
-    
+    private static final double EPSILON = 1.0e-6;
+
     /**
      * A normalization filter to the interval [-1,1]
      * 
@@ -61,8 +61,8 @@ public class NormalizeMidrange implements Filter {
     private double normalMiddle, normalRange;
 
     public NormalizeMidrange(double middle, double range) {
-        this.normalMiddle =  middle;
-        this.normalRange =  range;
+        this.normalMiddle = middle;
+        this.normalRange = range;
 
     }
 
@@ -95,23 +95,21 @@ public class NormalizeMidrange implements Filter {
     private Instance filter(Instance tmpInstance) {
         double[] instance = tmpInstance.toArray();
         for (int j = 0; j < instance.length; j++) {
-            if(range[j]<EPSILON){
-                instance[j]=normalMiddle;
-            }else{                
+            if (range[j] < EPSILON) {
+                instance[j] = normalMiddle;
+            } else {
                 instance[j] = ((instance[j] - midrange[j]) / (range[j] / normalRange)) + normalMiddle;
             }
         }
-        return new SimpleInstance(instance, tmpInstance.getWeight(), tmpInstance.isClassSet(), tmpInstance
-                .getClassValue());
+        return new SimpleInstance(instance, tmpInstance);
     }
 
     public Instance unfilterInstance(Instance tmpInstance) {
         double[] instance = tmpInstance.toArray();
         for (int j = 0; j < instance.length; j++) {
-           instance[j] = instance[j] * (range[j] / normalRange) + midrange[j];
+            instance[j] = instance[j] * (range[j] / normalRange) + midrange[j];
         }
-        return new SimpleInstance(instance, tmpInstance.getWeight(), tmpInstance.isClassSet(), tmpInstance
-                .getClassValue());
+        return new SimpleInstance(instance, tmpInstance);
     }
 
     public Instance filterInstance(Instance instance) {

@@ -57,7 +57,7 @@ public class ARFF {
                 values[i]=Double.parseDouble(arr[i]);
             }
             int classValue=Integer.parseInt(arr[arr.length-1]);
-            out.addInstance(new SimpleInstance(values,1,true,classValue));
+            out.addInstance(new SimpleInstance(values,1,classValue));
             line=in.readLine();                        
         }
         return out;

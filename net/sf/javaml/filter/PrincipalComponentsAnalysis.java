@@ -272,7 +272,7 @@ public class PrincipalComponentsAnalysis implements Filter {
                 break;
             }
         }
-        return new SimpleInstance(newVals, instance.getWeight(), instance.isClassSet(), instance.getClassValue());
+        return new SimpleInstance(newVals, instance);
     }
 
     public Instance unfilterInstance(Instance instance) {
@@ -284,7 +284,7 @@ public class PrincipalComponentsAnalysis implements Filter {
             }
             newVals[i] = tempval;
         }
-        return new SimpleInstance(newVals, instance.getWeight(), instance.isClassSet(), instance.getClassValue());
+        return new SimpleInstance(newVals, instance);
     }
 
     public double[] getEigenValues() {

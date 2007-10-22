@@ -171,7 +171,7 @@ public class DatasetLoader {
                 }
             }
 
-            out.addInstance(new SimpleInstance(values, 1.0f, true, classValue));
+            out.addInstance(new SimpleInstance(values, 1.0, classValue));
             lineCount++;
             line = in.readLine();
             while (line != null && line.length() == 0) {

@@ -567,8 +567,7 @@ public class XMeans implements Clusterer {
                     centerValues[j] = (float) val;
                 }
             }
-            m_ClusterCenters[i] = new SimpleInstance(centerValues, centers[i].getWeight(), centers[i].isClassSet(),
-                    centers[i].getClassValue());
+            m_ClusterCenters[i] = new SimpleInstance(centerValues, centers[i]);
 
         }
         return converged;
@@ -593,8 +592,7 @@ public class XMeans implements Clusterer {
                 val = meanOrMode(data, instOfCentIndexes[i], j);
                 centerValues[j] = (float) val;
             }
-            centers[i] = new SimpleInstance(centerValues, centers[i].getWeight(), centers[i].isClassSet(), centers[i]
-                    .getClassValue());
+            centers[i] = new SimpleInstance(centerValues, centers[i]);
         }
     }
 
@@ -876,14 +874,14 @@ public class XMeans implements Clusterer {
         // add random vector to center
         double[] centerValues = center.toArray();
         centerValues = ArrayOperations.add(centerValues, randomValues);
-        children[0] = new SimpleInstance(centerValues, center.getWeight(), center.isClassSet(), center.getClassValue());
+        children[0] = new SimpleInstance(centerValues, center);
         ;
         // substract random vector to center
         centerValues = center.toArray();
         randomValues = new double[center.size()];
         ArrayOperations.fillRandom(randomValues, rg);
         centerValues = ArrayOperations.substract(centerValues, randomValues);
-        children[1] = new SimpleInstance(centerValues, center.getWeight(), center.isClassSet(), center.getClassValue());
+        children[1] = new SimpleInstance(centerValues, center);
         return children;
     }
 

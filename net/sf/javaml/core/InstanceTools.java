@@ -36,7 +36,7 @@ public class InstanceTools {
             double middle = Math.abs(max.getValue(i) + min.getValue(i)) / 2;
             out[i] = ((instance.getValue(i) - middle) / range) * normalRange + normalMiddle;
         }
-        return new SimpleInstance(out, instance.getWeight(), instance.isClassSet(), instance.getClassValue());
+        return new SimpleInstance(out, instance);
     }
 
     private static Random rg = new Random(System.currentTimeMillis());

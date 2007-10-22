@@ -46,7 +46,6 @@
 
 package net.sf.javaml.core;
 
-
 import net.sf.javaml.distance.DistanceMeasure;
 import net.sf.javaml.distance.EuclideanDistance;
 
@@ -105,7 +104,7 @@ public class KDTree {
 
     private Dataset data;
 
-    //private double[][] m_Ranges;
+    // private double[][] m_Ranges;
 
     /**
      * Constructor, copies all options from an existing KDTree.
@@ -132,7 +131,7 @@ public class KDTree {
     public void setInstances(Dataset instances) {
         buildKDTree(instances);
     }
-  
+
     /**
      * Initializes the ranges using all instances of the dataset. Sets m_Ranges.
      * 
@@ -151,14 +150,15 @@ public class KDTree {
         for (int i = 1; i < data.size(); i++) {
             updateRanges(data.getInstance(i), numAtt, ranges);
         }
-      //  m_Ranges = ranges;
+        // m_Ranges = ranges;
         // System.out.println("Initialized ranges");
         // printRanges(m_Ranges);
         return ranges;
     }
+
     /**
-     * Updates the minimum and maximum and width values for all the
-     * attributes based on a new instance.
+     * Updates the minimum and maximum and width values for all the attributes
+     * based on a new instance.
      * 
      * @param instance
      *            the new instance
@@ -192,9 +192,9 @@ public class KDTree {
     }
 
     /**
-     * Used to initialize the ranges. For this the values of the first
-     * instance is used to save time. Sets low and high to the values of the
-     * first instance and width to zero.
+     * Used to initialize the ranges. For this the values of the first instance
+     * is used to save time. Sets low and high to the values of the first
+     * instance and width to zero.
      * 
      * @param instance
      *            the new instance
@@ -219,6 +219,7 @@ public class KDTree {
 
         }
     }
+
     /**
      * Builds the KDTree. It is adviseable to run the replace missing attributes
      * filter on the passed instances first.
@@ -1271,13 +1272,12 @@ public class KDTree {
             double[] extremeValues = new double[candidate.size()];
             for (int i = 0; i < candidate.size(); i++) {
                 if ((competitor.getValue(i) - candidate.getValue(i)) > 0) {
-                    extremeValues[i] =  m_NodeRanges[i][R_MAX];
+                    extremeValues[i] = m_NodeRanges[i][R_MAX];
                 } else {
-                    extremeValues[i] =  m_NodeRanges[i][R_MIN];
+                    extremeValues[i] = m_NodeRanges[i][R_MIN];
                 }
             }
-            Instance extreme = new SimpleInstance(extremeValues, candidate.getWeight(), candidate.isClassSet(),
-                    candidate.getClassValue());
+            Instance extreme = new SimpleInstance(extremeValues, candidate);
             ;
             boolean isFullOwner = dm.calculateDistance(extreme, candidate) < dm.calculateDistance(extreme, competitor);
 
@@ -1300,16 +1300,15 @@ public class KDTree {
             boolean inside = true;
             for (int i = 0; i < x.size(); i++) {
                 if (x.getValue(i) < m_NodeRanges[i][R_MIN]) {
-                    closestPointValues[i] =  m_NodeRanges[i][R_MIN];
+                    closestPointValues[i] = m_NodeRanges[i][R_MIN];
                     inside = false;
                 } else if (x.getValue(i) > m_NodeRanges[i][R_MAX]) {
-                    closestPointValues[i] =  m_NodeRanges[i][R_MAX];
+                    closestPointValues[i] = m_NodeRanges[i][R_MAX];
                     inside = false;
                 }
             }
 
-            Instance closestPoint = new SimpleInstance(closestPointValues, x.getWeight(), x.isClassSet(), x
-                    .getClassValue());
+            Instance closestPoint = new SimpleInstance(closestPointValues, x);
 
             if (!inside)
                 distance = dm.calculateDistance(closestPoint, x);
@@ -1333,7 +1332,7 @@ public class KDTree {
          */
         private void assignSubToCenters(double[][] ranges, Instance[] centers, int[] centList, int[] assignments) {
 
-            // todo: undecided situations
+            // TODO: undecided situations
 
             // WARNING: assignments is "input/output-parameter"
             // should not be null and the following should not happen

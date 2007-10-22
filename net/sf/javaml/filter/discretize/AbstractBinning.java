@@ -34,8 +34,8 @@ import net.sf.javaml.core.SimpleInstance;
 import net.sf.javaml.filter.Filter;
 
 /**
- * A filter that discretizes a range of numeric attributes in the
- * dataset into nominal attributes. Discretization is done by binning. 
+ * A filter that discretizes a range of numeric attributes in the dataset into
+ * nominal attributes. Discretization is done by binning.
  * 
  * @author Len Trigg (trigg@cs.waikato.ac.nz)
  * @author Eibe Frank (eibe@cs.waikato.ac.nz)
@@ -75,7 +75,7 @@ public abstract class AbstractBinning implements Filter {
 
     /** Generate the cutpoints for each attribute */
     private void calculateBorderPoints(Dataset data) {
-        borderPoints=new double[binnedAttributes.size()][];
+        borderPoints = new double[binnedAttributes.size()][];
         for (int i = 0; i < binnedAttributes.size(); i++) {
             borderPoints[i] = calculateBorderPoints(data, binnedAttributes.get(i));
         }
@@ -114,7 +114,8 @@ public abstract class AbstractBinning implements Filter {
                 } else {
 
                     int j = 0;
-                    while (j < borderPoints[binnedAttributes.indexOf(i)].length && currentVal > borderPoints[binnedAttributes.indexOf(i)][j])
+                    while (j < borderPoints[binnedAttributes.indexOf(i)].length
+                            && currentVal > borderPoints[binnedAttributes.indexOf(i)][j])
                         j++;
 
                     vals[index] = j;
@@ -128,7 +129,7 @@ public abstract class AbstractBinning implements Filter {
             }
         }
 
-        return new SimpleInstance(vals, instance.getWeight(), instance.isClassSet(), instance.getClassValue());
+        return new SimpleInstance(vals, instance);
 
     }
 

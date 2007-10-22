@@ -80,7 +80,7 @@ public class RemoveAttributes implements Filter {
                 index++;
             }
         }
-        return new SimpleInstance(newVals, instance.getWeight(), instance.isClassSet(), instance.getClassValue());
+        return new SimpleInstance(newVals, instance);
     }
 
     public Instance unfilterInstance(Instance instance) {
