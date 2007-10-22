@@ -89,7 +89,7 @@ public class SimpleInstance implements Instance {
         this(values, 1.0f);
     }
 
-    public SimpleInstance(double[] values, float weight) {
+    public SimpleInstance(double[] values, double weight) {
         this(values, weight, false, 0);
     }
 
