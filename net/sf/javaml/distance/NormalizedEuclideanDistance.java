@@ -26,7 +26,7 @@ package net.sf.javaml.distance;
 
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.core.InstanceTools;
+import net.sf.javaml.core.SimpleInstance;
 
 /**
  * A normalized version of the Euclidean distance. This distance measure is
@@ -44,6 +44,7 @@ public class NormalizedEuclideanDistance extends EuclideanDistance {
      * 
      */
     private static final long serialVersionUID = -6489071802740149683L;
+
     private Dataset data;
 
     public NormalizedEuclideanDistance(Dataset data) {
@@ -52,11 +53,20 @@ public class NormalizedEuclideanDistance extends EuclideanDistance {
     }
 
     public double calculateDistance(Instance i, Instance j) {
-        Instance normI = InstanceTools.normalizeMidrange(0.5, 1, data.getMinimumInstance(), data.getMaximumInstance(),
-                i);
-        Instance normJ = InstanceTools.normalizeMidrange(0.5, 1, data.getMinimumInstance(), data.getMaximumInstance(),
-                j);
+        Instance normI = normalizeMidrange(0.5, 1, data.getMinimumInstance(), data.getMaximumInstance(), i);
+        Instance normJ = normalizeMidrange(0.5, 1, data.getMinimumInstance(), data.getMaximumInstance(), j);
         return super.calculateDistance(normI, normJ) / Math.sqrt(i.size());
 
+    }
+
+    private Instance normalizeMidrange(double normalMiddle, double normalRange, Instance min, Instance max,
+            Instance instance) {
+        double[] out = new double[instance.size()];
+        for (int i = 0; i < out.length; i++) {
+            double range = Math.abs(max.getValue(i) - min.getValue(i));
+            double middle = Math.abs(max.getValue(i) + min.getValue(i)) / 2;
+            out[i] = ((instance.getValue(i) - middle) / range) * normalRange + normalMiddle;
+        }
+        return new SimpleInstance(out, instance);
     }
 }
