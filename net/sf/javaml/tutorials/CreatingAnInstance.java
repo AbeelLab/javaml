@@ -30,16 +30,18 @@ import net.sf.javaml.core.SimpleInstance;
 
 /**
  * This tutorial shows the very first step in using Java-ML. It will show you
- * how to create an Instance that can later be used in a Dataset and in the
+ * how to create an {@link Instance} that can later be used in a {@link Dataset} and in the
  * machine learning algorithms.
  * 
  * For now we will only work with the simplest variant of Instance, namely a
- * SimpleInstance. This is an instance that has double values as attributes, a
+ * {@link SimpleInstance}. This is an {@link Instance} that has double values as attributes, a
  * weight and optionally a class value.
  * 
  * @see Instance
  * @see SimpleInstance
  * @see InstanceTools
+ * 
+ * @see <a href="http://java-ml.svn.sourceforge.net/viewvc/java-ml/trunk/net/sf/javaml/tutorials/CreatingAnInstance.java?view=markup">Source code</a>
  * 
  * @author Thomas Abeel
  * 
