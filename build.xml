@@ -12,7 +12,12 @@
 
 	
 	<target name="javadoc">
-		<javadoc packagenames="net.sf.javaml.*,gov.nist.math.jama.*,nz.ac.waikato.cs.weka.*" sourcepath="${src}" defaultexcludes="yes" destdir="${dist}/doc" author="true" version="true" use="true" windowtitle="Java Machine Learning Library ${version}">
+		<replaceregexp flags="g" match="Thomas Abeel" replace="Thomas Abeel (&lt;a href=&quot;mailto:thomas@abeel.be&quot;&gt;thomas@abeel.be&lt;&#47;a&gt;)">
+			<fileset dir="${build}/src">
+				<include name="**/*.java" />
+			</fileset>
+		</replaceregexp>
+		<javadoc packagenames="net.sf.javaml.*,gov.nist.math.jama.*,nz.ac.waikato.cs.weka.*" sourcepath="${build}/src" defaultexcludes="yes" destdir="${dist}/doc" author="true" version="true" use="true" windowtitle="Java Machine Learning Library ${version}">
 			<doctitle>
 				<![CDATA[<h1>Java Machine Learning Library ${version} - ${TODAY_LOCAL}</h1>]]></doctitle>
 		<bottom>
@@ -65,12 +70,6 @@
 	<status path="." revisionProperty="revision" />
 </svn>
 <echo message="Building with revision: ${revision}" />
-
-
-
-
-
-
 </target>
 
 <target name="compile" depends="init" description="compile the source ">
@@ -93,13 +92,18 @@
 	</fileset>
 </copy>
 <!-- Replace the SVN.REVISION tag with the current SVN revision number -->
+<echo message="Replacing revision number" />
 <replaceregexp match="%SVN.REVISION%" replace="${revision}">
-
 	<fileset dir="${build}/src">
 		<include name="**/*.java" />
 	</fileset>
 </replaceregexp>
+<!--Replace with emailaddress -->
+<echo message="Replacing mail" />
+
+
 <!--Replace the SVN.HEADER tag with the entire header -->
+<echo message="Replacing headers" />
 <replaceregexp match="%SVN.HEADER%" replace="This file is part of the Java Machine Learning Library${line.separator}
 * ${line.separator}
 * The Java Machine Learning Library is free software; you can redistribute it and/or modify${line.separator}
