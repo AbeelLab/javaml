@@ -91,10 +91,10 @@ For the SVN download you will also need JUnit 4.0 to compile the unit tests.
 ------------
 Since version 0.0.10 we have incorporated the JAMA version 1.0.2 into the library.
 
-* tools.jar
------------
-If you want to use the build script, you have to make sure that tools.jar 
-(bundled with the Sun JDK) is on your classpath.
+* Third party libraries needed to build
+---------------------------------------
+If you want the project yourself, you need several libraries that are required by the build script.
+They can all be found in the devtools/lib directory when checking out the project from the SVN.
 
 3. Requirements
 ===============

@@ -1,25 +1,7 @@
 /**
  * CreatingAnInstance.java
  *
- * This file is part of the Java Machine Learning Library
- * 
- * The Java Machine Learning Library is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * The Java Machine Learning Library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with the Java Machine Learning Library; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * 
- * Copyright (c) 2006-2007, Thomas Abeel
- * 
- * Project: http://sourceforge.net/projects/java-ml/
+ * %SVN.HEADER%
  * 
  */
 package net.sf.javaml.tutorials;
@@ -30,18 +12,20 @@ import net.sf.javaml.core.SimpleInstance;
 
 /**
  * This tutorial shows the very first step in using Java-ML. It will show you
- * how to create an {@link Instance} that can later be used in a {@link Dataset} and in the
- * machine learning algorithms.
+ * how to create an {@link net.sf.javaml.core.Instance} that can later be used in a {@link net.sf.javaml.core.Dataset}
+ * and in the machine learning algorithms.
  * 
  * For now we will only work with the simplest variant of Instance, namely a
- * {@link SimpleInstance}. This is an {@link Instance} that has double values as attributes, a
- * weight and optionally a class value.
+ * {@link net.sf.javaml.core.SimpleInstance}. This is an {@link net.sf.javaml.core.Instance} that has double values
+ * as attributes, a weight and optionally a class value.
  * 
- * @see Instance
- * @see SimpleInstance
- * @see InstanceTools
+ * {@jmlSource}
  * 
- * @see <a href="http://java-ml.svn.sourceforge.net/viewvc/java-ml/trunk/net/sf/javaml/tutorials/CreatingAnInstance.java?view=markup">Source code</a>
+ * @see net.sf.javaml.core.Instance
+ * @see net.sf.javaml.core.SimpleInstance
+ * @see net.sf.javaml.core.InstanceTools
+ * 
+ * @version %SVN.REVISION%
  * 
  * @author Thomas Abeel
  * 
@@ -93,7 +77,7 @@ public class CreatingAnInstance {
         System.out.println("Random instance:");
         System.out.println(random);
         System.out.println();
-        
+
     }
 
 }

@@ -114,7 +114,6 @@ public class MathUtils {
      * 
      * @param me1
      * @param me2
-     * @return
      */
     public static boolean eq(double[] me1, double[] me2) {
         if (me1.length != me2.length)
@@ -130,7 +129,6 @@ public class MathUtils {
      * XXX DOC
      * 
      * @param array
-     * @return
      */
     public static double min(double[] array) {
         double min = array[0];

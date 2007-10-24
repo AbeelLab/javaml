@@ -142,7 +142,6 @@ import gov.nist.math.jama.Matrix;
  * 
  * @author Xin Xu (xx5@cs.waikato.ac.nz)
  * @version $Revision: 1.8 $
- * @see #getTechnicalInformation()
  */
 public abstract class ActiveSetsOptimization {
 

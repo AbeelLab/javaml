@@ -5,19 +5,24 @@
 	<!-- set global properties for this build -->
 	<property name="src" location="." />
 	<property name="build" location="build" />
-	<property name="version" value="0.0.12" />
+	<property name="version" value="0.0.13" />
+	<property name="revision" value="notset" />
+	<property name="statusText" value="notset" />
 	<property name="dist" location="javaml-${version}" />
 
-
+	
 	<target name="javadoc">
 		<javadoc packagenames="net.sf.javaml.*,gov.nist.math.jama.*,nz.ac.waikato.cs.weka.*" sourcepath="${src}" defaultexcludes="yes" destdir="${dist}/doc" author="true" version="true" use="true" windowtitle="Java Machine Learning Library ${version}">
 			<doctitle>
 				<![CDATA[<h1>Java Machine Learning Library ${version} - ${TODAY_LOCAL}</h1>]]></doctitle>
 		<bottom>
-			<![CDATA[<i>Copyright &#169; 2006-2007 - Thomas Abeel - All Rights Reserved.</i>]]></bottom>
-
+			<![CDATA[<i>Copyright &#169; 2006-2007 - <a target="_blank" href="http://www.abeel.be/">Thomas Abeel</a> - All Rights Reserved.</i>]]></bottom>
+	<taglet name="net.sourceforge.taglets.Taglets" path="devtools/lib/ajt-1.8.jar:devtools/lib/taglets.jar" />
 </javadoc>
 </target>
+
+
+
 
 <target name="build" depends="dist,javadoc">
 <delete dir="${build}" />
@@ -28,6 +33,11 @@
 </copy>
 <copy file="commons-math-1.1.jar" todir="${dist}/" />
 
+<zip destfile="${dist}.zip" basedir="${dist}" />
+<tar tarfile="${dist}.tar" basedir="${dist}" excludes="${dist}.zip" />
+<gzip zipfile="${dist}.tar.gz" src="${dist}.tar" />
+<delete file="${dist}.tar" />
+<!--<delete failonerror="false" dir="${dist}" />-->
 </target>
 
 
@@ -38,11 +48,34 @@
 </tstamp>
 <!-- Create the build directory structure used by compile -->
 <mkdir dir="${build}" />
+
+
+<!-- path to the svnant libraries. Usually they will be located in ANT_HOME/lib -->
+<path id="svnant.classpath">
+	<fileset dir="devtools/lib/">
+		<include name="**/*.jar" />
+	</fileset>
+</path>
+
+<!-- load the svn task -->
+<typedef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="svnant.classpath" />
+
+<svn>
+	<update dir="." />
+	<status path="." revisionProperty="revision" />
+</svn>
+<echo message="Building with revision: ${revision}" />
+
+
+
+
+
+
 </target>
 
 <target name="compile" depends="init" description="compile the source ">
 <!-- Compile the java code from ${src} into ${build} -->
-<javac classpath="junit-4.3.1.jar:commons-math-1.1.jar" srcdir="${src}" destdir="${build}" />
+<javac classpath="junit-4.3.1.jar:commons-math-1.1.jar" srcdir="${src}" destdir="${build}" excludes="devtools/**" />
 </target>
 
 <target name="dist" depends="compile" description="generate the distribution">
@@ -59,12 +92,46 @@
 		<include name="**/*.java" />
 	</fileset>
 </copy>
+<!-- Replace the SVN.REVISION tag with the current SVN revision number -->
+<replaceregexp match="%SVN.REVISION%" replace="${revision}">
+
+	<fileset dir="${build}/src">
+		<include name="**/*.java" />
+	</fileset>
+</replaceregexp>
+<!--Replace the SVN.HEADER tag with the entire header -->
+<replaceregexp match="%SVN.HEADER%" replace="This file is part of the Java Machine Learning Library${line.separator}
+* ${line.separator}
+* The Java Machine Learning Library is free software; you can redistribute it and/or modify${line.separator}
+* it under the terms of the GNU General Public License as published by${line.separator}
+* the Free Software Foundation; either version 2 of the License, or${line.separator}
+* (at your option) any later version.${line.separator}
+* ${line.separator}
+* The Java Machine Learning Library is distributed in the hope that it will be useful,${line.separator}
+* but WITHOUT ANY WARRANTY; without even the implied warranty of${line.separator}
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the${line.separator}
+* GNU General Public License for more details.${line.separator}
+* ${line.separator}
+* You should have received a copy of the GNU General Public License${line.separator}
+* along with the Java Machine Learning Library; if not, write to the Free Software${line.separator}
+* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA${line.separator}
+* ${line.separator}
+* Copyright (c) 2006-2007, Thomas Abeel${line.separator}
+* ${line.separator}
+* Project: http://sourceforge.net/projects/java-ml/${line.separator}
+* ">
+<fileset dir="${build}/src">
+		<include name="**/*.java" />
+	</fileset>
+</replaceregexp>
+
+
 <jar jarfile="${dist}/javaml-${version}-src.jar" basedir="${build}/src" />
 </target>
 
 <target name="clean" description="clean up">
 <!-- Delete the ${build} and ${dist} directory trees -->
-<delete dir="${build}" />
-<delete dir="${dist}" />
+<delete failonerror="false" dir="${build}" />
+<delete failonerror="false" dir="${dist}" />
 </target>
 </project>
