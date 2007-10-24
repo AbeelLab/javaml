@@ -15,6 +15,11 @@ import net.sf.javaml.distance.DistanceMeasure;
 /**
  * This class provides utility methods on datasets.
  * 
+ * {@jmlSource}
+ * 
+ * @see Dataset
+ * @see SimpleDataset
+ * 
  * @author Thomas Abeel
  * 
  */
@@ -26,9 +31,14 @@ final public class DatasetTools {
      * 
      * @param data
      *            the dataset to search in
+     * @param dm
+     *            the distance measure used to calculate the distance between
+     *            instances
      * @param inst
      *            the instance for which we need to find the closest
-     * @return
+     * @return the instance from the supplied dataset that is closest to the
+     *         supplied instance
+     * 
      */
     public static Instance getClosest(Dataset data, DistanceMeasure dm, Instance inst) {
         Instance closest = data.getInstance(0);
@@ -44,11 +54,16 @@ final public class DatasetTools {
     }
 
     /**
-     * Return an instance with on each position the standard deviation for that
-     * attribute.
+     * Calculate the standard deviation of all attributes for all instances in a
+     * dataset. The result is returned as an instance with as value for each
+     * attribute the standard deviation of the values of that attribute in the
+     * instances from the dataset.
      * 
      * @param data
-     * @return
+     *            the dataset for which you want to calculate the standard
+     *            deviation
+     * @return an instance that contains the standard deviations of all
+     *         attribute values
      */
     public static Instance getStandardDeviation(Dataset data) {
         int numAttributes = data.getInstance(0).size();
@@ -66,7 +81,11 @@ final public class DatasetTools {
     }
 
     /**
-     * Return the centroid of this cluster
+     * Calculates the centroid of a dataset. A centroid is the middle or the
+     * average of a dataset.
+     * 
+     * @param data
+     *            the dataset to calculate the centroid of
      * 
      * @return the centroid of this dataset
      */
@@ -98,13 +117,13 @@ final public class DatasetTools {
      * @param data
      *            the dataset on which to run the query.
      * @param epsilon
-     *            Specifies the range for the query
+     *            the range for the query
      * @param instance
-     *            The instance that is used as query-object for epsilon range
-     *            query
+     *            the instance that is used as query-object for the epsilon
+     *            range query
      * @param dm
      *            The distance measure used to calculated the distances.
-     * @return List with all the Instances that are within the specified range
+     * @return a list with all the instances that are within the specified range
      */
     public static List<Instance> epsilonRangeQuery(Dataset data, double epsilon, Instance instance, DistanceMeasure dm) {
         ArrayList<Instance> epsilonRange_List = new ArrayList<Instance>();
@@ -123,11 +142,13 @@ final public class DatasetTools {
     /**
      * Removes an instance from a dataset and returns the resulting dataset.
      * 
-     * XXX DOC
-     * 
+     * @warning This method does actually construct a new dataset with all
+     *          instances that are not removed.
      * @param data
+     *            the dataset from which to remove an instance
      * @param index
-     * @return
+     *            the index of the instance to remove
+     * @return the new dataset without the instance to remove
      */
     public static Dataset removeInstance(Dataset data, int index) {
         Dataset out = new SimpleDataset();
@@ -140,11 +161,12 @@ final public class DatasetTools {
     }
 
     /**
-     * This method will merge all the data from the two datasets in to the first
-     * one.
+     * Merges all the data from the two datasets into the first one.
      * 
      * @param data
+     *            the first dataset
      * @param added
+     *            the dataset to add to the first one
      */
     public static void merge(Dataset data, Dataset added) {
         for (int i = 0; i < added.size(); i++) {
@@ -153,15 +175,13 @@ final public class DatasetTools {
     }
 
     /**
-     * Filter out all the empty datasets in an array.
-     * 
-     * XXX DOC
+     * Removes all the empty datasets from an array of datasets.
      * 
      * @param input
-     * @return
+     *            the array with all datasets
+     * @return an array with only datasets that have at least size 1
      */
     public static Dataset[] filterEmpty(Dataset[] input) {
-        // Filter empty clusters out;
         int nonEmptyClusterCount = 0;
         for (int i = 0; i < input.length; i++) {
             if (input[i].size() > 0)
