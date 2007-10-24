@@ -7,20 +7,50 @@ package net.sf.javaml.core;
 
 import net.sf.javaml.utils.MathUtils;
 
+/**
+ * Provides an implementation of the {@link Instance} interface that has
+ * {@link Complex} numbers as attributes.
+ * 
+ * @{jmlSource}
+ * 
+ * @see Complex
+ * @see Instance
+ * 
+ * @author Thomas Abeel
+ * 
+ */
 public class ComplexInstance implements Instance {
 
     private static final long serialVersionUID = 2364870063195994478L;
 
+    /**
+     * Cached hashCode value of this instance.
+     */
     private int hashCode = 0;
 
+    /**
+     * The attributes of this instance
+     */
     private Complex[] values = null;;
 
+    /**
+     * Flag to indicate whether the class value of this instance is set
+     */
     private boolean classSet = false;
 
+    /**
+     * The class value of this instance, this is only relevant if classSet==true
+     */
     private int classValue = 0;
 
+    /**
+     * The weight of this instance
+     */
     private double weight = 1;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean equals(Object obj) {
         Instance tmp = (Instance) obj;
@@ -33,11 +63,17 @@ public class ComplexInstance implements Instance {
         return equal;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int hashCode() {
         return hashCode;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         StringBuffer out = new StringBuffer();
@@ -57,14 +93,17 @@ public class ComplexInstance implements Instance {
         this(values, 1.0f);
     }
 
-    public ComplexInstance(Complex[] values, float weight) {
+    public ComplexInstance(Complex[] values, double weight) {
         this(values, weight, false, 0);
     }
 
-    public ComplexInstance(Complex[] values, double weight, boolean classSet, int classValue) {
+    public ComplexInstance(Complex[] values, double weight, int classValue) {
+        this(values, weight, true, classValue);
+    }
+
+    private ComplexInstance(Complex[] values, double weight, boolean classSet, int classValue) {
         this.values = new Complex[values.length];
         System.arraycopy(values, 0, this.values, 0, values.length);
-
         this.weight = weight;
         this.classSet = classSet;
         this.classValue = classValue;
@@ -72,41 +111,64 @@ public class ComplexInstance implements Instance {
 
     }
 
+    /**
+     * Returns the real value of the attribute with the given index.
+     * 
+     * @param index
+     *            the index of the attribute
+     * @return the real part of the attribute on the supplied index
+     */
     public double getValue(int index) {
         return values[index].re;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public int getClassValue() {
         return classValue;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public boolean isClassSet() {
         return classSet;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public boolean isCompatible(Instance instance) {
         return instance.size() == this.size();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public double getWeight() {
         return this.weight;
     }
 
-    public void setWeight(float d) {
-        this.weight = d;
-
-    }
-
+    /**
+     * {@inheritDoc}
+     */
     public int size() {
         return values.length;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public Complex getComplex(int index) {
         return values[index];
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public double[] toArray() {
-        throw new RuntimeException("Impossible to implement");
+        return null;
     }
 
 }
