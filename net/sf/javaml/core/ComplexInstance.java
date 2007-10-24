@@ -16,6 +16,8 @@ import net.sf.javaml.utils.MathUtils;
  * @see Complex
  * @see Instance
  * 
+ * @version %SVN.REVISION%
+ * 
  * @author Thomas Abeel
  * 
  */

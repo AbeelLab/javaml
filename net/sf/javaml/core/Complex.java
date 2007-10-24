@@ -12,6 +12,8 @@ package net.sf.javaml.core;
  * 
  * @see ComplexInstance
  * 
+ * @version %SVN.REVISION%
+ * 
  * @author Thomas Abeel
  * 
  */

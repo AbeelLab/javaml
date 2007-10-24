@@ -6,7 +6,14 @@
 package net.sf.javaml.core;
 
 import net.sf.javaml.utils.MathUtils;
-
+/**
+ * 
+ * 
+ * @version %SVN.REVISION%
+ * 
+ * @author Thomas Abeel
+ *
+ */
 public class SimpleInstance implements Instance {
 
     /**

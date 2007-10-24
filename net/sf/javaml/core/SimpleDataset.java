@@ -14,6 +14,8 @@ import java.util.Vector;
 /**
  * @todo Write javadoc
  * 
+ * @version %SVN.REVISION%
+ * 
  * @author Thomas Abeel
  * 
  */

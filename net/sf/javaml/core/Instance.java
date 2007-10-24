@@ -18,6 +18,8 @@ import java.io.Serializable;
  * 
  * @see Dataset
  * 
+ * @version %SVN.REVISION%
+ * 
  * @author Thomas Abeel
  * 
  */

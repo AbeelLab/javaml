@@ -20,6 +20,8 @@ import net.sf.javaml.distance.DistanceMeasure;
  * @see Dataset
  * @see SimpleDataset
  * 
+ * @version %SVN.REVISION%
+ * 
  * @author Thomas Abeel
  * 
  */

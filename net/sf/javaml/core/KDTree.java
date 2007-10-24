@@ -35,6 +35,8 @@ import net.sf.javaml.distance.EuclideanDistance;
  * The connection to dataset is only a reference. For the tree structure the
  * indexes are stored in an array. <br/>
  * 
+ * @version %SVN.REVISION%
+ * 
  * @author Gabi Schmidberger (gabi@cs.waikato.ac.nz)
  * @author Malcolm Ware (mfw4@cs.waikato.ac.nz)
  * @author Ashraf M. Kibriya (amk14@cs.waikato.ac.nz)

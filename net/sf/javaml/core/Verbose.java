@@ -6,7 +6,13 @@
 package net.sf.javaml.core;
 
 import java.util.logging.Logger;
-
+/**
+ * 
+ * @version %SVN.REVISION%
+ * 
+ * @author Thomas Abeel
+ *
+ */
 public class Verbose {
 
     private Logger log = Logger.getAnonymousLogger();

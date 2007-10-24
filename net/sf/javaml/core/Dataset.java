@@ -5,7 +5,13 @@
  */
 
 package net.sf.javaml.core;
-
+/**
+ * 
+ * @version %SVN.REVISION%
+ * 
+ * @author Thomas Abeel
+ *
+ */
 public interface Dataset extends Iterable<Instance> {
 
     /**

@@ -13,6 +13,8 @@ import java.util.Random;
  * @see Instance
  * @see SimpleInstance
  * 
+ * @version %SVN.REVISION%
+ * 
  * @author Thomas Abeel
  * 
  */
