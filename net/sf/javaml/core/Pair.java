@@ -8,6 +8,8 @@ package net.sf.javaml.core;
 /**
  * Represents a pair or couple of objects.
  * 
+ * {@jmlSource}
+ * 
  * @version %SVN.REVISION%
  * 
  * @author Thomas Abeel

@@ -8,6 +8,8 @@ package net.sf.javaml.core;
 import java.util.logging.Logger;
 /**
  * 
+ * {@jmlSource}
+ * 
  * @version %SVN.REVISION%
  * 
  * @author Thomas Abeel

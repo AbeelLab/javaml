@@ -9,6 +9,8 @@ import net.sf.javaml.utils.MathUtils;
 /**
  * 
  * 
+ * {@jmlSource}
+ * 
  * @version %SVN.REVISION%
  * 
  * @author Thomas Abeel

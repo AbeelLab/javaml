@@ -14,7 +14,7 @@ import java.io.Serializable;
  * 
  * Instances can be grouped together into a {@link Dataset}.
  * 
- * {jmlSource}
+ * {@jmlSource}
  * 
  * @see Dataset
  * 

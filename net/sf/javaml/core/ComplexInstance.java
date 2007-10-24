@@ -11,7 +11,7 @@ import net.sf.javaml.utils.MathUtils;
  * Provides an implementation of the {@link Instance} interface that has
  * {@link Complex} numbers as attributes.
  * 
- * @{jmlSource}
+ * {@jmlSource}
  * 
  * @see Complex
  * @see Instance

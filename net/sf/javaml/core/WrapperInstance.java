@@ -10,6 +10,8 @@ package net.sf.javaml.core;
  * 
  * Only provides the very basics of an instance.
  * 
+ * {@jmlSource}
+ * 
  * @version %SVN.REVISION%
  * 
  * @author Thomas Abeel

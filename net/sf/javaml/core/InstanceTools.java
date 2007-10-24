@@ -10,6 +10,8 @@ import java.util.Random;
 /**
  * Provides utility methods for manipulating, creating and modifying instances.
  * 
+ * {@jmlSource}
+ * 
  * @see Instance
  * @see SimpleInstance
  * 

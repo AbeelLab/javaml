@@ -31,9 +31,12 @@ import net.sf.javaml.distance.DistanceMeasure;
 import net.sf.javaml.distance.EuclideanDistance;
 
 /**
- * Class implementing the KDTree search algorithm for nearest neighbour search.<br/>
+ * Class implementing the KDTree search algorithm for nearest neighbour search.
+ * 
  * The connection to dataset is only a reference. For the tree structure the
- * indexes are stored in an array. <br/>
+ * indexes are stored in an array.
+ * 
+ * {@jmlSource}
  * 
  * @version %SVN.REVISION%
  * 

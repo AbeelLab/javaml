@@ -7,6 +7,8 @@
 package net.sf.javaml.core;
 /**
  * 
+ * {@jmlSource}
+ * 
  * @version %SVN.REVISION%
  * 
  * @author Thomas Abeel
