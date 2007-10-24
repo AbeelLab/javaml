@@ -10,7 +10,24 @@
 	<property name="statusText" value="notset" />
 	<property name="dist" location="javaml-${version}" />
 
-	
+
+
+	<!-- Specify the build type, if this variable is set the current version -->
+	<!-- of the SVN will be tagged with the version number -->
+	<!-- Comment this out to do test runs of the build script -->
+	<!-- Uncomment this if you want to make a real release -->
+	<!--<property name="isRelease" value="set" />-->
+
+	<target name="tag" if="isRelease">
+		<taskdef name="query" classname="com.jera.anttasks.Query" classpath="devtools/lib/JeraAntTasks.jar" />
+		<query name="user" />
+		<query name="pass" password="true" />
+		<echo message="SVN tagging ${version}" />
+		<svn username="${user}" password="${pass}">
+			<copy message="tagging for release ${version}" srcUrl="https://java-ml.svn.sourceforge.net/svnroot/java-ml/trunk/" destURL="https://java-ml.svn.sourceforge.net/svnroot/java-ml/tags/${version}/" />
+		</svn>
+	</target>
+
 	<target name="javadoc">
 		<replaceregexp flags="g" match="Thomas Abeel" replace="Thomas Abeel (&lt;a href=&quot;mailto:thomas@abeel.be&quot;&gt;thomas@abeel.be&lt;&#47;a&gt;)">
 			<fileset dir="${build}/src">
@@ -72,7 +89,7 @@
 <echo message="Building with revision: ${revision}" />
 </target>
 
-<target name="compile" depends="init" description="compile the source ">
+<target name="compile" depends="init,tag" description="compile the source ">
 <!-- Compile the java code from ${src} into ${build} -->
 <javac classpath="junit-4.3.1.jar:commons-math-1.1.jar" srcdir="${src}" destdir="${build}" excludes="devtools/**" />
 </target>
@@ -124,7 +141,7 @@
 * ${line.separator}
 * Project: http://sourceforge.net/projects/java-ml/${line.separator}
 * ">
-<fileset dir="${build}/src">
+	<fileset dir="${build}/src">
 		<include name="**/*.java" />
 	</fileset>
 </replaceregexp>
