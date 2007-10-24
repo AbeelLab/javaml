@@ -8,12 +8,24 @@ package net.sf.javaml.core;
 /**
  * Implements a mutable Complex number.
  * 
+ * {@jmlSource}
+ * 
+ * @see ComplexInstance
+ * 
  * @author Thomas Abeel
  * 
  */
 public class Complex {
 
-    public double im = 0, re = 0;
+    /**
+     * The imaginary part of this complex number.
+     */
+    public double im = 0;
+
+    /**
+     * The real part of this imaginary number
+     */
+    public double re = 0;
 
     /**
      * Creates a new Complex number with the supplied real and complex part.
@@ -36,14 +48,15 @@ public class Complex {
     }
 
     /**
-     * Returns a string representation of the object
+     * {@inheritDoc}
      */
     public String toString() {
         return re + " + " + im + "i";
     }
 
     /**
-     * The absolute value of this complex number. Basically it return |this|.
+     * Takes the absolute value of this complex number. Basically it returns
+     * |this|.
      * 
      * @return the absolute value of this complex number
      */
@@ -52,7 +65,7 @@ public class Complex {
     }
 
     /**
-     * Add a complex number to this one.
+     * Adds a complex number to this one.
      * 
      * @param b
      *            the number to add to this one.
@@ -74,7 +87,7 @@ public class Complex {
     }
 
     /**
-     * Multiply this complex number with another one.
+     * Multiplies this complex number with another one.
      * 
      * @param b
      *            the number to multiply with.
@@ -87,7 +100,7 @@ public class Complex {
     }
 
     /**
-     * Multiply with real number
+     * Multiplies with real number
      * 
      * @param alpha
      *            the real number to multiply with.
@@ -98,7 +111,7 @@ public class Complex {
     }
 
     /**
-     * Take the conjugate of this complex number.
+     * Takes the conjugate of this complex number.
      * 
      */
     public void conjugate() {
@@ -106,7 +119,7 @@ public class Complex {
     }
 
     /**
-     * Add two complex numbers and return the result.
+     * Adds two complex numbers and return the result.
      * 
      * @param a
      *            first complex number
@@ -120,10 +133,28 @@ public class Complex {
         return new Complex(real, imag);
     }
 
+    /**
+     * Multiplies a complex number with a real value.
+     * 
+     * @param a
+     *            the complex number
+     * @param d
+     *            the real value
+     * @return the resulting complex number
+     */
     public static Complex multiply(Complex a, double d) {
         return new Complex(a.re * d, a.im * d);
     }
 
+    /**
+     * Multiplies two complex numbers and return the resulting complex number.
+     * 
+     * @param a
+     *            the first complex number
+     * @param b
+     *            the second complex number
+     * @return the result of the multiplication of a and b
+     */
     public static Complex multiply(Complex a, Complex b) {
         // (x + yi)(u + vi) = (xu – yv) + (xv + yu)i.
         double real = a.re * b.re - a.im * b.im;
@@ -131,6 +162,9 @@ public class Complex {
         return new Complex(real, imag);
     }
 
+    /**
+     * The imaginary constant I
+     */
     public static final Complex I = new Complex(0, 1);
 
 }
