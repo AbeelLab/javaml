@@ -66,7 +66,9 @@ public class NormalizeMidrange implements Filter {
 
     }
 
-    private double[] range, midrange;
+    private double[] range = null;
+
+    private double[] midrange = null;
 
     private boolean constructed = false;
 
