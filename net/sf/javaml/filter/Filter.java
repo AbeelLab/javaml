@@ -46,7 +46,7 @@ public interface Filter {
     /**
      * This method will filter an instance according to the rules of this
      * filter. Some filters may require to first call <code>filterDataset</code>
-     * before you can use this method. This is filter dependend.
+     * before you can use this method.
      * 
      * @param instance
      *            the instance to be filtered
