@@ -26,12 +26,12 @@ import java.io.Serializable;
 public interface Instance extends Serializable {
 
     /**
-     * Converts the instance to a value array. If this is not supported by the
-     * implementation, <code>null</code> should be returned.
+     * Returns the values of all attributes as a double array.
      * 
-     * @return the attributes of this instance
+     * @throws UnsupportedOperationException
+     *             when the implementation does not support this operation.
+     * @return the values of the attributes of this instance
      */
-    @Deprecated
     public double[] toArray();
 
     /**
