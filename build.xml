@@ -91,7 +91,7 @@
 
 <target name="compile" depends="init,tag" description="compile the source ">
 <!-- Compile the java code from ${src} into ${build} -->
-<javac classpath="junit-4.3.1.jar:commons-math-1.1.jar" srcdir="${src}" destdir="${build}" excludes="devtools/**" />
+<javac source="1.5" target="1.5" classpath="junit-4.3.1.jar:commons-math-1.1.jar" srcdir="${src}" destdir="${build}" excludes="devtools/**" />
 </target>
 
 <target name="dist" depends="compile" description="generate the distribution">
