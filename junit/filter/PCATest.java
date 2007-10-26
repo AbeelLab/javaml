@@ -30,8 +30,9 @@ import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.SimpleDataset;
 import net.sf.javaml.core.SimpleInstance;
+import net.sf.javaml.filter.DatasetFilter;
 import net.sf.javaml.filter.Filter;
-import net.sf.javaml.filter.NormalizeMidrange;
+import net.sf.javaml.filter.DatasetNormalizeMidrange;
 import net.sf.javaml.filter.PrincipalComponentsAnalysis;
 
 import org.junit.Test;
@@ -68,7 +69,7 @@ public class PCATest {
         inst = new SimpleInstance(vals6);
         data.addInstance(inst);
 
-        Filter norm = new NormalizeMidrange(0.5, 1);
+        DatasetFilter norm = new DatasetNormalizeMidrange(0.5, 1);
         Dataset tmp = norm.filterDataset(data);
 
         Filter rem = new PrincipalComponentsAnalysis();

@@ -28,8 +28,9 @@ import junit.framework.Assert;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.SimpleDataset;
 import net.sf.javaml.core.SimpleInstance;
+import net.sf.javaml.filter.DatasetFilter;
 import net.sf.javaml.filter.Filter;
-import net.sf.javaml.filter.NormalizeMidrange;
+import net.sf.javaml.filter.DatasetNormalizeMidrange;
 
 import org.junit.Test;
 
@@ -43,7 +44,7 @@ public class NormalizeMidrangeTest {
         add(data, 2, 2, 1);
         add(data, 0, 1, 1);
 
-        Filter f = new NormalizeMidrange(0.5, 1);
+        DatasetFilter  f = new DatasetNormalizeMidrange(0.5, 1);
         data = f.filterDataset(data);
         Assert.assertFalse(new Float(data.getInstance(0).getValue(2)).equals(Float.NaN));
         Assert.assertFalse(new Float(data.getInstance(1).getValue(2)).equals(Float.NaN));
