@@ -38,7 +38,7 @@ import net.sf.javaml.core.SimpleInstance;
  * @author Thomas Abeel
  * 
  */
-public class DatasetNormalizeMidrange implements DatasetFilter, InstanceFilter {
+public class DatasetNormalizeMidrange extends AbstractFilter {
 
     private static final double EPSILON = 1.0e-6;
 

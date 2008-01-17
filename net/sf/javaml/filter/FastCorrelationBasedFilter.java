@@ -1,29 +1,9 @@
 /**
  * FastCorrelationBasedFilter.java
  *
- * This file is part of the Java Machine Learning API
- * 
- * The Java Machine Learning API is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * %SVN.HEADER%
  *
- * The Java Machine Learning API is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with the Java Machine Learning API; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * 
- * Copyright (c) 2006-2007, Thomas Abeel
- * 
- * Project: http://sourceforge.net/projects/java-ml/
- *
- * This class was originally written by Ravi Bhim, ASU.
- * 
- * This file was modified by Thomas Abeel to fit the Java-ML project
+ * Based on work by Ravi Bhim, ASU.
  */
 package net.sf.javaml.filter;
 
@@ -35,14 +15,20 @@ import net.sf.javaml.core.Instance;
 import net.sf.javaml.utils.MathUtils;
 
 /**
- * This class is used to compute the required mathematical computations for the
- * FCBF algorithm.
+ * This {@link net.sf.javaml.filter.DatasetFilter} uses the FCBF algorithm to
+ * remove some attributes from the instances of the data set. instances.
  * 
- * @author Ravi Bhim,ASU.
+ * {@jmlSource}
+ * 
+ * @see net.sf.javaml.core.Instance
+ * @see net.sf.javaml.core.Dataset
+ * 
+ * @version %SVN.REVISION%
+ * 
  * @author Thomas Abeel
+ * 
  */
-
-public class FastCorrelationBasedFilter implements Filter {
+public class FastCorrelationBasedFilter extends AbstractFilter {
 
     public FastCorrelationBasedFilter() {
         this(0.0);
@@ -54,7 +40,7 @@ public class FastCorrelationBasedFilter implements Filter {
         this.threshold = threshold;
     }
 
-    private Filter remove = null;
+    private AbstractFilter remove = null;
 
     public Dataset filterDataset(Dataset data) {
         int[] toRemove = fcbf(data);
@@ -64,11 +50,10 @@ public class FastCorrelationBasedFilter implements Filter {
     }
 
     public Instance filterInstance(Instance instance) {
-        return remove.filterInstance(instance);
-    }
-
-    public Instance unfilterInstance(Instance instance) {
-        return remove.unfilterInstance(instance);
+        if (remove != null)
+            return remove.filterInstance(instance);
+        else
+            throw new RuntimeException("Filter needs to be trained on dataset first");
     }
 
     /* Variables used by the 'fcbf' function */
@@ -81,7 +66,7 @@ public class FastCorrelationBasedFilter implements Filter {
     private int[] valid = null;
 
     /**
-     * The fcbc function applies the FCBF algorithm and outputs the list of
+     * The FCBF function applies the FCBF algorithm and outputs the list of
      * features that can be pruned.
      * 
      * @param delta
@@ -395,6 +380,14 @@ public class FastCorrelationBasedFilter implements Filter {
             return ((double) 2 * (ig / (e1 + e2)));
         else
             return (double) 1;
+    }
+
+    public Dataset unfilterDataset(Dataset data) {
+        throw new UnsupportedOperationException("One-way filter only");
+    }
+
+    public Instance unfilterInstance(Instance inst) {
+        throw new UnsupportedOperationException("One-way filter only");
     }
 
 }

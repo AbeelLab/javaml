@@ -1,36 +1,17 @@
 /**
  * RemoveAttributes.java
  *
- * This file is part of the Java Machine Learning API
- * 
- * The Java Machine Learning API is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * The Java Machine Learning API is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with the Java Machine Learning API; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * 
- * Copyright (c) 2006-2007, Thomas Abeel
- * 
- * Project: http://sourceforge.net/projects/java-ml/
+ * %SVN.HEADER%
  * 
  */
 package net.sf.javaml.filter;
 
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.core.SimpleDataset;
 import net.sf.javaml.core.SimpleInstance;
 import nz.ac.waikato.cs.weka.Utils;
 
-public class RemoveAttributes implements Filter {
+public class RemoveAttributes extends AbstractFilter {
     /**
      * The indices to remove.
      */
@@ -58,17 +39,13 @@ public class RemoveAttributes implements Filter {
                     count++;
                 binIndices[indices[i]] = true;
             }
-        }else{
-            binIndices=new boolean[0];
+        } else {
+            binIndices = new boolean[0];
         }
     }
 
     public Dataset filterDataset(Dataset data) {
-        Dataset out = new SimpleDataset();
-        for (int i = 0; i < data.size(); i++) {
-            out.addInstance(filterInstance(data.getInstance(i)));
-        }
-        return out;
+        return FilterUtils.applyFilter(this, data);
     }
 
     public Instance filterInstance(Instance instance) {
@@ -84,7 +61,11 @@ public class RemoveAttributes implements Filter {
     }
 
     public Instance unfilterInstance(Instance instance) {
-        throw new RuntimeException("RemoveAttributes is a one-way filter.");
+        throw new UnsupportedOperationException("RemoveAttributes is a one-way filter.");
+    }
+
+    public Dataset unfilterDataset(Dataset data) {
+        throw new UnsupportedOperationException("RemoveAttributes is a one-way filter.");
     }
 
 }

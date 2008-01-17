@@ -1,34 +1,15 @@
 /**
  * PrincipalComponentsAnalysis.java
  *
- * This file is part of the Java Machine Learning API
- * 
- * The Java Machine Learning API is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * %SVN.HEADER%
  *
- * The Java Machine Learning API is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with the Java Machine Learning API; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * 
- * Copyright (c) 2000, Mark Hall
- * Copyright (c) 2006-2007, Thomas Abeel
- * 
- * Project: http://sourceforge.net/projects/java-ml/
- * 
+ * Based on work by Mark Hall.
  */
 
 package net.sf.javaml.filter;
 
 import gov.nist.math.jama.EigenvalueDecomposition;
 import gov.nist.math.jama.Matrix;
-
 
 import java.util.HashSet;
 import java.util.Set;
@@ -43,17 +24,22 @@ import nz.ac.waikato.cs.weka.Utils;
 /**
  * Performs a principal components analysis and transformation of the data. Use
  * in conjunction with a Ranker search. Dimensionality reduction is accomplished
- * by choosing enough eigenvectors to account for some percentage of the
+ * by choosing enough eigen vectors to account for some percentage of the
  * variance in the original data---default 0.95 (95%). Attribute noise can be
- * filtered by transforming to the PC space, eliminating some of the worst
- * eigenvectors, and then transforming back to the original space. <p/>
+ * filtered by transforming to the PC space, eliminating some of the worst eigen
+ * vectors, and then transforming back to the original space. <p/>
+ * 
+ * {@jmlSource}
+ * 
+ * 
+ * @version %SVN.REVISION%
  * 
  * @author Mark Hall (mhall@cs.waikato.ac.nz)
  * @author Gabi Schmidberger (gabi@cs.waikato.ac.nz)
  * @author Thomas Abeel
  * 
  */
-public class PrincipalComponentsAnalysis implements Filter {
+public class PrincipalComponentsAnalysis extends AbstractFilter {
 
     /** Number of attributes */
     private int m_numAttribs;
@@ -104,7 +90,7 @@ public class PrincipalComponentsAnalysis implements Filter {
 
     private int maxComponents = -1;
 
-    public PrincipalComponentsAnalysis(double m_cover, boolean convertBack,int maxComponents) {
+    public PrincipalComponentsAnalysis(double m_cover, boolean convertBack, int maxComponents) {
         m_coverVariance = m_cover;
         converBackToOriginalSpace = convertBack;
         this.maxComponents = maxComponents;
@@ -112,7 +98,7 @@ public class PrincipalComponentsAnalysis implements Filter {
     }
 
     public PrincipalComponentsAnalysis(double m_cover, boolean convertBack) {
-       this(m_cover,convertBack,-1);
+        this(m_cover, convertBack, -1);
     }
 
     private RemoveAttributes remAtt;
@@ -211,7 +197,7 @@ public class PrincipalComponentsAnalysis implements Filter {
             if (!converBackToOriginalSpace) {
                 out.addInstance(filterInstance(tempInst));
             } else {
-               out.addInstance(unfilterInstance(filterInstance(tempInst)));
+                out.addInstance(unfilterInstance(filterInstance(tempInst)));
             }
         }
         return out;
@@ -258,7 +244,7 @@ public class PrincipalComponentsAnalysis implements Filter {
         }
         if (remAtt != null)
             instance = remAtt.filterInstance(instance);
-        double[] newVals= new double[numComponents];
+        double[] newVals = new double[numComponents];
 
         double cumulative = 0;
         for (int i = numComponents - 1; i >= 0; i--) {
@@ -266,7 +252,7 @@ public class PrincipalComponentsAnalysis implements Filter {
             for (int j = 0; j < numComponents; j++) {
                 tempval += (m_eigenvectors[j][m_sortedEigens[i]] * instance.getValue(j));
             }
-            newVals[numComponents - i - 1] =  tempval;
+            newVals[numComponents - i - 1] = tempval;
             cumulative += m_eigenvalues[m_sortedEigens[i]];
             if ((cumulative / m_sumOfEigenValues) > m_coverVariance) {
                 break;
@@ -275,11 +261,15 @@ public class PrincipalComponentsAnalysis implements Filter {
         return new SimpleInstance(newVals, instance);
     }
 
+    /**
+     * Tranform back to the original space.
+     * 
+     */
     public Instance unfilterInstance(Instance instance) {
         double[] newVals = new double[m_numAttribs];
         for (int i = 0; i < m_eTranspose[0].length; i++) {
             float tempval = 0;
-            for (int j = 0; j < m_eTranspose.length &&j<instance.size(); j++) {
+            for (int j = 0; j < m_eTranspose.length && j < instance.size(); j++) {
                 tempval += (m_eTranspose[j][i] * instance.getValue(j));
             }
             newVals[i] = tempval;
@@ -287,10 +277,18 @@ public class PrincipalComponentsAnalysis implements Filter {
         return new SimpleInstance(newVals, instance);
     }
 
+    public Dataset unfilterDataset(Dataset data) {
+        Dataset out = new SimpleDataset();
+        for (Instance i : data)
+            out.addInstance(unfilterInstance(i));
+        return out;
+    }
+
     public double[] getEigenValues() {
         return m_eigenvalues;
     }
-    public double[][]getEigenVectors(){
+
+    public double[][] getEigenVectors() {
         return m_eigenvectors;
     }
 }

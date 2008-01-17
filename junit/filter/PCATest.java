@@ -1,26 +1,7 @@
 /**
  * RemoveAttributes.java
  *
- * This file is part of the Java Machine Learning API
- * 
- * The Java Machine Learning API is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * The Java Machine Learning API is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with the Java Machine Learning API; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * 
- * Copyright (c) 2006-2007, Thomas Abeel
- * 
- * Project: http://sourceforge.net/projects/java-ml/
- * 
+ * %SVN.HEADER%
  */
 package junit.filter;
 
@@ -30,8 +11,8 @@ import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.SimpleDataset;
 import net.sf.javaml.core.SimpleInstance;
+import net.sf.javaml.filter.AbstractFilter;
 import net.sf.javaml.filter.DatasetFilter;
-import net.sf.javaml.filter.Filter;
 import net.sf.javaml.filter.DatasetNormalizeMidrange;
 import net.sf.javaml.filter.PrincipalComponentsAnalysis;
 
@@ -72,7 +53,7 @@ public class PCATest {
         DatasetFilter norm = new DatasetNormalizeMidrange(0.5, 1);
         Dataset tmp = norm.filterDataset(data);
 
-        Filter rem = new PrincipalComponentsAnalysis();
+        AbstractFilter rem = new PrincipalComponentsAnalysis();
         Dataset out = rem.filterDataset(tmp);
         // System.out.println("JML "+out);
         for (int i = 0; i < out.size(); i++) {
