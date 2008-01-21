@@ -12,11 +12,11 @@ import java.io.Serializable;
  * Provides an interface for all instances. An instance is a collection of
  * attributes that belong together.
  * 
- * Instances can be grouped together into a {@link Dataset}.
+ * Instances can be grouped together into a {@link net.sf.javaml.core.Dataset}.
  * 
  * {@jmlSource}
  * 
- * @see Dataset
+ * @see net.sf.javaml.core.Dataset
  * 
  * @version %SVN.REVISION%
  * 
@@ -42,7 +42,7 @@ public interface Instance extends Serializable {
      *            the attribute index
      * @return the value of the attribute on the supplied index
      */
-    public double getValue(int index);
+    public double value(int index);
 
     /**
      * Returns the complex values at a given index.
@@ -57,7 +57,7 @@ public interface Instance extends Serializable {
      * 
      * @return the class value of this instance
      */
-    public int getClassValue();
+    public int classValue();
 
     /**
      * Return whether the class of this instance is set.
@@ -83,7 +83,7 @@ public interface Instance extends Serializable {
      * 
      * @return the weight of the instance
      */
-    public double getWeight();
+    public double weight();
 
     /**
      * This method return the number of attributes this instance has.
@@ -91,5 +91,11 @@ public interface Instance extends Serializable {
      * @return the number of attributes
      */
     public int size();
+    
+    /**
+     * Returns a deep copy of this instance.
+     *
+     */
+    public Instance copy();
 
 }
