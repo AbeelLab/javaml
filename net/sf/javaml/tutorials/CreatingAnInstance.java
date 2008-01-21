@@ -12,12 +12,14 @@ import net.sf.javaml.core.SimpleInstance;
 
 /**
  * This tutorial shows the very first step in using Java-ML. It will show you
- * how to create an {@link net.sf.javaml.core.Instance} that can later be used in a {@link net.sf.javaml.core.Dataset}
- * and in the machine learning algorithms.
+ * how to create an {@link net.sf.javaml.core.Instance} that can later be used
+ * in a {@link net.sf.javaml.core.Dataset} and in the machine learning
+ * algorithms.
  * 
  * For now we will only work with the simplest variant of Instance, namely a
- * {@link net.sf.javaml.core.SimpleInstance}. This is an {@link net.sf.javaml.core.Instance} that has double values
- * as attributes, a weight and optionally a class value.
+ * {@link net.sf.javaml.core.SimpleInstance}. This is an
+ * {@link net.sf.javaml.core.Instance} that has double values as attributes, a
+ * weight and optionally a class value.
  * 
  * {@jmlSource}
  * 
@@ -49,22 +51,23 @@ public class CreatingAnInstance {
         System.out.println(instance);
         System.out.println();
 
-        // If you wish to supply a weight for your instance, you can use the
-        // two argument version of the constructor that takes a weight as a
-        // second argument. The value for the weight should be between 0 and 1.
-        Instance instanceWithWeight = new SimpleInstance(values, 0.5);
+        // To create instances that have a class value set, you can use the two
+        // argument constructor which takes the values and the class value
+        // as parameters.
+        Instance instanceWithClassValue = new SimpleInstance(values, 1);
 
-        System.out.println("Instance with weight set to 0.5: ");
-        System.out.println(instanceWithWeight);
+        System.out.println("Instance with class value set to 1: ");
+        System.out.println(instanceWithClassValue);
         System.out.println();
 
-        // To create instances that have a class value set, you can use the 3
-        // argument constructor which takes the values, weight and class value
-        // as parameters.
-        Instance instanceWithClassValue = new SimpleInstance(values, 0.5, 1);
+        // If you wish to supply a weight for your instance, you can use the
+        // three argument version of the constructor that takes the class value
+        // as second and the weight as the
+        // third argument. The value for the weight should be between 0 and 1.
+        Instance instanceWithWeight = new SimpleInstance(values, 1, 0.5);
 
-        System.out.println("Instance with weight set to 0.5 and class value set to 1: ");
-        System.out.println(instanceWithClassValue);
+        System.out.println("Instance with weight set to 0.5 and class value to 1: ");
+        System.out.println(instanceWithWeight);
         System.out.println();
 
         // Finally the InstanceTools class offers a utility method to generate
