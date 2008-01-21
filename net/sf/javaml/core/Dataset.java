@@ -5,6 +5,7 @@
  */
 
 package net.sf.javaml.core;
+
 /**
  * 
  * {@jmlSource}
@@ -12,20 +13,20 @@ package net.sf.javaml.core;
  * @version %SVN.REVISION%
  * 
  * @author Thomas Abeel
- *
+ * 
  */
 public interface Dataset extends Iterable<Instance> {
 
     /**
-     * Add an instance to this dataset. The compatibility of the new item with
-     * the items in the dataset should be checked by the implementation.
-     * Incompatible items should not be added to the dataset.
+     * Add an instance to this data set. The compatibility of the new item with
+     * the items in the data set should be checked by the implementation.
+     * Incompatible items should not be added to the data set.
      * 
      * @param i
      *            the instance to be added
      * @return true if the instance was added, otherwise false
      */
-    public boolean addInstance(Instance i);
+    public boolean add(Instance i);
 
     /**
      * Get the instance with a certain index.
@@ -34,7 +35,7 @@ public interface Dataset extends Iterable<Instance> {
      *            the index of the instance you want to retrieve.
      * @return
      */
-    public Instance getInstance(int index);
+    public Instance instance(int index);
 
     /**
      * Get the index of a certain instance.
@@ -46,46 +47,82 @@ public interface Dataset extends Iterable<Instance> {
     public int getIndex(Instance inst);
 
     /**
-     * Returns the size of the dataset
+     * Returns the size of the data set
      * 
-     * @return the number of instances in the dataset.
+     * @return the number of instances in the data set.
      */
     public int size();
 
     /**
-     * Get the 'minimum instance' of this dataset. This is a virtual instance
-     * with for each index the lowest value found in the dataset.
+     * Get the 'minimum instance' of this data set. This is a virtual instance
+     * with for each index the lowest value found in the data set.
      * 
      * If this method is not supported by the implementation, the method should
      * return null.
      * 
      * @return an instance with for every index it's lowest value, null if the
-     *         dataset is empty
+     *         data set is empty
      */
     public Instance getMinimumInstance();
 
+    public double getMinimumAttribute(int index);
+
     /**
-     * Get the 'maximum instance' of this dataset. This is a virtual instance
-     * with for each index the highest value found in the dataset.
+     * Get the 'maximum instance' of this data set. This is a virtual instance
+     * with for each index the highest value found in the data set.
      * 
      * If this method is not supported by the implementation, the method should
      * return null.
      * 
      * @return an instance with for every index it's highest value, null if the
-     *         dataset is empty
+     *         data set is empty
      */
     public Instance getMaximumInstance();
 
+    public double getMaximumAttribute(int index);
+
     /**
-     * Returns the number of different classes in the dataset.
+     * Get the 'average instance' of this data set. This is a virtual instance
+     * with for each index the average value found in the data set.
+     * 
+     * If this method is not supported by the implementation, the method should
+     * return null.
+     * 
+     * @return an instance with for every index it's average value, null if the
+     *         data set is empty
+     */
+    public Instance getAverageInstance();
+
+    public double getAverageAttribute(int index);
+
+    /**
+     * Returns the number of different classes in the data set.
      * 
      * @return
      */
-    public int getNumClasses();
+    public int numClasses();
 
     /**
-     * Sorts the dataset according to the attribute with the given index.
+     * Sorts the data set according to the attribute with the given index.
      * 
      */
     public void sort(int index);
+
+    /**
+     * Returns the number of attributes each instance has in this data set.
+     * 
+     * @return the number of attributes
+     */
+    public int numAttributes();
+
+    /**
+     * Returns a deep copy of this data set.
+     * 
+     */
+    public Dataset copy();
+
+    /**
+     * Returns the number of values that exist for the attribute
+     */
+    public int numValues(int attIndex);
 }
