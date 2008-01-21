@@ -1,26 +1,7 @@
 /**
- * Classifier.java, 10-nov-2006
+ * Classifier.java
  *
- * This file is part of the Java Machine Learning API
- * 
- * The Java Machine Learning API is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * The Java Machine Learning API is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with the Java Machine Learning API; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * 
- * Copyright (c) 2006, Thomas Abeel
- * 
- * Project: http://sourceforge.net/projects/java-ml/
- * 
+ * %SVN.HEADER%
  */
 package net.sf.javaml.classification;
 
@@ -29,12 +10,20 @@ import java.io.Serializable;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 
+/**
+ * Interface for all classifiers.
+ * 
+ * @{jmlSource}
+ * 
+ * @author Thomas Abeel
+ *
+ */
 public interface Classifier extends Serializable {
     /**
-     * Create a classifier from the given dataset.
+     * Create a classifier from the given data set.
      * 
      * @param data
-     *            the dataset to be used to create the clusterer
+     *            the data set to be used to create the classifier
      */
     public void buildClassifier(Dataset data);
 
@@ -53,8 +42,10 @@ public interface Classifier extends Serializable {
      * 
      * @param instance
      *            the instance to be classified
-     * @return an array with membership degress for all the various classes in
-     *         the dataset
+     * @return an array with membership degrees for all the various classes in
+     *         the data set
      */
     public double[] distributionForInstance(Instance instance);
+    
+  
 }
