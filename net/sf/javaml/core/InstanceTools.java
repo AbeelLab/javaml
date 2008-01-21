@@ -42,4 +42,23 @@ public class InstanceTools {
         }
         return new SimpleInstance(values);
     }
+
+    /**
+     * Checks if there are any missing values in the instance. Missing values
+     * are denoted by Double.NaN.
+     * 
+     * @param inst
+     *            the instance to check for missing values
+     * @return true is the instance contains missing values, false in other
+     *         cases.
+     */
+    public static boolean hasMissingValues(Instance inst) {
+        for (int i = 0; i < inst.size(); i++) {
+            if (Double.isNaN(inst.value(i)))
+                return true;
+
+        }
+        return false;
+    }
+
 }
