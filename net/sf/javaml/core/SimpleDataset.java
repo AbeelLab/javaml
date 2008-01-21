@@ -9,6 +9,7 @@ package net.sf.javaml.core;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.Vector;
 
 /**
@@ -37,8 +38,13 @@ public class SimpleDataset implements Dataset, Serializable {
      */
     public SimpleDataset(Vector<Instance> data) {
         for (Instance in : data) {
-            this.addInstance(in);
+            this.add(in);
         }
+    }
+
+    public SimpleDataset(Dataset data) {
+        for (Instance i : data)
+            add(i.copy());
     }
 
     /**
@@ -49,14 +55,18 @@ public class SimpleDataset implements Dataset, Serializable {
     /**
      * XXX doc
      */
-    private double[] lowArray, highArray;
+    private double[] lowArray, highArray, sum;
 
     /**
      * XXX doc
      */
-    public boolean addInstance(Instance instance) {
+    public boolean add(Instance instance) {
+
+        numValuesCache = null;
+        numValuesSet = new boolean[instance.size()];
+
         if (instance.isClassSet()) {
-            classValues.add(instance.getClassValue());
+            classValues.add(instance.classValue());
         }
 
         // XXX this will not work for complex instances...
@@ -64,6 +74,7 @@ public class SimpleDataset implements Dataset, Serializable {
             if (instances.size() == 0) {
                 lowArray = instance.toArray();
                 highArray = instance.toArray();
+                sum = instance.toArray();
             }
         } catch (RuntimeException e) {
             // TODO Auto-generated catch block
@@ -75,12 +86,13 @@ public class SimpleDataset implements Dataset, Serializable {
             instances.add(instance);
             if (lowArray != null && highArray != null) {
                 for (int i = 0; i < instance.size(); i++) {
-                    if (instance.getValue(i) < lowArray[i]) {
-                        lowArray[i] = instance.getValue(i);
+                    if (instance.value(i) < lowArray[i]) {
+                        lowArray[i] = instance.value(i);
                     }
-                    if (instance.getValue(i) > highArray[i]) {
-                        highArray[i] = instance.getValue(i);
+                    if (instance.value(i) > highArray[i]) {
+                        highArray[i] = instance.value(i);
                     }
+                    sum[i] += instance.value(i);
                 }
             }
             return true;
@@ -98,7 +110,7 @@ public class SimpleDataset implements Dataset, Serializable {
     /**
      * XXX doc
      */
-    public Instance getInstance(int index) {
+    public Instance instance(int index) {
         return instances.get(index);
     }
 
@@ -137,9 +149,9 @@ public class SimpleDataset implements Dataset, Serializable {
         // TODO optimize using stringbuffer;
         if (this.size() == 0)
             return "";
-        String out = this.getInstance(0).toString();
+        String out = this.instance(0).toString();
         for (int i = 1; i < this.size(); i++) {
-            out += ";" + this.getInstance(i).toString();
+            out += ";" + this.instance(i).toString();
         }
 
         return out;
@@ -147,7 +159,7 @@ public class SimpleDataset implements Dataset, Serializable {
 
     private HashSet<Integer> classValues = new HashSet<Integer>();
 
-    public int getNumClasses() {
+    public int numClasses() {
         return classValues.size();
     }
 
@@ -179,13 +191,13 @@ public class SimpleDataset implements Dataset, Serializable {
 
     private int partition(int index, int l, int r) {
 
-        double pivot = getInstance((l + r) / 2).getValue(index);
+        double pivot = instance((l + r) / 2).value(index);
 
         while (l < r) {
-            while ((getInstance(l).getValue(index) < pivot) && (l < r)) {
+            while ((instance(l).value(index) < pivot) && (l < r)) {
                 l++;
             }
-            while ((getInstance(r).getValue(index) > pivot) && (l < r)) {
+            while ((instance(r).value(index) > pivot) && (l < r)) {
                 r--;
             }
             if (l < r) {
@@ -194,7 +206,7 @@ public class SimpleDataset implements Dataset, Serializable {
                 r--;
             }
         }
-        if ((l == r) && (getInstance(r).getValue(index) > pivot)) {
+        if ((l == r) && (instance(r).value(index) > pivot)) {
             r--;
         }
 
@@ -205,6 +217,63 @@ public class SimpleDataset implements Dataset, Serializable {
         Instance help = instances.elementAt(first);
         instances.set(first, instances.get(second));// = m_Objects[second];
         instances.set(second, help);// m_Objects[second] = help;
+    }
+
+    public int numAttributes() {
+        if (instances.size() == 0)
+            return 0;
+        else
+            return instances.get(0).size();
+
+    }
+
+    public Instance getAverageInstance() {
+        double[] tmpSum = new double[sum.length];
+        System.arraycopy(sum, 0, tmpSum, 0, sum.length);
+        for (int i = 0; i < sum.length; i++)
+            tmpSum[i] /= instances.size();
+        return new SimpleInstance(tmpSum);
+
+    }
+
+    public double getAverageAttribute(int index) {
+        return sum[index] / instances.size();
+    }
+
+    public double getMaximumAttribute(int index) {
+        return highArray[index];
+    }
+
+    public double getMinimumAttribute(int index) {
+        return lowArray[index];
+    }
+
+    public Dataset copy() {
+        return new SimpleDataset(this);
+    }
+
+    /*
+     * Contains which of the values in numValuesCache actually have meaning.
+     */
+    private boolean[] numValuesSet = null;
+
+    private int[] numValuesCache = null;
+
+    /**
+     * @{inheritDoc}
+     */
+    public int numValues(int attIndex) {
+        if (numValuesSet == null)
+            numValuesSet = new boolean[numAttributes()];
+        if(numValuesCache==null)
+            numValuesCache=new int[numAttributes()];
+        if (!numValuesSet[attIndex]){
+            Set<Double>tmp=new HashSet<Double>();
+            for(Instance i:this)
+                tmp.add(i.value(attIndex));
+            numValuesCache[attIndex]=tmp.size();
+        }
+        return numValuesCache[attIndex];
     }
 
 }

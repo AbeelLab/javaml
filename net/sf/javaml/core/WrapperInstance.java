@@ -26,7 +26,7 @@ public class WrapperInstance implements Instance {
      */
     private double[] data;
 
-    public int getClassValue() {
+    public int classValue() {
         throw new UnsupportedOperationException("Method not implemented");
     }
 
@@ -39,11 +39,11 @@ public class WrapperInstance implements Instance {
         this.data = data;
     }
 
-    public double getValue(int index) {
+    public double value(int index) {
         return data[index];
     }
 
-    public double getWeight() {
+    public double weight() {
         return 1;
     }
 
@@ -64,7 +64,11 @@ public class WrapperInstance implements Instance {
     }
 
     public Complex getComplex(int index) {
-        return new Complex(getValue(index), 0);
+        return new Complex(value(index), 0);
+    }
+
+    public Instance copy() {
+       return new WrapperInstance(data);
     }
 
 }

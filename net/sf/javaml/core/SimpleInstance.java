@@ -40,7 +40,7 @@ public class SimpleInstance implements Instance {
      */
     @Deprecated
     public SimpleInstance(Instance instance) {
-        this(instance.toArray(), instance.getWeight(), instance.isClassSet(), instance.getClassValue());
+        this(instance.toArray(), instance.weight(), instance.isClassSet(), instance.classValue());
 
     }
 
@@ -50,7 +50,7 @@ public class SimpleInstance implements Instance {
      * @param instance
      */
     public SimpleInstance(SimpleInstance instance) {
-        this(instance.values, instance.getWeight(), instance.isClassSet(), instance.getClassValue());
+        this(instance.values, instance.weight(), instance.isClassSet(), instance.classValue());
 
     }
 
@@ -60,7 +60,7 @@ public class SimpleInstance implements Instance {
         boolean equal = values.length == tmp.size();
         int pos = 0;
         while (equal && pos < values.length) {
-            equal = equal && MathUtils.eq(values[pos], tmp.getValue(pos));
+            equal = equal && MathUtils.eq(values[pos], tmp.value(pos));
             pos++;
         }
         return equal;
@@ -87,14 +87,14 @@ public class SimpleInstance implements Instance {
     }
 
     public SimpleInstance(double[] values) {
-        this(values, 1.0);
+        this(values, 0);
     }
 
-    public SimpleInstance(double[] values, double weight) {
-        this(values, weight, false, 0);
+    public SimpleInstance(double[] values, int classValue) {
+        this(values, 1.0, true, classValue);
     }
 
-    public SimpleInstance(double[] values, double weight, int classValue) {
+    public SimpleInstance(double[] values, int classValue, double weight) {
         this(values, weight, true, classValue);
     }
 
@@ -109,7 +109,7 @@ public class SimpleInstance implements Instance {
      *            information.
      */
     public SimpleInstance(double[] values, Instance old) {
-        this(values, old.getWeight(), old.isClassSet(), old.getClassValue());
+        this(values, old.weight(), old.isClassSet(), old.classValue());
     }
 
     private SimpleInstance(double[] values, double weight, boolean classSet, int classValue) {
@@ -122,11 +122,11 @@ public class SimpleInstance implements Instance {
 
     }
 
-    public double getValue(int index) {
+    public double value(int index) {
         return values[index];
     }
 
-    public int getClassValue() {
+    public int classValue() {
         return classValue;
     }
 
@@ -138,7 +138,7 @@ public class SimpleInstance implements Instance {
         return instance.size() == this.size();
     }
 
-    public double getWeight() {
+    public double weight() {
         return this.weight;
     }
 
@@ -158,7 +158,11 @@ public class SimpleInstance implements Instance {
     }
 
     public Complex getComplex(int index) {
-        return new Complex(getValue(index), 0);
+        return new Complex(value(index), 0);
+    }
+
+    public Instance copy() {
+        return new SimpleInstance(this);
     }
 
 }
