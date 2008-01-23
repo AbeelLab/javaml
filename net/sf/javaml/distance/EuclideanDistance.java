@@ -1,25 +1,7 @@
 /**
- * EuclidianDistance.java
+ * EuclideanDistance.java
  *
- * This file is part of the Java Machine Learning API
- * 
- * The Java Machine Learning API is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * The Java Machine Learning API is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with the Java Machine Learning API; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * 
- * Copyright (c) 2006-2007, Thomas Abeel
- * 
- * Project: http://sourceforge.net/projects/java-ml/
+ * %SVN.HEADER%
  * 
  */
 package net.sf.javaml.distance;
@@ -36,6 +18,8 @@ import net.sf.javaml.core.Instance;
  * The Euclidean distance is a special instance of the NormDistance. The
  * Euclidean distance corresponds to the 2-norm distance.
  * 
+ * @{jmlSource}
+ * 
  * @linkplain http://en.wikipedia.org/wiki/Euclidean_distance
  * @linkplain http://en.wikipedia.org/wiki/Euclidean_space
  * @author Thomas Abeel
@@ -43,9 +27,6 @@ import net.sf.javaml.core.Instance;
  */
 public class EuclideanDistance extends NormDistance {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 6672471509639068507L;
 
     public double calculateDistance(Instance x, Instance y) {
@@ -54,7 +35,9 @@ public class EuclideanDistance extends NormDistance {
         }
         double sum = 0;
         for (int i = 0; i < x.size(); i++) {
-            sum += (y.getValue(i) - x.getValue(i)) * (y.getValue(i) - x.getValue(i));
+            //ignore missing values
+            if (!Double.isNaN(y.value(i)) && !Double.isNaN(x.value(i)))
+                sum += (y.value(i) - x.value(i)) * (y.value(i) - x.value(i));
         }
         return Math.sqrt(sum);
     }
