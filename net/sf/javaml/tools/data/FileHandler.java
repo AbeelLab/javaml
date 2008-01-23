@@ -95,11 +95,22 @@ public class FileHandler {
         Dataset out = new SimpleDataset();
         for (String line : it) {
             String[] arr = line.split(separator);
-            double[] values = new double[arr.length];
+            double[] values;
+            if (classIndex == Integer.MAX_VALUE)
+                values = new double[arr.length];
+            else
+                values = new double[arr.length - 1];
             int classValue = 0;
             for (int i = 0; i < arr.length; i++) {
                 if (i == classIndex) {
-                    classValue = Integer.parseInt(arr[i]);
+                    try {
+                        classValue = Integer.parseInt(arr[i]);
+
+                    } catch (Exception e) {
+                        System.err.println(f);
+                        System.err.println("$" + line + "$");
+                        System.exit(-1);
+                    }
                 } else {
                     double val;
                     try {
