@@ -101,28 +101,27 @@ import net.sf.javaml.distance.LinearKernel;
  * <p/>
  * 
  * @author Eibe Frank (eibe@cs.waikato.ac.nz)
- * @author Shane Legg (shane@intelligenesis.net) (sparse vector code)
- * @author Stuart Inglis (stuart@reeltwo.com) (sparse vector code)
- * @author Thomas Abeel (modification for Java-ML) 
+ * @author Thomas Abeel (modification for Java-ML)
  */
 public class BinaryLinearSMO extends Verbose implements Classifier {
-    
+
     private static final long serialVersionUID = 1202307139516461728L;
 
-    public BinaryLinearSMO(){
+    public BinaryLinearSMO() {
         this(1.0);
-        
+
     }
-    
-    public BinaryLinearSMO(double C){
-        this(C,new LinearKernel());
+
+    public BinaryLinearSMO(double C) {
+        this(C, new LinearKernel());
     }
-    
-    public BinaryLinearSMO(double C,DistanceMeasure dm){
-        this.m_C=C;
-        this.m_kernel=dm;
-        
+
+    public BinaryLinearSMO(double C, DistanceMeasure dm) {
+        this.m_C = C;
+        this.m_kernel = dm;
+
     }
+
     /**
      * The complexity constant C. (default 1)
      */
@@ -146,7 +145,7 @@ public class BinaryLinearSMO extends Verbose implements Classifier {
     /**
      * Kernel to use
      */
-    private DistanceMeasure m_kernel =null;
+    private DistanceMeasure m_kernel = null;
 
     /** The Lagrange multipliers. */
     private double[] m_alpha;
@@ -323,7 +322,7 @@ public class BinaryLinearSMO extends Verbose implements Classifier {
         verbose("Storing the sum of weights...");
         m_sumOfWeights = 0;
         for (int i = 0; i < insts.size(); i++) {
-            m_sumOfWeights += insts.getInstance(i).getWeight();
+            m_sumOfWeights += insts.instance(i).weight();
         }
 
         // Set class values
@@ -332,14 +331,15 @@ public class BinaryLinearSMO extends Verbose implements Classifier {
         m_iUp = -1;
         m_iLow = -1;
         for (int i = 0; i < m_class.length; i++) {
-            if ((int) insts.getInstance(i).getClassValue() == 0) {
+            if ((int) insts.instance(i).classValue() == 0) {
                 m_class[i] = -1;
                 m_iLow = i;
-            } else if ((int) insts.getInstance(i).getClassValue() == 1) {
+            } else if ((int) insts.instance(i).classValue() == 1) {
                 m_class[i] = 1;
                 m_iUp = i;
             } else {
-                throw new RuntimeException("This should never happen! A binary SMO can only take 0 and 1 as class values.");
+                throw new RuntimeException(
+                        "This should never happen! A binary SMO can only take 0 and 1 as class values.");
             }
         }
 
@@ -376,7 +376,7 @@ public class BinaryLinearSMO extends Verbose implements Classifier {
 
         // If machine is linear, reserve space for weights
         // if (m_KernelIsLinear) {
-        m_weights = new double[m_data.getInstance(0).size()];
+        m_weights = new double[m_data.instance(0).size()];
         // } else {
         // m_weights = null;
         // }
@@ -396,7 +396,7 @@ public class BinaryLinearSMO extends Verbose implements Classifier {
         m_sparseWeights = null;
         m_sparseIndices = null;
 
-       // Initialize error cache
+        // Initialize error cache
         m_errors = new double[m_data.size()];
         m_errors[m_iLow] = 1;
         m_errors[m_iUp] = -1;
@@ -427,7 +427,7 @@ public class BinaryLinearSMO extends Verbose implements Classifier {
                 // This code implements Modification 1 from Keerthi et al.'s
                 // paper
                 for (int i = 0; i < m_alpha.length; i++) {
-                    if ((m_alpha[i] > 0) && (m_alpha[i] < m_C * m_data.getInstance(i).getWeight())) {
+                    if ((m_alpha[i] > 0) && (m_alpha[i] < m_C * m_data.instance(i).weight())) {
                         if (examineExample(i)) {
                             numChanged++;
                         }
@@ -518,7 +518,7 @@ public class BinaryLinearSMO extends Verbose implements Classifier {
      * @throws Exception
      *             in case of an error
      */
-    private double SVMOutput(Instance inst){
+    private double SVMOutput(Instance inst) {
 
         double result = 0;
 
@@ -527,19 +527,19 @@ public class BinaryLinearSMO extends Verbose implements Classifier {
 
         // Is weight vector stored in sparse format?
         if (m_sparseWeights == null) {
-//            verbose("SVMOutput dense");
+            // verbose("SVMOutput dense");
             int n1 = inst.size();
             for (int p = 0; p < n1; p++) {
                 // if (inst.index(p) != m_classIndex) {
-                result += m_weights[p] * inst.getValue(p);
+                result += m_weights[p] * inst.value(p);
                 // }
             }
         } else {
-//            verbose("SVMOutput sparse");
-//            int n1 = inst.size();// numValues();
+            // verbose("SVMOutput sparse");
+            // int n1 = inst.size();// numValues();
             int n2 = m_sparseWeights.length;
             for (int i = 0; i < n2; i++) {
-                result += inst.getValue(m_sparseIndices[i]) * m_sparseWeights[i];
+                result += inst.value(m_sparseIndices[i]) * m_sparseWeights[i];
             }
             // for (int p1 = 0, p2 = 0; p1 < n1 && p2 < n2;) {
             // int ind1 = inst.index(p1);
@@ -578,7 +578,7 @@ public class BinaryLinearSMO extends Verbose implements Classifier {
      * @throws Exception
      *             if something goes wrong
      */
-    private boolean examineExample(int i2){
+    private boolean examineExample(int i2) {
 
         double y2, F2;
         int i1 = -1;
@@ -587,7 +587,7 @@ public class BinaryLinearSMO extends Verbose implements Classifier {
         if (m_I0.contains(i2)) {
             F2 = m_errors[i2];
         } else {
-            F2 = SVMOutput(m_data.getInstance(i2)) + m_b - y2;
+            F2 = SVMOutput(m_data.instance(i2)) + m_b - y2;
             m_errors[i2] = F2;
 
             // Update thresholds
@@ -646,11 +646,11 @@ public class BinaryLinearSMO extends Verbose implements Classifier {
      * @throws Exception
      *             if something goes wrong
      */
-    private boolean takeStep(int i1, int i2, double F2)  {
+    private boolean takeStep(int i1, int i2, double F2) {
 
         double alph1, alph2, y1, y2, F1, s, L, H, k11, k12, k22, eta, a1, a2, f1, f2, v1, v2, Lobj, Hobj;
-        double C1 = m_C * m_data.getInstance(i1).getWeight();
-        double C2 = m_C * m_data.getInstance(i2).getWeight();
+        double C1 = m_C * m_data.instance(i1).weight();
+        double C2 = m_C * m_data.instance(i2).weight();
 
         // Don't do anything if the two instances are the same
         if (i1 == i2) {
@@ -678,9 +678,9 @@ public class BinaryLinearSMO extends Verbose implements Classifier {
         }
 
         // Compute second derivative of objective function
-        k11 = m_kernel.calculateDistance(m_data.getInstance(i1), m_data.getInstance(i1));
-        k12 = m_kernel.calculateDistance(m_data.getInstance(i2), m_data.getInstance(i1));
-        k22 = m_kernel.calculateDistance(m_data.getInstance(i2), m_data.getInstance(i2));
+        k11 = m_kernel.calculateDistance(m_data.instance(i1), m_data.instance(i1));
+        k12 = m_kernel.calculateDistance(m_data.instance(i2), m_data.instance(i1));
+        k22 = m_kernel.calculateDistance(m_data.instance(i2), m_data.instance(i2));
         eta = 2 * k12 - k11 - k22;
 
         // Check if second derivative is negative
@@ -698,8 +698,8 @@ public class BinaryLinearSMO extends Verbose implements Classifier {
         } else {
 
             // Look at endpoints of diagonal
-            f1 = SVMOutput(m_data.getInstance(i1));
-            f2 = SVMOutput(m_data.getInstance(i2));
+            f1 = SVMOutput(m_data.instance(i1));
+            f2 = SVMOutput(m_data.instance(i2));
             v1 = f1 + m_b - y1 * alph1 * k11 - y2 * alph2 * k12;
             v2 = f2 + m_b - y1 * alph1 * k12 - y2 * alph2 * k22;
             double gamma = alph1 + s * alph2;
@@ -799,22 +799,21 @@ public class BinaryLinearSMO extends Verbose implements Classifier {
         }
 
         // Update weight vector to reflect change a1 and a2, if linear SVM
-        Instance inst1 = m_data.getInstance(i1);
+        Instance inst1 = m_data.instance(i1);
         for (int p1 = 0; p1 < inst1.size(); p1++) {
-            m_weights[p1] += y1 * (a1 - alph1) * inst1.getValue(p1);
+            m_weights[p1] += y1 * (a1 - alph1) * inst1.value(p1);
         }
-        Instance inst2 = m_data.getInstance(i2);
+        Instance inst2 = m_data.instance(i2);
         for (int p2 = 0; p2 < inst2.size(); p2++) {
-             m_weights[p2] += y2 * (a2 - alph2) * inst2.getValue(p2);
+            m_weights[p2] += y2 * (a2 - alph2) * inst2.value(p2);
         }
-     
+
         // Update error cache using new Lagrange multipliers
-        
+
         for (Integer j : m_I0) {
             if ((j != i1) && (j != i2)) {
-                m_errors[j] += y1 * (a1 - alph1)
-                        * m_kernel.calculateDistance(m_data.getInstance(i1), m_data.getInstance(j)) + y2 * (a2 - alph2)
-                        * m_kernel.calculateDistance(m_data.getInstance(j), m_data.getInstance(i2));
+                m_errors[j] += y1 * (a1 - alph1) * m_kernel.calculateDistance(m_data.instance(i1), m_data.instance(j))
+                        + y2 * (a2 - alph2) * m_kernel.calculateDistance(m_data.instance(j), m_data.instance(i2));
             }
         }
 
@@ -876,7 +875,6 @@ public class BinaryLinearSMO extends Verbose implements Classifier {
         return true;
     }
 
-
     public int classifyInstance(Instance instance) {
         double output = SVMOutput(instance);
         if (output < 0) {
@@ -890,5 +888,14 @@ public class BinaryLinearSMO extends Verbose implements Classifier {
         double[] out = new double[2];
         out[classifyInstance(instance)]++;
         return out;
+    }
+
+    public void setC(double c) {
+        this.m_C = c;
+
+    }
+
+    public double[] getWeights() {
+        return m_weights;
     }
 }
