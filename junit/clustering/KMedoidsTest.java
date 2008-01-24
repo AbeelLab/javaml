@@ -88,6 +88,6 @@ public class KMedoidsTest {
     private void add(Dataset data,float x,float y){
         double[] values={x,y};
         SimpleInstance in=new SimpleInstance(values);
-        data.addInstance(in);
+        data.add(in);
     }
 }

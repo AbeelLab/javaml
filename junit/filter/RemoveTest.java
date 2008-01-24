@@ -22,16 +22,16 @@ public class RemoveTest {
         Instance inst = new SimpleInstance(vals);
         Dataset data = new SimpleDataset();
         for (int i = 0; i < 10; i++) {
-            data.addInstance(inst);
+            data.add(inst);
 
         }
         int[] indices = { 0, 1, 2 };
         AbstractFilter rem = new net.sf.javaml.filter.RemoveAttributes(indices);
         Dataset out = rem.filterDataset(data);
         // System.out.println(out);
-        Assert.assertTrue(out.getInstance(0).getValue(0) == 4);
-        Assert.assertTrue(out.getInstance(0).getValue(1) == 5);
-        Assert.assertTrue(out.getInstance(0).getValue(2) == 6);
+        Assert.assertTrue(out.instance(0).value(0) == 4);
+        Assert.assertTrue(out.instance(0).value(1) == 5);
+        Assert.assertTrue(out.instance(0).value(2) == 6);
     }
 
 }

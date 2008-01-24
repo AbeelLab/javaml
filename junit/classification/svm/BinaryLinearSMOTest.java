@@ -24,10 +24,12 @@
  */
 package junit.classification.svm;
 
+import java.io.File;
+
 import net.sf.javaml.classification.evaluation.CrossValidation;
 import net.sf.javaml.classification.svm.BinaryLinearSMO;
 import net.sf.javaml.core.Dataset;
-import net.sf.javaml.tools.data.DatasetLoader;
+import net.sf.javaml.tools.data.FileHandler;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -40,7 +42,7 @@ public class BinaryLinearSMOTest {
         try {
             CrossValidation cv=new CrossValidation(smo);
             System.out.println("Iris dataset");
-            Dataset data = DatasetLoader.loadDataset("iris.data", 4);
+            Dataset data = FileHandler.loadDataset(new File("devtools/data/iris.data"), 4);
             System.out.println(cv.crossValidation(data, 1,5));
 //            smo.setVerbose(true);
 //            smo.buildClassifier(data);
@@ -53,7 +55,7 @@ public class BinaryLinearSMOTest {
             
             System.out.println();
             System.out.println("BUPA dataset");
-            data = DatasetLoader.loadDataset("BUPA.tsv", 6);
+            data = FileHandler.loadDataset(new File("devtools/data/BUPA.tsv"), 6);
           
 //            smo.buildClassifier(data);
 //            System.out.println("SMO\ttrue");

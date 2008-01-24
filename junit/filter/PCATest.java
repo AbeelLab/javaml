@@ -13,8 +13,8 @@ import net.sf.javaml.core.SimpleDataset;
 import net.sf.javaml.core.SimpleInstance;
 import net.sf.javaml.filter.AbstractFilter;
 import net.sf.javaml.filter.DatasetFilter;
-import net.sf.javaml.filter.DatasetNormalizeMidrange;
 import net.sf.javaml.filter.PrincipalComponentsAnalysis;
+import net.sf.javaml.filter.normalize.DatasetNormalizeMidrange;
 
 import org.junit.Test;
 
@@ -38,17 +38,17 @@ public class PCATest {
 
         Dataset data = new SimpleDataset();
         Instance inst = new SimpleInstance(vals1);
-        data.addInstance(inst);
+        data.add(inst);
         inst = new SimpleInstance(vals2);
-        data.addInstance(inst);
+        data.add(inst);
         inst = new SimpleInstance(vals3);
-        data.addInstance(inst);
+        data.add(inst);
         inst = new SimpleInstance(vals4);
-        data.addInstance(inst);
+        data.add(inst);
         inst = new SimpleInstance(vals5);
-        data.addInstance(inst);
+        data.add(inst);
         inst = new SimpleInstance(vals6);
-        data.addInstance(inst);
+        data.add(inst);
 
         DatasetFilter norm = new DatasetNormalizeMidrange(0.5, 1);
         Dataset tmp = norm.filterDataset(data);
@@ -57,8 +57,8 @@ public class PCATest {
         Dataset out = rem.filterDataset(tmp);
         // System.out.println("JML "+out);
         for (int i = 0; i < out.size(); i++) {
-            System.out.println("PCATest-JML: " + out.getInstance(i));
-            System.out.println("PCATest-JML back: " + rem.unfilterInstance(out.getInstance(i)));
+            System.out.println("PCATest-JML: " + out.instance(i));
+//            System.out.println("PCATest-JML back: " + rem.unfilterInstance(out.instance(i)));
         }
 
         

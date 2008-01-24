@@ -30,7 +30,7 @@ import net.sf.javaml.core.SimpleDataset;
 import net.sf.javaml.core.SimpleInstance;
 import net.sf.javaml.filter.DatasetFilter;
 import net.sf.javaml.filter.Filter;
-import net.sf.javaml.filter.DatasetNormalizeMidrange;
+import net.sf.javaml.filter.normalize.DatasetNormalizeMidrange;
 
 import org.junit.Test;
 
@@ -46,21 +46,21 @@ public class NormalizeMidrangeTest {
 
         DatasetFilter  f = new DatasetNormalizeMidrange(0.5, 1);
         data = f.filterDataset(data);
-        Assert.assertFalse(new Float(data.getInstance(0).getValue(2)).equals(Float.NaN));
-        Assert.assertFalse(new Float(data.getInstance(1).getValue(2)).equals(Float.NaN));
-        Assert.assertFalse(new Float(data.getInstance(2).getValue(2)).equals(Float.NaN));
-        Assert.assertFalse(new Float(data.getInstance(3).getValue(2)).equals(Float.NaN));
-        Assert.assertFalse(new Float(data.getInstance(0).getValue(0)).equals(Float.NaN));
-        Assert.assertFalse(new Float(data.getInstance(1).getValue(1)).equals(Float.NaN));
-        Assert.assertFalse(new Float(data.getInstance(2).getValue(0)).equals(Float.NaN));
-        Assert.assertFalse(new Float(data.getInstance(3).getValue(1)).equals(Float.NaN));
+        Assert.assertFalse(new Float(data.instance(0).value(2)).equals(Float.NaN));
+        Assert.assertFalse(new Float(data.instance(1).value(2)).equals(Float.NaN));
+        Assert.assertFalse(new Float(data.instance(2).value(2)).equals(Float.NaN));
+        Assert.assertFalse(new Float(data.instance(3).value(2)).equals(Float.NaN));
+        Assert.assertFalse(new Float(data.instance(0).value(0)).equals(Float.NaN));
+        Assert.assertFalse(new Float(data.instance(1).value(1)).equals(Float.NaN));
+        Assert.assertFalse(new Float(data.instance(2).value(0)).equals(Float.NaN));
+        Assert.assertFalse(new Float(data.instance(3).value(1)).equals(Float.NaN));
 
     }
 
     private void add(Dataset data, float x, float y, float z) {
         double[] values = { x, y, z };
         SimpleInstance in = new SimpleInstance(values);
-        data.addInstance(in);
+        data.add(in);
     }
 
 }
