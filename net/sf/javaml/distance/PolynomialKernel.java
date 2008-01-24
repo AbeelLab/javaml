@@ -56,7 +56,7 @@ public class PolynomialKernel implements DistanceMeasure {
         double result = 0;
 
         for (int i = 0; i < inst1.size(); i++) {
-            result += inst1.getValue(i) * inst2.getValue(i);
+            result += inst1.value(i) * inst2.value(i);
         }
         return result;
     }

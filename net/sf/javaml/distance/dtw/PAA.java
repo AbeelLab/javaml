@@ -55,7 +55,7 @@ final class PAA {
             double timeSum = 0.0D;
             double measurementSums = 0;
             for (int pt = ptToReadFrom; pt <= ptToReadTo; pt++) {
-                measurementSums += ts.getValue(pt);
+                measurementSums += ts.value(pt);
                 // timeSum += ts.getTimeAtNthPoint(pt);
                 // for(int dim = 0; dim < ts.numOfDimensions(); dim++)
                 // measurementSums[dim] += currentPoint[dim];

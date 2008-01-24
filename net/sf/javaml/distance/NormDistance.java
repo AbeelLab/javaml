@@ -82,7 +82,7 @@ public class NormDistance extends AbstractDistance {
         }
         double sum = 0;
         for (int i = 0; i < x.size(); i++) {
-            sum += Math.pow(Math.abs(y.getValue(i) - x.getValue(i)), power);
+            sum += Math.pow(Math.abs(y.value(i) - x.value(i)), power);
         }
         return Math.pow(sum, 1 / power);
     }

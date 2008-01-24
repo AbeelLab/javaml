@@ -61,14 +61,14 @@ public class AngularDistance extends AbstractDistance {
 
     private static double calcTheta(Instance pos) {
         double theta = 0.0;
-        double r = Math.sqrt(pos.getValue(0) * pos.getValue(0) + pos.getValue(1) * pos.getValue(1));
-        theta = Math.atan2(r, pos.getValue(2));
+        double r = Math.sqrt(pos.value(0) * pos.value(0) + pos.value(1) * pos.value(1));
+        theta = Math.atan2(r, pos.value(2));
         return theta;
     }
 
     private static double calcPhi(Instance pos) {
         double phi = 0.0;
-        phi = Math.atan2(pos.getValue(1), pos.getValue(0));
+        phi = Math.atan2(pos.value(1), pos.value(0));
         if (phi < 0.0)
             phi += 2.0 * Math.PI;
         return phi;

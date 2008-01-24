@@ -45,16 +45,16 @@ public class DTW extends AbstractDistance {
         double costMatrix[][] = new double[tsI.size()][tsJ.size()];
         int maxI = tsI.size() - 1;
         int maxJ = tsJ.size() - 1;
-        costMatrix[0][0] = euclideanDist(tsI.getValue(0), tsJ.getValue(0));
+        costMatrix[0][0] = euclideanDist(tsI.value(0), tsJ.value(0));
         for (int j = 1; j <= maxJ; j++)
-            costMatrix[0][j] = costMatrix[0][j - 1] + euclideanDist(tsI.getValue(0), tsJ.getValue(j));
+            costMatrix[0][j] = costMatrix[0][j - 1] + euclideanDist(tsI.value(0), tsJ.value(j));
 
         for (int i = 1; i <= maxI; i++) {
-            costMatrix[i][0] = costMatrix[i - 1][0] + euclideanDist(tsI.getValue(i), tsJ.getValue(0));
+            costMatrix[i][0] = costMatrix[i - 1][0] + euclideanDist(tsI.value(i), tsJ.value(0));
             for (int j = 1; j <= maxJ; j++) {
                 double minGlobalCost = Math.min(costMatrix[i - 1][j], Math.min(costMatrix[i - 1][j - 1],
                         costMatrix[i][j - 1]));
-                costMatrix[i][j] = minGlobalCost + euclideanDist(tsI.getValue(i), tsJ.getValue(j));
+                costMatrix[i][j] = minGlobalCost + euclideanDist(tsI.value(i), tsJ.value(j));
             }
 
         }
@@ -111,15 +111,15 @@ public class DTW extends AbstractDistance {
             int i = currentCell.x();
             int j = currentCell.y();
             if (i == 0 && j == 0)
-                costMatrix.put(i, j, euclideanDist(tsI.getValue(0), tsJ.getValue(0)));
+                costMatrix.put(i, j, euclideanDist(tsI.value(0), tsJ.value(0)));
             else if (i == 0)
-                costMatrix.put(i, j, euclideanDist(tsI.getValue(0), tsJ.getValue(j)) + costMatrix.get(i, j - 1));
+                costMatrix.put(i, j, euclideanDist(tsI.value(0), tsJ.value(j)) + costMatrix.get(i, j - 1));
             else if (j == 0) {
-                costMatrix.put(i, j, euclideanDist(tsI.getValue(i), tsJ.getValue(0)) + costMatrix.get(i - 1, j));
+                costMatrix.put(i, j, euclideanDist(tsI.value(i), tsJ.value(0)) + costMatrix.get(i - 1, j));
             } else {
                 double minGlobalCost = Math.min(costMatrix.get(i - 1, j), Math.min(costMatrix.get(i - 1, j - 1),
                         costMatrix.get(i, j - 1)));
-                costMatrix.put(i, j, minGlobalCost + euclideanDist(tsI.getValue(i), tsJ.getValue(j)));
+                costMatrix.put(i, j, minGlobalCost + euclideanDist(tsI.value(i), tsJ.value(j)));
             }
         }
 

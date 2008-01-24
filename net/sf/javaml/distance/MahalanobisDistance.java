@@ -40,7 +40,7 @@ public class MahalanobisDistance extends AbstractDistance {
         double[][] del = new double[3][1];
         for (int m = 0; m < 3; m++) {
             for (int n = 0; n < 1; n++) {
-                del[m][n] = i.getValue(m) - j.getValue(m);
+                del[m][n] = i.value(m) - j.value(m);
             }
         }
         Matrix M1 = new Matrix(del);
@@ -49,7 +49,7 @@ public class MahalanobisDistance extends AbstractDistance {
         double[][] covar = new double[3][3];
         for (int m = 0; m < 3; m++) {
             for (int n = 0; n < 3; n++) {
-                covar[m][n] += (i.getValue(m) - j.getValue(m)) * (i.getValue(n) - j.getValue(n));
+                covar[m][n] += (i.value(m) - j.value(m)) * (i.value(n) - j.value(n));
             }
         }
         Matrix cov = new Matrix(covar);

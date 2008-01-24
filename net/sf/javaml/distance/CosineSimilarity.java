@@ -52,9 +52,9 @@ public class CosineSimilarity extends AbstractSimilarity {
         double sumTwo = 0;
 
         for (int i = 0; i < x.size(); i++) {
-            sumTop += x.getValue(i) * y.getValue(i);
-            sumOne += x.getValue(i) * x.getValue(i);
-            sumTwo += y.getValue(i) * y.getValue(i);
+            sumTop += x.value(i) * y.value(i);
+            sumOne += x.value(i) * x.value(i);
+            sumTwo += y.value(i) * y.value(i);
         }
         double cosSim = sumTop / (Math.sqrt(sumOne) * Math.sqrt(sumTwo));
         if (cosSim < 0)

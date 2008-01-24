@@ -63,9 +63,9 @@ public class NormalizedEuclideanDistance extends EuclideanDistance {
             Instance instance) {
         double[] out = new double[instance.size()];
         for (int i = 0; i < out.length; i++) {
-            double range = Math.abs(max.getValue(i) - min.getValue(i));
-            double middle = Math.abs(max.getValue(i) + min.getValue(i)) / 2;
-            out[i] = ((instance.getValue(i) - middle) / range) * normalRange + normalMiddle;
+            double range = Math.abs(max.value(i) - min.value(i));
+            double middle = Math.abs(max.value(i) + min.value(i)) / 2;
+            out[i] = ((instance.value(i) - middle) / range) * normalRange + normalMiddle;
         }
         return new SimpleInstance(out, instance);
     }

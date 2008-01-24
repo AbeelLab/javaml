@@ -29,7 +29,7 @@ import net.sf.javaml.core.Instance;
 
 /**
  * The Manhattan distance is the sum of the (absolute) differences of their
- * coordinates. The taxicab metric is also known as rectilinear distance,
+ * coordinates. The taxicab metric is also known as recti-linear distance,
  * Minkowski's L1 distance, city block distance, or Manhattan distance.
  * 
  * 
@@ -57,22 +57,22 @@ public class ManhattanDistance extends AbstractDistance {
             throw new RuntimeException("Both instances should contain the same number of values.");
         double sum = 0.0;
         for (int i = 0; i < x.size(); i++) {
-            sum += Math.abs(x.getValue(i) - y.getValue(i));
+            sum += Math.abs(x.value(i) - y.value(i));
         }
         return sum;
     }
 
     /**
-     * Returns the theoretical maximum distance for the given dataset. This is
-     * based on the virtual Min and Max instances of the dataset.
+     * Returns the theoretical maximum distance for the given data set. This is
+     * based on the virtual Min and Max instances of the data set.
      * 
      * @see Dataset
      * 
      * @param data
-     *            the dataset for which the maximal possible distance should be
+     *            the data set for which the maximal possible distance should be
      *            calculated.
      * 
-     * @return the maximum possible distance between instances in the dataset
+     * @return the maximum possible distance between instances in the data set
      */
     public double getMaximumDistance(Dataset data) {
         Instance max = data.getMaximumInstance();
@@ -82,13 +82,13 @@ public class ManhattanDistance extends AbstractDistance {
 
     /**
      * Return the minimal Manhattan distance between two instances in the given
-     * dataset. This is always zero as the Manhattan distances cannot be
+     * data set. This is always zero as the Manhattan distances cannot be
      * negative and the distance between two equal instances is zero.
      * 
      * @param data
-     *            the dataset for which the minimal possible distance should be
+     *            the data set for which the minimal possible distance should be
      *            calculated.
-     * @return the minimum possible Manhattan distance for the dataset, i.e.
+     * @return the minimum possible Manhattan distance for the data set, i.e.
      *         zero
      */
     public double getMinimumDistance(Dataset data) {

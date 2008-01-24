@@ -68,7 +68,7 @@ public class RBFKernel extends AbstractSimilarity {
     private final double dotProduct(Instance x, Instance y) {
         double result = 0;
         for (int i = 0; i < x.size(); i++) {
-            result += x.getValue(i) * y.getValue(i);
+            result += x.value(i) * y.value(i);
         }
         return result;
     }
