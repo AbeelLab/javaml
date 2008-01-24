@@ -44,7 +44,7 @@ import net.sf.javaml.core.Instance;
  * @author Thomas Abeel
  * 
  */
-public class PearsonCorrelationCoefficient extends AbstractSimilarity {
+public class PearsonCorrelationCoefficient extends AbstractCorrelation {
     /**
      * 
      */
@@ -58,11 +58,11 @@ public class PearsonCorrelationCoefficient extends AbstractSimilarity {
             throw new RuntimeException("Both instances should have the same length");
         double xy = 0, x = 0, x2 = 0, y = 0, y2 = 0;
         for (int i = 0; i < a.size(); i++) {
-            xy += a.getValue(i) * b.getValue(i);
-            x += a.getValue(i);
-            y += b.getValue(i);
-            x2 += a.getValue(i) * a.getValue(i);
-            y2 += b.getValue(i) * b.getValue(i);
+            xy += a.value(i) * b.value(i);
+            x += a.value(i);
+            y += b.value(i);
+            x2 += a.value(i) * a.value(i);
+            y2 += b.value(i) * b.value(i);
         }
         int n = a.size();
         return (xy - (x * y) / n) / Math.sqrt((x2 - (x * x) / n) * (y2 - (y * y) / n));
