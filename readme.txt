@@ -91,6 +91,10 @@ For the SVN download you will also need JUnit 4.0 to compile the unit tests.
 ------------
 Since version 0.0.10 we have incorporated the JAMA version 1.0.2 into the library.
 
+* AJT
+-----
+Since version 0.0.14 the AJT library is required. This library is supplied with Java-ML
+
 * Third party libraries needed to build
 ---------------------------------------
 If you want the project yourself, you need several libraries that are required by the build script.
