@@ -63,16 +63,16 @@ public class LogLikelihoodFunction {
 
 	// likelihood of all instances in a given cluster
 	public double logLikelihood(Dataset cluster) {
-		double instanceLength = cluster.getInstance(0).size();
+		double instanceLength = cluster.instance(0).size();
 		this.count = instanceLength * cluster.size();
 		sum = 0;
 		sum2 = 0;
 
 		for (int row = 0; row < cluster.size(); row++) {
 			for (int column = 0; column < instanceLength; column++) {
-				sum += cluster.getInstance(row).getValue(column);
-				sum2 += cluster.getInstance(row).getValue(column)
-						* cluster.getInstance(row).getValue(column);
+				sum += cluster.instance(row).value(column);
+				sum2 += cluster.instance(row).value(column)
+						* cluster.instance(row).value(column);
 			}
 		}
 
@@ -86,7 +86,7 @@ public class LogLikelihoodFunction {
 
 	// sum of loglikelihood of each column
 	public double logLikelihoodC(Dataset cluster) {
-		double instanceLength = cluster.getInstance(0).size();
+		double instanceLength = cluster.instance(0).size();
 		double loglikelihood = 0;
 		double countTotal = 0;
 		double sumTotal = 0;

@@ -35,6 +35,17 @@ import net.sf.javaml.core.Complex;
  */
 public class MathUtils {
 
+    /**
+     * Test whether a is zero with acceptable error.
+     * 
+     * @param a
+     * @return true if a is zero, false otherwise
+     */
+    public static boolean zero(double a) {
+        return Math.abs(a) < epsilon;
+
+    }
+
     private static final double epsilon = 1e-6;
 
     /**
@@ -58,7 +69,7 @@ public class MathUtils {
      *            a double
      */
     public static boolean eq(double a, double b) {
-        return (a - b < epsilon) && (b - a < epsilon);
+        return ((a - b < epsilon) && (b - a < epsilon)) || (Double.isNaN(a) && Double.isNaN(b));
     }
 
     /**
@@ -141,6 +152,30 @@ public class MathUtils {
 
     public static double log2(double n) {
         return Math.log(n) / Math.log(2);
+    }
+
+    /**
+     * Calculates the harmonic mean of the values in the supplied array.
+     * 
+     * @param g
+     * @return
+     */
+    public static double harmonicMean(double[] g) {
+        double sum = 0;
+
+        for (double d : g)
+            sum += 1 / d;
+
+        return g.length / sum;
+    }
+
+    public static double arithmicMean(double[] g) {
+        double sum = 0;
+
+        for (double d : g)
+            sum += d;
+
+        return sum / g.length;
     }
 
 }
