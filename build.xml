@@ -5,7 +5,7 @@
 	<!-- set global properties for this build -->
 	<property name="src" location="." />
 	<property name="build" location="build" />
-	<property name="version" value="0.0.13" />
+	<property name="version" value="0.0.14" />
 	<property name="revision" value="notset" />
 	<property name="statusText" value="notset" />
 	<property name="dist" location="javaml-${version}" />
@@ -34,12 +34,12 @@
 				<include name="**/*.java" />
 			</fileset>
 		</replaceregexp>
-		<javadoc classpath="commons-math-1.1.jar" packagenames="net.sf.javaml.*,gov.nist.math.jama.*,nz.ac.waikato.cs.weka.*" sourcepath="${build}/src" defaultexcludes="yes" destdir="${dist}/doc" author="true" version="true" use="true" windowtitle="Java Machine Learning Library ${version}">
+		<javadoc classpath="ajt-1.9.jar:commons-math-1.1.jar" packagenames="net.sf.javaml.*,gov.nist.math.jama.*,nz.ac.waikato.cs.weka.*" sourcepath="${build}/src" defaultexcludes="yes" destdir="${dist}/doc" author="true" version="true" use="true" windowtitle="Java Machine Learning Library ${version}">
 			<doctitle>
 				<![CDATA[<h1>Java Machine Learning Library ${version} - ${TODAY_LOCAL}</h1>]]></doctitle>
 		<bottom>
-			<![CDATA[<i>Copyright &#169; 2006-2007 - <a target="_blank" href="http://www.abeel.be/">Thomas Abeel</a> - All Rights Reserved.</i>]]></bottom>
-	<taglet name="net.sourceforge.taglets.Taglets" path="devtools/lib/ajt-1.8.jar:devtools/lib/taglets.jar" />
+			<![CDATA[<i>Copyright &#169; 2006-2008 - <a target="_blank" href="http://www.abeel.be/">Thomas Abeel</a> - All Rights Reserved.</i>]]></bottom>
+	<taglet name="net.sourceforge.taglets.Taglets" path="ajt-1.9.jar:devtools/lib/taglets.jar" />
 </javadoc>
 </target>
 
@@ -54,6 +54,7 @@
 	</fileset>
 </copy>
 <copy file="commons-math-1.1.jar" todir="${dist}/" />
+<copy file="ajt-1.9.jar" todir="${dist}/" />
 
 <zip destfile="${dist}.zip" basedir="${dist}" />
 <tar tarfile="${dist}.tar" basedir="${dist}" excludes="${dist}.zip" />
@@ -91,7 +92,7 @@
 
 <target name="compile" depends="init,tag" description="compile the source ">
 <!-- Compile the java code from ${src} into ${build} -->
-<javac source="1.5" target="1.5" classpath="junit-4.3.1.jar:commons-math-1.1.jar" srcdir="${src}" destdir="${build}" excludes="devtools/**" />
+<javac source="1.5" target="1.5" classpath="ajt-1.9.jar:junit-4.3.1.jar:commons-math-1.1.jar" srcdir="${src}" destdir="${build}" excludes="devtools/**" />
 </target>
 
 <target name="dist" depends="compile" description="generate the distribution">
@@ -106,6 +107,7 @@
 <copy todir="${build}/src">
 	<fileset dir="${src}">
 		<include name="**/*.java" />
+		<include name="**/*.html" />
 	</fileset>
 </copy>
 <!-- Replace the SVN.REVISION tag with the current SVN revision number -->
