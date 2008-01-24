@@ -126,15 +126,15 @@ public class KDTree {
     // Being used in other classes (KDTree).
     private double[][] initializeRanges() {
 
-        int numAtt = data.getInstance(0).size();
+        int numAtt = data.instance(0).size();
         double[][] ranges = new double[numAtt][3];
 
         // initialize ranges using the first instance
-        updateRangesFirst(data.getInstance(0), numAtt, ranges);
+        updateRangesFirst(data.instance(0), numAtt, ranges);
 
         // update ranges, starting from the second
         for (int i = 1; i < data.size(); i++) {
-            updateRanges(data.getInstance(i), numAtt, ranges);
+            updateRanges(data.instance(i), numAtt, ranges);
         }
         // m_Ranges = ranges;
         // System.out.println("Initialized ranges");
@@ -158,7 +158,7 @@ public class KDTree {
 
         // updateRangesFirst must have been called on ranges
         for (int j = 0; j < numAtt; j++) {
-            double value = instance.getValue(j);
+            double value = instance.value(j);
             if (value < ranges[j][R_MIN]) {
                 ranges[j][R_MIN] = value;
                 ranges[j][R_WIDTH] = ranges[j][R_MAX] - ranges[j][R_MIN];
@@ -199,8 +199,8 @@ public class KDTree {
         // System.out.println("In ranges the first supplied instance is:\n"+
         // instance.toString());
         for (int j = 0; j < numAtt; j++) {
-            ranges[j][R_MIN] = instance.getValue(j);
-            ranges[j][R_MAX] = instance.getValue(j);
+            ranges[j][R_MIN] = instance.value(j);
+            ranges[j][R_MAX] = instance.value(j);
             ranges[j][R_WIDTH] = 0.0;
 
         }
@@ -344,7 +344,7 @@ public class KDTree {
         int numLeft = 0;
         for (int i = startIdx, j = 0; i <= endIdx; i++, j++) {
             // value <= splitValue
-            if (valueIsSmallerEqual(data.getInstance(m_InstList[i]), splitDim, splitValue)) {
+            if (valueIsSmallerEqual(data.instance(m_InstList[i]), splitDim, splitValue)) {
                 left[j] = true;
                 numLeft++;
             } else {
@@ -368,7 +368,7 @@ public class KDTree {
      */
     private boolean valueIsSmallerEqual(Instance instance, int dim, double value) { // This
         // stays
-        return instance.getValue(dim) <= value; // Utils.smOrEq(instance.value(dim),
+        return instance.value(dim) <= value; // Utils.smOrEq(instance.value(dim),
         // value);
     }
 
@@ -788,14 +788,14 @@ public class KDTree {
         // being used in other classes (KDTree and XMeans)
         private double[][] initializeRanges(int[] instList, int startIdx, int endIdx) {
 
-            int numAtt = data.getInstance(0).size();
+            int numAtt = data.instance(0).size();
             double[][] ranges = new double[numAtt][3];
 
             // initialize ranges using the first instance
-            updateRangesFirst(data.getInstance(instList[startIdx]), numAtt, ranges);
+            updateRangesFirst(data.instance(instList[startIdx]), numAtt, ranges);
             // update ranges, starting from the second
             for (int i = startIdx + 1; i <= endIdx; i++) {
-                updateRanges(data.getInstance(instList[i]), numAtt, ranges);
+                updateRanges(data.instance(instList[i]), numAtt, ranges);
             }
 
             return ranges;
@@ -817,7 +817,7 @@ public class KDTree {
 
             // updateRangesFirst must have been called on ranges
             for (int j = 0; j < numAtt; j++) {
-                double value = instance.getValue(j);
+                double value = instance.value(j);
                 if (value < ranges[j][R_MIN]) {
                     ranges[j][R_MIN] = value;
                     ranges[j][R_WIDTH] = ranges[j][R_MAX] - ranges[j][R_MIN];
@@ -858,8 +858,8 @@ public class KDTree {
             // System.out.println("In ranges the first supplied instance is:\n"+
             // instance.toString());
             for (int j = 0; j < numAtt; j++) {
-                ranges[j][R_MIN] = instance.getValue(j);
-                ranges[j][R_MAX] = instance.getValue(j);
+                ranges[j][R_MIN] = instance.value(j);
+                ranges[j][R_MAX] = instance.value(j);
                 ranges[j][R_WIDTH] = 0.0;
 
             }
@@ -943,7 +943,7 @@ public class KDTree {
                 // go further down the tree to look for the leaf the instance
                 // should
                 // be in
-                double instanceValue = instance.getValue(m_SplitDim);
+                double instanceValue = instance.value(m_SplitDim);
                 boolean instanceInLeft = instanceValue <= m_SplitValue;
                 if (instanceInLeft) {
                     success = m_Left.addInstance(instance);
@@ -1008,12 +1008,12 @@ public class KDTree {
 
             // updateRangesFirst must have been called on ranges
             for (int j = 0; j < ranges.length; j++) {
-                double value = instance.getValue(j);
+                double value = instance.value(j);
                 if (value < ranges[j][R_MIN]) {
                     ranges[j][R_MIN] = value;
                     ranges[j][R_WIDTH] = ranges[j][R_MAX] - ranges[j][R_MIN];
                 } else {
-                    if (instance.getValue(j) > ranges[j][R_MAX]) {
+                    if (instance.value(j) > ranges[j][R_MAX]) {
                         ranges[j][R_MAX] = value;
                         ranges[j][R_WIDTH] = ranges[j][R_MAX] - ranges[j][R_MIN];
                     }
@@ -1107,7 +1107,7 @@ public class KDTree {
                     for (int i = m_Start; i <= m_End; i++) {
                         int instIndex = m_InstList[i];
                         text.append(instIndex + ": ");
-                        text.append(data.getInstance(instIndex).toString() + "\n");
+                        text.append(data.instance(instIndex).toString() + "\n");
                     }
                 }
             }
@@ -1257,7 +1257,7 @@ public class KDTree {
 
             double[] extremeValues = new double[candidate.size()];
             for (int i = 0; i < candidate.size(); i++) {
-                if ((competitor.getValue(i) - candidate.getValue(i)) > 0) {
+                if ((competitor.value(i) - candidate.value(i)) > 0) {
                     extremeValues[i] = m_NodeRanges[i][R_MAX];
                 } else {
                     extremeValues[i] = m_NodeRanges[i][R_MIN];
@@ -1285,10 +1285,10 @@ public class KDTree {
             double[] closestPointValues = new double[x.size()];
             boolean inside = true;
             for (int i = 0; i < x.size(); i++) {
-                if (x.getValue(i) < m_NodeRanges[i][R_MIN]) {
+                if (x.value(i) < m_NodeRanges[i][R_MIN]) {
                     closestPointValues[i] = m_NodeRanges[i][R_MIN];
                     inside = false;
-                } else if (x.getValue(i) > m_NodeRanges[i][R_MAX]) {
+                } else if (x.value(i) > m_NodeRanges[i][R_MAX]) {
                     closestPointValues[i] = m_NodeRanges[i][R_MAX];
                     inside = false;
                 }
@@ -1332,7 +1332,7 @@ public class KDTree {
             // set assignments for all instances of this node
             for (int i = m_Start; i <= m_End; i++) {
                 int instIndex = m_InstList[i];
-                Instance inst = data.getInstance(instIndex);
+                Instance inst = data.instance(instIndex);
                 // if (instList[i] == 664) System.out.println("664***");
                 int newC = closestPoint(inst, centers, centList);
                 // int newC = clusterProcessedInstance(inst, centers);

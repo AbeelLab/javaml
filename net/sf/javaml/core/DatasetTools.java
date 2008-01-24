@@ -7,10 +7,12 @@ package net.sf.javaml.core;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.commons.math.stat.descriptive.moment.StandardDeviation;
+import java.util.Random;
+import java.util.Vector;
 
 import net.sf.javaml.distance.DistanceMeasure;
+
+import org.apache.commons.math.stat.descriptive.moment.StandardDeviation;
 
 /**
  * This class provides utility methods on datasets.
@@ -28,31 +30,87 @@ import net.sf.javaml.distance.DistanceMeasure;
 final public class DatasetTools {
 
     /**
-     * Returns the instance of the given dataset that is closest to the instance
-     * that is given as a parameter.
+     * Returns the instance of the given data set that is closest to the
+     * instance that is given as a parameter.
      * 
      * @param data
-     *            the dataset to search in
+     *            the data set to search in
      * @param dm
      *            the distance measure used to calculate the distance between
      *            instances
      * @param inst
      *            the instance for which we need to find the closest
-     * @return the instance from the supplied dataset that is closest to the
+     * @return the instance from the supplied data set that is closest to the
      *         supplied instance
      * 
      */
-    public static Instance getClosest(Dataset data, DistanceMeasure dm, Instance inst) {
-        Instance closest = data.getInstance(0);
+    public static Instance getNearest(Dataset data, DistanceMeasure dm, Instance inst) {
+        Instance closest = data.instance(0);
         double bestDistance = dm.calculateDistance(inst, closest);
         for (int i = 1; i < data.size(); i++) {
-            double tmpDistance = dm.calculateDistance(inst, data.getInstance(i));
+            double tmpDistance = dm.calculateDistance(inst, data.instance(i));
             if (dm.compare(tmpDistance, bestDistance)) {
                 bestDistance = tmpDistance;
-                closest = data.getInstance(i);
+                closest = data.instance(i);
             }
         }
         return closest;
+    }
+
+    /**
+     * Returns the k instances of the given data set that are the closest to the
+     * instance that is given as a parameter.
+     * 
+     * @param data
+     *            the data set to search in
+     * @param dm
+     *            the distance measure used to calculate the distance between
+     *            instances
+     * @param inst
+     *            the instance for which we need to find the closest
+     * @return the instances from the supplied data set that are closest to the
+     *         supplied instance
+     * 
+     */
+    public static List<Instance> getNearestK(Dataset data, DistanceMeasure dm, Instance inst, int k) {
+        Vector<Instance> closest = new Vector<Instance>();
+        // double bestDistance = dm.calculateDistance(inst, closest);
+        for (Instance tmp : data) {
+            if (!inst.equals(tmp)) {
+                closest.add(tmp);
+                if (closest.size() > k)
+                    removeFarthest(closest, inst, dm);
+            }
+            // double tmpDistance = dm.calculateDistance(inst,
+            // data.instance(i));
+            // if (dm.compare(tmpDistance, bestDistance)) {
+            // bestDistance = tmpDistance;
+            // closest = data.instance(i);
+            // }
+        }
+        return closest;
+    }
+
+    /*
+     * Removes the element from the vector that is farthest from the supplied
+     * element.
+     */
+    private static void removeFarthest(Vector<Instance> vector, Instance supplied, DistanceMeasure dist) {
+        Instance tmp = null;// ; = vector.get(0);
+        double max = 0;// dist.calculateDistance(vector.get(0), supplied);
+        for (Instance inst : vector) {
+            double tmpDist = dist.calculateDistance(inst, supplied);
+            if (dist.compare(max, tmpDist)) {
+                max = tmpDist;
+                tmp = inst;
+            }
+        }
+
+        if (!vector.remove(tmp)) {
+            System.out.println(tmp);
+            throw new RuntimeException("This should not happen...");
+        }
+
     }
 
     /**
@@ -68,13 +126,13 @@ final public class DatasetTools {
      *         attribute values
      */
     public static Instance getStandardDeviation(Dataset data) {
-        int numAttributes = data.getInstance(0).size();
+        int numAttributes = data.instance(0).size();
         double[] stdValues = new double[numAttributes];
         double[] attr = new double[data.size()];
         for (int i = 0; i < numAttributes; i++) {
             StandardDeviation std = new StandardDeviation();
             for (int j = 0; j < data.size(); j++) {
-                attr[j] = data.getInstance(j).getValue(i);
+                attr[j] = data.instance(j).value(i);
             }
             stdValues[i] = std.evaluate(attr);
         }
@@ -94,13 +152,13 @@ final public class DatasetTools {
     public static Instance getCentroid(Dataset data) {
         if (data.size() == 0)
             return null;
-        int instanceLength = data.getInstance(0).size();
+        int instanceLength = data.instance(0).size();
         double[] sumPosition = new double[instanceLength];
         for (int i = 0; i < data.size(); i++) {
-            Instance in = data.getInstance(i);
+            Instance in = data.instance(i);
             for (int j = 0; j < instanceLength; j++) {
 
-                sumPosition[j] += in.getWeight() * in.getValue(j);
+                sumPosition[j] += in.weight() * in.value(j);
 
             }
 
@@ -131,7 +189,7 @@ final public class DatasetTools {
         ArrayList<Instance> epsilonRange_List = new ArrayList<Instance>();
 
         for (int i = 0; i < data.size(); i++) {
-            Instance tmp = data.getInstance(i);
+            Instance tmp = data.instance(i);
             double distance = dm.calculateDistance(tmp, instance);
             if (distance < epsilon) {
                 epsilonRange_List.add(tmp);
@@ -156,7 +214,7 @@ final public class DatasetTools {
         Dataset out = new SimpleDataset();
         for (int i = 0; i < data.size(); i++) {
             if (i != index)
-                out.addInstance(data.getInstance(i));
+                out.add(data.instance(i));
         }
         return out;
 
@@ -172,7 +230,7 @@ final public class DatasetTools {
      */
     public static void merge(Dataset data, Dataset added) {
         for (int i = 0; i < added.size(); i++) {
-            data.addInstance(added.getInstance(i));
+            data.add(added.instance(i));
         }
     }
 
@@ -199,5 +257,28 @@ final public class DatasetTools {
         }
         return output;
     }
+
+    /**
+     * Create a random sample from the data set.
+     * 
+     * @param data
+     *            the data set to sample
+     * @param size
+     *            the number of instances in the output data set
+     * @return a random sample from the input data
+     */
+    public static Dataset randomSample(Dataset data, int size) {
+        Random rg = new Random();
+        Dataset out = new SimpleDataset();
+        while (out.size() < size) {
+            out.add(data.instance(rg.nextInt(data.size())).copy());
+        }
+        return out;
+
+    }
+
+    
+    
+    
 
 }

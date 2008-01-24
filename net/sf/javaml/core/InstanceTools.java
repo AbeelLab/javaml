@@ -60,5 +60,18 @@ public class InstanceTools {
         }
         return false;
     }
+    
+    /**
+     * Returns the same instance with a single attribute perturbed.
+     * 
+     * @param i
+     * @param attIndex
+     * @return
+     */
+    public static Instance perturb(Instance i,int attIndex){
+        double[] values = i.toArray();
+        values[attIndex]=Math.random();
+        return new SimpleInstance(values,i);
+    }
 
 }

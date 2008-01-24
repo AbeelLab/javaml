@@ -120,14 +120,14 @@ public class ComplexInstance implements Instance {
      *            the index of the attribute
      * @return the real part of the attribute on the supplied index
      */
-    public double getValue(int index) {
+    public double value(int index) {
         return values[index].re;
     }
 
     /**
      * {@inheritDoc}
      */
-    public int getClassValue() {
+    public int classValue() {
         return classValue;
     }
 
@@ -148,7 +148,7 @@ public class ComplexInstance implements Instance {
     /**
      * {@inheritDoc}
      */
-    public double getWeight() {
+    public double weight() {
         return this.weight;
     }
 
@@ -171,6 +171,10 @@ public class ComplexInstance implements Instance {
      */
     public double[] toArray() {
         return null;
+    }
+
+    public Instance copy() {
+       return new ComplexInstance(this.values,this.weight,this.classSet,this.classValue);
     }
 
 }

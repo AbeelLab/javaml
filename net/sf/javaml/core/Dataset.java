@@ -6,6 +6,8 @@
 
 package net.sf.javaml.core;
 
+import java.util.Collection;
+
 /**
  * 
  * {@jmlSource}
@@ -15,7 +17,7 @@ package net.sf.javaml.core;
  * @author Thomas Abeel
  * 
  */
-public interface Dataset extends Iterable<Instance> {
+public interface Dataset extends Collection<Instance>  {
 
     /**
      * Add an instance to this data set. The compatibility of the new item with
