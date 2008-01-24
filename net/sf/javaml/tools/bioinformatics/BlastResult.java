@@ -28,6 +28,7 @@ import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
@@ -120,7 +121,7 @@ public class BlastResult extends AbstractDistance implements Dataset {
         // return (float) value;
     }
 
-    public boolean addInstance(Instance i) {
+    public boolean add(Instance i) {
         // TODO it should be possible to add Gene instances, in all other cases
         // this should throw an exception
         return false;
@@ -131,7 +132,7 @@ public class BlastResult extends AbstractDistance implements Dataset {
         throw new UnsupportedOperationException("Method not implemented");
     }
 
-    public Instance getInstance(int index) {
+    public Instance instance(int index) {
         return genes.get(index);
     }
 
@@ -172,7 +173,7 @@ public class BlastResult extends AbstractDistance implements Dataset {
             return 1;
     }
 
-    public int getNumClasses() {
+    public int numClasses() {
         return 1;
     }
 
@@ -187,5 +188,85 @@ public class BlastResult extends AbstractDistance implements Dataset {
     public void sort(int index) {
       throw new UnsupportedOperationException("This method is not implemented for the Blast type dataset.");
         
+    }
+
+    public int numAttributes() {
+        return genes.get(0).size();
+    }
+
+    public double getAverageAttribute(int index) {
+        throw new UnsupportedOperationException("This method is not implemented for the Blast type dataset.");
+    }
+
+    public Instance getAverageInstance() {
+        throw new UnsupportedOperationException("This method is not implemented for the Blast type dataset.");
+    }
+
+    public double getMaximumAttribute(int index) {
+        throw new UnsupportedOperationException("This method is not implemented for the Blast type dataset.");
+    }
+
+    public double getMinimumAttribute(int index) {
+        throw new UnsupportedOperationException("This method is not implemented for the Blast type dataset.");
+    }
+
+    public Dataset copy() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public int numValues(int attIndex) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    public boolean addAll(Collection<? extends Instance> arg0) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    public void clear() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public boolean contains(Object arg0) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    public boolean containsAll(Collection<?> arg0) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    public boolean isEmpty() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    public boolean remove(Object arg0) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    public boolean removeAll(Collection<?> arg0) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    public boolean retainAll(Collection<?> arg0) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    public Object[] toArray() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public <T> T[] toArray(T[] arg0) {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

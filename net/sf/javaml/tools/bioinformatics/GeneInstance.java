@@ -48,15 +48,15 @@ public class GeneInstance implements Instance {
     public String toString(){
         return name;
     }
-    public int getClassValue() {
+    public int classValue() {
         return 0;
     }
 
-    public double getValue(int index) {
+    public double value(int index) {
         return 0;
     }
 
-    public double getWeight() {
+    public double weight() {
         return 1;
     }
 
@@ -77,7 +77,12 @@ public class GeneInstance implements Instance {
     }
 
     public Complex getComplex(int index) {
-        return new Complex(getValue(index),0);
+        return new Complex(value(index),0);
+    }
+
+    public Instance copy() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }
