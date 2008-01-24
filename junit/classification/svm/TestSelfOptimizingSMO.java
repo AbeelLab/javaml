@@ -9,8 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
-import net.sf.javaml.classification.svm.SelfOptimizingBinaryLinearSMO;
-import net.sf.javaml.classification.svm.SelfOptimizingBinaryLinearSMO2;
+//import net.sf.javaml.classification.svm.SelfOptimizingBinaryLinearSMO;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.tools.data.FileHandler;
 
@@ -24,10 +23,10 @@ public class TestSelfOptimizingSMO {
             Dataset data = FileHandler.loadDataset(new File("devtools/data/BUPA.tsv"), 6);
             System.out.println("Size: " + data.size());
             System.out.println("numAtt: " + data.numAttributes());
-            SelfOptimizingBinaryLinearSMO smo = new SelfOptimizingBinaryLinearSMO();
-            smo.buildClassifier(data);
-            System.out.println(smo.getC());
-            System.out.println(Arrays.toString(smo.getWeights()));
+//            SelfOptimizingBinaryLinearSMO smo = new SelfOptimizingBinaryLinearSMO();
+//            smo.buildClassifier(data);
+//            System.out.println(smo.getC());
+//            System.out.println(Arrays.toString(smo.getWeights()));
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

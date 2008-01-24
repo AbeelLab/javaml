@@ -9,8 +9,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
-import net.sf.javaml.classification.svm.SelfOptimizingBinaryLinearSMO;
-import net.sf.javaml.classification.svm.SelfOptimizingBinaryLinearSMO2;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.tools.data.FileHandler;
 
