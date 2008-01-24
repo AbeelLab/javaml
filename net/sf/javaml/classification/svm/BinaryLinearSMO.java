@@ -162,13 +162,13 @@ public class BinaryLinearSMO extends Verbose implements Classifier {
     /** Weight vector for linear machine. */
     private double[] m_weights;
 
-    /**
-     * Variables to hold weight vector in sparse form. (To reduce storage
-     * requirements.)
-     */
-    private double[] m_sparseWeights;
-
-    private int[] m_sparseIndices;
+    // /**
+    // * Variables to hold weight vector in sparse form. (To reduce storage
+    // * requirements.)
+    // */
+    // private double[] m_sparseWeights;
+    //
+    // private int[] m_sparseIndices;
 
     /** The transformed class values. */
     private double[] m_class;
@@ -315,8 +315,8 @@ public class BinaryLinearSMO extends Verbose implements Classifier {
         m_I2 = null;
         m_I3 = null;
         m_I4 = null;
-        m_sparseWeights = null;
-        m_sparseIndices = null;
+        // m_sparseWeights = null;
+        // m_sparseIndices = null;
 
         // Store the sum of weights
         verbose("Storing the sum of weights...");
@@ -355,8 +355,8 @@ public class BinaryLinearSMO extends Verbose implements Classifier {
                 return;
             }
             // if (m_KernelIsLinear) {
-            m_sparseWeights = new double[0];
-            m_sparseIndices = new int[0];
+            // m_sparseWeights = new double[0];
+            // m_sparseIndices = new int[0];
             m_class = null;
             // } else {
             // m_supportVectors = new SMOset(0);
@@ -393,8 +393,8 @@ public class BinaryLinearSMO extends Verbose implements Classifier {
         m_I4 = new HashSet<Integer>();
 
         // Clean out some instance variables
-        m_sparseWeights = null;
-        m_sparseIndices = null;
+        // m_sparseWeights = null;
+        // m_sparseIndices = null;
 
         // Initialize error cache
         m_errors = new double[m_data.size()];
@@ -478,23 +478,23 @@ public class BinaryLinearSMO extends Verbose implements Classifier {
         m_class = null;
 
         // Convert weight vector
-        double[] sparseWeights = new double[m_weights.length];
-        int[] sparseIndices = new int[m_weights.length];
-        int counter = 0;
-        for (int i = 0; i < m_weights.length; i++) {
-            if (m_weights[i] != 0.0) {
-                sparseWeights[counter] = m_weights[i];
-                sparseIndices[counter] = i;
-                counter++;
-            }
-        }
-        m_sparseWeights = new double[counter];
-        m_sparseIndices = new int[counter];
-        System.arraycopy(sparseWeights, 0, m_sparseWeights, 0, counter);
-        System.arraycopy(sparseIndices, 0, m_sparseIndices, 0, counter);
+        // double[] sparseWeights = new double[m_weights.length];
+        // int[] sparseIndices = new int[m_weights.length];
+        // int counter = 0;
+        // for (int i = 0; i < m_weights.length; i++) {
+        // if (m_weights[i] != 0.0) {
+        // sparseWeights[counter] = m_weights[i];
+        // sparseIndices[counter] = i;
+        // counter++;
+        // }
+        // }
+        // m_sparseWeights = new double[counter];
+        // m_sparseIndices = new int[counter];
+        // System.arraycopy(sparseWeights, 0, m_sparseWeights, 0, counter);
+        // System.arraycopy(sparseIndices, 0, m_sparseIndices, 0, counter);
 
         // Clean out weight vector
-        m_weights = null;
+        // m_weights = null;
 
         // We don't need the alphas in the linear case
         m_alpha = null;
@@ -526,37 +526,37 @@ public class BinaryLinearSMO extends Verbose implements Classifier {
         // if (m_KernelIsLinear) {
 
         // Is weight vector stored in sparse format?
-        if (m_sparseWeights == null) {
-            // verbose("SVMOutput dense");
-            int n1 = inst.size();
-            for (int p = 0; p < n1; p++) {
-                // if (inst.index(p) != m_classIndex) {
-                result += m_weights[p] * inst.value(p);
-                // }
-            }
-        } else {
-            // verbose("SVMOutput sparse");
-            // int n1 = inst.size();// numValues();
-            int n2 = m_sparseWeights.length;
-            for (int i = 0; i < n2; i++) {
-                result += inst.value(m_sparseIndices[i]) * m_sparseWeights[i];
-            }
-            // for (int p1 = 0, p2 = 0; p1 < n1 && p2 < n2;) {
-            // int ind1 = inst.index(p1);
-            // int ind2 = m_sparseIndices[p2];
-            // if (ind1 == ind2) {
-            // if (ind1 != m_classIndex) {
-            // result += inst.valueSparse(p1) * m_sparseWeights[p2];
-            // }
-            // p1++;
-            // p2++;
-            // } else if (ind1 > ind2) {
-            // p2++;
-            // } else {
-            // p1++;
-            // }
+        // if (m_sparseWeights == null) {
+        // verbose("SVMOutput dense");
+        int n1 = inst.size();
+        for (int p = 0; p < n1; p++) {
+            // if (inst.index(p) != m_classIndex) {
+            result += m_weights[p] * inst.value(p);
             // }
         }
+        // } else {
+        // // verbose("SVMOutput sparse");
+        // // int n1 = inst.size();// numValues();
+        // int n2 = m_sparseWeights.length;
+        // for (int i = 0; i < n2; i++) {
+        // result += inst.value(m_sparseIndices[i]) * m_sparseWeights[i];
+        // }
+        // // for (int p1 = 0, p2 = 0; p1 < n1 && p2 < n2;) {
+        // // int ind1 = inst.index(p1);
+        // // int ind2 = m_sparseIndices[p2];
+        // // if (ind1 == ind2) {
+        // // if (ind1 != m_classIndex) {
+        // // result += inst.valueSparse(p1) * m_sparseWeights[p2];
+        // // }
+        // // p1++;
+        // // p2++;
+        // // } else if (ind1 > ind2) {
+        // // p2++;
+        // // } else {
+        // // p1++;
+        // // }
+        // // }
+        // }
         // }
         // else {
         // for (int i = m_supportVectors.getNext(-1); i != -1; i =
@@ -897,5 +897,9 @@ public class BinaryLinearSMO extends Verbose implements Classifier {
 
     public double[] getWeights() {
         return m_weights;
+    }
+
+    public double getC() {
+        return m_C;
     }
 }

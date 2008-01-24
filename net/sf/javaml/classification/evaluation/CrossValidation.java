@@ -57,8 +57,8 @@ public class CrossValidation extends Verbose{
         Vector<Integer> positiveSamples = new Vector<Integer>();
         Vector<Integer> negativeSamples = new Vector<Integer>();
         for (int i = 0; i < data.size(); i++) {
-            Instance tmp = data.getInstance(i);
-            if (tmp.isClassSet() && tmp.getClassValue() == positiveClassValue) {
+            Instance tmp = data.instance(i);
+            if (tmp.isClassSet() && tmp.classValue() == positiveClassValue) {
                 positiveSamples.add(i);
             } else {
                 negativeSamples.add(i);
@@ -115,12 +115,12 @@ public class CrossValidation extends Verbose{
             if (i != fold) {
                 Vector<Integer> tmpPos = positiveSets.get(i);
                 for (int j = 0; j < tmpPos.size(); j++) {
-                    training.addInstance(data.getInstance(tmpPos.get(j)));
+                    training.add(data.instance(tmpPos.get(j)));
                 }
 
                 Vector<Integer> tmpNeg = negativeSets.get(i);
                 for (int j = 0; j < tmpNeg.size(); j++) {
-                    training.addInstance(data.getInstance(tmpNeg.get(j)));
+                    training.add(data.instance(tmpNeg.get(j)));
                 }
             }
         }
@@ -131,9 +131,9 @@ public class CrossValidation extends Verbose{
         Vector<Integer> valPos = positiveSets.get(fold);
         int tp = 0, fn = 0;
         for (int i = 0; i < valPos.size(); i++) {
-            Instance tmp = data.getInstance(valPos.get(i));
+            Instance tmp = data.instance(valPos.get(i));
             int value = classifier.classifyInstance(tmp);
-            if (value == 1 && tmp.getClassValue() == this.positiveClassValue)
+            if (value == 1 && tmp.classValue() == this.positiveClassValue)
                 tp++;
             else {
                 fn++;
@@ -143,9 +143,9 @@ public class CrossValidation extends Verbose{
         int tn = 0, fp = 0;
         Vector<Integer> valNeg = negativeSets.get(fold);
         for (int i = 0; i < valNeg.size(); i++) {
-            Instance tmp = data.getInstance(valNeg.get(i));
+            Instance tmp = data.instance(valNeg.get(i));
             int value = classifier.classifyInstance(tmp);
-            if (value == 0 && tmp.getClassValue() != this.positiveClassValue) {
+            if (value == 0 && tmp.classValue() != this.positiveClassValue) {
                 tn++;
             } else {
                 fp++;

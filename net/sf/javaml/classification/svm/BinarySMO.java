@@ -1,27 +1,9 @@
 /**
  * BinarySMO.java
  *
- * This file is part of the Java Machine Learning API
+ * %SVN.HEADER%
  * 
- * The Java Machine Learning API is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * The Java Machine Learning API is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with the Java Machine Learning API; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * 
- * Copyright (c) 1999 University of Waikato, Hamilton, New Zealand
- * Copyright (c) 2006-2007, Thomas Abeel
- * 
- * Project: http://sourceforge.net/projects/java-ml/
- * 
+ *  Based on work by Mark Hall
  */
 package net.sf.javaml.classification.svm;
 
@@ -39,15 +21,14 @@ public class BinarySMO extends Verbose implements Classifier {
 
     private static final long serialVersionUID = -3186757526558912403L;
 
-    
-    public BinarySMO(){
+    public BinarySMO() {
         this(1.0);
     }
-    
-    public BinarySMO(double C){
-        this.m_C=C;
+
+    public BinarySMO(double C) {
+        this.m_C = C;
     }
-    
+
     /**
      * The complexity constant C. (default 1)
      */
@@ -139,7 +120,7 @@ public class BinarySMO extends Verbose implements Classifier {
         verbose("Storing the sum of weights...");
         m_sumOfWeights = 0;
         for (int i = 0; i < insts.size(); i++) {
-            m_sumOfWeights += insts.getInstance(i).getWeight();
+            m_sumOfWeights += insts.instance(i).weight();
         }
         // /m_sumOfWeights = insts.sumOfWeights();
 
@@ -148,10 +129,10 @@ public class BinarySMO extends Verbose implements Classifier {
         m_iUp = -1;
         m_iLow = -1;
         for (int i = 0; i < m_class.length; i++) {
-            if ((int) insts.getInstance(i).getClassValue() == 0) {
+            if ((int) insts.instance(i).classValue() == 0) {
                 m_class[i] = -1;
                 m_iLow = i;
-            } else if ((int) insts.getInstance(i).getClassValue() == 1) {
+            } else if ((int) insts.instance(i).classValue() == 1) {
                 m_class[i] = 1;
                 m_iUp = i;
             } else {
@@ -228,7 +209,7 @@ public class BinarySMO extends Verbose implements Classifier {
                 // This code implements Modification 1 from Keerthi et al.'s
                 // paper
                 for (int i = 0; i < m_alpha.length; i++) {
-                    if ((m_alpha[i] > 0) && (m_alpha[i] < m_C * m_data.getInstance(i).getWeight())) {
+                    if ((m_alpha[i] > 0) && (m_alpha[i] < m_C * m_data.instance(i).weight())) {
                         if (examineExample(i)) {
                             numChanged++;
                         }
@@ -284,7 +265,7 @@ public class BinarySMO extends Verbose implements Classifier {
         double result = 0;
 
         for (Integer i : m_supportVectors) {
-            result += m_class[i] * m_alpha[i] * m_kernel.calculateDistance(m_data.getInstance(i), inst);
+            result += m_class[i] * m_alpha[i] * m_kernel.calculateDistance(m_data.instance(i), inst);
         }
         result -= m_b;
 
@@ -307,7 +288,7 @@ public class BinarySMO extends Verbose implements Classifier {
         if (m_I0.contains(i2)) {
             F2 = m_errors[i2];
         } else {
-            F2 = SVMOutput(m_data.getInstance(i2)) + m_b - y2;
+            F2 = SVMOutput(m_data.instance(i2)) + m_b - y2;
             m_errors[i2] = F2;
 
             // Update thresholds
@@ -367,8 +348,8 @@ public class BinarySMO extends Verbose implements Classifier {
     private boolean takeStep(int i1, int i2, double F2) {
 
         double alph1, alph2, y1, y2, F1, s, L, H, k11, k12, k22, eta, a1, a2, f1, f2, v1, v2, Lobj, Hobj;
-        double C1 = m_C * m_data.getInstance(i1).getWeight();
-        double C2 = m_C * m_data.getInstance(i2).getWeight();
+        double C1 = m_C * m_data.instance(i1).weight();
+        double C2 = m_C * m_data.instance(i2).weight();
 
         // Don't do anything if the two instances are the same
         if (i1 == i2) {
@@ -396,9 +377,9 @@ public class BinarySMO extends Verbose implements Classifier {
         }
 
         // Compute second derivative of objective function
-        k11 = m_kernel.calculateDistance(m_data.getInstance(i1), m_data.getInstance(i1));
-        k12 = m_kernel.calculateDistance(m_data.getInstance(i2), m_data.getInstance(i1));
-        k22 = m_kernel.calculateDistance(m_data.getInstance(i2), m_data.getInstance(i2));
+        k11 = m_kernel.calculateDistance(m_data.instance(i1), m_data.instance(i1));
+        k12 = m_kernel.calculateDistance(m_data.instance(i2), m_data.instance(i1));
+        k22 = m_kernel.calculateDistance(m_data.instance(i2), m_data.instance(i2));
         eta = 2 * k12 - k11 - k22;
 
         // Check if second derivative is negative
@@ -416,8 +397,8 @@ public class BinarySMO extends Verbose implements Classifier {
         } else {
 
             // Look at endpoints of diagonal
-            f1 = SVMOutput(m_data.getInstance(i1));
-            f2 = SVMOutput(m_data.getInstance(i2));
+            f1 = SVMOutput(m_data.instance(i1));
+            f2 = SVMOutput(m_data.instance(i2));
             v1 = f1 + m_b - y1 * alph1 * k11 - y2 * alph2 * k12;
             v2 = f2 + m_b - y1 * alph1 * k12 - y2 * alph2 * k22;
             double gamma = alph1 + s * alph2;
@@ -519,9 +500,8 @@ public class BinarySMO extends Verbose implements Classifier {
         // Update error cache using new Lagrange multipliers
         for (Integer j : m_I0) {
             if ((j != i1) && (j != i2)) {
-                m_errors[j] += y1 * (a1 - alph1)
-                        * m_kernel.calculateDistance(m_data.getInstance(i1), m_data.getInstance(j)) + y2 * (a2 - alph2)
-                        * m_kernel.calculateDistance(m_data.getInstance(j), m_data.getInstance(i2));
+                m_errors[j] += y1 * (a1 - alph1) * m_kernel.calculateDistance(m_data.instance(i1), m_data.instance(j))
+                        + y2 * (a2 - alph2) * m_kernel.calculateDistance(m_data.instance(j), m_data.instance(i2));
             }
         }
 

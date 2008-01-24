@@ -535,10 +535,10 @@ public class Logistic implements Classifier {
 
         // Extract data
         // m_ClassIndex = train.classIndex();
-        m_NumClasses = train.getNumClasses();
+        m_NumClasses = train.numClasses();
 
         int nK = m_NumClasses - 1; // Only K-1 class labels needed
-        int nR = m_NumPredictors = train.getInstance(0).size();
+        int nR = m_NumPredictors = train.instance(0).size();
         int nC = train.size();
 
         m_Data = new double[nC][nR + 1]; // Data values
@@ -556,16 +556,16 @@ public class Logistic implements Classifier {
 
         for (int i = 0; i < nC; i++) {
             // initialize X[][]
-            Instance current = train.getInstance(i);
-            Y[i] = (int) current.getClassValue(); // Class value starts from 0
-            weights[i] = current.getWeight(); // Dealing with weights
+            Instance current = train.instance(i);
+            Y[i] = (int) current.classValue(); // Class value starts from 0
+            weights[i] = current.weight(); // Dealing with weights
             totWeights += weights[i];
 
             m_Data[i][0] = 1;
             int j = 1;
             for (int k = 0; k <= nR; k++) {
 
-                double x = current.getValue(k);
+                double x = current.value(k);
                 m_Data[i][j] = x;
                 xMean[j] += weights[i] * x;
                 xSD[j] += weights[i] * x * x;
@@ -695,7 +695,7 @@ public class Logistic implements Classifier {
         instDat[0] = 1;
         for (int k = 0; k <= m_NumPredictors; k++) {
             // if (k != m_ClassIndex) {
-            instDat[j++] = instance.getValue(k);
+            instDat[j++] = instance.value(k);
             // }
         }
 
