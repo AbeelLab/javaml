@@ -1,5 +1,5 @@
 /**
- * FixedBinning.java
+ * EqualWidthBinning.java
  *
  * This file is part of the Java Machine Learning API
  * 
@@ -42,6 +42,10 @@ public class EqualWidthBinning extends AbstractBinning {
         super();
     }
 
+    public EqualWidthBinning(int numBins){
+        super(numBins);
+                
+    }
     public EqualWidthBinning(int[] binnedAttributes) {
         super(binnedAttributes);
     }
@@ -63,12 +67,12 @@ public class EqualWidthBinning extends AbstractBinning {
         Instance minInstance = data.getMinimumInstance();
         Instance maxInstance = data.getMaximumInstance();
 
-        double width = (maxInstance.getValue(index) - minInstance.getValue(index)) / numBins;
+        double width = (maxInstance.value(index) - minInstance.value(index)) / numBins;
         double[] out = null;
         if ((numBins > 1) && (width > 0)) {
             out = new double[numBins - 1];
             for (int i = 1; i < numBins; i++) {
-                out[i - 1] = minInstance.getValue(index) + width * i;
+                out[i - 1] = minInstance.value(index) + width * i;
             }
         }
         return out;

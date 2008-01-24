@@ -28,11 +28,11 @@ package net.sf.javaml.filter.discretize;
 import net.sf.javaml.core.Dataset;
 
 /**
- * A filter that discretizes a range of numeric attributes in the dataset into
+ * A filter that discretizes a range of numeric attributes in the data set into
  * nominal attributes. Discretization is done by binning.
  * 
- * @author Len Trigg (trigg@cs.waikato.ac.nz)
- * @author Eibe Frank (eibe@cs.waikato.ac.nz)
+ * @author Len Trigg 
+ * @author Eibe Frank
  * @author Thomas Abeel
  */
 public class EqualFrequencyBinning extends AbstractBinning {
@@ -75,7 +75,7 @@ public class EqualFrequencyBinning extends AbstractBinning {
         double sumOfWeights = 0;
         for (int i = 0; i < data.size(); i++) {
 
-            sumOfWeights += data.getInstance(i).getWeight();
+            sumOfWeights += data.instance(i).weight();
 
         }
         double freq;
@@ -93,24 +93,24 @@ public class EqualFrequencyBinning extends AbstractBinning {
         int cpindex = 0, lastIndex = -1;
         for (int i = 0; i < data.size() - 1; i++) {
 
-            counter += data.getInstance(i).getWeight();
-            sumOfWeights -= data.getInstance(i).getWeight();
+            counter += data.instance(i).weight();
+            sumOfWeights -= data.instance(i).weight();
 
             // Do we have a potential breakpoint?
-            if (data.getInstance(i).getValue(index) < data.getInstance(i + 1).getValue(index)) {
+            if (data.instance(i).value(index) < data.instance(i + 1).value(index)) {
 
                 // Have we passed the ideal size?
                 if (counter >= freq) {
 
                     // Is this break point worse than the last one?
                     if (((freq - last) < (counter - freq)) && (lastIndex != -1)) {
-                        cutPoints[cpindex] = (data.getInstance(lastIndex).getValue(index) + data.getInstance(
-                                lastIndex + 1).getValue(index)) / 2;
+                        cutPoints[cpindex] = (data.instance(lastIndex).value(index) + data.instance(
+                                lastIndex + 1).value(index)) / 2;
                         counter -= last;
                         last = counter;
                         lastIndex = i;
                     } else {
-                        cutPoints[cpindex] = (data.getInstance(i).getValue(index) + data.getInstance(i + 1).getValue(
+                        cutPoints[cpindex] = (data.instance(i).value(index) + data.instance(i + 1).value(
                                 index)) / 2;
                         counter = 0;
                         last = 0;
@@ -127,8 +127,8 @@ public class EqualFrequencyBinning extends AbstractBinning {
 
         // Check whether there was another possibility for a cut point
         if ((cpindex < cutPoints.length) && (lastIndex != -1)) {
-            cutPoints[cpindex] = (data.getInstance(lastIndex).getValue(index) + data.getInstance(lastIndex + 1)
-                    .getValue(index)) / 2;
+            cutPoints[cpindex] = (data.instance(lastIndex).value(index) + data.instance(lastIndex + 1)
+                    .value(index)) / 2;
             cpindex++;
         }
 

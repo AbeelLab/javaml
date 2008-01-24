@@ -12,6 +12,7 @@ import java.util.Vector;
 
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
+import net.sf.javaml.core.exception.TrainingRequiredException;
 import net.sf.javaml.utils.MathUtils;
 
 /**
@@ -42,9 +43,14 @@ public class FastCorrelationBasedFilter extends AbstractFilter {
 
     private AbstractFilter remove = null;
 
-    public Dataset filterDataset(Dataset data) {
+    public void build(Dataset data) {
         int[] toRemove = fcbf(data);
         remove = new RemoveAttributes(toRemove);
+    }
+
+    public Dataset filterDataset(Dataset data) {
+        if (remove == null)
+            throw new TrainingRequiredException();
         return remove.filterDataset(data);
 
     }
@@ -80,7 +86,7 @@ public class FastCorrelationBasedFilter extends AbstractFilter {
          * features in descending order of their SU values.
          */
 
-        int numAttrs = data.getInstance(0).size();
+        int numAttrs = data.instance(0).size();
         meta_diff = getDiff(data);
         int len = 0;
 
@@ -170,14 +176,14 @@ public class FastCorrelationBasedFilter extends AbstractFilter {
     } // end of fcbf()
 
     private int[] getDiff(Dataset data) {
-        int[] out = new int[data.getInstance(0).size() + 1];
+        int[] out = new int[data.instance(0).size() + 1];
         for (int i = 0; i < out.length - 1; i++) {
             HashSet<Double> set = new HashSet<Double>();
             for (Instance in : data)
-                set.add(in.getValue(i));
+                set.add(in.value(i));
             out[i] = set.size();
         }
-        out[data.getInstance(0).size()] = data.getNumClasses();
+        out[data.instance(0).size()] = data.numClasses();
         return out;
     }
 
@@ -260,11 +266,11 @@ public class FastCorrelationBasedFilter extends AbstractFilter {
         int count = 0;
 
         for (int i = 0; i < data.size(); i++) {
-            if (attrIndex == data.getInstance(0).size()) {
-                if (MathUtils.eq(data.getInstance(i).getClassValue(), attrValue)) {
+            if (attrIndex == data.instance(0).size()) {
+                if (MathUtils.eq(data.instance(i).classValue(), attrValue)) {
                     count++;
                 }
-            } else if (MathUtils.eq(data.getInstance(i).getValue(attrIndex), attrValue))
+            } else if (MathUtils.eq(data.instance(i).value(attrIndex), attrValue))
                 count++;
         }
         if (count != 0)
@@ -321,15 +327,15 @@ public class FastCorrelationBasedFilter extends AbstractFilter {
         for (int i = 0; i < data.size(); i++) {
             double tmpOne, tmpTwo;
 
-            if (indexOne == data.getInstance(0).size())
-                tmpOne = data.getInstance(i).getClassValue();
+            if (indexOne == data.instance(0).size())
+                tmpOne = data.instance(i).classValue();
             else
-                tmpOne = data.getInstance(i).getValue(indexOne);
+                tmpOne = data.instance(i).value(indexOne);
 
-            if (indexTwo == data.getInstance(0).size())
-                tmpTwo = data.getInstance(i).getClassValue();
+            if (indexTwo == data.instance(0).size())
+                tmpTwo = data.instance(i).classValue();
             else
-                tmpTwo = data.getInstance(i).getValue(indexTwo);
+                tmpTwo = data.instance(i).value(indexTwo);
 
             if (MathUtils.eq(tmpTwo, valueTwo)) {
                 den++;

@@ -1,5 +1,5 @@
 /**
- * Binning.java
+ * AbstractBinning.java
  *
  * This file is part of the Java Machine Learning API
  * 
@@ -31,7 +31,8 @@ import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.SimpleDataset;
 import net.sf.javaml.core.SimpleInstance;
-import net.sf.javaml.filter.Filter;
+import net.sf.javaml.core.exception.TrainingRequiredException;
+import net.sf.javaml.filter.AbstractFilter;
 
 /**
  * A filter that discretizes a range of numeric attributes in the dataset into
@@ -41,7 +42,7 @@ import net.sf.javaml.filter.Filter;
  * @author Eibe Frank (eibe@cs.waikato.ac.nz)
  * @author Thomas Abeel
  */
-public abstract class AbstractBinning implements Filter {
+public abstract class AbstractBinning extends AbstractFilter {
     /**
      * The number of bins
      */
@@ -58,7 +59,11 @@ public abstract class AbstractBinning implements Filter {
     private Vector<Integer> binnedAttributes = null;
 
     protected AbstractBinning() {
-        this.numBins = 10;
+        this(10);
+    }
+    
+    protected AbstractBinning(int numBins){
+        this.numBins=numBins;
     }
 
     protected AbstractBinning(int[] binnedAttributes) {
@@ -84,28 +89,35 @@ public abstract class AbstractBinning implements Filter {
 
     protected abstract double[] calculateBorderPoints(Dataset data, int index);
 
-    public Dataset filterDataset(Dataset data) {
+    public void build(Dataset data) {
         if (binnedAttributes == null) {
             binnedAttributes = new Vector<Integer>();
-            for (int i = 0; i < data.getInstance(0).size(); i++) {
+            for (int i = 0; i < data.instance(0).size(); i++) {
                 binnedAttributes.add(i);
             }
         }
         calculateBorderPoints(data);
+    }
+
+    public Dataset filterDataset(Dataset data) {
+        if (borderPoints == null)
+            build(data);
         Dataset out = new SimpleDataset();
         for (Instance i : data) {
-            out.addInstance(filterInstance(i));
+            out.add(filterInstance(i));
         }
         return out;
     }
 
     public Instance filterInstance(Instance instance) {
+        if (borderPoints == null)
+            throw new TrainingRequiredException();
         int index = 0;
         double[] vals = new double[instance.size()];
         for (int i = 0; i < instance.size(); i++) {
             if (binnedAttributes.contains(i)) {
 
-                double currentVal = instance.getValue(i);
+                double currentVal = instance.value(i);
                 if (borderPoints[binnedAttributes.indexOf(i)] == null) {
 
                     vals[index] = 0;
@@ -124,7 +136,7 @@ public abstract class AbstractBinning implements Filter {
 
                 }
             } else {
-                vals[index] = instance.getValue(i);
+                vals[index] = instance.value(i);
                 index++;
             }
         }
@@ -133,8 +145,5 @@ public abstract class AbstractBinning implements Filter {
 
     }
 
-    public Instance unfilterInstance(Instance instance) {
-        throw new UnsupportedOperationException("This method is not available for this filter");
-    }
-
+   
 }

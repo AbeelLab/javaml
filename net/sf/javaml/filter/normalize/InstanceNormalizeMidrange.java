@@ -4,24 +4,27 @@
  * %SVN.HEADER%
  * 
  */
-package net.sf.javaml.filter;
+package net.sf.javaml.filter.normalize;
 
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.SimpleDataset;
 import net.sf.javaml.core.SimpleInstance;
+import net.sf.javaml.filter.AbstractFilter;
+import net.sf.javaml.filter.DatasetFilter;
+import net.sf.javaml.filter.InstanceFilter;
 
 /**
- * This filter will normalize the all the attributes in an instance to a certain
- * interval determined by a midrange and a range. This class implements both the
+ * This filter will normalize all the attributes in an instance to a certain
+ * interval determined by a mid-range and a range. This class implements both the
  * {@link DatasetFilter} and {@link InstanceFilter} interfaces. When you apply
- * this filter to a whole dataset, each instance will be normalized separately.
+ * this filter to a whole data set, each instance will be normalized separately.
  * 
- * For example midrange 0 and range 2 would yield instances with attributes
+ * For example mid-range 0 and range 2 would yield instances with attributes
  * within the range [-1,1].
  * 
  * Each {@link Instance} is normalized separately. For example if you have three
- * instances {-5;0;5} and {0;40;20} and you normalize with midrange 0 and range
+ * instances {-5;0;5} and {0;40;20} and you normalize with mid-range 0 and range
  * 2, you would get {-1;0;1} and {-1;1;0}.
  * 
  * The default is normalization in the interval [-1,1].
@@ -65,8 +68,8 @@ public class InstanceNormalizeMidrange extends AbstractFilter {
 
         // Filter all instance and return the modified dataset
         for (int i = 0; i < data.size(); i++) {
-            Instance tmpInstance = data.getInstance(i);
-            out.addInstance(this.filterInstance(tmpInstance));
+            Instance tmpInstance = data.instance(i);
+            out.add(this.filterInstance(tmpInstance));
         }
         return out;
 
@@ -74,7 +77,7 @@ public class InstanceNormalizeMidrange extends AbstractFilter {
 
     public Instance filterInstance(Instance tmpInstance) {
         // Find min and max values
-        double min = tmpInstance.getValue(0);
+        double min = tmpInstance.value(0);
         double max = min;
         for (double d : tmpInstance.toArray()) {
             if (d > max)
@@ -104,5 +107,10 @@ public class InstanceNormalizeMidrange extends AbstractFilter {
 
     public Dataset unfilterDataset(Dataset data) {
         throw new UnsupportedOperationException("Cannot recover original instances in the dataset.");
+    }
+
+    public void build(Dataset data) {
+        // do nothing, not required for this filter
+
     }
 }

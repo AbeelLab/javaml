@@ -66,14 +66,14 @@ public class OptimizedBinning extends AbstractBinning {
         // Find best number of bins
         for (int i = 0; i < numBins; i++) {
             distribution = new double[i + 1];
-            binWidth = (maxInstance.getValue(index) - minInstance.getValue(index)) / (i + 1);
+            binWidth = (maxInstance.value(index) - minInstance.value(index)) / (i + 1);
 
             // Compute distribution
             for (int j = 0; j < data.size(); j++) {
-                Instance currentInstance = data.getInstance(j);
+                Instance currentInstance = data.instance(j);
                 for (int k = 0; k < i + 1; k++) {
-                    if (currentInstance.getValue(index) <= (minInstance.getValue(index) + (((double) k + 1) * binWidth))) {
-                        distribution[k] += currentInstance.getWeight();
+                    if (currentInstance.value(index) <= (minInstance.value(index) + (((double) k + 1) * binWidth))) {
+                        distribution[k] += currentInstance.weight();
                         break;
                     }
                 }
@@ -102,7 +102,7 @@ public class OptimizedBinning extends AbstractBinning {
         if ((bestNumBins > 1) && (binWidth > 0)) {
             cutPoints = new double[bestNumBins - 1];
             for (int i = 1; i < bestNumBins; i++) {
-                cutPoints[i - 1] = minInstance.getValue(index) + binWidth * i;
+                cutPoints[i - 1] = minInstance.value(index) + binWidth * i;
             }
         }
         return cutPoints;

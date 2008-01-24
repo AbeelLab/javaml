@@ -44,7 +44,7 @@ public class FastFourierTransform implements Filter {
     public Dataset filterDataset(Dataset data) {
         Dataset out=new SimpleDataset();
         for(Instance i:data){
-            out.addInstance(filterInstance(i));
+            out.add(filterInstance(i));
         }
         return out;
     }

@@ -11,6 +11,7 @@ import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.SimpleInstance;
 import nz.ac.waikato.cs.weka.Utils;
 
+// TODO rewrite using BitSet instead of boolean[]
 public class RemoveAttributes extends AbstractFilter {
     /**
      * The indices to remove.
@@ -22,6 +23,12 @@ public class RemoveAttributes extends AbstractFilter {
      */
     private int count;
 
+    public int[] getRemovedAttributes() {
+        return toRemove;
+    }
+
+    private int[] toRemove;
+
     /**
      * Construct a remove filter that removes all the attributes with the
      * indices given in the array as parameter.
@@ -31,6 +38,8 @@ public class RemoveAttributes extends AbstractFilter {
      */
     public RemoveAttributes(int[] indices) {
         if (indices.length > 0) {
+            toRemove = indices.clone();
+
             int max = indices[Utils.maxIndex(indices)];
             binIndices = new boolean[max + 1];
             count = 0;
@@ -53,19 +62,18 @@ public class RemoveAttributes extends AbstractFilter {
         int index = 0;
         for (int i = 0; i < instance.size(); i++) {
             if (i >= binIndices.length || !binIndices[i]) {
-                newVals[index] = instance.getValue(i);
+                newVals[index] = instance.value(i);
                 index++;
             }
         }
         return new SimpleInstance(newVals, instance);
     }
 
-    public Instance unfilterInstance(Instance instance) {
-        throw new UnsupportedOperationException("RemoveAttributes is a one-way filter.");
-    }
+   
 
-    public Dataset unfilterDataset(Dataset data) {
-        throw new UnsupportedOperationException("RemoveAttributes is a one-way filter.");
+    public void build(Dataset data) {
+        // do nothing, this is not required for this filter.
+
     }
 
 }

@@ -104,20 +104,15 @@ public class PrincipalComponentsAnalysis extends AbstractFilter {
     private RemoveAttributes remAtt;
 
     /**
-     * Initializes principal components and performs the analysis
-     * 
-     * @param data
-     *            the instances to analyse/transform
-     * @throws Exception
-     *             if analysis fails
+     * Initializes principal components
      */
-    public Dataset filterDataset(Dataset data) {
+    public void build(Dataset data) {
         m_eigenvalues = null;
         m_sumOfEigenValues = 0.0;
 
         // delete any attributes with only one distinct value or are all missing
         Vector<Integer> deleteCols = new Vector<Integer>();
-        for (int i = 0; i < data.getInstance(0).size(); i++) {
+        for (int i = 0; i < data.instance(0).size(); i++) {
             if (numDistinctValues(i, data) <= 1) {
                 deleteCols.addElement(i);
             }
@@ -135,7 +130,7 @@ public class PrincipalComponentsAnalysis extends AbstractFilter {
         }
 
         m_numInstances = m_trainInstances.size();
-        m_numAttribs = m_trainInstances.getInstance(0).size();
+        m_numAttribs = m_trainInstances.instance(0).size();
 
         fillCorrelation(m_trainInstances);
 
@@ -188,16 +183,27 @@ public class PrincipalComponentsAnalysis extends AbstractFilter {
                 m_eTranspose[i][j] = orderedVectors[j][i];
             }
         }
+    }
+
+    /**
+     * Initializes principal components and performs the analysis
+     * 
+     * @param data
+     *            the instances to analyse/transform
+     * @throws Exception
+     *             if analysis fails
+     */
+    public Dataset filterDataset(Dataset data) {
 
         Dataset out = new SimpleDataset();
         for (int k = 0; k < data.size(); k++) {
             // we need to use the original data as the call to filterInstance
             // will strip the unneeded attributes as defined in remAtt
-            Instance tempInst = data.getInstance(k);
+            Instance tempInst = data.instance(k);
             if (!converBackToOriginalSpace) {
-                out.addInstance(filterInstance(tempInst));
+                out.add(filterInstance(tempInst));
             } else {
-                out.addInstance(unfilterInstance(filterInstance(tempInst)));
+                out.add(unfilterInstance(filterInstance(tempInst)));
             }
         }
         return out;
@@ -206,7 +212,7 @@ public class PrincipalComponentsAnalysis extends AbstractFilter {
     private int numDistinctValues(int index, Dataset data) {
         Set<Double> set = new HashSet<Double>();
         for (int i = 0; i < data.size(); i++) {
-            set.add(data.getInstance(i).getValue(index));
+            set.add(data.instance(i).value(index));
         }
         return set.size();
     }
@@ -226,8 +232,8 @@ public class PrincipalComponentsAnalysis extends AbstractFilter {
                     m_correlation[i][j] = 1.0;
                 } else {
                     for (int k = 0; k < m_numInstances; k++) {
-                        att1[k] = m_trainInstances.getInstance(k).getValue(i);
-                        att2[k] = m_trainInstances.getInstance(k).getValue(j);
+                        att1[k] = m_trainInstances.instance(k).value(i);
+                        att2[k] = m_trainInstances.instance(k).value(j);
                     }
                     corr = Utils.correlation(att1, att2, m_numInstances);
                     m_correlation[i][j] = corr;
@@ -250,7 +256,7 @@ public class PrincipalComponentsAnalysis extends AbstractFilter {
         for (int i = numComponents - 1; i >= 0; i--) {
             double tempval = 0.0;
             for (int j = 0; j < numComponents; j++) {
-                tempval += (m_eigenvectors[j][m_sortedEigens[i]] * instance.getValue(j));
+                tempval += (m_eigenvectors[j][m_sortedEigens[i]] * instance.value(j));
             }
             newVals[numComponents - i - 1] = tempval;
             cumulative += m_eigenvalues[m_sortedEigens[i]];
@@ -262,7 +268,7 @@ public class PrincipalComponentsAnalysis extends AbstractFilter {
     }
 
     /**
-     * Tranform back to the original space.
+     * Transform back to the original space.
      * 
      */
     public Instance unfilterInstance(Instance instance) {
@@ -270,7 +276,7 @@ public class PrincipalComponentsAnalysis extends AbstractFilter {
         for (int i = 0; i < m_eTranspose[0].length; i++) {
             float tempval = 0;
             for (int j = 0; j < m_eTranspose.length && j < instance.size(); j++) {
-                tempval += (m_eTranspose[j][i] * instance.getValue(j));
+                tempval += (m_eTranspose[j][i] * instance.value(j));
             }
             newVals[i] = tempval;
         }
@@ -280,7 +286,7 @@ public class PrincipalComponentsAnalysis extends AbstractFilter {
     public Dataset unfilterDataset(Dataset data) {
         Dataset out = new SimpleDataset();
         for (Instance i : data)
-            out.addInstance(unfilterInstance(i));
+            out.add(unfilterInstance(i));
         return out;
     }
 

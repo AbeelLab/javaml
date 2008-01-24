@@ -37,15 +37,15 @@ public interface InstanceFilter {
      */
     public Instance filterInstance(Instance inst);
 
-    /**
-     * Tries to apply the reverse of this filter to the instance to restore the
-     * original instance.
-     * 
-     * @throws UnsupportedOperationException
-     *             if this filter does not work reverse
-     * @param inst
-     *            the instance to revert to its original
-     * @return the original instance
-     */
-    public Instance unfilterInstance(Instance inst);
+//    /**
+//     * Tries to apply the reverse of this filter to the instance to restore the
+//     * original instance.
+//     * 
+//     * @throws UnsupportedOperationException
+//     *             if this filter does not work reverse
+//     * @param inst
+//     *            the instance to revert to its original
+//     * @return the original instance
+//     */
+//    public Instance unfilterInstance(Instance inst);
 }

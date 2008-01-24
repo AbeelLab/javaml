@@ -37,8 +37,16 @@ public class FilterUtils {
     public static Dataset applyFilter(InstanceFilter filter, Dataset data) {
         Dataset out = new SimpleDataset();
         for (Instance i : data) {
-            out.addInstance(filter.filterInstance(i));
+            out.add(filter.filterInstance(i));
         }
         return out;
     }
+
+//    public static Dataset removeFilter(InstanceFilter filter, Dataset data) {
+//        Dataset out = new SimpleDataset();
+//        for (Instance i : data) {
+//            out.add(filter.unfilterInstance(i));
+//        }
+//        return out;
+//    }
 }

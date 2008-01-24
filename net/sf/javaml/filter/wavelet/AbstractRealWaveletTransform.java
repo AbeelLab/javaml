@@ -48,7 +48,7 @@ public abstract class AbstractRealWaveletTransform implements Filter {
     public Dataset filterDataset(Dataset data) {
         Dataset out = new SimpleDataset();
         for (Instance i : data)
-            out.addInstance(filterInstance(i));
+            out.add(filterInstance(i));
         return out;
     }
 
@@ -99,7 +99,7 @@ public abstract class AbstractRealWaveletTransform implements Filter {
                 Instance t = new ComplexInstance(what);
                 Instance w = fft.unfilterInstance(t);
                 for (int i = 0; i < w.size(); i++) {
-                    rwt[i][kscale - 1] = w.getValue(i);
+                    rwt[i][kscale - 1] = w.value(i);
                 }
                 kscale++;
 
