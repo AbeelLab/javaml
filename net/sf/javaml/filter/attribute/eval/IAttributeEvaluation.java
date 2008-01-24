@@ -13,7 +13,7 @@ import net.sf.javaml.core.Dataset;
  * interesting for removing attributes with little information to make your
  * algorithms run faster.
  * 
- * @{jmlSource}
+ * {@jmlSource}
  * 
  * @version %SVN.VERSION%
  * 

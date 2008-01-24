@@ -15,7 +15,7 @@ package net.sf.javaml.distance;
  * @see net.sf.javaml.distance.AbstractSimilarity
  * @see net.sf.javaml.distance.AbstractDistance
  * 
- * @{jmlSource}
+ * {@jmlSource}
  * 
  * @version %SVN.VERSION%
  * 

@@ -20,7 +20,7 @@ import external.libsvm.SelfOptimizingLinearLibSVM;
  * eliminated, the SVM is retrained (C is again optimized), and the process is
  * repeated until only one feature is retained. The result is a feature ranking.
  * 
- * @{jmlSource}
+ * {@jmlSource}
  * 
  * @version %SVN.VERSION%
  * 

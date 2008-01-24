@@ -13,7 +13,7 @@ import net.sf.javaml.core.Instance;
 /**
  * Interface for all classifiers.
  * 
- * @{jmlSource}
+ * {@jmlSource}
  * 
  * @author Thomas Abeel
  *

@@ -24,7 +24,7 @@ import net.sf.javaml.core.Instance;
  * Some distance measures are normalized, i.e. in the interval [0,1], but this
  * is not required by the interface.
  * 
- * @{jmlSource}
+ * {@jmlSource}
  * 
  * @see net.sf.javaml.distance.AbstractDistance
  * @see net.sf.javaml.distance.AbstractSimilarity

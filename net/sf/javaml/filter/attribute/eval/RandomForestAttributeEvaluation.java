@@ -28,7 +28,7 @@ import net.sf.javaml.utils.MathUtils;
  * We can use the differences in importance to rank the features or use the differences to
  * give an importance measure to all attributes
  * 
- * @{jmlSource}
+ * {@jmlSource}
  * 
  * @version %SVN.VERSION%
  * 

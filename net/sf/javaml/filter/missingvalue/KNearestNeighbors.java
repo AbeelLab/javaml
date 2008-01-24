@@ -25,7 +25,7 @@ import net.sf.javaml.filter.DatasetFilter;
  * neighbors also have the same missing attributes, it is impossible to replace
  * the original value.
  * 
- * @{jmlSource}
+ * {@jmlSource}
  * 
  * @author Thomas Abeel
  * 

@@ -18,7 +18,7 @@ import net.sf.javaml.core.Instance;
  * The Euclidean distance is a special instance of the NormDistance. The
  * Euclidean distance corresponds to the 2-norm distance.
  * 
- * @{jmlSource}
+ * {@jmlSource}
  * 
  * @linkplain http://en.wikipedia.org/wiki/Euclidean_distance
  * @linkplain http://en.wikipedia.org/wiki/Euclidean_space

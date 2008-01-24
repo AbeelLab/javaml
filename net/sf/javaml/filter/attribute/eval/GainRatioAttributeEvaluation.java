@@ -21,7 +21,7 @@ import net.sf.javaml.utils.ContingencyTables;
  * 
  * GainR(Class, Attribute) = (H(Class) - H(Class | Attribute)) / H(Attribute).
  * 
- * @{jmlSource}
+ * {@jmlSource}
  * 
  * @version %SVN.VERSION%
  * 

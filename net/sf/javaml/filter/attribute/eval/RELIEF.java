@@ -19,7 +19,7 @@ import net.sf.javaml.filter.normalize.DatasetNormalizeMidrange;
  * This implementation is extended to k include more neighbors in calculating the
  * weights of the features.
  * 
- * @{jmlSource}
+ * {@jmlSource}
  * 
  * @version %SVN.VERSION%
  * 

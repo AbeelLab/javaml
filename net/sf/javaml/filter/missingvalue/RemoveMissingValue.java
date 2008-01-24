@@ -14,7 +14,7 @@ import net.sf.javaml.filter.DatasetFilter;
 /**
  * Removes all instances that have missing values.
  * 
- * @{jmlSource}
+ * {@jmlSource}
  * 
  * @version %SVN.VERSION%
  * 

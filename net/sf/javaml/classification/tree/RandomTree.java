@@ -21,7 +21,7 @@ import net.sf.javaml.utils.MathUtils;
  * Class for constructing a tree that considers K randomly chosen attributes at
  * each node. Performs no pruning.
  * 
- * @{jmlSource}
+ * {@jmlSource}
  * 
  * @author Thomas Abeel
  * @author Eibe Frank

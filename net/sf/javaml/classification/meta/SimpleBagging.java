@@ -13,7 +13,7 @@ import net.sf.javaml.core.Instance;
 /**
  * Bootstrap aggregating (Bagging) meta learner. This is the most basic implementation of Bagging.
  * 
- * @{jmlSource}
+ * {@jmlSource}
  * 
  * @author Thomas Abeel
  * 

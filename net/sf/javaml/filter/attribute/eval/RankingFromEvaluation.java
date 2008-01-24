@@ -11,7 +11,7 @@ import net.sf.javaml.utils.ArrayUtils;
 /**
  * Creates an attribute ranking from an attribute evaluation technique.
  * 
- * @{jmlSource}
+ * {@jmlSource}
  * 
  * @version %SVN.VERSION%
  * 

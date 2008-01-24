@@ -15,7 +15,7 @@ import net.sf.javaml.filter.normalize.DatasetNormalizeMidrange;
 /**
  * Basic implementation of the RELIEF algorithm for attribute evaluation.
  * 
- * @{jmlSource}
+ * {@jmlSource}
  * 
  * @version %SVN.VERSION%
  * 

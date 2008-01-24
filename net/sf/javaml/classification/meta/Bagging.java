@@ -18,7 +18,7 @@ import net.sf.javaml.core.SimpleDataset;
  * Bagging meta learner. This implementation can also calculate the out-of-bag
  * error estimate while training at very little extra cost.
  * 
- *  @{jmlSource}
+ *  {@jmlSource}
  * 
  * @author Thomas Abeel
  * 
