@@ -209,7 +209,7 @@ public class Cobweb implements Clusterer {
             if (m_clusterInstances == null) {
                 m_clusterInstances = new SimpleDataset();
             }
-            m_clusterInstances.addInstance(leafInstance);
+            m_clusterInstances.add(leafInstance);
             updateStats(leafInstance, false);
         }
 
@@ -226,7 +226,7 @@ public class Cobweb implements Clusterer {
             if (m_clusterInstances == null) {
                 m_clusterInstances = new SimpleDataset();// (newInstance.dataset(),
                 // 1);
-                m_clusterInstances.addInstance(newInstance);
+                m_clusterInstances.add(newInstance);
                 updateStats(newInstance, false);
 
             } else if (m_children == null) {
@@ -235,19 +235,19 @@ public class Cobweb implements Clusterer {
                  * and then add the new instance as a child
                  */
                 m_children = new Vector<CNode>();
-                CNode tempSubCluster = new CNode(m_numAttributes, m_clusterInstances.getInstance(0));
+                CNode tempSubCluster = new CNode(m_numAttributes, m_clusterInstances.instance(0));
 
                 // System.out.println("Dumping
                 // "+m_clusterInstances.numInstances());
                 for (int i = 1; i < m_clusterInstances.size(); i++) {
-                    tempSubCluster.m_clusterInstances.addInstance(m_clusterInstances.getInstance(i));
-                    tempSubCluster.updateStats(m_clusterInstances.getInstance(i), false);
+                    tempSubCluster.m_clusterInstances.add(m_clusterInstances.instance(i));
+                    tempSubCluster.updateStats(m_clusterInstances.instance(i), false);
                 }
                 m_children = new Vector<CNode>();
                 m_children.addElement(tempSubCluster);
                 m_children.addElement(new CNode(m_numAttributes, newInstance));
 
-                m_clusterInstances.addInstance(newInstance);
+                m_clusterInstances.add(newInstance);
                 updateStats(newInstance, false);
 
                 // here is where we check against cutoff (also check cutoff
@@ -461,7 +461,7 @@ public class Cobweb implements Clusterer {
 
             if (finalBestHost != this) {
                 // can commit the instance to the set of instances at this node
-                m_clusterInstances.addInstance(newInstance);
+                m_clusterInstances.add(newInstance);
             } else {
                 m_numberSplits++;
             }
@@ -485,7 +485,7 @@ public class Cobweb implements Clusterer {
                     // recursion is aborted and we still need to add the
                     // instance
                     // to the set of instances at this node
-                    m_clusterInstances.addInstance(newInstance);
+                    m_clusterInstances.add(newInstance);
                 }
                 m_children = null;
                 finalBestHost = null;
@@ -509,8 +509,8 @@ public class Cobweb implements Clusterer {
          */
         private void addChildNode(CNode child) {
             for (int i = 0; i < child.m_clusterInstances.size(); i++) {
-                Instance temp = child.m_clusterInstances.getInstance(i);
-                m_clusterInstances.addInstance(temp);
+                Instance temp = child.m_clusterInstances.instance(i);
+                m_clusterInstances.add(temp);
                 updateStats(temp, false);
             }
 
@@ -597,15 +597,15 @@ public class Cobweb implements Clusterer {
                 }
             }
             for (int i = 0; i < m_numAttributes; i++) {
-                double value = updateInstance.getValue(i);
+                double value = updateInstance.value(i);
                 if (delete) {
-                    m_attStats[i].subtract(value, updateInstance.getWeight());
+                    m_attStats[i].subtract(value, updateInstance.weight());
                 } else {
-                    m_attStats[i].add(value, updateInstance.getWeight());
+                    m_attStats[i].add(value, updateInstance.weight());
                 }
 
             }
-            m_totalInstances += (delete) ? (-1.0 * updateInstance.getWeight()) : (updateInstance.getWeight());
+            m_totalInstances += (delete) ? (-1.0 * updateInstance.weight()) : (updateInstance.weight());
         }
 
         /**
@@ -737,7 +737,7 @@ public class Cobweb implements Clusterer {
         m_numberSplits = 0;
         m_numberMerges = 0;
         for (int i = 0; i < data.size(); i++) {
-            updateClusterer(data.getInstance(i));
+            updateClusterer(data.instance(i));
         }
         determineNumberOfClusters();
         // printNode(m_cobwebTree, 0);
@@ -758,7 +758,7 @@ public class Cobweb implements Clusterer {
             Dataset tmp = new SimpleDataset();
             Dataset fromTree = tree.m_clusterInstances;
             for (int i = 0; i < fromTree.size(); i++) {
-                tmp.addInstance(filter.unfilterInstance(fromTree.getInstance(i)));
+                tmp.add(filter.unfilterInstance(fromTree.instance(i)));
             }
             clusters.add(tmp);
         }

@@ -98,7 +98,7 @@ public class AQBC implements Clusterer {
         int BPRTH = 10;
         
         double REITERTHR = 0.1;
-        E = data.getInstance(0).size();
+        E = data.instance(0).size();
         // int D = E - 2;
         double R =  Math.sqrt(E - 1);
         double EXTTRESH = R / 2.0f;
@@ -190,7 +190,7 @@ public class AQBC implements Clusterer {
         Vector<TaggedInstance> out = new Vector<TaggedInstance>();
        
         for (int i = 0; i < data.size(); i++) {
-            double[] old = data.getInstance(i).toArray();
+            double[] old = data.instance(i).toArray();
             double[] conv = new double[old.length];
             for (int j = 0; j < old.length; j++) {
                 conv[j] = old[j];
@@ -260,7 +260,7 @@ public class AQBC implements Clusterer {
     private void outputCluster(Vector<TaggedInstance> q, int index) {
         Dataset tmp = new SimpleDataset();
         for (TaggedInstance i : q) {
-            tmp.addInstance(data.getInstance(i.getTag()));
+            tmp.add(data.instance(i.getTag()));
         }
         clusters.add(tmp);
 
@@ -627,7 +627,7 @@ public class AQBC implements Clusterer {
         for (int i = 0; i < a.size(); i++) {
             // System.out.println("Instance "+i+" = "+a.get(i));
             for (int j = 0; j < a.get(0).size(); j++)
-                out[j] += a.get(i).getValue(j);
+                out[j] += a.get(i).value(j);
         }
         // System.out.println("OUT = "+Arrays.toString(out));
         for (int j = 0; j < a.get(0).size(); j++) {

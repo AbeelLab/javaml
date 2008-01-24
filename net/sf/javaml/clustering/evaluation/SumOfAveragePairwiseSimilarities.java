@@ -50,7 +50,7 @@ public class SumOfAveragePairwiseSimilarities implements ClusterEvaluation{
             double tmpSum=0;
             for(int j=0;j<datas[i].size();j++){
                 for(int k=0;k<datas[i].size();k++){
-                    double error=dm.calculateDistance(datas[i].getInstance(j),datas[i].getInstance(k));
+                    double error=dm.calculateDistance(datas[i].instance(j),datas[i].instance(k));
                     tmpSum+=error;
                 }  
             }

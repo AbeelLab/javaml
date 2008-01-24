@@ -201,9 +201,9 @@ public class Ant implements Clusterer {
      */
     private double minSimilarity(Dataset heap) {
         Instance meanH = meanH(heap);
-        double minSimilar = dm.calculateDistance(heap.getInstance(0), meanH);
+        double minSimilar = dm.calculateDistance(heap.instance(0), meanH);
         for (int i = 1; i < heap.size(); i++) {
-            double sim = dm.calculateDistance(heap.getInstance(i), meanH);
+            double sim = dm.calculateDistance(heap.instance(i), meanH);
             minSimilar = Math.min(minSimilar, sim);
         }
         return minSimilar;
@@ -219,10 +219,10 @@ public class Ant implements Clusterer {
      */
     private int leastSim(Dataset heap) {
         Instance meanH = meanH(heap);
-        double sim1 = dm.calculateDistance(heap.getInstance(0), meanH);
+        double sim1 = dm.calculateDistance(heap.instance(0), meanH);
         int index = 0;
         for (int i = 1; i < heap.size(); i++) {
-            double sim2 = dm.calculateDistance(heap.getInstance(i), meanH);
+            double sim2 = dm.calculateDistance(heap.instance(i), meanH);
             if (sim2 > sim1) {
                 sim1 = sim2;
                 index = i;
@@ -242,7 +242,7 @@ public class Ant implements Clusterer {
         double avg = 0;
         Instance meanH = meanH(heap);
         for (int i = 0; i < heap.size(); i++) {
-            avg += dm.calculateDistance(heap.getInstance(i), meanH);
+            avg += dm.calculateDistance(heap.instance(i), meanH);
         }
         avg /= heap.size();
         return avg;
@@ -355,8 +355,8 @@ public class Ant implements Clusterer {
         // add one instance to a cluster
         for (int i = 0; i < data.size(); i++) {
             Dataset tmpHeap = new SimpleDataset();
-            Instance in = data.getInstance(i);
-            tmpHeap.addInstance(in);
+            Instance in = data.instance(i);
+            tmpHeap.add(in);
             clusters.add(tmpHeap);
         }
         iterations = data.size()*500;
@@ -366,7 +366,7 @@ public class Ant implements Clusterer {
         // first, load ant with instance from a random heap and remove instance/
         randomHeap = rg.nextInt(clusters.size());
        // heap = getVector(clusters.get(randomHeap));
-        carried.add(clusters.get(randomHeap).getInstance(0));
+        carried.add(clusters.get(randomHeap).instance(0));
         clusters.remove(randomHeap);
         
         // main algorithm
@@ -383,7 +383,7 @@ public class Ant implements Clusterer {
                 // calculated drop probability
                 if (clusters.get(randomHeap).size() == 1) {
                     if (carried.size() == 1) {
-                        probDropC = Math.pow(dm.calculateDistance(clusters.get(randomHeap).getInstance(0), carried.get(0)), 5);
+                        probDropC = Math.pow(dm.calculateDistance(clusters.get(randomHeap).instance(0), carried.get(0)), 5);
                     } else {// never add a large heap to a cluster with a single
                             // element
                         probDropC = 0;
@@ -407,7 +407,7 @@ public class Ant implements Clusterer {
                 // drop instance if random prob <= probDrop
                 if (randomProb <= probDropC) {
                     for (int i = 0; i < carried.size(); i++) {
-                        clusters.get(randomHeap).addInstance(carried.get(i));
+                        clusters.get(randomHeap).add(carried.get(i));
                     }
                     failMovesDrop = 0;
                     carried = null;
@@ -442,14 +442,14 @@ public class Ant implements Clusterer {
                 if (clusters.get(randomHeap).size() == 1) {
                     // pick instance from heap and remove heap from clusters
                     carried=new Vector<Instance>();
-                    carried.add(clusters.get(randomHeap).getInstance(0));
+                    carried.add(clusters.get(randomHeap).instance(0));
                     clusters.remove(randomHeap);
                     failMovesPick = 0;
                 } else if (clusters.get(randomHeap).size() == 2) {
                     // pick 1 instance and remove from heap
                     carried=new Vector<Instance>();
                     int randomIndex=rg.nextInt(2);
-                    carried.add(clusters.get(randomHeap).getInstance(randomIndex));
+                    carried.add(clusters.get(randomHeap).instance(randomIndex));
                     clusters.set(randomHeap, DatasetTools.removeInstance(clusters.get(randomHeap), randomIndex));
                     failMovesPick = 0;
                 } else if (clusters.get(randomHeap).size() > 2) {
@@ -470,7 +470,7 @@ public class Ant implements Clusterer {
                             // pick least similar instance and remove from heap
                             int indexLeastSimInstance = leastSim(clusters.get(randomHeap));
                             carried = new Vector<Instance>();
-                            carried.add(clusters.get(randomHeap).getInstance(indexLeastSimInstance));
+                            carried.add(clusters.get(randomHeap).instance(indexLeastSimInstance));
                             // carried = tmp;
                             clusters.set(randomHeap, DatasetTools.removeInstance(clusters.get(randomHeap),indexLeastSimInstance));
                             failMovesPick = 0;
@@ -483,7 +483,7 @@ public class Ant implements Clusterer {
                             // pick heap and remove from clusters
                             carried = new Vector<Instance>();
                             for(int i=0;i<clusters.get(randomHeap).size();i++){
-                                carried.add(clusters.get(randomHeap).getInstance(i));
+                                carried.add(clusters.get(randomHeap).instance(i));
                             }
                             clusters.remove(randomHeap);
                             

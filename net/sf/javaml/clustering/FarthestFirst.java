@@ -103,7 +103,7 @@ public class FarthestFirst implements Clusterer {
     private void updateMinDistance(double[] minDistance, boolean[] selected, Instance center) {
         for (int i = 0; i < selected.length; i++)
             if (!selected[i]) {
-                double d = dm.calculateDistance(center, data.getInstance(i));
+                double d = dm.calculateDistance(center, data.instance(i));
                 if (d < minDistance[i])
                     minDistance[i] = d;
             }
@@ -167,19 +167,19 @@ public class FarthestFirst implements Clusterer {
             minDistance[i] = Double.MAX_VALUE;
 
         int firstI = rg.nextInt(n);
-        centroids[0] = data.getInstance(firstI);
+        centroids[0] = data.instance(firstI);
         selected[firstI] = true;
 
-        updateMinDistance(minDistance, selected, data.getInstance(firstI));
+        updateMinDistance(minDistance, selected, data.instance(firstI));
 
         if (m_NumClusters > n)
             m_NumClusters = n;
 
         for (int i = 1; i < m_NumClusters; i++) {
             int nextI = farthestAway(minDistance, selected);
-            centroids[i] = data.getInstance(nextI);
+            centroids[i] = data.instance(nextI);
             selected[nextI] = true;
-            updateMinDistance(minDistance, selected, data.getInstance(nextI));
+            updateMinDistance(minDistance, selected, data.instance(nextI));
         }
 
         // put data in clusters using the calculated centroids
@@ -188,7 +188,7 @@ public class FarthestFirst implements Clusterer {
             clusters[i] = new SimpleDataset();
         }
         for (int i = 0; i < data.size(); i++) {
-            Instance inst = data.getInstance(i);
+            Instance inst = data.instance(i);
             double min = dm.calculateDistance(inst, centroids[0]);
             int index = 0;
             for (int j = 1; j < m_NumClusters; j++) {
@@ -198,7 +198,7 @@ public class FarthestFirst implements Clusterer {
                     index = j;
                 }
             }
-            clusters[index].addInstance(inst);
+            clusters[index].add(inst);
         }
         return clusters;
     }

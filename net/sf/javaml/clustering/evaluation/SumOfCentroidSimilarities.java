@@ -53,7 +53,7 @@ public class SumOfCentroidSimilarities implements ClusterEvaluation {
 		double sum = 0;
 		for (int i = 0; i < datas.length; i++) {
 			for (int j = 0; j < datas[i].size(); j++) {
-				double error = dm.calculateDistance(datas[i].getInstance(j),
+				double error = dm.calculateDistance(datas[i].instance(j),
 						centroids[i]);
 				sum += error;
 			}

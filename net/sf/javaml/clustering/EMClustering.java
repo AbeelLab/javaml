@@ -128,11 +128,11 @@ public class EMClustering implements Clusterer {
             Instance center = centers[i];
             for (int j = 0; j < m_num_attribs; j++) {
                 double minStdD = (m_minStdDevPerAtt != null) ? m_minStdDevPerAtt[j] : m_minStdDev;
-                double mean = center.getValue(j);
+                double mean = center.value(j);
                 m_modelNormal[i][j][0] = mean;
-                double stdv = stdD[i].getValue(j);
+                double stdv = stdD[i].value(j);
                 if (stdv < minStdD) {
-                    stdv = datasetSTD.getValue(j);// data.attributeStats(j).numericStats.stdDev;
+                    stdv = datasetSTD.value(j);// data.attributeStats(j).numericStats.stdDev;
                     if (Double.isInfinite(stdv)) {
                         stdv = minStdD;
                     }
@@ -214,7 +214,7 @@ public class EMClustering implements Clusterer {
 
         for (int i = 0; i < inst.size(); i++) {
             for (int j = 0; j < m_num_clusters; j++) {
-                m_priors[j] += inst.getInstance(i).getWeight() * m_weights[i][j];
+                m_priors[j] += inst.instance(i).weight() * m_weights[i][j];
             }
         }
 
@@ -269,10 +269,10 @@ public class EMClustering implements Clusterer {
         for (i = 0; i < m_num_clusters; i++) {
             for (j = 0; j < m_num_attribs; j++) {
                 for (l = 0; l < inst.size(); l++) {
-                    Instance in = inst.getInstance(l);
-                    m_modelNormal[i][j][0] += (in.getValue(j) * in.getWeight() * m_weights[l][i]);
-                    m_modelNormal[i][j][2] += in.getWeight() * m_weights[l][i];
-                    m_modelNormal[i][j][1] += (in.getValue(j) * in.getValue(j) * in.getWeight() * m_weights[l][i]);
+                    Instance in = inst.instance(l);
+                    m_modelNormal[i][j][0] += (in.value(j) * in.weight() * m_weights[l][i]);
+                    m_modelNormal[i][j][2] += in.weight() * m_weights[l][i];
+                    m_modelNormal[i][j][1] += (in.value(j) * in.value(j) * in.weight() * m_weights[l][i]);
                 }
             }
         }
@@ -301,7 +301,7 @@ public class EMClustering implements Clusterer {
                     m_modelNormal[i][j][1] = Math.sqrt(m_modelNormal[i][j][1]);
 
                     if ((m_modelNormal[i][j][1] <= minStdD)) {
-                        m_modelNormal[i][j][1] = stdD.getValue(j);// inst.attributeStats(j).numericStats.stdDev;
+                        m_modelNormal[i][j][1] = stdD.value(j);// inst.attributeStats(j).numericStats.stdDev;
                         if ((m_modelNormal[i][j][1] <= minStdD)) {
                             m_modelNormal[i][j][1] = minStdD;
                         }
@@ -339,10 +339,10 @@ public class EMClustering implements Clusterer {
 
         for (int l = 0; l < inst.size(); l++) {
 
-            Instance in = inst.getInstance(l);
+            Instance in = inst.instance(l);
 
-            loglk += in.getWeight() * logDensityForInstance(in);
-            sOW += in.getWeight();
+            loglk += in.weight() * logDensityForInstance(in);
+            sOW += in.weight();
 
             if (change_weights) {
                 m_weights[l] = distributionForInstance(in);
@@ -498,7 +498,7 @@ public class EMClustering implements Clusterer {
             logprob = 0.0;
 
             for (j = 0; j < m_num_attribs; j++) {
-                logprob += logNormalDens(inst.getValue(j), m_modelNormal[i][j][0], m_modelNormal[i][j][1]);
+                logprob += logNormalDens(inst.value(j), m_modelNormal[i][j][0], m_modelNormal[i][j][1]);
             }
 
             wghts[i] = logprob;
@@ -513,7 +513,7 @@ public class EMClustering implements Clusterer {
      */
     private double doEM() {
 
-        m_num_attribs = m_theInstances.getInstance(0).size();// .numAttributes();
+        m_num_attribs = m_theInstances.instance(0).size();// .numAttributes();
 
         // fit full training set
         EM_Init(m_theInstances);
@@ -599,10 +599,10 @@ public class EMClustering implements Clusterer {
             clusters[j] = new SimpleDataset();
         }
         for (int i = 0; i < data.size(); i++) {
-            double[] distr = distributionForInstance(data.getInstance(i));
+            double[] distr = distributionForInstance(data.instance(i));
             for (int j = 0; j < m_num_clusters; j++) {
                 if (distr[j] > clusterThreshold) {
-                    clusters[j].addInstance(data.getInstance(i));
+                    clusters[j].add(data.instance(i));
                 }
             }
         }

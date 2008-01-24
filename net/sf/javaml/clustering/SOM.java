@@ -1020,7 +1020,7 @@ public class SOM implements Clusterer, Classifier {
   private WeightVectors wV;
     public Dataset[] executeClustering(Dataset data) {
         // hexa || rect
-        wV = new WeightVectors(xdim, ydim, data.getInstance(0).size(), gridType.toString());
+        wV = new WeightVectors(xdim, ydim, data.instance(0).size(), gridType.toString());
         InputVectors iV = convertDataset(data);
         JSomTraining jst = new JSomTraining( iV);
         // exponential || inverse || linear
@@ -1063,7 +1063,7 @@ public class SOM implements Clusterer, Classifier {
 
         for (int i = 0; i < data.size(); i++) {
             int index = resolveIndexOfWinningNeuron(iVector.getNodeValuesAt(i));
-            clusters.get(index).addInstance(data.getInstance(i));
+            clusters.get(index).add(data.instance(i));
             wVector.setNodeLabelAt(index, iVector.getNodeLabelAt(i));
         }
         return wVector;
@@ -1093,7 +1093,7 @@ public class SOM implements Clusterer, Classifier {
     private InputVectors convertDataset(Dataset data) {
         InputVectors iVS = new InputVectors();
         for (int i = 0; i < data.size(); i++) {
-            double[] values = data.getInstance(i).toArray();
+            double[] values = data.instance(i).toArray();
             SomNode tmp = new SomNode("node_" + i, values);
             iVS.add(tmp);
         }

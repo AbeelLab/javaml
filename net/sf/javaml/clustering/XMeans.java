@@ -35,7 +35,7 @@ import net.sf.javaml.core.SimpleDataset;
 import net.sf.javaml.core.SimpleInstance;
 import net.sf.javaml.distance.DistanceMeasure;
 import net.sf.javaml.distance.EuclideanDistance;
-import net.sf.javaml.utils.ArrayOperations;
+import net.sf.javaml.utils.ArrayUtils;
 import net.sf.javaml.utils.MathUtils;
 
 /**
@@ -343,9 +343,9 @@ public class XMeans implements Clusterer {
             out[i] = new SimpleDataset();
         }
         for (int i = 0; i < data.size(); i++) {
-            Instance inst = data.getInstance(i);
+            Instance inst = data.instance(i);
             int index = clusterProcessedInstance(inst, m_ClusterCenters);
-            out[index].addInstance(inst);
+            out[index].add(inst);
         }
         return out;
     }
@@ -418,7 +418,7 @@ public class XMeans implements Clusterer {
         for (int j = 0; j < diff.length; j++) {
             diff[j] = pbic[j] - cbic[j];
         }
-        int[] sortOrder = ArrayOperations.sort(diff);
+        int[] sortOrder = ArrayUtils.sort(diff);
 
         // check if maxNumClusters would be exceeded
         int possibleToSplit = m_MaxNumClusters - m_NumClusters;
@@ -560,7 +560,7 @@ public class XMeans implements Clusterer {
 
                 for (int k = 0; k < instOfCent[i].length; k++)
 
-                    if (converged && m_ClusterCenters[i].getValue(j) != val)
+                    if (converged && m_ClusterCenters[i].value(j) != val)
                         converged = false;
                 if (!converged) {
                     // m_ClusterCenters[i].setValue(j, val);
@@ -616,10 +616,10 @@ public class XMeans implements Clusterer {
         // if (instances.attribute(attIndex).isNumeric()) {
         result = found = 0;
         for (int j = 0; j < numInst; j++) {
-            Instance currInst = instances.getInstance(instList[j]);
+            Instance currInst = instances.instance(instList[j]);
             // if (!currInst.isMissing(attIndex)) {
-            found += currInst.getWeight();
-            result += currInst.getWeight() * currInst.getValue(attIndex);
+            found += currInst.weight();
+            result += currInst.weight() * currInst.value(attIndex);
             // }
         }
         if (MathUtils.eq(found, 0)) {
@@ -789,7 +789,7 @@ public class XMeans implements Clusterer {
 
         // set assignments
         for (int i = 0; i < numInst; i++) {
-            Instance inst = data.getInstance(allInstList[i]);
+            Instance inst = data.instance(allInstList[i]);
             int newC = clusterProcessedInstance(inst, centers);
             counts[newC]++;
             if (converged && newC != assignments[i]) {
@@ -866,21 +866,21 @@ public class XMeans implements Clusterer {
     private Instance[] splitCenter(Random rg, Instance center, double variance) {
         m_NumSplits++;
         double[] randomValues = new double[center.size()];
-        ArrayOperations.fillRandom(randomValues, rg);
+        ArrayUtils.fillRandom(randomValues, rg);
         Instance[] children = new Instance[2];
 
-        ArrayOperations.changeLength(Math.sqrt(variance), randomValues);
+        ArrayUtils.changeLength(Math.sqrt(variance), randomValues);
 
         // add random vector to center
         double[] centerValues = center.toArray();
-        centerValues = ArrayOperations.add(centerValues, randomValues);
+        centerValues = ArrayUtils.add(centerValues, randomValues);
         children[0] = new SimpleInstance(centerValues, center);
         ;
         // substract random vector to center
         centerValues = center.toArray();
         randomValues = new double[center.size()];
-        ArrayOperations.fillRandom(randomValues, rg);
-        centerValues = ArrayOperations.substract(centerValues, randomValues);
+        ArrayUtils.fillRandom(randomValues, rg);
+        centerValues = ArrayUtils.substract(centerValues, randomValues);
         children[1] = new SimpleInstance(centerValues, center);
         return children;
     }
@@ -903,7 +903,7 @@ public class XMeans implements Clusterer {
         // makes the new centers randomly
         for (int i = 0; i < numClusters; i++) {
             int instIndex = Math.abs(random0.nextInt()) % data.size();
-            clusterCenters[i] = data.getInstance(instIndex);
+            clusterCenters[i] = data.instance(instIndex);
         }
         return clusterCenters;
     }
@@ -1059,7 +1059,7 @@ public class XMeans implements Clusterer {
         for (int i = 0; i < centers.length; i++) {
             distortion[i] = 0.0;
             for (int j = 0; j < instOfCent[i].length; j++) {
-                distortion[i] += dm.calculateDistance(data.getInstance(instOfCent[i][j]), centers[i]);
+                distortion[i] += dm.calculateDistance(data.instance(instOfCent[i][j]), centers[i]);
             }
         }
         /*

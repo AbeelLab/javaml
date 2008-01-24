@@ -48,11 +48,11 @@ public class WB implements ClusterEvaluation {
 		
 		for (int i = 0; i < datas.length; i++) {
 			for (int j = 0; j < datas[i].size(); j++) {
-				Instance x = datas[i].getInstance(j);
+				Instance x = datas[i].instance(j);
 				// calculate sum of intra cluster distances dw and count their
 				// number.
 				for (int k = j + 1; k < datas[i].size(); k++) {
-					Instance y = datas[i].getInstance(k);
+					Instance y = datas[i].instance(k);
 					double distance = dm.calculateDistance(x, y);
 					dw += distance;
 					fw++;
@@ -61,7 +61,7 @@ public class WB implements ClusterEvaluation {
 				// number.
 				for (int k = i + 1; k < datas.length; k++) {
 					for (int l = 0; l < datas[k].size(); l++) {
-						Instance y = datas[k].getInstance(l);
+						Instance y = datas[k].instance(l);
 						double distance = dm.calculateDistance(x, y);
 						db += distance;
 						fb++;

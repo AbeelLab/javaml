@@ -52,13 +52,13 @@ public class MinMaxCut implements ClusterEvaluation {
             for (int j = 0; j < datas[i].size(); j++) {
                 for (int k = 0; k < datas.length; k++) {
                     for (int p = 0; p < datas[k].size(); p++)
-                        if (datas[i].getInstance(j) != datas[k].getInstance(p)) {
-                            double error = dm.calculateDistance(datas[i].getInstance(j), datas[k].getInstance(p));
+                        if (datas[i].instance(j) != datas[k].instance(p)) {
+                            double error = dm.calculateDistance(datas[i].instance(j), datas[k].instance(p));
                             tmpTop += error;
                         }
                 }
                 for (int k = 0; k < datas[i].size(); k++) {
-                    double error = dm.calculateDistance(datas[i].getInstance(j), datas[i].getInstance(k));
+                    double error = dm.calculateDistance(datas[i].instance(j), datas[i].instance(k));
                     tmp += error;
                 }
             }

@@ -92,7 +92,7 @@ public class KMedoids implements Clusterer {
         Dataset[] output = new SimpleDataset[numberOfClusters];
         for (int i = 0; i < numberOfClusters; i++) {
             int random = rg.nextInt(data.size());
-            medoids[i] = data.getInstance(random);
+            medoids[i] = data.instance(random);
         }
 
         boolean changed = true;
@@ -125,10 +125,10 @@ public class KMedoids implements Clusterer {
     private int[] assign(Instance[] medoids, Dataset data) {
         int[] out = new int[data.size()];
         for (int i = 0; i < data.size(); i++) {
-            double bestDistance = dm.calculateDistance(data.getInstance(i), medoids[0]);
+            double bestDistance = dm.calculateDistance(data.instance(i), medoids[0]);
             int bestIndex = 0;
             for (int j = 1; j < medoids.length; j++) {
-                double tmpDistance = dm.calculateDistance(data.getInstance(i), medoids[j]);
+                double tmpDistance = dm.calculateDistance(data.instance(i), medoids[j]);
                 if (dm.compare(tmpDistance, bestDistance)) {
                     bestDistance = tmpDistance;
                     bestIndex = j;
@@ -161,16 +161,16 @@ public class KMedoids implements Clusterer {
             output[i] = new SimpleDataset();
             for (int j = 0; j < assignment.length; j++) {
                 if (assignment[j] == i) {
-                    output[i].addInstance(data.getInstance(j));
+                    output[i].add(data.instance(j));
                 }
             }
             if (output[i].size() == 0) { // new random, empty medoid
-                medoids[i] = data.getInstance(rg.nextInt(data.size()));
+                medoids[i] = data.instance(rg.nextInt(data.size()));
                 changed = true;
             } else {
                 Instance centroid = DatasetTools.getCentroid(output[i]);
                 Instance oldMedoid = medoids[i];
-                medoids[i] = DatasetTools.getClosest(data, dm, centroid);
+                medoids[i] = DatasetTools.getNearest(data, dm, centroid);
                 if (!medoids[i].equals(oldMedoid))
                     changed = true;
             }

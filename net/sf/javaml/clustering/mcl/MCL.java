@@ -86,8 +86,8 @@ public class MCL implements Clusterer {
         SparseMatrix dataSparseMatrix = new SparseMatrix();
         for (int i = 0; i < data.size(); i++) {
             for (int j = 0; j <= i; j++) {
-                Instance x = data.getInstance(i);
-                Instance y = data.getInstance(j);
+                Instance x = data.instance(i);
+                Instance y = data.instance(j);
                 double dist = dm.calculateDistance(x, y);
                 if (dist > maxZero)
                     dataSparseMatrix.add(i, j, dm.calculateDistance(x, y));
@@ -117,7 +117,7 @@ public class MCL implements Clusterer {
                 for (int j = 0; j < sparseMatrixSize[0]; j++) {
                     double value = matrix.get(j, i);
                     if (value != 0) {
-                        cluster.add(data.getInstance(j));
+                        cluster.add(data.instance(j));
                     }
                 }
                 finalClusters.add(cluster);
@@ -132,7 +132,7 @@ public class MCL implements Clusterer {
             Vector<Instance> getCluster = new Vector<Instance>();
             getCluster = finalClusters.get(i);
             for (int j = 0; j < getCluster.size(); j++) {
-                output[i].addInstance(getCluster.get(j));
+                output[i].add(getCluster.get(j));
             }
         }
 

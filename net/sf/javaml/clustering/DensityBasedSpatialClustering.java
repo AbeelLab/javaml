@@ -175,7 +175,7 @@ public class DensityBasedSpatialClustering extends AbstractDensityBasedClusterin
         this.clusterID = 0;
         dataset = new Vector<DataObject>();
         for (int i = 0; i < data.size(); i++) {
-            dataset.add(new DataObject(data.getInstance(i)));
+            dataset.add(new DataObject(data.instance(i)));
 
         }
 
@@ -196,7 +196,7 @@ public class DensityBasedSpatialClustering extends AbstractDensityBasedClusterin
         int notKnownCount = 0;
         for (DataObject dataObject : dataset) {
             if (dataObject.clusterIndex >= 0)
-                clusters[dataObject.clusterIndex].addInstance(dataObject.instance);
+                clusters[dataObject.clusterIndex].add(dataObject.instance);
             if (DataObject.NOISE == dataObject.clusterIndex) {
                 noiseCount++;
             }

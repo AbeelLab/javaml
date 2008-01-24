@@ -52,9 +52,9 @@ public class CIndex implements ClusterEvaluation {
         // calculate intra cluster distances and sum of all.
         for (int i = 0; i < clusters.length; i++) {
         	for (int j = 0; j < clusters[i].size(); j++) {
-            	Instance x = clusters[i].getInstance(j);
+            	Instance x = clusters[i].instance(j);
                 for (int k = j + 1; k < clusters[i].size(); k++) {
-                    Instance y = clusters[i].getInstance(k);
+                    Instance y = clusters[i].instance(k);
                     double distance = dm.calculateDistance(x, y);
                     dw += distance;
                     if (maxDw < distance) {

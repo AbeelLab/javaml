@@ -71,7 +71,7 @@ public class TraceScatterMatrix implements ClusterEvaluation {
         Dataset data = new SimpleDataset();
         for (int i = 0; i < clusters.length; i++) {
             for (int j = 0; j < clusters[i].size(); j++) {
-                data.addInstance(clusters[i].getInstance(j));
+                data.add(clusters[i].instance(j));
             }
         }
         overAllCentroid = DatasetTools.getCentroid(data);

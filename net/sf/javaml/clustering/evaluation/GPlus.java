@@ -52,10 +52,10 @@ public class GPlus implements ClusterEvaluation {
 		// calculate max intra cluster distance
 		for (int i = 0; i < datas.length; i++) {
 			for (int j = 0; j < datas[i].size(); j++) {
-				Instance x = datas[i].getInstance(j);
+				Instance x = datas[i].instance(j);
 				for (int k = j + 1; k < datas[i].size(); k++) {
 					fw++;
-					Instance y = datas[i].getInstance(k);
+					Instance y = datas[i].instance(k);
 					double distance = dm.calculateDistance(x, y);
 					if (maxIntraDist < distance) {
 						maxIntraDist = distance;
@@ -68,10 +68,10 @@ public class GPlus implements ClusterEvaluation {
 		// count sMin
 		for (int i = 0; i < datas.length; i++) {
 			for (int j = 0; j < datas[i].size(); j++) {
-				Instance x = datas[i].getInstance(j);
+				Instance x = datas[i].instance(j);
 				for (int k = i + 1; k < datas.length; k++) {
 					for (int l = 0; l < datas[k].size(); l++) {
-						Instance y = datas[k].getInstance(l);
+						Instance y = datas[k].instance(l);
 						fb++;
 						double distance = dm.calculateDistance(x, y);
 						if (distance < maxIntraDist) {

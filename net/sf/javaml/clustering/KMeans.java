@@ -135,12 +135,12 @@ public class KMeans implements Clusterer {
         Instance min = data.getMinimumInstance();
         Instance max = data.getMaximumInstance();
         this.centroids = new Instance[numberOfClusters];
-        int instanceLength = data.getInstance(0).size();
+        int instanceLength = data.instance(0).size();
         for (int j = 0; j < numberOfClusters; j++) {
             double[] randomInstance = new double[instanceLength];
             for (int i = 0; i < instanceLength; i++) {
-                double dist = Math.abs(max.getValue(i) - min.getValue(i));
-                randomInstance[i] = (float) (min.getValue(i) + rg.nextDouble() * dist);
+                double dist = Math.abs(max.value(i) - min.value(i));
+                randomInstance[i] = (float) (min.value(i) + rg.nextDouble() * dist);
 
             }
             this.centroids[j] = new SimpleInstance(randomInstance);
@@ -155,9 +155,9 @@ public class KMeans implements Clusterer {
             int[] assignment = new int[data.size()];
             for (int i = 0; i < data.size(); i++) {
                 int tmpCluster = 0;
-                double minDistance = dm.calculateDistance(centroids[0], data.getInstance(i));
+                double minDistance = dm.calculateDistance(centroids[0], data.instance(i));
                 for (int j = 1; j < centroids.length; j++) {
-                    double dist = dm.calculateDistance(centroids[j], data.getInstance(i));
+                    double dist = dm.calculateDistance(centroids[j], data.instance(i));
                     if (dm.compare(dist, minDistance)) {
                         minDistance = dist;
                         tmpCluster = j;
@@ -173,10 +173,10 @@ public class KMeans implements Clusterer {
             double[][] sumPosition = new double[this.numberOfClusters][instanceLength];
             int[] countPosition = new int[this.numberOfClusters];
             for (int i = 0; i < data.size(); i++) {
-                Instance in = data.getInstance(i);
+                Instance in = data.instance(i);
                 for (int j = 0; j < instanceLength; j++) {
 
-                    sumPosition[assignment[i]][j] += in.getWeight() * in.getValue(j);
+                    sumPosition[assignment[i]][j] += in.weight() * in.value(j);
 
                 }
                 countPosition[assignment[i]]++;
@@ -197,8 +197,8 @@ public class KMeans implements Clusterer {
                 } else {
                     double[] randomInstance = new double[instanceLength];
                     for (int j = 0; j < instanceLength; j++) {
-                        double dist = Math.abs(max.getValue(j) - min.getValue(j));
-                        randomInstance[j] = (float) (min.getValue(j) + rg.nextDouble() * dist);
+                        double dist = Math.abs(max.value(j) - min.value(j));
+                        randomInstance[j] = (float) (min.value(j) + rg.nextDouble() * dist);
 
                     }
                     randomCentroids = true;
@@ -213,15 +213,15 @@ public class KMeans implements Clusterer {
             output[i] = new SimpleDataset();
         for (int i = 0; i < data.size(); i++) {
             int tmpCluster = 0;
-            double minDistance = dm.calculateDistance(centroids[0], data.getInstance(i));
+            double minDistance = dm.calculateDistance(centroids[0], data.instance(i));
             for (int j = 0; j < centroids.length; j++) {
-                double dist = dm.calculateDistance(centroids[j], data.getInstance(i));
+                double dist = dm.calculateDistance(centroids[j], data.instance(i));
                 if (dm.compare(dist, minDistance)) {
                     minDistance = dist;
                     tmpCluster = j;
                 }
             }
-            output[tmpCluster].addInstance(data.getInstance(i));
+            output[tmpCluster].add(data.instance(i));
 
         }
         return output;

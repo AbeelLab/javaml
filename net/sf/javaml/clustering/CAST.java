@@ -91,8 +91,8 @@ public class CAST {
 		for (int i = 0; i < data.size(); i++) {
 			for (int j = 0; j < data.size(); j++) {
 				this.dm = new NormalizedEuclideanSimilarity(data);
-				double similarity = dm.calculateDistance(data.getInstance(i),
-						data.getInstance(j));
+				double similarity = dm.calculateDistance(data.instance(i),
+						data.instance(j));
 				if (i == j) {
 					similarityMatrix[i][i] = similarity;
 				} else {
@@ -162,7 +162,7 @@ public class CAST {
 		// build temporarily processing vector containig all data
 		Vector<Instance> all = new Vector<Instance>();
 		for (int i = 0; i < data.size(); i++) {
-			Instance in = data.getInstance(i);
+			Instance in = data.instance(i);
 			all.add(in);
 		}
 
@@ -229,7 +229,7 @@ public class CAST {
 			Vector<Instance> getCluster = new Vector<Instance>();
 			getCluster = clusters.get(i);
 			for (int j = 0; j < getCluster.size(); j++) {
-				output[i].addInstance(getCluster.get(j));
+				output[i].add(getCluster.get(j));
 			}
 		}
 		return output;
