@@ -1,26 +1,9 @@
 /**
  * DistanceMeasure.java
  *
- * This file is part of the Java Machine Learning API
- * 
- * The Java Machine Learning API is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
  *
- * The Java Machine Learning API is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with the Java Machine Learning API; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * 
- * Copyright (c) 2006-2007, Thomas Abeel
- * 
- * Project: http://sourceforge.net/projects/java-ml/
- * 
+ * %SVN.HEADER%
+ *  
  */
 package net.sf.javaml.distance;
 
@@ -35,55 +18,85 @@ import net.sf.javaml.core.Instance;
  * low distance values, while object that are far apart or are not similar
  * should have high distance values.
  * 
- * By convention measures that end in <code>Similarity</code> have a high
- * value for highly similar (low distance) and measure that end in
- * <code>Distance</code> have a high value for items that have low similarity
- * (high distance).
+ * There are three types of distance measures: distance, similarity and
+ * correlation measures.
  * 
  * Some distance measures are normalized, i.e. in the interval [0,1], but this
  * is not required by the interface.
+ * 
+ * @{jmlSource}
+ * 
+ * @see net.sf.javaml.distance.AbstractDistance
+ * @see net.sf.javaml.distance.AbstractSimilarity
+ * @see net.sf.javaml.distance.AbstractCorrelation
+ * 
+ * @version %SVN.VERSION%
  * 
  * @author Thomas Abeel
  * 
  */
 public interface DistanceMeasure extends Serializable {
     /**
-     * XXX add doc
+     * Calculates the distance between two instances.
      * 
      * @param i
+     *            the first instance
      * @param j
-     * @return
+     *            the second instance
+     * @return the distance between the two instances
      */
     public double calculateDistance(Instance i, Instance j);
 
     /**
-     * XXX add doc maximal distance, minimal similarity for distance measures
-     * this value should be high, for similarity measures this value should be
-     * low
+     * Maximal distance, minimal similarity for distance measures this value
+     * should be high, for similarity measures this value should be low.
+     * 
+     * For some distance measures this will be a very expensive operation as all
+     * possible distances have to be calculated.
+     * 
+     * It is allowed to return an upper bound of the distance, although it may
+     * not actually be reached within the data set.
+     * 
      * 
      * @param data
-     * @return
+     *            the data set to calculate the maximum distance for.
+     * @return the maximum distance within this data set
      */
     public double getMaximumDistance(Dataset data);
 
     /**
-     * XXX add doc minimal distance, maximal similarty for distance measures
-     * this value should be low, for similarity measures this value should be
-     * high
+     * Minimal distance, maximal similarity for distance measures this value
+     * should be low, for similarity measures this value should be high.
+     * 
+     * For some distance measures this will be a very expensive operation as all
+     * possible distances have to be calculated.
+     * 
+     * It is allowed to return a lower bound of the distance, although it may
+     * not actually be reached within the data set.
+     * 
      * 
      * @param data
-     * @return
+     *            the data set to calculate the minimum distance for.
+     * @return the minimum distance within this data set
      */
     public double getMinimumDistance(Dataset data);
+
     /**
-     * Returns whether the first distance/similarity is better than the second distance/similarity.
+     * Returns whether the first distance, similarity or correlation is better
+     * than the second distance, similarity or correlation.
+     * 
+     * Both values should bee calculated using the same measure.
      * 
      * For similarity measures the higher the similarity the better the measure,
-     * for distance measures it is the lower the better.
+     * for distance measures it is the lower the better and for correlation
+     * measure the absolute value must be higher.
      * 
-     * @param x the first distance or similarity
-     * @param y the second distance or similarity
-     * @return true if the first distance is better than the second, false in other cases.
+     * @param x
+     *            the first distance, similarity or correlation
+     * @param y
+     *            the second distance, similarity or correlation
+     * @return true if the first distance is better than the second, false in
+     *         other cases.
      */
-    public boolean compare(double x,double y);
+    public boolean compare(double x, double y);
 }
