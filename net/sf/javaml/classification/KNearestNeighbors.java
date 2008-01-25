@@ -29,7 +29,7 @@ public class KNearestNeighbors implements Classifier {
 
     private int k = 5;
 
-    private KNearestNeighbors(int k) {
+    public KNearestNeighbors(int k) {
         this.k = k;
     }
 
