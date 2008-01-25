@@ -22,6 +22,13 @@ public class RandomForest implements Classifier {
 
     private int treeCount;
 
+    private int numAttributes;
+
+    public void setNumAttributes(int k) {
+        this.numAttributes = k;
+
+    }
+
     private boolean calculateOutOfBagErrorEstimate = false;
 
     public RandomForest(int treeCount, boolean calculateOutOfBagErrorEstimate) {
@@ -34,9 +41,11 @@ public class RandomForest implements Classifier {
     }
 
     public void buildClassifier(Dataset data) {
-        Classifier[] trees = new Classifier[treeCount];
-        for (int i = 0; i < trees.length; i++)
+        RandomTree[] trees = new RandomTree[treeCount];
+        for (int i = 0; i < trees.length; i++) {
             trees[i] = new RandomTree();
+            trees[i].setKValue(numAttributes);
+        }
         bagger = new Bagging(trees);
         bagger.setCalculateOutOfBagErrorEstimate(calculateOutOfBagErrorEstimate);
         bagger.buildClassifier(data);
