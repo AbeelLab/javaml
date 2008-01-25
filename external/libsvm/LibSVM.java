@@ -29,7 +29,7 @@ public class LibSVM implements Classifier {
     public void buildClassifier(Dataset data) {
         // System.out.println("Size: " + data.size());
         // System.out.println("att: " + data.numAttributes());
-//        this.data = data;
+        // this.data = data;
         // svm_parameter param = new svm_parameter();
         // default values
         param.svm_type = svm_parameter.C_SVC;
@@ -75,12 +75,12 @@ public class LibSVM implements Classifier {
         // }
 
         model = svm.svm_train(p, param);
-        try {
-            svm.svm_save_model("test", model);
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        // try {
+        // svm.svm_save_model("test", model);
+        // } catch (IOException e) {
+        // // TOO Auto-generated catch block
+        // e.printStackTrace();
+        // }
         // System.out.println(Arrays.toString(model.nSV));
         double[][] coef = model.sv_coef;
         // System.out.println();
