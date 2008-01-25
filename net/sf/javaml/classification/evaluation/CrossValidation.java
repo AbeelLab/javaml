@@ -56,6 +56,7 @@ public class CrossValidation extends Verbose{
         verbose("Splitting positive and negative samples...");
         Vector<Integer> positiveSamples = new Vector<Integer>();
         Vector<Integer> negativeSamples = new Vector<Integer>();
+        
         for (int i = 0; i < data.size(); i++) {
             Instance tmp = data.instance(i);
             if (tmp.isClassSet() && tmp.classValue() == positiveClassValue) {
@@ -65,6 +66,8 @@ public class CrossValidation extends Verbose{
             }
 
         }
+        verbose("Positive samples: "+positiveSamples.size());
+        verbose("Negative samples: "+negativeSamples.size());
         if (folds > positiveSamples.size() || folds > negativeSamples.size()) {
             throw new RuntimeException("There are not enough samples to perform " + folds
                     + "-fold cross validation on the dataset");
@@ -132,8 +135,10 @@ public class CrossValidation extends Verbose{
         int tp = 0, fn = 0;
         for (int i = 0; i < valPos.size(); i++) {
             Instance tmp = data.instance(valPos.get(i));
+            if(tmp.classValue()!=this.positiveClassValue)
+                throw new RuntimeException("Negative sample in the positive set.");
             int value = classifier.classifyInstance(tmp);
-            if (value == 1 && tmp.classValue() == this.positiveClassValue)
+            if (value == this.positiveClassValue)
                 tp++;
             else {
                 fn++;
@@ -144,8 +149,10 @@ public class CrossValidation extends Verbose{
         Vector<Integer> valNeg = negativeSets.get(fold);
         for (int i = 0; i < valNeg.size(); i++) {
             Instance tmp = data.instance(valNeg.get(i));
+            if(tmp.classValue()==this.positiveClassValue)
+                throw new RuntimeException("Positive sample in the positive set.");
             int value = classifier.classifyInstance(tmp);
-            if (value == 0 && tmp.classValue() != this.positiveClassValue) {
+            if (value != this.positiveClassValue) {
                 tn++;
             } else {
                 fp++;
