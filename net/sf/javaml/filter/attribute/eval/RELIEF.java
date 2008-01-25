@@ -30,8 +30,15 @@ public class RELIEF implements IAttributeEvaluation {
 
     private double[] weights = null;
 
-    private int numNeighbors = 1;
+    private int numNeighbors;
 
+    public RELIEF(){
+        this(1);
+    }
+    public RELIEF(int numNeighbors){
+        this.numNeighbors=numNeighbors;
+    }
+    
     public void setNumNeigbors(int num) {
         numNeighbors = num;
     }
