@@ -11,6 +11,8 @@ import java.util.Random;
 import java.util.Vector;
 
 import net.sf.javaml.distance.DistanceMeasure;
+import net.sf.javaml.filter.ClassRemoveFilter;
+import net.sf.javaml.filter.ClassRetainFilter;
 
 import org.apache.commons.math.stat.descriptive.moment.StandardDeviation;
 
@@ -221,20 +223,6 @@ final public class DatasetTools {
     }
 
     /**
-     * Merges all the data from the two datasets into the first one.
-     * 
-     * @param data
-     *            the first dataset
-     * @param added
-     *            the dataset to add to the first one
-     */
-    public static void merge(Dataset data, Dataset added) {
-        for (int i = 0; i < added.size(); i++) {
-            data.add(added.instance(i));
-        }
-    }
-
-    /**
      * Removes all the empty datasets from an array of datasets.
      * 
      * @param input
@@ -277,8 +265,31 @@ final public class DatasetTools {
 
     }
 
-    
-    
-    
+    /**
+     * Create folds from the supplied data set for cross-validation
+     * 
+     * @param data
+     *            the data set to make folds from
+     * @param positiveClass
+     *            the positive class
+     * @param numFolds
+     *            the number of folds to create
+     * @return
+     */
+    public static Dataset[] createFolds(Dataset data, int positiveClass, int numFolds) {
+        ClassRetainFilter retain = new ClassRetainFilter(positiveClass);
+        ClassRemoveFilter remove = new ClassRemoveFilter(positiveClass);
+        Dataset positive = retain.filterDataset(data);
+        Dataset negative = remove.filterDataset(data);
+        Dataset[] out = new Dataset[numFolds];
+        for (int i = 0; i < out.length; i++)
+            out[i] = new SimpleDataset();
+        for (int i = 0; i < positive.size(); i++)
+            out[i % numFolds].add(positive.instance(i));
+        for (int i = 0; i < negative.size(); i++)
+            out[i % numFolds].add(negative.instance(i));
+        return out;
+
+    }
 
 }

@@ -37,20 +37,14 @@ public class SimpleDataset implements Dataset, Serializable {
      * XXX doc
      */
     public SimpleDataset() {
-        this(true);
-    }
 
-    public SimpleDataset(boolean lazy) {
-        this.lazy = lazy;
     }
 
     /**
      * XXX doc
      */
     public SimpleDataset(Vector<Instance> data) {
-        for (Instance in : data) {
-            this.add(in);
-        }
+        this.addAll(data);
     }
 
     public SimpleDataset(Dataset data) {
