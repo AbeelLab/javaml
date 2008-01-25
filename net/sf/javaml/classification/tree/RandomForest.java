@@ -31,9 +31,10 @@ public class RandomForest implements Classifier {
 
     private boolean calculateOutOfBagErrorEstimate = false;
 
-    public RandomForest(int treeCount, boolean calculateOutOfBagErrorEstimate) {
+    public RandomForest(int treeCount, boolean calculateOutOfBagErrorEstimate, int numAttributes) {
         this.treeCount = treeCount;
         this.calculateOutOfBagErrorEstimate = calculateOutOfBagErrorEstimate;
+        this.numAttributes = numAttributes;
     }
 
     public PerformanceMeasure getOutOfBagErrorEstimate() {

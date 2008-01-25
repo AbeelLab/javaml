@@ -58,12 +58,12 @@ public class TestRandomTree {
         System.out.println("RandomTree: ");
         System.out.println(x + "\n" + x.getFMeasure());
 
-        RandomForest rf = new RandomForest(50, true);
+        RandomForest rf = new RandomForest(50, true,5);
         rf.buildClassifier(data);
         System.out.println("RF-OOBEE:\n" + rf.getOutOfBagErrorEstimate() + "\n"
                 + rf.getOutOfBagErrorEstimate().getFMeasure());
 
-        rf = new RandomForest(50, false);
+        rf = new RandomForest(50, false,5);
         CrossValidation cv2 = new CrossValidation(rf);
         PerformanceMeasure pf = cv2.crossValidation(data, 1, 4);
         System.out.println("RF: " + pf + "\n" + pf.getFMeasure());
