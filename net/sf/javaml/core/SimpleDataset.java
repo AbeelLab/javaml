@@ -37,7 +37,11 @@ public class SimpleDataset implements Dataset, Serializable {
      * XXX doc
      */
     public SimpleDataset() {
+        this(true);
+    }
 
+    public SimpleDataset(boolean lazy) {
+        this.lazy = lazy;
     }
 
     /**
@@ -210,17 +214,24 @@ public class SimpleDataset implements Dataset, Serializable {
 
     }
 
+    /*
+     * Flag to indicate whether the cache should be updated when adding new
+     * instances.
+     * 
+     */
+    private boolean lazy = true;
+
     /**
      * XXX doc
      */
     public boolean add(Instance instance) {
-        if (dirty)
+        if (dirty && !lazy)
             recalculate(instance.size());
-
         if (instances.size() > 0 && !instance.isCompatible(instances.get(0)))
             return false;
         instances.add(instance);
-        update(instance);
+        if (!lazy)
+            update(instance);
         return true;
 
     }
@@ -247,6 +258,9 @@ public class SimpleDataset implements Dataset, Serializable {
         highArray = new double[size];
         sum = new double[size];
         dirty = false;
+        for (Instance inst : instances) {
+            update(inst);
+        }
 
     }
 
@@ -279,11 +293,8 @@ public class SimpleDataset implements Dataset, Serializable {
 
     private int[] numValuesCache = null;
 
-    /**
-     * @{inheritDoc}
-     */
     public int numValues(int attIndex) {
-        if(dirty)
+        if (dirty)
             recalculate(numAttributes());
         if (numValuesSet == null)
             numValuesSet = new boolean[numAttributes()];
