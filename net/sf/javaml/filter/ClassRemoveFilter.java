@@ -10,7 +10,7 @@ import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.SimpleDataset;
 
 /**
- * Filters all instances from a data set that have a specific class value
+ * Removes all instances from a data set that have a specific class value
  * 
  * {@jmlSource}
  * 
@@ -20,9 +20,17 @@ import net.sf.javaml.core.SimpleDataset;
  * @author Thomas Abeel
  * 
  */
-public class ClassFilter implements DatasetFilter {
+public class ClassRemoveFilter implements DatasetFilter {
 
     private int classValue;
+
+    public ClassRemoveFilter() {
+        this(0);
+    }
+    
+    public ClassRemoveFilter(int classValue) {
+        this.classValue = classValue;
+    }
 
     public void setClass(int classValue) {
         this.classValue = classValue;
@@ -36,7 +44,7 @@ public class ClassFilter implements DatasetFilter {
     public Dataset filterDataset(Dataset data) {
         Dataset out = new SimpleDataset();
         for (Instance i : data)
-            if (i.classValue() == classValue)
+            if (i.classValue() != classValue)
                 out.add(i);
         return out;
     }
