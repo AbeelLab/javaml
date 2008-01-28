@@ -102,11 +102,13 @@ public class RecursiveFeatureEliminationSVM implements IAttributeRanking {
 
         }
         int index = 0;
-        for (int i = 0; i < removedAttributes.length; i++) {
-            if (!removedAttributes[i])
-                index = i;
+        if (data.numAttributes() == 1) {
+            for (int i = 0; i < removedAttributes.length; i++) {
+                if (!removedAttributes[i])
+                    index = i;
+            }
+            ordering[0] = index;
         }
-        ordering[0] = index;
         ranking = new int[ordering.length];
         for (int i = 0; i < ranking.length; i++)
             ranking[ordering[i]] = i;
