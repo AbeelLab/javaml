@@ -420,16 +420,7 @@ public class RandomTree implements Classifier {
 
     public int classifyInstance(Instance instance) {
 
-        double[] returnedDist = null;
-        if (m_Attribute > -1) {
-            // For numeric attributes
-            if (MathUtils.lt(instance.value(m_Attribute), m_SplitPoint)) {
-                returnedDist = m_Successors[0].distributionForInstance(instance);
-            } else {
-                returnedDist = m_Successors[1].distributionForInstance(instance);
-            }
-        }
-        return ArrayUtils.maxIndex(returnedDist);
+        return ArrayUtils.maxIndex(distributionForInstance(instance));
 
     }
 }
