@@ -249,6 +249,10 @@ public class BlastResult extends AbstractDistance implements Dataset {
         // TODO Auto-generated method stub
         return false;
     }
+    public boolean remove(int arg0) {
+        // TODO Auto-generated method stub
+        return false;
+    }
 
     public boolean removeAll(Collection<?> arg0) {
         // TODO Auto-generated method stub

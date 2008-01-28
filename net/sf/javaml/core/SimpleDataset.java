@@ -10,6 +10,8 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.Set;
 import java.util.Vector;
 
@@ -349,6 +351,12 @@ public class SimpleDataset implements Dataset, Serializable {
 
     public <T> T[] toArray(T[] a) {
         return instances.toArray(a);
+    }
+
+    public boolean remove(int index) {
+        dirty=true;
+        instances.remove(index);
+        return dirty;
     }
 
 }

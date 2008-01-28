@@ -127,4 +127,6 @@ public interface Dataset extends Collection<Instance>  {
      * Returns the number of values that exist for the attribute
      */
     public int numValues(int attIndex);
+    
+    public boolean remove(int index);
 }
