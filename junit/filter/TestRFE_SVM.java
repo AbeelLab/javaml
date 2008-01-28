@@ -21,7 +21,7 @@ public class TestRFE_SVM {
     public void testRFE_SVM() {
 
         try {
-            Dataset data = FileHandler.loadDataset(new File("devtools/data/BUPA.tsv"), 6);
+            Dataset data = FileHandler.loadDataset(new File("devtools/data/test_breast.csv"), 0,",");
             // RELIEF rel=new RELIEF();
             RankingFromEvaluation rel = new RankingFromEvaluation(new RELIEF());
 
