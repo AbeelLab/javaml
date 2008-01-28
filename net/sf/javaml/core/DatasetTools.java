@@ -247,7 +247,8 @@ final public class DatasetTools {
     }
 
     /**
-     * Create a random sample from the data set.
+     * Create a random sample from the data set. Sampling is done with
+     * replacement.
      * 
      * @param data
      *            the data set to sample
@@ -288,6 +289,25 @@ final public class DatasetTools {
             out[i % numFolds].add(positive.instance(i));
         for (int i = 0; i < negative.size(); i++)
             out[i % numFolds].add(negative.instance(i));
+        return out;
+
+    }
+
+    /**
+     * Create a random slice from the data set. This is basically sampling
+     * without replacement.
+     * 
+     * @param data
+     *            the data set to sample
+     * @param size
+     *            the percentage of instances in the output data set
+     * @return a random sample from the input data
+     */
+    public static Dataset randomSlice(Dataset data, double d, Random rg) {
+        Dataset out = data.copy();
+        while (out.size() > d * data.size()) {
+            out.remove(rg.nextInt(out.size()));
+        }
         return out;
 
     }
