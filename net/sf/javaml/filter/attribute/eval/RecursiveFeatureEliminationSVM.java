@@ -70,15 +70,29 @@ public class RecursiveFeatureEliminationSVM implements IAttributeRanking {
             int numRemove = (int) (order.length * removePercentage + 1);
             // System.out.println("remove=" + numRemove);
             int[] toRemove = new int[numRemove];
+            int[] trueIndices = new int[numRemove];
+
             for (int i = 0; i < numRemove; i++) {
+
+//                System.out.println("Remove=" + order[i] + "/" + data.numAttributes());
                 toRemove[i] = order[i];
-                int trueIndex = getTrueIndex(order[i], removedAttributes);
+                // int trueIndex =
+                trueIndices[i] = getTrueIndex(order[i], removedAttributes);
                 // System.out.println("true remove=" + trueIndex);
-                removedAttributes[trueIndex] = true;
-                ordering[ordering.length - removed - 1] = trueIndex;
+                ordering[ordering.length - removed - 1] = trueIndices[i];
                 removed++;
             }
+            // This needs to be done afterwards, otherwise the getTrueIndex
+            // method will fail.
+            for (int i = 0; i < numRemove; i++) {
+//                if (removedAttributes[trueIndices[i]])
+//                    System.err.println("WRONG = " + trueIndices);
+                removedAttributes[trueIndices[i]] = true;
+
+            }
+
             System.out.println(Arrays.toString(toRemove));
+//            System.out.println(Arrays.toString(removedAttributes));
             // actually remove the attributes
             RemoveAttributes filter = new RemoveAttributes(toRemove);
             data = filter.filterDataset(data);
@@ -97,22 +111,25 @@ public class RecursiveFeatureEliminationSVM implements IAttributeRanking {
 
     }
 
-    // @Test
-    // public void testTrueIndex() {
-    // boolean[] test = { true, true, false, false, true, false, true, true,
-    // false, false, false };
-    // System.out.println("Should be 9");
-    // System.out.println(getTrueIndex(0, test));
-    // System.out.println(getTrueIndex(1, test));
-    // System.out.println(getTrueIndex(2, test));
-    // System.out.println(getTrueIndex(3, test));
-    // System.out.println(getTrueIndex(4, test));
-    // System.out.println(getTrueIndex(5, test));
-    // // System.out.println(getTrueIndex(6, test));
-    //
-    // }
+//    public RecursiveFeatureEliminationSVM() {
+//    }
+//
+//    @Test
+//    public void testTrueIndex() {
+//        boolean[] test = { true, true, false, false, true, false, true, true, false, false, false, true, false };
+//        // System.out.println("Should be 9");
+//        System.out.println(getTrueIndex(0, test));
+//        System.out.println(getTrueIndex(1, test));
+//        System.out.println(getTrueIndex(2, test));
+//        System.out.println(getTrueIndex(3, test));
+//        System.out.println(getTrueIndex(4, test));
+//        System.out.println(getTrueIndex(5, test));
+//        System.out.println(getTrueIndex(6, test));
+//
+//    }
 
     private int getTrueIndex(int i, boolean[] removedAttributes) {
+        // System.out.println("RA.length = " + removedAttributes.length);
         int index = 0;
         while (i >= 0) {
 
