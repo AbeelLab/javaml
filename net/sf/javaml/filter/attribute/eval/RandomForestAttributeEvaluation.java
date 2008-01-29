@@ -25,8 +25,8 @@ import net.sf.javaml.utils.MathUtils;
  * and the oob error estimate of the perturbed samples is a measure for the
  * importance of the perturbed attribute.
  * 
- * We can use the differences in importance to rank the features or use the differences to
- * give an importance measure to all attributes
+ * We can use the differences in importance to rank the features or use the
+ * differences to give an importance measure to all attributes
  * 
  * {@jmlSource}
  * 
@@ -41,29 +41,41 @@ public class RandomForestAttributeEvaluation implements IAttributeEvaluation {
 
     private int positiveClass;
 
+    private int k;
+
+    public void setK(int k) {
+        this.k = k;
+    }
+
+    public void setPerturbations(int p) {
+        this.numPerturbations = p;
+    }
+
     public RandomForestAttributeEvaluation(int numTrees, int positiveClassIndex) {
         this.numTrees = numTrees;
         this.positiveClass = positiveClassIndex;
+        this.k = 5;
+        this.numPerturbations=1;
     }
 
     /*
      * Number of times each attribute is perturbed
      */
-    private int randomFolds = 10;
+    private int numPerturbations;
 
     public void build(Dataset data) {
 
         int tp = 0, fp = 0, fn = 0, tn = 0;
-        int[][] tpR = new int[data.numAttributes()][randomFolds];
-        int[][] fpR = new int[data.numAttributes()][randomFolds];
-        int[][] tnR = new int[data.numAttributes()][randomFolds];
-        int[][] fnR = new int[data.numAttributes()][randomFolds];
+        int[][] tpR = new int[data.numAttributes()][numPerturbations];
+        int[][] fpR = new int[data.numAttributes()][numPerturbations];
+        int[][] tnR = new int[data.numAttributes()][numPerturbations];
+        int[][] fnR = new int[data.numAttributes()][numPerturbations];
 
         for (int k = 0; k < data.numAttributes(); k++) {
-            tpR[k] = new int[randomFolds];
-            fpR[k] = new int[randomFolds];
-            tnR[k] = new int[randomFolds];
-            fnR[k] = new int[randomFolds];
+            tpR[k] = new int[numPerturbations];
+            fpR[k] = new int[numPerturbations];
+            tnR[k] = new int[numPerturbations];
+            fnR[k] = new int[numPerturbations];
         }
 
         for (int i = 0; i < numTrees; i++) {
@@ -73,6 +85,7 @@ public class RandomForestAttributeEvaluation implements IAttributeEvaluation {
              * samples.
              */
             RandomTree tree = new RandomTree();
+            tree.setKValue(k);
             Dataset sample = DatasetTools.randomSample(data, data.size());
             tree.buildClassifier(sample);
 
@@ -103,7 +116,7 @@ public class RandomForestAttributeEvaluation implements IAttributeEvaluation {
                  * idea of the importance, more runs for the same attribute
                  * would give a more accurate image of the importance.
                  */
-                for (int j = 0; j < randomFolds; j++) {
+                for (int j = 0; j < numPerturbations; j++) {
 
                     Dataset perturbed = new SimpleDataset();
                     for (Instance inst : outOfBag) {
@@ -134,8 +147,8 @@ public class RandomForestAttributeEvaluation implements IAttributeEvaluation {
         double originalF = new PerformanceMeasure(tp, tn, fp, fn).getFMeasure();
         importance = new double[data.numAttributes()];
         for (int k = 0; k < data.numAttributes(); k++) {
-            double[] g = new double[randomFolds];
-            for (int i = 0; i < randomFolds; i++) {
+            double[] g = new double[numPerturbations];
+            for (int i = 0; i < numPerturbations; i++) {
                 g[i] = new PerformanceMeasure(tpR[k][i], tnR[k][i], fpR[k][i], tnR[k][i]).getFMeasure();
             }
             double avg = MathUtils.arithmicMean(g);
