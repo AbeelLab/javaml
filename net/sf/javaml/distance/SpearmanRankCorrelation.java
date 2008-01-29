@@ -23,8 +23,8 @@ public class SpearmanRankCorrelation extends AbstractCorrelation {
     public double calculateDistance(Instance a, Instance b) {
         if (a.size() != b.size())
             throw new IllegalArgumentException("Instances should be compatible.");
-        int k = a.size();
-        int denom = k * (k * k - 1);
+        long k = a.size();
+        long denom = k * (k * k - 1);
         double sum = 0.0;
         for (int i = 0; i < a.size(); i++) {
             double diff = (a.value(i) - b.value(i));

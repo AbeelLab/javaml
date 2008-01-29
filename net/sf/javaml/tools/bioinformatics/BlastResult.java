@@ -79,7 +79,7 @@ public class BlastResult extends AbstractDistance implements Dataset {
 
                 String[] arr = line.split("\t");
                 try {
-                    Integer.parseInt(arr[2]);
+                    Double.parseDouble(arr[2]);
                     if (!mapping.containsKey(arr[0])) {
                         genes.add(new GeneInstance(arr[0]));
                         mapping.put(arr[0], index++);
@@ -101,6 +101,7 @@ public class BlastResult extends AbstractDistance implements Dataset {
                 } catch (RuntimeException e) {
                     // column with index 2 is not an int, this is probably a
                     // header line, ignore
+                    System.err.println(e);
                 }
                 line = in.readLine();
             }

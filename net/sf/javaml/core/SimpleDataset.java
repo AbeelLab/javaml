@@ -185,7 +185,7 @@ public class SimpleDataset implements Dataset, Serializable {
         return r;
     }
 
-    private void swap(int first, int second) {
+    public void swap(int first, int second) {
         Instance help = instances.elementAt(first);
         instances.set(first, instances.get(second));// = m_Objects[second];
         instances.set(second, help);// m_Objects[second] = help;

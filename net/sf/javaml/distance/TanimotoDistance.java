@@ -36,21 +36,21 @@ public class TanimotoDistance extends AbstractDistance {
     private static final long serialVersionUID = 6715828721744669500L;
 
     public double calculateDistance(Instance a, Instance b) {
-        HashSet<Double> set1 = new HashSet<Double>();
-        HashSet<Double> set2 = new HashSet<Double>();
+        HashSet<Integer> set1 = new HashSet<Integer>();
+        HashSet<Integer> set2 = new HashSet<Integer>();
 
         for (int i = 0; i < a.size(); i++)
-            set1.add(a.value(i));
+            set1.add((int)a.value(i));
 
         for (int i = 0; i < b.size(); i++)
-            set2.add(b.value(i));
+            set2.add((int)b.value(i));
 
-        int n1 = set1.size();
-        int n2 = set2.size();
+        double n1 = set1.size();
+        double n2 = set2.size();
 
-        set1.removeAll(set2);
+        set1.retainAll(set2);
 
-        int n12 = set1.size();
+        double n12 = set1.size();
 
         return 1 - (n1 + n2 - 2 * n12) / (n1 + n2 - n12);
 
