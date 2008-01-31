@@ -5,7 +5,7 @@
 	<!-- set global properties for this build -->
 	<property name="src" location="." />
 	<property name="build" location="build" />
-	<property name="version" value="0.0.14" />
+	<property name="version" value="0.0.15" />
 	<property name="revision" value="notset" />
 	<property name="statusText" value="notset" />
 	<property name="dist" location="javaml-${version}" />
@@ -16,7 +16,7 @@
 	<!-- of the SVN will be tagged with the version number -->
 	<!-- Comment this out to do test runs of the build script -->
 	<!-- Uncomment this if you want to make a real release -->
-	<!--<property name="isRelease" value="set" />-->
+	<!-- <property name="isRelease" value="set" /> -->
 
 	<target name="tag" if="isRelease">
 		<taskdef name="query" classname="com.jera.anttasks.Query" classpath="devtools/lib/JeraAntTasks.jar" />
