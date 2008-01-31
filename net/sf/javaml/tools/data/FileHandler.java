@@ -6,8 +6,12 @@
 package net.sf.javaml.tools.data;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
@@ -74,23 +78,7 @@ public class FileHandler {
         return loadDataset(f, Integer.MAX_VALUE, "\t");
     }
 
-    /**
-     * Load the data from a file.
-     * <p>
-     * All columns should only contain double values, except the class column
-     * which can only contain integer values.
-     * <p>
-     * Values that cannot be parsed to numbers will be entered as missing values
-     * in the instances.
-     * <p>
-     * When the classIndex is outside the range of available attributes, all
-     * instances will have the same class.
-     * 
-     * @param f
-     *            the file to be loaded.
-     */
-    public static Dataset loadDataset(File f, int classIndex, String separator) throws IOException {
-        LineIterator it = new LineIterator(f);
+    protected static Dataset read(LineIterator it, int classIndex, String separator) {
         it.setSkipBlanks(true);
         Dataset out = new SimpleDataset();
         for (String line : it) {
@@ -107,7 +95,7 @@ public class FileHandler {
                         classValue = Integer.parseInt(arr[i]);
 
                     } catch (Exception e) {
-                        System.err.println(f);
+                        // System.err.println(f);
                         System.err.println("$" + line + "$");
                         System.exit(-1);
                     }
@@ -130,6 +118,26 @@ public class FileHandler {
                 out.add(new SimpleInstance(values, classValue));
         }
         return out;
+    }
+
+    /**
+     * Load the data from a file.
+     * <p>
+     * All columns should only contain double values, except the class column
+     * which can only contain integer values.
+     * <p>
+     * Values that cannot be parsed to numbers will be entered as missing values
+     * in the instances.
+     * <p>
+     * When the classIndex is outside the range of available attributes, all
+     * instances will have the same class.
+     * 
+     * @param f
+     *            the file to be loaded.
+     */
+    public static Dataset loadDataset(File f, int classIndex, String separator) throws IOException {
+        LineIterator it = new LineIterator(f);
+        return read(it, classIndex, separator);
 
     }
 
@@ -159,5 +167,63 @@ public class FileHandler {
         }
         out.close();
 
+    }
+    /**
+     * Load a data set from a file that has been compressed using ZIP.
+     * 
+     * @param f
+     *            the compressed file
+     * @param classIndex
+     *            the index of the class
+     * @param separator
+     *            the separator for values
+     * @return the data set
+     * @throws IOException
+     */
+    public static Dataset loadDatasetZip(File f, int classIndex, String separator) throws IOException {
+        Dataset out = null;
+        System.out.println(f);
+        ZipInputStream zipinputstream = new ZipInputStream(new FileInputStream(f));
+
+        ZipEntry zipentry = zipinputstream.getNextEntry();
+        System.out.println(zipentry);
+        if (zipentry != null) {
+            // for each entry to be extracted
+            String entryName = zipentry.getName();
+            System.out.println("File ::" + entryName);
+            // RandomAccessFile rf;
+            File newFile = new File(entryName);
+            LineIterator it = new LineIterator(newFile);
+            out = read(it, classIndex, separator);
+
+            zipinputstream.closeEntry();
+
+        }// while
+
+        zipinputstream.close();
+        return out;
+    }
+
+    /**
+     * Load a data set from a file that has been compressed using GZIP.
+     * 
+     * @param f
+     *            the compressed file
+     * @param classIndex
+     *            the index of the class
+     * @param separator
+     *            the separator for values
+     * @return the data set
+     * @throws IOException
+     */
+    public static Dataset loadDatasetGZip(File f, int classIndex, String separator) throws IOException {
+        Dataset out = null;
+        System.out.println(f);
+        GZIPInputStream gzipInputStream = new GZIPInputStream(new FileInputStream(f));
+        // Open the output file
+        out = read(new LineIterator(gzipInputStream), classIndex, separator);
+        gzipInputStream.close();
+
+        return out;
     }
 }
