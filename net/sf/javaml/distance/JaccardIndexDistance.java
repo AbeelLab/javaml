@@ -31,7 +31,7 @@ import net.sf.javaml.core.Instance;
  * @author Thomas Abeel
  * 
  */
-public class TanimotoDistance extends AbstractDistance {
+public class JaccardIndexDistance extends AbstractDistance {
 
     private static final long serialVersionUID = 6715828721744669500L;
 
