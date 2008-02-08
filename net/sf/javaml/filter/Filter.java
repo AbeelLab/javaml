@@ -27,7 +27,7 @@ import net.sf.javaml.core.Instance;
  * 
  * 
  * @deprecated This interface has been deprecated in favor of the
- *             {@link InstanceFilter} and {@link DatasetFilter interfaces}.
+ *             {@link InstanceFilter} and {@link DatasetFilter} interfaces.
  */
 @Deprecated
 public interface Filter {
