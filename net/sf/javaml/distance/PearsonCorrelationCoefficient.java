@@ -34,7 +34,7 @@ import net.sf.javaml.core.Instance;
  * linear equation describes the relationship perfectly and positively, with all
  * data points lying on the same line and with Y increasing with X. A score of
  * ?1 shows that all data points lie on a single line but that Y increases as X
- * decreases. A value of 0 shows that a linear model is inappropriate – that
+ * decreases. A value of 0 shows that a linear model is inappropriate / that
  * there is no linear relationship between the variables.
  * 
  * http://davidmlane.com/hyperstat/A56626.html
