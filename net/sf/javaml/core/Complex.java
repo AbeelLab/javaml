@@ -158,7 +158,7 @@ public class Complex {
      * @return the result of the multiplication of a and b
      */
     public static Complex multiply(Complex a, Complex b) {
-        // (x + yi)(u + vi) = (xu – yv) + (xv + yu)i.
+        // (x + yi)(u + vi) = (xu - yv) + (xv + yu)i.
         double real = a.re * b.re - a.im * b.im;
         double imag = a.re * b.im + a.im * b.re;
         return new Complex(real, imag);
