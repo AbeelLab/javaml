@@ -24,7 +24,7 @@
  * 
  */
 /*
- Copyright © Anagha Joshi, as part of Chinese Clustering.
+ Copyright (C) Anagha Joshi, as part of Chinese Clustering.
  */
 
 
