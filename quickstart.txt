@@ -20,19 +20,19 @@ for (int i = 0; i < itemsPerCluster; i++) {
     // lower left
 	double[] vec1 = {  ((rg.nextGaussian() * clusterSpread)  + space * small),
     	 ((rg.nextGaussian() * clusterSpread)  + space * small) };
-    data.addInstance(new SimpleInstance(vec1));
+    data.add(new SimpleInstance(vec1));
 	// upper left
     double[] vec2 = {  ((rg.nextGaussian() * clusterSpread)  + space * small),
     	 ((rg.nextGaussian() * clusterSpread)  + space * large) };
-    data.addInstance(new SimpleInstance(vec2));
+    data.add(new SimpleInstance(vec2));
 	// lower righ
     double[] vec3 = {  ((rg.nextGaussian() * clusterSpread)  + space * large),
     	 ((rg.nextGaussian() * clusterSpread)  + space * small) };
-    data.addInstance(new SimpleInstance(vec3));
+    data.add(new SimpleInstance(vec3));
     // upper right
     double[] vec4= {  ((rg.nextGaussian() * clusterSpread)  + space * large),
     	 ((rg.nextGaussian() * clusterSpread)  + space * large) };
-    data.addInstance(new SimpleInstance(vec4));
+    data.add(new SimpleInstance(vec4));
 }
 
 2. Creating and using a clustering algorithm
