@@ -7,7 +7,7 @@ package junit.distance;
 
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.SimpleInstance;
-import net.sf.javaml.distance.TanimotoDistance;
+import net.sf.javaml.distance.JaccardIndexDistance;
 
 import org.junit.Test;
 
@@ -18,7 +18,7 @@ public class TestTanimoto {
         double[]vals2={1,2};
         Instance a=new SimpleInstance(vals);
         Instance b=new SimpleInstance(vals2);
-        TanimotoDistance td=new TanimotoDistance();
+        JaccardIndexDistance td=new JaccardIndexDistance();
         System.out.println(td.calculateDistance(a, b));
     }
 }
