@@ -21,7 +21,7 @@ public class WekaUtils {
         FastVector fvNominalVal = new FastVector(3);
         fvNominalVal.addElement("0");
         fvNominalVal.addElement("1");
-        // fvNominalVal.addElement(“black”);
+        // fvNominalVal.addElement("black");
         Attribute ca = new Attribute("classAtt", fvNominalVal);
 
         // Attribute ca = new Attribute("classAtt");

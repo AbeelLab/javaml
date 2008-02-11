@@ -33,7 +33,7 @@ public class ComplexInstance implements Instance {
     /**
      * The attributes of this instance
      */
-    private Complex[] values = null;;
+    private Complex[] values = null;
 
     /**
      * Flag to indicate whether the class value of this instance is set

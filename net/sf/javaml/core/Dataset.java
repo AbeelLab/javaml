@@ -62,7 +62,7 @@ public interface Dataset extends Collection<Instance>  {
      * If this method is not supported by the implementation, the method should
      * return null.
      * 
-     * @return an instance with for every index it's lowest value, null if the
+     * @return an instance with for every index its lowest value, null if the
      *         data set is empty
      */
     public Instance getMinimumInstance();
@@ -76,7 +76,7 @@ public interface Dataset extends Collection<Instance>  {
      * If this method is not supported by the implementation, the method should
      * return null.
      * 
-     * @return an instance with for every index it's highest value, null if the
+     * @return an instance with for every index its highest value, null if the
      *         data set is empty
      */
     public Instance getMaximumInstance();
@@ -90,7 +90,7 @@ public interface Dataset extends Collection<Instance>  {
      * If this method is not supported by the implementation, the method should
      * return null.
      * 
-     * @return an instance with for every index it's average value, null if the
+     * @return an instance with for every index its average value, null if the
      *         data set is empty
      */
     public Instance getAverageInstance();

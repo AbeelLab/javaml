@@ -25,7 +25,7 @@ public class SimpleInstance implements Instance {
 
     private int hashCode = 0;
 
-    private double[] values = null;;
+    private double[] values = null;
 
     private boolean classSet = false;
 
