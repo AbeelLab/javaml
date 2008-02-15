@@ -2,6 +2,8 @@ Once you have downloaded the library, you can start using it in you Java
 programs. For now this guide features some basis sample programs that should
 get you under way.
 
+For more detailed tutorials see the files under net.sf.javaml.tutorials.
+
 +----------------------------------------------+
 | 1. Creating a dataset                        |
 | 2. Creating and using a clustering algorithm |
