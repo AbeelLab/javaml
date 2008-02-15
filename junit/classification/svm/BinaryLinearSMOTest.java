@@ -37,13 +37,13 @@ import org.junit.Test;
 public class BinaryLinearSMOTest {
 
     @Test
-    public void testConstructor() {
+    public void testBinaryLinearSMO() {
         BinaryLinearSMO smo = new BinaryLinearSMO ();
         try {
             CrossValidation cv=new CrossValidation(smo);
             System.out.println("Iris dataset");
-            Dataset data = FileHandler.loadDataset(new File("devtools/data/iris.data"), 4);
-            System.out.println(cv.crossValidation(data, 1,5));
+            Dataset data = FileHandler.loadDataset(new File("devtools/data/iris.tsv"), 4);
+            System.out.println(cv.crossValidation(data, 1,2));
 //            smo.setVerbose(true);
 //            smo.buildClassifier(data);
 //            
@@ -65,7 +65,7 @@ public class BinaryLinearSMOTest {
 //            }
             
             
-            System.out.println(cv.crossValidation(data, 1,5));
+            System.out.println(cv.crossValidation(data, 1,2));
             System.out.println(data.size());
 
         } catch (Exception e) {

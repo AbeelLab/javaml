@@ -41,7 +41,7 @@ public class BinarySMOTest {
         net.sf.javaml.classification.svm.BinarySMO smo = new net.sf.javaml.classification.svm.BinarySMO();
         try {
             System.out.println("Iris dataset");
-            Dataset data = FileHandler.loadDataset(new File("devtool/data/iris.data"), 4);
+            Dataset data = FileHandler.loadDataset(new File("devtools/data/iris.tsv"), 4);
             smo.buildClassifier(data);
             System.out.println("SMO\ttrue");
             for (Instance instance : data) {
