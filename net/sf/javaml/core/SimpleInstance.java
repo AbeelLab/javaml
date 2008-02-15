@@ -74,6 +74,8 @@ public class SimpleInstance implements Instance {
     @Override
     public String toString() {
         StringBuffer out = new StringBuffer();
+        if(values.length==0)
+        	return "[]";
         out.append("[" + values[0]);
         for (int i = 1; i < values.length; i++) {
             out.append(";" + values[i]);
