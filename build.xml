@@ -16,7 +16,7 @@
 	<!-- of the SVN will be tagged with the version number -->
 	<!-- Comment this out to do test runs of the build script -->
 	<!-- Uncomment this if you want to make a real release -->
-	<!-- <property name="isRelease" value="set" /> -->
+	<property name="isRelease" value="set" />
 
 	<target name="tag" if="isRelease">
 		<taskdef name="query" classname="com.jera.anttasks.Query" classpath="devtools/lib/JeraAntTasks.jar" />
@@ -55,6 +55,7 @@
 </copy>
 <copy file="commons-math-1.1.jar" todir="${dist}/" />
 <copy file="ajt-1.10.jar" todir="${dist}/" />
+	<copy file="weka.jar" todir="${dist}/" />
 
 <zip destfile="${dist}.zip" basedir="${dist}" />
 <tar tarfile="${dist}.tar" basedir="${dist}" excludes="${dist}.zip" />
@@ -92,7 +93,7 @@
 
 <target name="compile" depends="init,tag" description="compile the source ">
 <!-- Compile the java code from ${src} into ${build} -->
-<javac debug="true" debuglevel="lines,vars,source" source="1.5" target="1.5" classpath="ajt-1.10.jar:junit-4.3.1.jar:commons-math-1.1.jar" srcdir="${src}" destdir="${build}" excludes="devtools/**" />
+<javac debug="true" debuglevel="lines,vars,source" source="1.5" target="1.5" classpath="ajt-1.10.jar:junit-4.3.1.jar:commons-math-1.1.jar:weka.jar" srcdir="${src}" destdir="${build}" excludes="devtools/**" />
 </target>
 
 <target name="dist" depends="compile" description="generate the distribution">
