@@ -35,31 +35,42 @@ import net.sf.javaml.core.SimpleInstance;
 
 public class ARFF {
 
-    public static Dataset readARFF(String file)throws IOException{
-        return readARFF(new File(file));
-        
-    }
+	public static Dataset readARFF(String file) throws IOException {
+		return readARFF(new File(file));
 
-    public static Dataset readARFF(File file)throws IOException {
-        //      FIXME hacked together solution;
-        //skip everything empty or with @ in front
-        //read all data and make the last one the classvalue
-        BufferedReader in =new BufferedReader(new FileReader(file));
-        Dataset out=new SimpleDataset();
-        String line=in.readLine();
-        while(line!=null&&(line.length()==0||line.startsWith("@"))){
-            line=in.readLine();
-        }
-        while(line!=null){
-            String[]arr=line.split(",");
-            double[]values=new double[arr.length-1];
-            for(int i=0;i<arr.length-1;i++){
-                values[i]=Double.parseDouble(arr[i]);
-            }
-            int classValue=Integer.parseInt(arr[arr.length-1]);
-            out.add(new SimpleInstance(values,1,classValue));
-            line=in.readLine();                        
-        }
-        return out;
-    }
+	}
+
+	public static Dataset readARFF(File file) throws IOException {
+		// FIXME hacked together solution;
+		// skip everything empty or with @ in front
+		// read all data and make the last one the classvalue
+		BufferedReader in = new BufferedReader(new FileReader(file));
+		Dataset out = new SimpleDataset();
+		String line = in.readLine();
+		while (line != null && (line.length() == 0 || line.startsWith("@"))) {
+			line = in.readLine();
+		}
+		while (line != null) {
+			String[] arr = line.split(",");
+			double[] values = new double[arr.length - 1];
+			for (int i = 0; i < arr.length - 1; i++) {
+				try {
+					values[i] = Double.parseDouble(arr[i]);
+				} catch (NumberFormatException e) {
+					values[i] = Double.NaN;
+
+				}
+			}
+			try {
+
+				int classValue = Integer.parseInt(arr[arr.length - 1]);
+				out.add(new SimpleInstance(values, classValue));
+			} catch (NumberFormatException e) {
+				// class value not known
+				out.add(new SimpleInstance(values));
+			}
+			line = in.readLine();
+		}
+		return out;
+	}
 }
