@@ -50,7 +50,7 @@ public class FastCorrelationBasedFilter extends AbstractFilter {
 
     public Dataset filterDataset(Dataset data) {
         if (remove == null)
-            throw new TrainingRequiredException();
+            build(data);
         return remove.filterDataset(data);
 
     }
@@ -59,7 +59,7 @@ public class FastCorrelationBasedFilter extends AbstractFilter {
         if (remove != null)
             return remove.filterInstance(instance);
         else
-            throw new RuntimeException("Filter needs to be trained on dataset first");
+            throw new TrainingRequiredException("Filter needs to be trained on dataset first");
     }
 
     /* Variables used by the 'fcbf' function */
