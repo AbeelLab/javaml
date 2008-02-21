@@ -11,7 +11,7 @@ import net.sf.javaml.distance.JaccardIndexDistance;
 
 import org.junit.Test;
 
-public class TestTanimoto {
+public class TestJaccard {
     @Test
     public void testTanimoto() {
         double[]vals={1,2,3,4,5};
