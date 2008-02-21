@@ -44,6 +44,8 @@ import net.sf.javaml.distance.AbstractDistance;
  * 
  * This algorithm is an approximation of the real Dynamic Time Warping Distance
  * 
+ * At this point, it is not clear whether this implementation actually works.
+ * 
  * @author Thomas Abeel
  * 
  */
