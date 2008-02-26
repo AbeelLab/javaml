@@ -5,12 +5,18 @@
  */
 package net.sf.javaml.filter;
 
+import net.sf.javaml.core.Dataset;
+import net.sf.javaml.core.Instance;
+import net.sf.javaml.core.SimpleDataset;
 
 /**
  * Umbrella class for filters that implements both the
  * {@link net.sf.javaml.filter.InstanceFilter} and
- * {@link net.sf.javaml.filter.DatasetFilter} interfaces. No implementation is
- * done in this class.
+ * {@link net.sf.javaml.filter.DatasetFilter} interfaces. 
+ * 
+ * The <code>build</code>
+ * method has an empty implementation and the <code>filterDataset</code>
+ * method applies the filter separately to each instance.
  * 
  * {@jmlSource}
  * 
@@ -20,10 +26,16 @@ package net.sf.javaml.filter;
  */
 public abstract class AbstractFilter implements DatasetFilter, InstanceFilter {
 
-//    public Dataset unfilterDataset(Dataset d){
-//        throw new UnsupportedOperationException("One-way filter only.");
-//    }
-//    public Instance unfilterInstance(Instance i){
-//        throw new UnsupportedOperationException("One-way filter only.");
-//    }
+	public void build(Dataset data) {
+	}
+
+	public Dataset filterDataset(Dataset data) {
+		Dataset out = new SimpleDataset();
+		for (Instance i : data)
+			out.add(filterInstance(i));
+		return out;
+	}
+
+	public abstract Instance filterInstance(Instance inst);
+
 }

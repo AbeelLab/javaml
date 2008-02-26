@@ -12,7 +12,7 @@ import net.sf.javaml.classification.Logistic;
 import net.sf.javaml.classification.evaluation.CrossValidation;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.tools.data.FileHandler;
-import net.sf.javaml.utils.WekaUtils;
+import net.sf.javaml.tools.weka.WekaUtils;
 
 import org.junit.Assert;
 import org.junit.Test;
