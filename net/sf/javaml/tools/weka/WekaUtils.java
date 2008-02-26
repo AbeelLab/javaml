@@ -23,7 +23,12 @@ import weka.core.Instances;
  * 
  */
 public class WekaUtils {
-	public static Instances datasetToWeka(Dataset data) {
+	private Instances wData;
+	
+	private boolean classSet;
+
+	public WekaUtils(Dataset data) {
+		
 		FastVector att = new FastVector();
 		for (int i = 0; i < data.numAttributes(); i++) {
 			att.addElement(new Attribute("att" + i));
@@ -40,29 +45,38 @@ public class WekaUtils {
 		// ca.addStringValue("1");
 		att.addElement(ca);
 		// System.out.println(att.size());
-		Instances wData = new Instances("Java_ML", att, data.size());
+		wData = new Instances("Java_ML", att, data.size());
 		// System.out.println(wData.numAttributes());
-		if (data.instance(0).isClassSet()) {
-			System.out.println("Class set!");
+		classSet = data.instance(0).isClassSet();
+		if (classSet)
 			wData.setClass(ca);
-		}
+
 		for (net.sf.javaml.core.Instance i : data) {
-			double[] values = new double[i.size() + 1];
-			System.arraycopy(i.toArray(), 0, values, 0, values.length - 1);
-			values[values.length - 1] = i.classValue();
-			Instance wI = new Instance(i.weight(), values);
-			wI.setDataset(wData);
-			if (i.isClassSet()) {
-				if (i.classValue() == 0) {
-					wI.setClassValue("0");
-				} else {
-					wI.setClassValue("1");
-				}
-			}
 
-			wData.add(wI);
+			wData.add(instanceToWeka(i));
 		}
-		return wData;
 
+	}
+
+	public Instances getDataset() {
+		return wData;
+	}
+
+	public Instance instanceToWeka(net.sf.javaml.core.Instance i) {
+		double[] values = new double[classSet ? i.size() + 1 : i.size()];
+		System.arraycopy(i.toArray(), 0, values, 0,
+				classSet ? values.length - 1 : values.length);
+		if (classSet)
+			values[values.length - 1] = i.classValue();
+		Instance wI = new Instance(i.weight(), values);
+		wI.setDataset(wData);
+		if (i.isClassSet()) {
+			if (i.classValue() == 0) {
+				wI.setClassValue("0");
+			} else {
+				wI.setClassValue("1");
+			}
+		}
+		return wI;
 	}
 }
