@@ -54,7 +54,7 @@ public class TestLogistic {
 
     private void doWeka(Dataset data) throws Exception {
         weka.classifiers.functions.Logistic wekaL = new weka.classifiers.functions.Logistic();
-        Instances wData = WekaUtils.datasetToWeka(data);
+        Instances wData = new WekaUtils(data).getDataset();
         Evaluation eval = new Evaluation(wData);
         eval.crossValidateModel(wekaL, wData, 10, new Random());
         System.out.println("wekaL\t" + eval.fMeasure(0)+"\t"+eval.fMeasure(1));

@@ -46,7 +46,7 @@ public class TestEMClustering {
 			Dataset[] clusters = em.executeClustering(data);
 			System.out.println("Size: " + clusters.length);
 
-			Instances insts = WekaUtils.datasetToWeka(data);
+			Instances insts = new WekaUtils(data).getDataset();
 			EM emWeka = new EM();
 			// emWeka.setNumClusters(3);
 			emWeka.setMaxIterations(50);
@@ -107,7 +107,7 @@ public class TestEMClustering {
 			System.out.println("Java-ML size: " + clusters.length);
 
 			Dataset data2 = new UnsetClassFilter().filterDataset(data);
-			Instances insts = WekaUtils.datasetToWeka(data2);
+			Instances insts =  new WekaUtils(data2).getDataset();
 			EM emWeka = new EM();
 			// emWeka.setNumClusters(3);
 			// emWeka.setMaxIterations(50);
