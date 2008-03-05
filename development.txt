@@ -1,10 +1,10 @@
 This files contains some basic information about the development of the 
-Java Machine Learning API.
+Java Machine Learning Library.
 
 1. Future Milestones
 ====================
 0.1.0 --> the library should have a set of validated clustering algorithms with 
-evaluation criteria and datasets.
+evaluation criteria and data sets.
 
 0.2.0 --> the library should include several implementations of SVMs
 
@@ -30,7 +30,7 @@ Files:
 2. changelog in html format
 3. Java Machine Learning API source files in jar format 
 	(net.sf.javaml package and junit package)
-4. Java Machine Learning API as a binary library in jar format 
+4. Java Machine Learning Library as a binary library in jar format 
 	(net.sf.javaml package)
 5. readme.txt
 6. quickstart.txt
@@ -39,5 +39,5 @@ Files:
 9. commmons math library
 
 Directories:
-1. The javadoc documentation: this is the documenation of the net.sf.javaml 
+1. The javadoc documentation: this is the documentation of the net.sf.javaml 
 package. Other packages are excluded.
