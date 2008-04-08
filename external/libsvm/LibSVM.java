@@ -26,6 +26,10 @@ public class LibSVM implements Classifier {
 
     private svm_parameter param = new svm_parameter();
 
+    public LibSVM(){
+        param.C=1;
+    }
+    
     public void buildClassifier(Dataset data) {
         // System.out.println("Size: " + data.size());
         // System.out.println("att: " + data.numAttributes());
@@ -39,7 +43,7 @@ public class LibSVM implements Classifier {
         param.coef0 = 0;
         param.nu = 0.5;
         param.cache_size = 100;
-        param.C = 1;
+//        param.C = 1;
         param.eps = 1e-3;
         param.p = 0.1;
         param.shrinking = 1;
