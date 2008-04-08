@@ -26,7 +26,8 @@ public class SelfOptimizingLinearLibSVM implements Classifier {
     private int positiveClass = 1;
 
     private int folds = 5;
-
+    
+    //commit test
     public void buildClassifier(Dataset data) {
         double[] result = new double[24];
 
