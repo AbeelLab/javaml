@@ -26,26 +26,29 @@ package junit.filter;
 
 import junit.framework.Assert;
 import net.sf.javaml.core.Dataset;
-import net.sf.javaml.core.SimpleDataset;
-import net.sf.javaml.core.SimpleInstance;
+import net.sf.javaml.core.DefaultDataset;
+import net.sf.javaml.core.DenseInstance;
 import net.sf.javaml.filter.DatasetFilter;
-import net.sf.javaml.filter.Filter;
-import net.sf.javaml.filter.normalize.DatasetNormalizeMidrange;
+import net.sf.javaml.filter.normalize.NormalizeMidrange;
 
 import org.junit.Test;
 
-public class NormalizeMidrangeTest {
+public class TestNormalizeMidrange {
 
     @Test
     public void testNaNWhenAllSameValues() {
-        Dataset data = new SimpleDataset();
+        Dataset data = new DefaultDataset();
         add(data, 0, 0, 1);
         add(data, 1, 1, 1);
         add(data, 2, 2, 1);
         add(data, 0, 1, 1);
-
-        DatasetFilter  f = new DatasetNormalizeMidrange(0.5, 1);
-        data = f.filterDataset(data);
+        System.out.println("Before filter");
+        System.out.println(data);
+        DatasetFilter f = new NormalizeMidrange(0.5, 1);
+        f.filterDataset(data);
+        System.out.println("--");
+        System.out.println("After filter");
+        System.out.println(data);
         Assert.assertFalse(new Float(data.instance(0).value(2)).equals(Float.NaN));
         Assert.assertFalse(new Float(data.instance(1).value(2)).equals(Float.NaN));
         Assert.assertFalse(new Float(data.instance(2).value(2)).equals(Float.NaN));
@@ -59,7 +62,7 @@ public class NormalizeMidrangeTest {
 
     private void add(Dataset data, float x, float y, float z) {
         double[] values = { x, y, z };
-        SimpleInstance in = new SimpleInstance(values);
+        DenseInstance in = new DenseInstance(values);
         data.add(in);
     }
 

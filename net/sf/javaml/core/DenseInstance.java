@@ -1,18 +1,23 @@
 package net.sf.javaml.core;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class DenseInstance implements Instance {
+public class DenseInstance extends AbstractInstance implements Instance {
 
     private double[] attributes;
 
-    public DenseInstance(int noAttributes) {
-        this.attributes = new double[noAttributes];
+    // public DenseInstance(int noAttributes) {
+    // this.attributes = new double[noAttributes];
+    // }
+
+    public DenseInstance(double[] att) {
+        this(att, null);
     }
 
     public DenseInstance(double[] att, Object classValue) {
@@ -27,10 +32,10 @@ public class DenseInstance implements Instance {
         return classValue;
     }
 
-    @Override
-    public int noAttributes() {
-        return attributes.length;
-    }
+    // @Override
+    // public int noAttributes() {
+    // return attributes.length;
+    // }
 
     @Override
     public double value(int pos) {
@@ -123,6 +128,16 @@ public class DenseInstance implements Instance {
         for (double v : attributes)
             vals.add(v);
         return vals;
+    }
+
+    @Override
+    public int noAttributes() {
+        return attributes.length;
+    }
+
+    @Override
+    public String toString() {
+        return "{" + Arrays.toString(attributes) + ";" + classValue + "}";
     }
 
 }

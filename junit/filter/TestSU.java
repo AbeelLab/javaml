@@ -12,14 +12,14 @@ import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.DefaultDataset;
 import net.sf.javaml.core.DenseInstance;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.filter.eval.RELIEF;
+import net.sf.javaml.filter.eval.SymmetricalUncertainty;
 import net.sf.javaml.tools.data.FileHandler;
 
 import org.junit.Test;
 
-public class TestRELIEF {
+public class TestSU {
     @Test
-    public void testRELIEFSynthetic() {
+    public void testSUSynthetic() {
         // double[] vals = { 1, 2, 3, 4, 5, 6 };
 
         Dataset data = new DefaultDataset();
@@ -34,7 +34,7 @@ public class TestRELIEF {
 //        Dataset test=dnm.filterDataset(data);
         
         System.out.println(data);
-        RELIEF ga = new RELIEF();
+        SymmetricalUncertainty ga = new SymmetricalUncertainty();
         //ga.setNumNeigbors(4);
      
         ga.build(data);
@@ -49,10 +49,10 @@ public class TestRELIEF {
     }
     
     @Test
-    public void testRELIEFReal(){
+    public void testSymmetricalUncertaintyAttributeEvaluationReal(){
         try {
             Dataset data = FileHandler.loadDataset(new File("devtools/data/iris.data"), 4,",");
-            RELIEF ga = new RELIEF();
+            SymmetricalUncertainty ga = new SymmetricalUncertainty();
             //ga.setNumNeigbors(4);
          
             ga.build(data);

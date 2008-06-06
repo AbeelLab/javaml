@@ -50,7 +50,7 @@ public class TestAttributeEvaluation {
             
             IAttributeRanking[] grs3 = new IAttributeRanking[50];
             for (int i = 0; i < grs3.length; i++)
-                grs3[i] = new RankingFromEvaluation(new SymmetricalUncertaintyAttributeEvaluation());
+                grs3[i] = new RankingFromEvaluation(new SymmetricalUncertainty());
 
             LinearRankingEnsemble lre3 = new LinearRankingEnsemble(grs3);
             lre3.build(data);
@@ -66,7 +66,7 @@ public class TestAttributeEvaluation {
             RandomForestAttributeEvaluation rfas = new RandomForestAttributeEvaluation(20, 1);
 
             GainRatioAttributeEvaluation gr = new GainRatioAttributeEvaluation();
-            SymmetricalUncertaintyAttributeEvaluation su = new SymmetricalUncertaintyAttributeEvaluation();
+            SymmetricalUncertainty su = new SymmetricalUncertainty();
             RELIEF rel = new RELIEF();
             gr.build(data);
             su.build(data);

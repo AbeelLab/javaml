@@ -22,19 +22,30 @@ import net.sf.javaml.distance.DistanceMeasure;
 
 public class DefaultDataset extends Vector<Instance> implements Dataset {
 
+    private int maxAttributes = 0;
+
+    private void check(Collection<? extends Instance> c) {
+        for (Instance i : c)
+            check(i);
+    }
+
+    private void check(Instance i) {
+
+        if (i.classValue() != null)
+            classes.add(i.classValue());
+        if (i.noAttributes() > maxAttributes)
+            maxAttributes = i.noAttributes();
+    }
+
     @Override
     public synchronized boolean addAll(Collection<? extends Instance> c) {
-        for (Instance i : c)
-            if(i.classValue()!=null)
-                classes.add(i.classValue());
+        check(c);
         return super.addAll(c);
     }
 
     @Override
     public synchronized boolean addAll(int index, Collection<? extends Instance> c) {
-        for (Instance i : c)
-            if(i.classValue()!=null)
-                classes.add(i.classValue());
+        check(c);
         return super.addAll(index, c);
     }
 
@@ -50,37 +61,31 @@ public class DefaultDataset extends Vector<Instance> implements Dataset {
 
     @Override
     public synchronized boolean add(Instance e) {
-        if (e.classValue() != null)
-            classes.add(e.classValue());
-        // System.out.println("ADD: "+classes);
+        check(e);
         return super.add(e);
     }
 
     @Override
     public void add(int index, Instance e) {
-        if (e.classValue() != null)
-            classes.add(e.classValue());
+        check(e);
         super.add(index, e);
     }
 
     @Override
-    public synchronized void addElement(Instance obj) {
-        if (obj.classValue() != null)
-            classes.add(obj.classValue());
-        super.addElement(obj);
+    public synchronized void addElement(Instance e) {
+        check(e);
+        super.addElement(e);
     }
 
     @Override
     public synchronized void insertElementAt(Instance e, int index) {
-        if (e.classValue() != null)
-            classes.add(e.classValue());
+        check(e);
         super.insertElementAt(e, index);
     }
 
     @Override
     public synchronized void setElementAt(Instance e, int index) {
-        if (e.classValue() != null)
-            classes.add(e.classValue());
+        check(e);
         super.setElementAt(e, index);
     }
 
@@ -181,5 +186,10 @@ public class DefaultDataset extends Vector<Instance> implements Dataset {
         }
         // System.out.println(Arrays.deepToString(array));
         return out;
+    }
+
+    @Override
+    public int noAttributes() {
+        return maxAttributes;
     }
 }

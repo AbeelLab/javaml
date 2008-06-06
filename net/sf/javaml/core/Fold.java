@@ -240,4 +240,9 @@ public class Fold implements Dataset {
         }
         return tmp.toArray(a);
     }
+
+    @Override
+    public int noAttributes() {
+        return parent.noAttributes();
+    }
 }

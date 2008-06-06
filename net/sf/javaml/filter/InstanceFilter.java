@@ -29,23 +29,13 @@ import net.sf.javaml.core.Instance;
 public interface InstanceFilter {
 
     /**
-     * Applies this filter to an instance and return the modified instance.
+     * Applies this filter to an instance 
      * 
      * @param inst
      *            the instance to apply this filter to
      * @return the modified instance
      */
-    public Instance filterInstance(Instance inst);
+    public void filterInstance(Instance inst);
 
-//    /**
-//     * Tries to apply the reverse of this filter to the instance to restore the
-//     * original instance.
-//     * 
-//     * @throws UnsupportedOperationException
-//     *             if this filter does not work reverse
-//     * @param inst
-//     *            the instance to revert to its original
-//     * @return the original instance
-//     */
-//    public Instance unfilterInstance(Instance inst);
+
 }

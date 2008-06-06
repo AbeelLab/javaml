@@ -75,6 +75,8 @@ public interface Dataset extends List<Instance> {
      */
     public Dataset[] folds(int numFolds, Random rg);
 
+    public int noAttributes();
+
     // /**
     // * Get the index of a certain instance.
     // *

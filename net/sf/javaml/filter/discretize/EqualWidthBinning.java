@@ -17,8 +17,7 @@
  * along with the Java Machine Learning API; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * 
- * Copyright (c) 1999 University of Waikato, Hamilton, New Zealand
- * Copyright (c) 2006-2007, Thomas Abeel
+ * Copyright (c) 2006-2008, Thomas Abeel
  * 
  * Project: http://sourceforge.net/projects/java-ml/
  * 
@@ -26,55 +25,63 @@
 package net.sf.javaml.filter.discretize;
 
 import net.sf.javaml.core.Dataset;
+import net.sf.javaml.core.DatasetTools;
 import net.sf.javaml.core.Instance;
+import net.sf.javaml.core.exception.TrainingRequiredException;
+import net.sf.javaml.filter.AbstractFilter;
+import net.sf.javaml.filter.instance.FloorValueFilter;
 
 /**
- * A filter that discretizes a range of numeric attributes in the dataset into
+ * A filter that discretizes a range of numeric attributes in the data set into
  * nominal attributes. Discretization is done by binning.
  * 
- * @author Len Trigg (trigg@cs.waikato.ac.nz)
- * @author Eibe Frank (eibe@cs.waikato.ac.nz)
  * @author Thomas Abeel
  */
-public class EqualWidthBinning extends AbstractBinning {
+public class EqualWidthBinning extends AbstractFilter {
+    /**
+     * The number of bins
+     */
+    private int numBins = 10;
+
+    private Instance currentMiddle;
+
+    private Instance currentRange;
 
     public EqualWidthBinning() {
-        super();
+        this(10);
     }
 
-    public EqualWidthBinning(int numBins){
-        super(numBins);
-                
-    }
-    public EqualWidthBinning(int[] binnedAttributes) {
-        super(binnedAttributes);
+    public EqualWidthBinning(int numBins) {
+        this.numBins = numBins;
     }
 
-    public EqualWidthBinning(int[] binnedAttributes, int numBins) {
-        super(binnedAttributes, numBins);
+    public void build(Dataset data) {
+        Instance min = DatasetTools.minAttributes(data);
+        Instance max = DatasetTools.maxAttributes(data);
+        currentRange = max.minus(min);
+        currentMiddle = min.plus(max).divide(2);
+
     }
 
-    /**
-     * Calculate cutpoints for a single attribute.
-     * 
-     * @param index
-     *            the index of the attribute to calculate cutpoints for
-     */
-    protected double[] calculateBorderPoints(Dataset data, int index) {
+    private FloorValueFilter rvf = new FloorValueFilter();
 
-        // Scan for max and min values
-        // double max = 0, min = 1, currentVal;
-        Instance minInstance = data.getMinimumInstance();
-        Instance maxInstance = data.getMaximumInstance();
+    @Override
+    public void filterInstance(Instance instance) {
+        if (currentRange == null || currentMiddle == null)
+            throw new TrainingRequiredException();
+       
+        Instance tmp = instance.minus(currentMiddle).divide(currentRange).multiply(numBins-1).plus((numBins-1) / 2);
+        instance.clear();
+        instance.putAll(tmp);
+        rvf.filterInstance(instance);
 
-        double width = (maxInstance.value(index) - minInstance.value(index)) / numBins;
-        double[] out = null;
-        if ((numBins > 1) && (width > 0)) {
-            out = new double[numBins - 1];
-            for (int i = 1; i < numBins; i++) {
-                out[i - 1] = minInstance.value(index) + width * i;
-            }
-        }
-        return out;
     }
+
+    public void filterDataset(Dataset data) {
+        if (currentRange == null || currentMiddle == null)
+            build(data);
+        for (Instance i : data)
+            filterInstance(i);
+    }
+
 }
