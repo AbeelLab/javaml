@@ -8,15 +8,12 @@ package net.sf.javaml.tools.data;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.zip.GZIPInputStream;
-import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import net.sf.javaml.core.Dataset;
-import net.sf.javaml.core.Instance;
-import net.sf.javaml.core.SimpleDataset;
-import net.sf.javaml.core.SimpleInstance;
+import net.sf.javaml.core.DefaultDataset;
+import net.sf.javaml.core.DenseInstance;
 import be.abeel.util.LineIterator;
 
 /**
@@ -41,6 +38,8 @@ import be.abeel.util.LineIterator;
  * 
  */
 public class FileHandler {
+    public FileHandler() {
+    }
 
     /**
      * Utility method to load from a file without class set.
@@ -51,7 +50,7 @@ public class FileHandler {
      * @throws IOException
      */
     public static Dataset loadDataset(File f, String separator) throws IOException {
-        return loadDataset(f, Integer.MAX_VALUE, separator);
+        return loadDataset(f, -1, separator);
     }
 
     /**
@@ -75,24 +74,28 @@ public class FileHandler {
     }
 
     public static Dataset loadDataset(File f) throws IOException {
-        return loadDataset(f, Integer.MAX_VALUE, "\t");
+        return loadDataset(f, -1);
+
     }
 
-    protected static Dataset read(LineIterator it, int classIndex, String separator) {
+    private static Dataset load(java.io.InputStream in, int classIndex, String separator) {
+
+        LineIterator it = new LineIterator(in);
         it.setSkipBlanks(true);
-        Dataset out = new SimpleDataset();
+        it.setSkipComments(true);
+        Dataset out = new DefaultDataset();
         for (String line : it) {
             String[] arr = line.split(separator);
             double[] values;
-            if (classIndex == Integer.MAX_VALUE)
+            if (classIndex == -1)
                 values = new double[arr.length];
             else
                 values = new double[arr.length - 1];
-            int classValue = 0;
+            String classValue = null;
             for (int i = 0; i < arr.length; i++) {
                 if (i == classIndex) {
                     try {
-                        classValue = Integer.parseInt(arr[i]);
+                        classValue = arr[i];
 
                     } catch (Exception e) {
                         // System.err.println(f);
@@ -112,10 +115,8 @@ public class FileHandler {
                         values[i] = val;
                 }
             }
-            if (classIndex == Integer.MAX_VALUE)
-                out.add(new SimpleInstance(values));
-            else
-                out.add(new SimpleInstance(values, classValue));
+            out.add(new DenseInstance(values, classValue));
+
         }
         return out;
     }
@@ -136,94 +137,13 @@ public class FileHandler {
      *            the file to be loaded.
      */
     public static Dataset loadDataset(File f, int classIndex, String separator) throws IOException {
-        LineIterator it = new LineIterator(f);
-        return read(it, classIndex, separator);
+        if (f.getName().endsWith("gz"))
+            return load(new GZIPInputStream(new FileInputStream(f)), classIndex, separator);
+        if (f.getName().endsWith("zip"))
+            return load(new ZipInputStream(new FileInputStream(f)), classIndex, separator);
+        return load(new FileInputStream(f), classIndex, separator);
 
     }
 
-    /**
-     * Writes a data set to a file.
-     * 
-     * NOTE: The weight of instances will never be written to the file.
-     * 
-     * NOTE: The class will always be written on index 0. If no class value is
-     * available, the line will start with a separator character.
-     * 
-     * @param data
-     * @param f
-     * @param classIndex
-     */
-    public static void writeDataset(Dataset data, File f, String separator) throws IOException {
-        PrintWriter out = new PrintWriter(f);
-        for (Instance inst : data) {
-            if (inst.isClassSet())
-                out.print(inst.classValue());
-
-            for (int i = 0; i < inst.size(); i++) {
-                out.print(separator);
-                out.print(inst.value(i));
-            }
-            out.println();
-        }
-        out.close();
-
-    }
-    /**
-     * Load a data set from a file that has been compressed using ZIP.
-     * 
-     * @param f
-     *            the compressed file
-     * @param classIndex
-     *            the index of the class
-     * @param separator
-     *            the separator for values
-     * @return the data set
-     * @throws IOException
-     */
-    public static Dataset loadDatasetZip(File f, int classIndex, String separator) throws IOException {
-        Dataset out = null;
-        System.out.println(f);
-        ZipInputStream zipinputstream = new ZipInputStream(new FileInputStream(f));
-
-        ZipEntry zipentry = zipinputstream.getNextEntry();
-        System.out.println(zipentry);
-        if (zipentry != null) {
-            // for each entry to be extracted
-            String entryName = zipentry.getName();
-            System.out.println("File ::" + entryName);
-            // RandomAccessFile rf;
-            File newFile = new File(entryName);
-            LineIterator it = new LineIterator(newFile);
-            out = read(it, classIndex, separator);
-
-            zipinputstream.closeEntry();
-
-        }// while
-
-        zipinputstream.close();
-        return out;
-    }
-
-    /**
-     * Load a data set from a file that has been compressed using GZIP.
-     * 
-     * @param f
-     *            the compressed file
-     * @param classIndex
-     *            the index of the class
-     * @param separator
-     *            the separator for values
-     * @return the data set
-     * @throws IOException
-     */
-    public static Dataset loadDatasetGZip(File f, int classIndex, String separator) throws IOException {
-        Dataset out = null;
-        System.out.println(f);
-        GZIPInputStream gzipInputStream = new GZIPInputStream(new FileInputStream(f));
-        // Open the output file
-        out = read(new LineIterator(gzipInputStream), classIndex, separator);
-        gzipInputStream.close();
-
-        return out;
-    }
+    
 }

@@ -24,8 +24,8 @@
  */
 package net.sf.javaml.distance;
 
-import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
+import net.sf.javaml.core.Sets;
 
 /**
  * The norm distance or
@@ -39,12 +39,13 @@ import net.sf.javaml.core.Instance;
  * in the Euclidean n-space is defined as: ((p1-q1)^x + (p2-q2)^x + ... +
  * (pn-qn)^x)^(1/x)
  * 
- * Special instances are x=0, the Manhattan- or taxicab norm. Or x=infinity
+ * Special instances are x=1, the Manhattan- or taxicab norm. Or x=infinity
  * gives the
  * 
  * The default is the Euclidean distance where x=2.
  * 
  * @linkplain http://en.wikipedia.org/wiki/Norm_%28mathematics%29
+ * 
  * @author Thomas Abeel
  * 
  */
@@ -76,29 +77,14 @@ public class NormDistance extends AbstractDistance {
     /**
      * XXX add doc
      */
-    public double calculateDistance(Instance x, Instance y) {
-        if (x.size() != y.size()) {
-            throw new RuntimeException("Both instances should contain the same number of values.");
-        }
+    @Override
+    public double measure(Instance x, Instance y) {
+
         double sum = 0;
-        for (int i = 0; i < x.size(); i++) {
-            sum += Math.pow(Math.abs(y.value(i) - x.value(i)), power);
+        for (Integer xi : Sets.intersection(x.keySet(), y.keySet())) {
+            sum += Math.pow(Math.abs(y.value(xi) - x.value(xi)), power);
         }
         return Math.pow(sum, 1 / power);
-    }
-
-    /**
-     * XXX add doc
-     */
-    public double getMaximumDistance(Dataset data) {
-        return calculateDistance(data.getMaximumInstance(), data.getMinimumInstance());
-    }
-
-    /**
-     * XXX add doc
-     */
-    public double getMinimumDistance(Dataset data) {
-        return 0;
     }
 
 }

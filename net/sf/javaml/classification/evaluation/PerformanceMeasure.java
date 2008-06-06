@@ -17,7 +17,7 @@
  * along with the Java Machine Learning API; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * 
- * Copyright (c) 2006-2007, Thomas Abeel
+ * Copyright (c) 2006-2008, Thomas Abeel
  * 
  * Project: http://sourceforge.net/projects/java-ml/
  * 
@@ -44,7 +44,7 @@ public class PerformanceMeasure {
      * <p>
      * 
      */
-    public double truePositives;
+    public double tp;
 
     /**
      * The number of false positives.
@@ -57,13 +57,13 @@ public class PerformanceMeasure {
      * observing a difference when in truth there is none (or more specifically -
      * no statistically significant difference).
      */
-    public double falsePositives;
+    public double fp;
 
     /**
      * The number of true negatives.
      * <p>
      */
-    public double trueNegatives;
+    public double tn;
 
     /**
      * The number of false negatives.
@@ -75,17 +75,17 @@ public class PerformanceMeasure {
      * don't have adequate power. Plainly speaking, it occurs when we are
      * failing to observe a difference when in truth there is one.
      */
-    public double falseNegatives;
+    public double fn;
 
     public double getCorrelationCoefficient() {
 
-        return (truePositives * trueNegatives - falsePositives * falseNegatives)
-                / Math.sqrt((truePositives + falsePositives) * (truePositives + falseNegatives)
-                        * (trueNegatives + falsePositives) * (trueNegatives + falseNegatives));
+        return (tp * tn - fp * fn)
+                / Math.sqrt((tp + fp) * (tp + fn)
+                        * (tn + fp) * (tn + fn));
     }
 
     public double getCost() {
-        return falsePositives / truePositives;
+        return fp / tp;
     }
 
     /**
@@ -101,10 +101,10 @@ public class PerformanceMeasure {
      *            the number of false negatives
      */
     public PerformanceMeasure(double tp, double tn, double fp, double fn) {
-        this.truePositives = tp;
-        this.trueNegatives = tn;
-        this.falsePositives = fp;
-        this.falseNegatives = fn;
+        this.tp = tp;
+        this.tn = tn;
+        this.fp = fp;
+        this.fn = fn;
 
     }
 
@@ -117,41 +117,41 @@ public class PerformanceMeasure {
     }
 
     public double getTPRate() {
-        return this.truePositives / (this.truePositives + this.falseNegatives);
+        return this.tp / (this.tp + this.fn);
     }
 
     public double getTNRate() {
-        return this.trueNegatives / (this.trueNegatives + this.falsePositives);
+        return this.tn / (this.tn + this.fp);
     }
 
     public double getFNRate() {
-        return this.falseNegatives / (this.truePositives + this.falseNegatives);
+        return this.fn / (this.tp + this.fn);
     }
 
     public double getFPRate() {
-        return this.falsePositives / (this.falsePositives + this.trueNegatives);
+        return this.fp / (this.fp + this.tn);
     }
 
     public double getErrorRate() {
-        return (this.falsePositives + this.falseNegatives) / this.getTotal();
+        return (this.fp + this.fn) / this.getTotal();
     }
 
     public double getAccuracy() {
-        return (this.truePositives + this.trueNegatives) / this.getTotal();
+        return (this.tp + this.tn) / this.getTotal();
     }
 
     public double getRecall() {
-        return this.truePositives / (this.truePositives + this.falseNegatives);
+        return this.tp / (this.tp + this.fn);
     }
 
     public double getPrecision() {
-        return this.truePositives / (this.truePositives + this.falsePositives);
+        return this.tp / (this.tp + this.fp);
     }
 
     public double getCorrelation() {
-        return (this.truePositives * this.trueNegatives + this.falsePositives * this.falseNegatives)
-                / Math.sqrt((this.trueNegatives + this.falseNegatives) * (this.truePositives + this.falsePositives)
-                        * (this.trueNegatives + this.falsePositives) * (this.falseNegatives + this.truePositives));
+        return (this.tp * this.tn + this.fp * this.fn)
+                / Math.sqrt((this.tn + this.fn) * (this.tp + this.fp)
+                        * (this.tn + this.fp) * (this.fn + this.tp));
     }
 
     public double getFMeasure() {
@@ -168,26 +168,26 @@ public class PerformanceMeasure {
     }
 
     public double getQ9() {
-        if (this.truePositives + this.falseNegatives == 0) {
-            return (this.trueNegatives - this.falsePositives) / (this.trueNegatives + this.falsePositives);
-        } else if (this.trueNegatives + this.falsePositives == 0) {
-            return (this.truePositives - this.falseNegatives) / (this.truePositives + this.falseNegatives);
+        if (this.tp + this.fn == 0) {
+            return (this.tn - this.fp) / (this.tn + this.fp);
+        } else if (this.tn + this.fp == 0) {
+            return (this.tp - this.fn) / (this.tp + this.fn);
         } else
             return 1
                     - Math.sqrt(2)
-                    * Math.sqrt(Math.pow(this.falseNegatives / (this.truePositives + this.falseNegatives), 2)
-                            + Math.pow(this.falsePositives / (this.trueNegatives + this.falsePositives), 2));
+                    * Math.sqrt(Math.pow(this.fn / (this.tp + this.fn), 2)
+                            + Math.pow(this.fp / (this.tn + this.fp), 2));
 
     }
 
     @Override
     public String toString() {
-        return "[TP=" + this.truePositives + ", FP=" + this.falsePositives + ", TN=" + this.trueNegatives + ", FN="
-                + this.falseNegatives + "]";
+        return "[TP=" + this.tp + ", FP=" + this.fp + ", TN=" + this.tn + ", FN="
+                + this.fn + "]";
     }
 
     public double getTotal() {
-        return falseNegatives + falsePositives + trueNegatives + truePositives;
+        return fn + fp + tn + tp;
     }
 
 }
