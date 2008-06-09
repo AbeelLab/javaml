@@ -16,6 +16,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.Vector;
 
 import net.sf.javaml.distance.DistanceMeasure;
@@ -51,7 +53,7 @@ public class DefaultDataset extends Vector<Instance> implements Dataset {
 
     private static final long serialVersionUID = 8586030444860912681L;
 
-    private Set<Object> classes = new HashSet<Object>();
+    private SortedSet<Object> classes = new TreeSet<Object>();
 
     @Override
     public void clear() {
@@ -95,10 +97,11 @@ public class DefaultDataset extends Vector<Instance> implements Dataset {
     }
 
     @Override
-    public Set<Object> classes() {
+    public SortedSet<Object> classes() {
         return classes;
     }
 
+    
     /**
      * Returns the k instances of the given data set that are the closest to the
      * instance that is given as a parameter.

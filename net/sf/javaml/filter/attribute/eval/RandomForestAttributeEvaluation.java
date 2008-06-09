@@ -5,13 +5,16 @@
  */
 package net.sf.javaml.filter.attribute.eval;
 
+import java.util.Random;
+
 import net.sf.javaml.classification.evaluation.PerformanceMeasure;
 import net.sf.javaml.classification.tree.RandomTree;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.DatasetTools;
+import net.sf.javaml.core.DefaultDataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.InstanceTools;
-import net.sf.javaml.core.SimpleDataset;
+import net.sf.javaml.filter.eval.IAttributeEvaluation;
 import net.sf.javaml.utils.ArrayUtils;
 import net.sf.javaml.utils.MathUtils;
 
@@ -39,7 +42,7 @@ public class RandomForestAttributeEvaluation implements IAttributeEvaluation {
 
     private int numTrees;
 
-    private int positiveClass;
+    private Object positiveClass;
 
     private int k;
 
@@ -51,11 +54,11 @@ public class RandomForestAttributeEvaluation implements IAttributeEvaluation {
         this.numPerturbations = p;
     }
 
-    public RandomForestAttributeEvaluation(int numTrees, int positiveClassIndex) {
+    public RandomForestAttributeEvaluation(int numTrees, Object positiveClass) {
         this.numTrees = numTrees;
-        this.positiveClass = positiveClassIndex;
+        this.positiveClass = positiveClass;
         this.k = 5;
-        this.numPerturbations=1;
+        this.numPerturbations = 1;
     }
 
     /*
@@ -66,12 +69,12 @@ public class RandomForestAttributeEvaluation implements IAttributeEvaluation {
     public void build(Dataset data) {
 
         int tp = 0, fp = 0, fn = 0, tn = 0;
-        int[][] tpR = new int[data.numAttributes()][numPerturbations];
-        int[][] fpR = new int[data.numAttributes()][numPerturbations];
-        int[][] tnR = new int[data.numAttributes()][numPerturbations];
-        int[][] fnR = new int[data.numAttributes()][numPerturbations];
+        int[][] tpR = new int[data.noAttributes()][numPerturbations];
+        int[][] fpR = new int[data.noAttributes()][numPerturbations];
+        int[][] tnR = new int[data.noAttributes()][numPerturbations];
+        int[][] fnR = new int[data.noAttributes()][numPerturbations];
 
-        for (int k = 0; k < data.numAttributes(); k++) {
+        for (int k = 0; k < data.noAttributes(); k++) {
             tpR[k] = new int[numPerturbations];
             fpR[k] = new int[numPerturbations];
             tnR[k] = new int[numPerturbations];
@@ -86,21 +89,22 @@ public class RandomForestAttributeEvaluation implements IAttributeEvaluation {
              */
             RandomTree tree = new RandomTree();
             tree.setKValue(k);
-            Dataset sample = DatasetTools.randomSample(data, data.size());
+            Dataset sample = DatasetTools.bootstrap(data, data.size(),new Random(37));
             tree.buildClassifier(sample);
 
-            Dataset outOfBag = data.copy();
+            Dataset outOfBag=new DefaultDataset();
+            outOfBag.addAll(data);
             outOfBag.removeAll(sample);
 
             for (Instance inst : outOfBag) {
-                int predClass = tree.classifyInstance(inst);
-                if (predClass == positiveClass) {
-                    if (inst.classValue() == positiveClass)
+                Object predClass = tree.classifyInstance(inst);
+                if (predClass.equals(positiveClass)) {
+                    if (inst.classValue().equals(positiveClass))
                         tp++;
                     else
                         fp++;
                 } else {
-                    if (inst.classValue() == positiveClass)
+                    if (inst.classValue().equals(positiveClass))
                         fn++;
                     else
                         tn++;
@@ -110,7 +114,7 @@ public class RandomForestAttributeEvaluation implements IAttributeEvaluation {
             /*
              * For each attribute we run the perturbation process.
              */
-            for (int k = 0; k < data.numAttributes(); k++) {
+            for (int k = 0; k < data.noAttributes(); k++) {
                 /*
                  * While one perturbation of the attribute would give a first
                  * idea of the importance, more runs for the same attribute
@@ -118,20 +122,20 @@ public class RandomForestAttributeEvaluation implements IAttributeEvaluation {
                  */
                 for (int j = 0; j < numPerturbations; j++) {
 
-                    Dataset perturbed = new SimpleDataset();
+                    Dataset perturbed = new DefaultDataset();
                     for (Instance inst : outOfBag) {
                         perturbed.add(InstanceTools.perturb(inst, k));
 
                     }
                     for (Instance inst : perturbed) {
-                        int predClass = tree.classifyInstance(inst);
-                        if (predClass == positiveClass) {
-                            if (inst.classValue() == positiveClass)
+                        Object predClass = tree.classifyInstance(inst);
+                        if (predClass.equals(positiveClass)) {
+                            if (inst.classValue().equals(positiveClass))
                                 tpR[k][j]++;
                             else
                                 fpR[k][j]++;
                         } else {
-                            if (inst.classValue() == positiveClass)
+                            if (inst.classValue().equals(positiveClass))
                                 fnR[k][j]++;
                             else
                                 tnR[k][j]++;
@@ -145,8 +149,8 @@ public class RandomForestAttributeEvaluation implements IAttributeEvaluation {
 
         }
         double originalF = new PerformanceMeasure(tp, tn, fp, fn).getFMeasure();
-        importance = new double[data.numAttributes()];
-        for (int k = 0; k < data.numAttributes(); k++) {
+        importance = new double[data.noAttributes()];
+        for (int k = 0; k < data.noAttributes(); k++) {
             double[] g = new double[numPerturbations];
             for (int i = 0; i < numPerturbations; i++) {
                 g[i] = new PerformanceMeasure(tpR[k][i], tnR[k][i], fpR[k][i], tnR[k][i]).getFMeasure();

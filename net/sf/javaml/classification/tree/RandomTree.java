@@ -7,6 +7,7 @@
  */
 package net.sf.javaml.classification.tree;
 
+import java.util.List;
 import java.util.Random;
 
 import net.sf.javaml.classification.Classifier;
@@ -78,19 +79,19 @@ public class RandomTree implements Classifier {
     public void buildClassifier(Dataset data) {
 
         // Make sure K value is in range
-        if (m_KValue > data.numAttributes() - 1)
-            m_KValue = data.numAttributes() - 1;
+        if (m_KValue > data.noAttributes() - 1)
+            m_KValue = data.noAttributes() - 1;
         if (m_KValue < 1)
-            m_KValue = (int) MathUtils.log2(data.numAttributes()) + 1;
+            m_KValue = (int) MathUtils.log2(data.noAttributes()) + 1;
 
         MissingClassFilter mc = new MissingClassFilter();
         Dataset train = mc.filterDataset(data);
 
         // Create array of sorted indices and weights
-        int[][] sortedIndices = new int[train.numAttributes()][0];
-        double[][] weights = new double[train.numAttributes()][0];
+        int[][] sortedIndices = new int[train.noAttributes()][0];
+        double[][] weights = new double[train.noAttributes()][0];
         double[] vals = new double[train.size()];
-        for (int j = 0; j < train.numAttributes(); j++) {
+        for (int j = 0; j < train.noAttributes(); j++) {
             // if (j != train.classIndex()) {
             weights[j] = new double[train.size()];
             // Sorted indices are computed for numeric attributes
@@ -100,19 +101,21 @@ public class RandomTree implements Classifier {
             }
             sortedIndices[j] = ArrayUtils.sort(vals);
             for (int i = 0; i < train.size(); i++) {
-                weights[j][i] = train.instance(sortedIndices[j][i]).weight();
+                weights[j][i] = 1.0;// train.instance(sortedIndices[j][i]).weight();
             }
         }
 
         // Compute initial class counts
-        double[] classProbs = new double[train.numClasses()];
+        double[] classProbs = new double[train.classes().size()];
+//        List<Object>classes=new Vector<Object>();
+//        classes.addAll(train.classes());
         for (int i = 0; i < train.size(); i++) {
             Instance inst = train.instance(i);
-            classProbs[(int) inst.classValue()] += inst.weight();
+            classProbs[train.classes().headSet(inst.classValue()).size()] += 1.0;
         }
 
         // Create the attribute indices window
-        int[] attIndicesWindow = new int[data.numAttributes() - 1];
+        int[] attIndicesWindow = new int[data.noAttributes() - 1];
         int j = 0;
         for (int i = 0; i < attIndicesWindow.length; i++) {
             attIndicesWindow[i] = j++;
@@ -200,10 +203,10 @@ public class RandomTree implements Classifier {
 
         // Compute class distributions and value of splitting
         // criterion for each attribute
-        double[] vals = new double[data.numAttributes()];
-        double[][][] dists = new double[data.numAttributes()][0][0];
-        double[][] props = new double[data.numAttributes()][0];
-        double[] splits = new double[data.numAttributes()];
+        double[] vals = new double[data.noAttributes()];
+        double[][][] dists = new double[data.noAttributes()][0][0];
+        double[][] props = new double[data.noAttributes()][0];
+        double[] splits = new double[data.noAttributes()];
 
         // Investigate K random attributes
         int attIndex = 0;
@@ -236,8 +239,8 @@ public class RandomTree implements Classifier {
 
             // Build subtrees
             m_SplitPoint = splits[m_Attribute];
-            int[][][] subsetIndices = new int[m_Distribution.length][data.numAttributes()][0];
-            double[][][] subsetWeights = new double[m_Distribution.length][data.numAttributes()][0];
+            int[][][] subsetIndices = new int[m_Distribution.length][data.noAttributes()][0];
+            double[][][] subsetWeights = new double[m_Distribution.length][data.noAttributes()][0];
             splitData(subsetIndices, subsetWeights, m_Attribute, m_SplitPoint, sortedIndices, weights, m_Distribution,
                     data);
             m_Successors = new RandomTree[m_Distribution.length];
@@ -291,7 +294,7 @@ public class RandomTree implements Classifier {
         int[] num;
 
         // For each attribute
-        for (int i = 0; i < data.numAttributes(); i++) {
+        for (int i = 0; i < data.noAttributes(); i++) {
             num = new int[2];
             for (int k = 0; k < 2; k++) {
                 subsetIndices[k][i] = new int[sortedIndices[i].length];
@@ -339,8 +342,8 @@ public class RandomTree implements Classifier {
         double[][] dist = null;
 
         // For numeric attributes
-        double[][] currDist = new double[2][data.numClasses()];
-        dist = new double[2][data.numClasses()];
+        double[][] currDist = new double[2][data.classes().size()];
+        dist = new double[2][data.classes().size()];
 
         // Move all Dataset into second subset
         for (int j = 0; j < sortedIndices.length; j++) {

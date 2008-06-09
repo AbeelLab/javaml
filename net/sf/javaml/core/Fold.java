@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Random;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.Vector;
 
 import net.sf.javaml.distance.DistanceMeasure;
@@ -27,7 +28,7 @@ public class Fold implements Dataset {
     }
 
     @Override
-    public Set<Object> classes() {
+    public SortedSet<Object> classes() {
         // System.out.println("Call");
         return parent.classes();
     }

@@ -9,6 +9,7 @@ package net.sf.javaml.core;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.SortedSet;
 
 import net.sf.javaml.distance.DistanceMeasure;
 
@@ -39,7 +40,7 @@ public interface Dataset extends List<Instance> {
      * 
      * @return
      */
-    public Set<Object> classes();
+    public SortedSet<Object> classes();
 
     /**
      * Add an instance to this data set. The compatibility of the new item with
