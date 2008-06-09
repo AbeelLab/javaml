@@ -10,11 +10,30 @@ public class SparseInstance extends AbstractInstance implements Instance {
 
     private HashMap<Integer, Double> data = new HashMap<Integer, Double>();
 
+    private double defaultValue;
+
+    /* The number of attributes */
+    private int noAttributes = -1;
+
     private static final long serialVersionUID = -7642462956857985858L;
+
+    public SparseInstance() {
+        this(-1);
+    }
+
+    public SparseInstance(int noAttributes) {
+        this(noAttributes, 0.0);
+    }
+
+    public SparseInstance(int noAttributes, double defaultValue) {
+        this.defaultValue = defaultValue;
+        this.noAttributes = noAttributes;
+
+    }
 
     @Override
     public double value(int pos) {
-        return data.get(pos).doubleValue();
+        return get(pos).doubleValue();
     }
 
     @Override
@@ -40,7 +59,10 @@ public class SparseInstance extends AbstractInstance implements Instance {
 
     @Override
     public Double get(Object key) {
-        return data.get(key);
+        if (data.containsKey(key))
+            return data.get(key);
+        else
+            return defaultValue;
     }
 
     @Override
@@ -56,6 +78,7 @@ public class SparseInstance extends AbstractInstance implements Instance {
     @Override
     public Double put(Integer key, Double value) {
         return data.put(key, value);
+
     }
 
     @Override
@@ -79,11 +102,14 @@ public class SparseInstance extends AbstractInstance implements Instance {
         return data.values();
     }
 
-//    private int maxIndex = 0;
+    // private int maxIndex = 0;
 
     @Override
     public int noAttributes() {
-      return Collections.max(data.keySet());
-    }
+        if (noAttributes == -1)
+            return Collections.max(data.keySet());
+        else
+            return noAttributes;
 
+    }
 }

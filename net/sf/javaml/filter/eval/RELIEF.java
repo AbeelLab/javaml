@@ -125,7 +125,7 @@ public class RELIEF implements IAttributeEvaluation {
         Instance tmp = null;
         double max = 0;// dist.calculateDistance(vector.get(0), supplied);
         for (Instance inst : vector) {
-            double tmpDist = dist.calculateDistance(inst, supplied);
+            double tmpDist = dist.measure(inst, supplied);
             if (tmpDist > max) {
                 max = tmpDist;
                 tmp = inst;

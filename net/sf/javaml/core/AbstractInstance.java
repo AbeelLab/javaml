@@ -11,7 +11,36 @@
  */
 package net.sf.javaml.core;
 
+import java.util.Iterator;
+
 public abstract class AbstractInstance implements Instance {
+    class InstanceValueIterator implements Iterator<Double> {
+
+        private int index = 0;
+
+        @Override
+        public boolean hasNext() {
+            return index < noAttributes() - 1;
+        }
+
+        @Override
+        public Double next() {
+            index++;
+            return value(index - 1);
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException("Cannot remove from instance using the iterator.");
+
+        }
+
+    }
+
+    @Override
+    public Iterator<Double> iterator() {
+        return new InstanceValueIterator();
+    }
 
     private Object classValue;
 
@@ -61,6 +90,7 @@ public abstract class AbstractInstance implements Instance {
         }
         return out;
     }
+
     @Override
     public Instance multiply(double value) {
         Instance out = new SparseInstance();

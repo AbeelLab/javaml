@@ -24,7 +24,6 @@
  */
 package net.sf.javaml.distance;
 
-import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 
 /**
@@ -52,7 +51,7 @@ public class ManhattanDistance extends AbstractDistance {
      * 
      * @return the Manhattan distance between the two instances.
      */
-    public double calculateDistance(Instance x, Instance y) {
+    public double measure(Instance x, Instance y) {
         if (x.size() != y.size())
             throw new RuntimeException("Both instances should contain the same number of values.");
         double sum = 0.0;
@@ -62,37 +61,37 @@ public class ManhattanDistance extends AbstractDistance {
         return sum;
     }
 
-    /**
-     * Returns the theoretical maximum distance for the given data set. This is
-     * based on the virtual Min and Max instances of the data set.
-     * 
-     * @see Dataset
-     * 
-     * @param data
-     *            the data set for which the maximal possible distance should be
-     *            calculated.
-     * 
-     * @return the maximum possible distance between instances in the data set
-     */
-    public double getMaximumDistance(Dataset data) {
-        Instance max = data.getMaximumInstance();
-        Instance min = data.getMinimumInstance();
-        return calculateDistance(min, max);
-    }
-
-    /**
-     * Return the minimal Manhattan distance between two instances in the given
-     * data set. This is always zero as the Manhattan distances cannot be
-     * negative and the distance between two equal instances is zero.
-     * 
-     * @param data
-     *            the data set for which the minimal possible distance should be
-     *            calculated.
-     * @return the minimum possible Manhattan distance for the data set, i.e.
-     *         zero
-     */
-    public double getMinimumDistance(Dataset data) {
-        return 0;
-    }
+//    /**
+//     * Returns the theoretical maximum distance for the given data set. This is
+//     * based on the virtual Min and Max instances of the data set.
+//     * 
+//     * @see Dataset
+//     * 
+//     * @param data
+//     *            the data set for which the maximal possible distance should be
+//     *            calculated.
+//     * 
+//     * @return the maximum possible distance between instances in the data set
+//     */
+//    public double getMaximumDistance(Dataset data) {
+//        Instance max = data.getMaximumInstance();
+//        Instance min = data.getMinimumInstance();
+//        return calculateDistance(min, max);
+//    }
+//
+//    /**
+//     * Return the minimal Manhattan distance between two instances in the given
+//     * data set. This is always zero as the Manhattan distances cannot be
+//     * negative and the distance between two equal instances is zero.
+//     * 
+//     * @param data
+//     *            the data set for which the minimal possible distance should be
+//     *            calculated.
+//     * @return the minimum possible Manhattan distance for the data set, i.e.
+//     *         zero
+//     */
+//    public double getMinimumDistance(Dataset data) {
+//        return 0;
+//    }
 
 }

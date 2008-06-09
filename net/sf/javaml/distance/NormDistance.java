@@ -25,7 +25,6 @@
 package net.sf.javaml.distance;
 
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.core.Sets;
 
 /**
  * The norm distance or
@@ -40,7 +39,7 @@ import net.sf.javaml.core.Sets;
  * (pn-qn)^x)^(1/x)
  * 
  * Special instances are x=1, the Manhattan- or taxicab norm. Or x=infinity
- * gives the
+ * gives the Chebychev distance.
  * 
  * The default is the Euclidean distance where x=2.
  * 
@@ -79,11 +78,12 @@ public class NormDistance extends AbstractDistance {
      */
     @Override
     public double measure(Instance x, Instance y) {
-
+        assert (x.noAttributes() == y.noAttributes());
         double sum = 0;
-        for (Integer xi : Sets.intersection(x.keySet(), y.keySet())) {
-            sum += Math.pow(Math.abs(y.value(xi) - x.value(xi)), power);
+        for (int i = 0; i < x.noAttributes(); i++) {
+            sum += Math.pow(Math.abs(y.value(i) - x.value(i)), power);
         }
+
         return Math.pow(sum, 1 / power);
     }
 
