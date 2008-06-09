@@ -24,12 +24,20 @@
  */
 package net.sf.javaml.distance;
 
-public class ChebychevDistance extends ManhattanDistance {
+import net.sf.javaml.core.Instance;
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -5650881013429577972L;
+public class ChebychevDistance extends AbstractDistance {
 
-    //This is just a placeholder as Manhattan and ChebychevDistance are exactly the same.
+    @Override
+    public double measure(Instance x, Instance y) {
+        if (x.size() != y.size())
+            throw new RuntimeException("Both instances should contain the same number of values.");
+        double totalMax = 0.0;
+        for (int i = 0; i < x.size(); i++) {
+            double max = Math.max(x.value(i), y.value(i));
+            totalMax = Math.max(totalMax, max);
+        }
+        return totalMax;
+    }
+
 }
