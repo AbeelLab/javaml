@@ -34,8 +34,7 @@ public class ChebychevDistance extends AbstractDistance {
             throw new RuntimeException("Both instances should contain the same number of values.");
         double totalMax = 0.0;
         for (int i = 0; i < x.size(); i++) {
-            double max = Math.max(x.value(i), y.value(i));
-            totalMax = Math.max(totalMax, max);
+            totalMax = Math.max(totalMax, Math.abs(y.value(i) - x.value(i)));
         }
         return totalMax;
     }
