@@ -246,4 +246,14 @@ public class Fold implements Dataset {
     public int noAttributes() {
         return parent.noAttributes();
     }
+
+    @Override
+    public int classIndex(Object clazz) {
+        return parent.classIndex(clazz);
+    }
+
+    @Override
+    public Object classValue(int index) {
+        return parent.classValue(index);
+    }
 }

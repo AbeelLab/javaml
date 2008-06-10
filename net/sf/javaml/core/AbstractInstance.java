@@ -44,6 +44,8 @@ public abstract class AbstractInstance implements Instance {
 
     private Object classValue;
 
+   
+
     protected AbstractInstance() {
         this(null);
     }

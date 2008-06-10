@@ -3,7 +3,7 @@
  *
  * %SVN.HEADER%
  */
-package net.sf.javaml.filter.attribute.eval;
+package net.sf.javaml.filter.eval;
 
 import java.util.Arrays;
 
@@ -48,17 +48,17 @@ public class RecursiveFeatureEliminationSVM implements IAttributeRanking {
     }
 
     public void build(Dataset data) {
-        int[] ordering = new int[data.numAttributes()];
+        int[] ordering = new int[data.noAttributes()];
         SelfOptimizingLinearLibSVM svm = new SelfOptimizingLinearLibSVM();
         svm.setFolds(folds);
         svm.setPositiveClass(positiveClass);
         // bitmap of removed attributes
-        boolean[] removedAttributes = new boolean[data.numAttributes()];
+        boolean[] removedAttributes = new boolean[data.noAttributes()];
         // number of remove attributes, is equal to the number of trues in the
         // above bitmap
         int removed = 0;
 
-        while (data.numAttributes() > 1) {
+        while (data.noAttributes() > 1) {
             svm.buildClassifier(data);
             double[] weights = svm.getWeights();
             // use absolute values of the weights
@@ -77,7 +77,7 @@ public class RecursiveFeatureEliminationSVM implements IAttributeRanking {
             for (int i = 0; i < numRemove; i++) {
 
                 // System.out.println("Remove=" + order[i] + "/" +
-                // data.numAttributes());
+                // data.noAttributes());
                 toRemove[i] = order[i];
                 // int trueIndex =
                 trueIndices[i] = getTrueIndex(order[i], removedAttributes);
@@ -102,7 +102,7 @@ public class RecursiveFeatureEliminationSVM implements IAttributeRanking {
 
         }
         int index = 0;
-        if (data.numAttributes() == 1) {
+        if (data.noAttributes() == 1) {
             for (int i = 0; i < removedAttributes.length; i++) {
                 if (!removedAttributes[i])
                     index = i;

@@ -5,6 +5,9 @@
  */
 package net.sf.javaml.classification.tree;
 
+import java.util.Map;
+import java.util.Random;
+
 import net.sf.javaml.classification.Classifier;
 import net.sf.javaml.classification.evaluation.PerformanceMeasure;
 import net.sf.javaml.classification.meta.Bagging;
@@ -31,8 +34,11 @@ public class RandomForest implements Classifier {
 
     private boolean calculateOutOfBagErrorEstimate = false;
 
-    public RandomForest(int treeCount, boolean calculateOutOfBagErrorEstimate, int numAttributes) {
+    private Random rg;
+
+    public RandomForest(int treeCount, boolean calculateOutOfBagErrorEstimate, int numAttributes,Random rg) {
         this.treeCount = treeCount;
+        this.rg=rg;
         this.calculateOutOfBagErrorEstimate = calculateOutOfBagErrorEstimate;
         this.numAttributes = numAttributes;
     }
@@ -47,17 +53,19 @@ public class RandomForest implements Classifier {
             trees[i] = new RandomTree();
             trees[i].setKValue(numAttributes);
         }
-        bagger = new Bagging(trees);
+        bagger = new Bagging(trees,rg);
         bagger.setCalculateOutOfBagErrorEstimate(calculateOutOfBagErrorEstimate);
         bagger.buildClassifier(data);
 
     }
 
-    public int classifyInstance(Instance instance) {
+    @Override
+    public Object classifyInstance(Instance instance) {
         return bagger.classifyInstance(instance);
     }
 
-    public double[] distributionForInstance(Instance instance) {
+    @Override
+    public Map<Object,Double> distributionForInstance(Instance instance) {
         return bagger.distributionForInstance(instance);
     }
 

@@ -19,7 +19,7 @@ import net.sf.javaml.distance.NormDistance;
  * @author Thomas Abeel
  * 
  */
-public class KNearestNeighbors implements Classifier {
+public class KNearestNeighbors extends AbstractClassifier{
 
     private static final long serialVersionUID = 1560149339188819924L;
 
@@ -39,22 +39,7 @@ public class KNearestNeighbors implements Classifier {
 
     }
 
-    @Override
-    public Object classifyInstance(Instance instance) {
-        Map<Object, Double> distribution = distributionForInstance(instance);
-        double max = 0;
-        Object out = null;
-        for (Object key : distribution.keySet()) {
-            if (distribution.get(key) > max) {
-                max = distribution.get(key);
-                out = key;
-            }
-        }
-        // System.out.println("pred: "+out);
-        // System.out.println("--");
-        
-        return out;
-    }
+    
 
     @Override
     public Map<Object, Double> distributionForInstance(Instance instance) {

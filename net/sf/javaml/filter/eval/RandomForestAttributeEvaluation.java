@@ -3,7 +3,7 @@
  *
  * %SVN.HEADER%
  */
-package net.sf.javaml.filter.attribute.eval;
+package net.sf.javaml.filter.eval;
 
 import java.util.Random;
 
@@ -46,6 +46,8 @@ public class RandomForestAttributeEvaluation implements IAttributeEvaluation {
 
     private int k;
 
+    private Random rg;
+
     public void setK(int k) {
         this.k = k;
     }
@@ -54,7 +56,8 @@ public class RandomForestAttributeEvaluation implements IAttributeEvaluation {
         this.numPerturbations = p;
     }
 
-    public RandomForestAttributeEvaluation(int numTrees, Object positiveClass) {
+    public RandomForestAttributeEvaluation(int numTrees, Object positiveClass,Random rg) {
+        this.rg=rg;
         this.numTrees = numTrees;
         this.positiveClass = positiveClass;
         this.k = 5;
@@ -89,7 +92,7 @@ public class RandomForestAttributeEvaluation implements IAttributeEvaluation {
              */
             RandomTree tree = new RandomTree();
             tree.setKValue(k);
-            Dataset sample = DatasetTools.bootstrap(data, data.size(),new Random(37));
+            Dataset sample = DatasetTools.bootstrap(data, data.size(),rg);
             tree.buildClassifier(sample);
 
             Dataset outOfBag=new DefaultDataset();

@@ -292,9 +292,13 @@ final public class DatasetTools {
     // return out;
     //
     // }
+    
+//    public static Dataset slice()
     /**
      * Generate a bootstrap sample from the data set with a particular size,
      * using the given random generator.
+     * 
+     * This is done by sampling with replacement.
      */
     public static Dataset bootstrap(Dataset data, int size, Random rg) {
         Dataset out = new DefaultDataset();

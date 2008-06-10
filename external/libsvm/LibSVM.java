@@ -6,6 +6,7 @@
 package external.libsvm;
 
 import java.io.IOException;
+import java.util.Map;
 
 import net.sf.javaml.classification.Classifier;
 import net.sf.javaml.core.Dataset;
@@ -22,7 +23,7 @@ public class LibSVM implements Classifier {
 
     private svm_model model;
 
-    // private Dataset data;
+     private Dataset data;
 
     private svm_parameter param = new svm_parameter();
 
@@ -32,8 +33,8 @@ public class LibSVM implements Classifier {
     
     public void buildClassifier(Dataset data) {
         // System.out.println("Size: " + data.size());
-        // System.out.println("att: " + data.numAttributes());
-        // this.data = data;
+        // System.out.println("att: " + data.noAttributes());
+         this.data = data;
         // svm_parameter param = new svm_parameter();
         // default values
         param.svm_type = svm_parameter.C_SVC;
@@ -57,20 +58,22 @@ public class LibSVM implements Classifier {
         svm_problem p = new svm_problem();
         p.l = data.size();
         p.y = new double[data.size()];
-        p.x = new svm_node[data.size()][data.numAttributes()];
+        p.x = new svm_node[data.size()][data.noAttributes()];
         for (int i = 0; i < data.size(); i++) {
-            p.y[i] = data.instance(i).classValue();
-            for (int j = 0; j < data.numAttributes(); j++) {
+            System.out.println(data.instance(i).classValue());
+            p.y[i] = data.classIndex(data.instance(i).classValue());
+            System.out.println(p.y[i]);
+            for (int j = 0; j < data.noAttributes(); j++) {
                 p.x[i][j] = new svm_node();
                 p.x[i][j].index = j;
                 p.x[i][j].value = data.instance(i).value(j);
             }
 
         }
-        // p.x = new svm_node[data.numAttributes()][data.size()];
+        // p.x = new svm_node[data.noAttributes()][data.size()];
         // for (int i = 0; i < data.size(); i++) {
         // p.y[i] = data.instance(i).classValue();
-        // for (int j = 0; j < data.numAttributes(); j++) {
+        // for (int j = 0; j < data.noAttributes(); j++) {
         // p.x[j][i] = new svm_node();
         // p.x[j][i].index = j;
         // p.x[j][i].value = data.instance(i).value(j);
@@ -147,23 +150,34 @@ public class LibSVM implements Classifier {
         return weights;
     }
 
-    public int classifyInstance(Instance instance) {
+    public Object classifyInstance(Instance instance) {
         svm_node[] x = new svm_node[instance.size()];
+        //TODO implement sparseness
         for (int i = 0; i < instance.size(); i++) {
             x[i] = new svm_node();
             x[i].index = i;
             x[i].value = instance.value(i);
         }
-        return (int) svm.svm_predict(model, x);
+        double d=svm.svm_predict(model, x);
+        
+        System.out.print("pp "+instance.classValue()+"\t"+(int)d);
+        System.out.println("\t"+data.classValue((int)d));
+        return data.classValue((int)d);
     }
 
-    public double[] distributionForInstance(Instance instance) {
-        return null;
-    }
+//    public double[] distributionForInstance(Instance instance) {
+//        return null;
+//    }
 
     public void setC(double c) {
         param.C = c;
 
+    }
+
+    @Override
+    public Map<Object, Double> distributionForInstance(Instance instance) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

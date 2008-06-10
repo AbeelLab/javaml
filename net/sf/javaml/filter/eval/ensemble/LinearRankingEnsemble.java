@@ -5,6 +5,9 @@
  */
 package net.sf.javaml.filter.eval.ensemble;
 
+import java.util.Random;
+
+
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.DatasetTools;
 import net.sf.javaml.filter.eval.IAttributeRanking;
@@ -14,7 +17,8 @@ public class LinearRankingEnsemble implements IAttributeRanking {
 
     private IAttributeRanking[] aes;
 
-    public LinearRankingEnsemble(IAttributeRanking[] aes) {
+    private Random rg;
+    public LinearRankingEnsemble(IAttributeRanking[] aes,Random rg) {
         this.aes = aes;
     }
 
@@ -24,7 +28,7 @@ public class LinearRankingEnsemble implements IAttributeRanking {
         int numAtt = data.noAttributes();
         double[] sum = new double[numAtt];
         for (IAttributeRanking ae : aes) {
-            ae.build(DatasetTools.randomSample(data, (int) (data.size() * 0.9 + 1)));
+            ae.build(DatasetTools.bootstrap(data, (int) (data.size() * 0.9 + 1),rg));
             for (int i = 0; i < numAtt; i++)
                 sum[i] += ae.getRank(i);
         }
@@ -32,12 +36,7 @@ public class LinearRankingEnsemble implements IAttributeRanking {
 
     }
 
-    // @Test
-    // public void testRescale() {
-    // double[] tmp = { 1000, 2000, 1500, 4000, 500 };
-    // rescale(tmp);
-    // System.out.println(Arrays.toString(ranking));
-    // }
+   
 
     private void toRank(double[] sum) {
         // int[]r= ArrayUtils.sort(ranking);

@@ -21,16 +21,17 @@ public class DenseInstance extends AbstractInstance implements Instance {
     }
 
     public DenseInstance(double[] att, Object classValue) {
+        super(classValue);
         this.attributes = att.clone();
-        this.classValue = classValue;
+//        this.classValue = classValue;
     }
 
-    private Object classValue = null;
+//    private Object classValue = null;
 
-    @Override
-    public Object classValue() {
-        return classValue;
-    }
+//    @Override
+//    public Object classValue() {
+//        return classValue;
+//    }
 
     // @Override
     // public int noAttributes() {
@@ -137,7 +138,7 @@ public class DenseInstance extends AbstractInstance implements Instance {
 
     @Override
     public String toString() {
-        return "{" + Arrays.toString(attributes) + ";" + classValue + "}";
+        return "{" + Arrays.toString(attributes) + ";" + classValue() + "}";
     }
 
 }

@@ -5,6 +5,9 @@
  */
 package external.libsvm;
 
+import java.util.Map;
+import java.util.Random;
+
 import net.sf.javaml.classification.Classifier;
 import net.sf.javaml.classification.evaluation.CrossValidation;
 import net.sf.javaml.classification.evaluation.PerformanceMeasure;
@@ -23,22 +26,29 @@ public class SelfOptimizingLinearLibSVM implements Classifier {
 
     private double optimalC;
 
-    private int positiveClass = 1;
+    private Object positiveClass = 1;
 
     private int folds = 5;
-    
-    //commit test
+
+    private Random rg;
+
+    public SelfOptimizingLinearLibSVM(Object positiveClass, Random rg) {
+        this.positiveClass = positiveClass;
+        this.rg = rg;
+    }
+
+    // commit test
     public void buildClassifier(Dataset data) {
         double[] result = new double[24];
 
         int min = -12, max = 12;
         for (int i = min; i < max; i++) {
-//            System.out.println("I="+i);
+            // System.out.println("I="+i);
             LibSVM svm = new LibSVM();
             svm.setC(Math.pow(2, i));
             CrossValidation cv = new CrossValidation(svm);
-            PerformanceMeasure pm = cv.crossValidation(data, positiveClass, folds);
-            result[i - min] = pm.getFMeasure();
+            Map<Object, PerformanceMeasure> score = cv.crossValidation(data, folds, rg);
+            result[i - min] = score.get(positiveClass).getFMeasure();
 
         }
 
@@ -48,16 +58,18 @@ public class SelfOptimizingLinearLibSVM implements Classifier {
         optimal.setC(optimalC);
 
         optimal.buildClassifier(data);
-//        for (double d : result) {
-//            System.out.println(d);
-//        }
+        // for (double d : result) {
+        // System.out.println(d);
+        // }
     }
 
-    public int classifyInstance(Instance instance) {
+    @Override
+    public Object classifyInstance(Instance instance) {
         return optimal.classifyInstance(instance);
     }
 
-    public double[] distributionForInstance(Instance instance) {
+    @Override
+    public Map<Object, Double> distributionForInstance(Instance instance) {
         return optimal.distributionForInstance(instance);
     }
 
@@ -69,7 +81,7 @@ public class SelfOptimizingLinearLibSVM implements Classifier {
         return optimal.getWeights();
     }
 
-    public final void setPositiveClass(int positiveClass) {
+    public final void setPositiveClass(Object positiveClass) {
         this.positiveClass = positiveClass;
     }
 

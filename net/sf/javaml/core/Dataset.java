@@ -177,4 +177,15 @@ public interface Dataset extends List<Instance> {
     // public int numValues(int attIndex);
 
     // public boolean remove(int index);
+    /**
+     * Returns the index of the class value in the supplied data set. This
+     * method will return -1 if the class value of this instance is not set.
+     * 
+     * @param data
+     *            the data set to give the index for
+     * @return the index of the class value
+     */
+    public int classIndex(Object clazz);
+    
+    public Object classValue(int index);
 }

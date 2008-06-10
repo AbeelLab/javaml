@@ -53,7 +53,7 @@ public class DefaultDataset extends Vector<Instance> implements Dataset {
 
     private static final long serialVersionUID = 8586030444860912681L;
 
-    private SortedSet<Object> classes = new TreeSet<Object>();
+    private TreeSet<Object> classes = new TreeSet<Object>();
 
     @Override
     public void clear() {
@@ -101,7 +101,6 @@ public class DefaultDataset extends Vector<Instance> implements Dataset {
         return classes;
     }
 
-    
     /**
      * Returns the k instances of the given data set that are the closest to the
      * instance that is given as a parameter.
@@ -194,5 +193,26 @@ public class DefaultDataset extends Vector<Instance> implements Dataset {
     @Override
     public int noAttributes() {
         return maxAttributes;
+    }
+
+    @Override
+    public int classIndex(Object clazz) {
+
+        if (clazz != null)
+            return this.classes().headSet(clazz).size();
+        else
+            return -1;
+
+    }
+
+    @Override
+    public Object classValue(int index) {
+        int i = 0;
+        for (Object o : this.classes) {
+            if (i == index)
+                return o;
+            i++;
+        }
+        return null;
     }
 }

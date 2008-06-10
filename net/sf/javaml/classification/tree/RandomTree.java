@@ -7,10 +7,13 @@
  */
 package net.sf.javaml.classification.tree;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.Vector;
 
-import net.sf.javaml.classification.Classifier;
+import net.sf.javaml.classification.AbstractClassifier;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.filter.MissingClassFilter;
@@ -28,7 +31,7 @@ import net.sf.javaml.utils.MathUtils;
  * @author Eibe Frank
  * @author Richard Kirkby
  */
-public class RandomTree implements Classifier {
+public class RandomTree extends AbstractClassifier {
 
     private static final long serialVersionUID = 2531824309323125009L;
 
@@ -68,6 +71,8 @@ public class RandomTree implements Classifier {
         m_KValue = k;
     }
 
+    private Dataset sourceReference = null;
+
     /**
      * Builds classifier.
      * 
@@ -77,7 +82,7 @@ public class RandomTree implements Classifier {
      *             if something goes wrong or the data doesn't fit
      */
     public void buildClassifier(Dataset data) {
-
+        this.sourceReference = data;
         // Make sure K value is in range
         if (m_KValue > data.noAttributes() - 1)
             m_KValue = data.noAttributes() - 1;
@@ -107,11 +112,11 @@ public class RandomTree implements Classifier {
 
         // Compute initial class counts
         double[] classProbs = new double[train.classes().size()];
-//        List<Object>classes=new Vector<Object>();
-//        classes.addAll(train.classes());
+        // List<Object>classes=new Vector<Object>();
+        // classes.addAll(train.classes());
         for (int i = 0; i < train.size(); i++) {
             Instance inst = train.instance(i);
-            classProbs[train.classes().headSet(inst.classValue()).size()] += 1.0;
+            classProbs[train.classIndex(inst.classValue())] += 1.0;
         }
 
         // Create the attribute indices window
@@ -124,34 +129,6 @@ public class RandomTree implements Classifier {
         // Build tree
         buildTree(sortedIndices, weights, train, classProbs, m_MinNum, true, attIndicesWindow, new Random(), 0);
 
-    }
-
-    /**
-     * Computes class distribution of an instance using the decision tree.
-     * 
-     * @param instance
-     *            the instance to compute the distribution for
-     * @return the computed class distribution
-     * @throws Exception
-     *             if computation fails
-     */
-    public double[] distributionForInstance(Instance instance) {
-
-        double[] returnedDist = null;
-        if (m_Attribute > -1) {
-            // For numeric attributes
-            if (MathUtils.lt(instance.value(m_Attribute), m_SplitPoint)) {
-                returnedDist = m_Successors[0].distributionForInstance(instance);
-            } else {
-                returnedDist = m_Successors[1].distributionForInstance(instance);
-            }
-        }
-        if ((m_Attribute == -1) || (returnedDist == null)) {
-            // Node is a leaf or successor is empty
-            return m_ClassProbs;
-        } else {
-            return returnedDist;
-        }
     }
 
     /**
@@ -351,7 +328,7 @@ public class RandomTree implements Classifier {
             // if (inst.isMissing(att)) {
             // break;
             // }
-            currDist[1][(int) inst.classValue()] += weights[j];
+            currDist[1][data.classIndex(inst.classValue())] += weights[j];
         }
         double priorVal = priorVal(currDist);
         for (int j = 0; j < currDist.length; j++) {
@@ -374,8 +351,8 @@ public class RandomTree implements Classifier {
                 }
             }
             currSplit = inst.value(att);
-            currDist[0][(int) inst.classValue()] += weights[i];
-            currDist[1][(int) inst.classValue()] -= weights[i];
+            currDist[0][data.classIndex(inst.classValue())] += weights[i];
+            currDist[1][data.classIndex(inst.classValue())] -= weights[i];
         }
 
         // Compute weights
@@ -420,10 +397,44 @@ public class RandomTree implements Classifier {
 
         return priorVal - ContingencyTables.entropyConditionedOnRows(dist);
     }
+//
+//    public Object classifyInstance(Instance instance) {
+//
+//        return ArrayUtils.maxIndex(distributionForInstance(instance));
+//
+//    }
 
-    public int classifyInstance(Instance instance) {
-
-        return ArrayUtils.maxIndex(distributionForInstance(instance));
-
+    /**
+     * Computes class distribution of an instance using the decision tree.
+     * 
+     * @param instance
+     *            the instance to compute the distribution for
+     * @return the computed class distribution
+     * @throws Exception
+     *             if computation fails
+     */
+    @Override
+    public Map<Object, Double> distributionForInstance(Instance instance) {
+        Map<Object, Double> returnedDist = null;
+        if (m_Attribute > -1) {
+            // For numeric attributes
+            if (MathUtils.lt(instance.value(m_Attribute), m_SplitPoint)) {
+                returnedDist = m_Successors[0].distributionForInstance(instance);
+            } else {
+                returnedDist = m_Successors[1].distributionForInstance(instance);
+            }
+        }
+        if ((m_Attribute == -1) || (returnedDist == null)) {
+            // Node is a leaf or successor is empty
+            List<Object> classes = new Vector<Object>();
+            classes.addAll(sourceReference.classes());
+            HashMap<Object, Double> out = new HashMap<Object, Double>();
+            for (int i = 0; i < m_ClassProbs.length; i++)
+                out.put(classes.get(i), m_ClassProbs[i]);
+            // return m_ClassProbs;
+            return out;
+        } else {
+            return returnedDist;
+        }
     }
 }

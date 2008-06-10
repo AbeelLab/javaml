@@ -2,13 +2,15 @@ package net.sf.javaml.core;
 
 import java.util.Map;
 
-public interface Instance extends Map<Integer, Double>, Iterable<Double>{
+public interface Instance extends Map<Integer, Double>, Iterable<Double> {
     /**
      * Returns the class value for this instance.
      * 
      * @return class value of this instance, or null if the class is not set
      */
     public Object classValue();
+
+   
 
     public void setClassValue(Object value);
 
@@ -30,6 +32,7 @@ public interface Instance extends Map<Integer, Double>, Iterable<Double>{
      *            result of the subtraction
      */
     public Instance minus(Instance min);
+
     /**
      * Subtract an scalar from this instance and returns the results.
      * 
@@ -47,7 +50,7 @@ public interface Instance extends Map<Integer, Double>, Iterable<Double>{
     public Instance divide(Instance currentRange);
 
     public Instance plus(double value);
-    
+
     public int noAttributes();
 
     public Instance multiply(double value);
