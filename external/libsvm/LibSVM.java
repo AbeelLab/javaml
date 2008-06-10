@@ -60,9 +60,10 @@ public class LibSVM implements Classifier {
         p.y = new double[data.size()];
         p.x = new svm_node[data.size()][data.noAttributes()];
         for (int i = 0; i < data.size(); i++) {
-            System.out.println(data.instance(i).classValue());
+            //TODO implement sparseness
+//            System.out.println(data.instance(i).classValue());
             p.y[i] = data.classIndex(data.instance(i).classValue());
-            System.out.println(p.y[i]);
+//            System.out.println(p.y[i]);
             for (int j = 0; j < data.noAttributes(); j++) {
                 p.x[i][j] = new svm_node();
                 p.x[i][j].index = j;
@@ -160,8 +161,8 @@ public class LibSVM implements Classifier {
         }
         double d=svm.svm_predict(model, x);
         
-        System.out.print("pp "+instance.classValue()+"\t"+(int)d);
-        System.out.println("\t"+data.classValue((int)d));
+//        System.out.print("pp "+instance.classValue()+"\t"+(int)d);
+//        System.out.println("\t"+data.classValue((int)d));
         return data.classValue((int)d);
     }
 
