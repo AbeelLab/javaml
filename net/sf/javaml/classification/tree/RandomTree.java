@@ -59,6 +59,14 @@ public class RandomTree extends AbstractClassifier {
     /** The maximum depth of the tree (0 = unlimited) */
     private int m_MaxDepth = 0;
 
+    public RandomTree(){
+        
+    }
+    
+    private RandomTree(Dataset data) {
+        this.sourceReference=data;
+    }
+
     /**
      * Set the value of K. K is the number of attributes to consider for a
      * split.
@@ -90,33 +98,34 @@ public class RandomTree extends AbstractClassifier {
             m_KValue = (int) MathUtils.log2(data.noAttributes()) + 1;
 
         MissingClassFilter mc = new MissingClassFilter();
-        Dataset train = mc.filterDataset(data);
+        // Dataset train = mc.filterDataset(data);
+        mc.filterDataset(data);
 
         // Create array of sorted indices and weights
-        int[][] sortedIndices = new int[train.noAttributes()][0];
-        double[][] weights = new double[train.noAttributes()][0];
-        double[] vals = new double[train.size()];
-        for (int j = 0; j < train.noAttributes(); j++) {
+        int[][] sortedIndices = new int[data.noAttributes()][0];
+        double[][] weights = new double[data.noAttributes()][0];
+        double[] vals = new double[data.size()];
+        for (int j = 0; j < data.noAttributes(); j++) {
             // if (j != train.classIndex()) {
-            weights[j] = new double[train.size()];
+            weights[j] = new double[data.size()];
             // Sorted indices are computed for numeric attributes
-            for (int i = 0; i < train.size(); i++) {
-                Instance inst = train.instance(i);
+            for (int i = 0; i < data.size(); i++) {
+                Instance inst = data.instance(i);
                 vals[i] = inst.value(j);
             }
             sortedIndices[j] = ArrayUtils.sort(vals);
-            for (int i = 0; i < train.size(); i++) {
+            for (int i = 0; i < data.size(); i++) {
                 weights[j][i] = 1.0;// train.instance(sortedIndices[j][i]).weight();
             }
         }
 
         // Compute initial class counts
-        double[] classProbs = new double[train.classes().size()];
+        double[] classProbs = new double[data.classes().size()];
         // List<Object>classes=new Vector<Object>();
         // classes.addAll(train.classes());
-        for (int i = 0; i < train.size(); i++) {
-            Instance inst = train.instance(i);
-            classProbs[train.classIndex(inst.classValue())] += 1.0;
+        for (int i = 0; i < data.size(); i++) {
+            Instance inst = data.instance(i);
+            classProbs[data.classIndex(inst.classValue())] += 1.0;
         }
 
         // Create the attribute indices window
@@ -127,7 +136,7 @@ public class RandomTree extends AbstractClassifier {
         }
 
         // Build tree
-        buildTree(sortedIndices, weights, train, classProbs, m_MinNum, true, attIndicesWindow, new Random(), 0);
+        buildTree(sortedIndices, weights, data, classProbs, m_MinNum, true, attIndicesWindow, new Random(), 0);
 
     }
 
@@ -222,7 +231,7 @@ public class RandomTree extends AbstractClassifier {
                     data);
             m_Successors = new RandomTree[m_Distribution.length];
             for (int i = 0; i < m_Distribution.length; i++) {
-                m_Successors[i] = new RandomTree();
+                m_Successors[i] = new RandomTree(data);
                 m_Successors[i].setKValue(m_KValue);
                 m_Successors[i].m_MaxDepth = m_MaxDepth;// setMaxDepth(getMaxDepth());
                 m_Successors[i].buildTree(subsetIndices[i], subsetWeights[i], data, m_Distribution[i], m_MinNum, true,
@@ -397,12 +406,13 @@ public class RandomTree extends AbstractClassifier {
 
         return priorVal - ContingencyTables.entropyConditionedOnRows(dist);
     }
-//
-//    public Object classifyInstance(Instance instance) {
-//
-//        return ArrayUtils.maxIndex(distributionForInstance(instance));
-//
-//    }
+
+    //
+    // public Object classifyInstance(Instance instance) {
+    //
+    // return ArrayUtils.maxIndex(distributionForInstance(instance));
+    //
+    // }
 
     /**
      * Computes class distribution of an instance using the decision tree.

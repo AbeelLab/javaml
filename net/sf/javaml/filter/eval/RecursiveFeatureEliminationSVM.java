@@ -5,7 +5,7 @@
  */
 package net.sf.javaml.filter.eval;
 
-import java.util.Arrays;
+import java.util.Random;
 
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.filter.RemoveAttributes;
@@ -16,7 +16,7 @@ import external.libsvm.SelfOptimizingLinearLibSVM;
  * Implements the SVM_RFE algorithm.
  * 
  * Starting with the full feature set, attributes are ranked according to their
- * weight with a linear SVM. Subsequently, the 10 % worst features are
+ * weight with a linear SVM. Subsequently, the 20 % worst features are
  * eliminated, the SVM is retrained (C is again optimized), and the process is
  * repeated until only one feature is retained. The result is a feature ranking.
  * 
@@ -31,7 +31,7 @@ public class RecursiveFeatureEliminationSVM implements IAttributeRanking {
 
     private int[] ranking;
 
-    private int positiveClass;
+    private Object positiveClass;
 
     private int folds;
 
@@ -40,18 +40,21 @@ public class RecursiveFeatureEliminationSVM implements IAttributeRanking {
 
     private double removePercentage = 0.20;
 
-    public RecursiveFeatureEliminationSVM(int folds, int positiveClass, double removePercentage) {
+    private Random rg;
+
+    public RecursiveFeatureEliminationSVM(int folds, Object positiveClass, double removePercentage, Random rg) {
         this.folds = folds;
         this.positiveClass = positiveClass;
         this.removePercentage = removePercentage;
+        this.rg = rg;
 
     }
 
     public void build(Dataset data) {
         int[] ordering = new int[data.noAttributes()];
-        SelfOptimizingLinearLibSVM svm = new SelfOptimizingLinearLibSVM();
+        SelfOptimizingLinearLibSVM svm = new SelfOptimizingLinearLibSVM(positiveClass, rg);
         svm.setFolds(folds);
-        svm.setPositiveClass(positiveClass);
+        // svm.setPositiveClass(positiveClass);
         // bitmap of removed attributes
         boolean[] removedAttributes = new boolean[data.noAttributes()];
         // number of remove attributes, is equal to the number of trues in the

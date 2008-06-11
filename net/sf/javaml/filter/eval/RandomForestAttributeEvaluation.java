@@ -7,6 +7,8 @@ package net.sf.javaml.filter.eval;
 
 import java.util.Random;
 
+import be.abeel.util.Copier;
+
 import net.sf.javaml.classification.evaluation.PerformanceMeasure;
 import net.sf.javaml.classification.tree.RandomTree;
 import net.sf.javaml.core.Dataset;
@@ -70,7 +72,7 @@ public class RandomForestAttributeEvaluation implements IAttributeEvaluation {
     private int numPerturbations;
 
     public void build(Dataset data) {
-
+        Copier<Instance>instCopier=new Copier<Instance>();
         int tp = 0, fp = 0, fn = 0, tn = 0;
         int[][] tpR = new int[data.noAttributes()][numPerturbations];
         int[][] fpR = new int[data.noAttributes()][numPerturbations];
@@ -127,7 +129,9 @@ public class RandomForestAttributeEvaluation implements IAttributeEvaluation {
 
                     Dataset perturbed = new DefaultDataset();
                     for (Instance inst : outOfBag) {
-                        perturbed.add(InstanceTools.perturb(inst, k));
+                        Instance per=instCopier.copy(inst);
+                        per.put(k,Math.random());
+                        perturbed.add(per);
 
                     }
                     for (Instance inst : perturbed) {

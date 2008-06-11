@@ -48,7 +48,18 @@ public class SelfOptimizingLinearLibSVM implements Classifier {
             svm.setC(Math.pow(2, i));
             CrossValidation cv = new CrossValidation(svm);
             Map<Object, PerformanceMeasure> score = cv.crossValidation(data, folds, rg);
-            result[i - min] = score.get(positiveClass).getFMeasure();
+            try {
+                result[i - min] = score.get(positiveClass).getFMeasure();
+            } catch (RuntimeException e) {
+                // TODO Auto-generated catch block
+                System.out.println(positiveClass.getClass());
+                System.err.println(score.keySet().iterator().next().getClass());
+                System.err.println(positiveClass);
+                System.err.println(score);
+                System.err.println(score.get(positiveClass));
+                e.printStackTrace();
+                System.exit(-1);
+            }
 
         }
 

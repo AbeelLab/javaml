@@ -5,9 +5,10 @@
  */
 package net.sf.javaml.filter;
 
+import java.util.Vector;
+
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.core.SimpleDataset;
 
 /**
  * Filters all instances from a data set that have their class value not set
@@ -27,12 +28,12 @@ public class MissingClassFilter implements DatasetFilter {
 
     }
 
-    public Dataset filterDataset(Dataset data) {
-        Dataset out = new SimpleDataset();
+    public void filterDataset(Dataset data) {
+        Vector<Instance> toRemove = new Vector<Instance>();
         for (Instance i : data)
-            if (i.isClassSet())
-                out.add(i);
-        return out;
+            if (i.classValue() == null)
+                toRemove.add(i);
+        data.removeAll(toRemove);
     }
 
 }
