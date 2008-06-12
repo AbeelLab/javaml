@@ -23,20 +23,9 @@ public class DenseInstance extends AbstractInstance implements Instance {
     public DenseInstance(double[] att, Object classValue) {
         super(classValue);
         this.attributes = att.clone();
-//        this.classValue = classValue;
     }
 
-//    private Object classValue = null;
 
-//    @Override
-//    public Object classValue() {
-//        return classValue;
-//    }
-
-    // @Override
-    // public int noAttributes() {
-    // return attributes.length;
-    // }
 
     @Override
     public double value(int pos) {
@@ -115,7 +104,7 @@ public class DenseInstance extends AbstractInstance implements Instance {
 
     @Override
     public Double remove(Object key) {
-        throw new UnsupportedOperationException("Cannot remove attributes from a dense instance.");
+        throw new UnsupportedOperationException("Cannot unset values from a dense instance.");
     }
 
     @Override
@@ -139,6 +128,15 @@ public class DenseInstance extends AbstractInstance implements Instance {
     @Override
     public String toString() {
         return "{" + Arrays.toString(attributes) + ";" + classValue() + "}";
+    }
+
+    @Override
+    public void removeAttribute(int i) {
+        double[]tmp=attributes.clone();
+        attributes=new double[tmp.length-1];
+        System.arraycopy(tmp, 0, attributes, 0, i);
+        System.arraycopy(tmp, i+1, attributes, i,tmp.length-i-1);
+        
     }
 
 }

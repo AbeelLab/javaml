@@ -6,28 +6,17 @@
  */
 package net.sf.javaml.filter;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Vector;
+
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.core.SimpleInstance;
-import nz.ac.waikato.cs.weka.Utils;
 
-// TODO rewrite using BitSet instead of boolean[]
 public class RemoveAttributes extends AbstractFilter {
-    /**
-     * The indices to remove.
-     */
-    private boolean[] binIndices;
 
-    /**
-     * Number of unique indices to remove
-     */
-    private int count;
-
-    public int[] getRemovedAttributes() {
-        return toRemove;
-    }
-
-    private int[] toRemove;
+ 
+    private List<Integer> indices;
 
     /**
      * Construct a remove filter that removes all the attributes with the
@@ -36,43 +25,24 @@ public class RemoveAttributes extends AbstractFilter {
      * @param indices
      *            the indices of the columns that will be removed.
      */
-    public RemoveAttributes(int[] indices) {
-        if (indices.length > 0) {
-            toRemove = indices.clone();
+    public RemoveAttributes(java.util.Set<Integer> indices) {
+        this.indices = new Vector<Integer>();
+        this.indices.addAll(indices);
+        Collections.sort(this.indices);
+       
+    }
 
-            int max = indices[Utils.maxIndex(indices)];
-            binIndices = new boolean[max + 1];
-            count = 0;
-            for (int i = 0; i < indices.length; i++) {
-                if (!binIndices[indices[i]])
-                    count++;
-                binIndices[indices[i]] = true;
-            }
-        } else {
-            binIndices = new boolean[0];
+    @Override
+    public void filterDataset(Dataset data) {
+        for (Instance i : data)
+            filterInstance(i);
+    }
+
+    @Override
+    public void filterInstance(Instance instance) {
+        for (int i = indices.size() - 1; i >= 0; i--) {
+            instance.removeAttribute(i);
         }
-    }
-
-    public Dataset filterDataset(Dataset data) {
-        return FilterUtils.applyFilter(this, data);
-    }
-
-    public Instance filterInstance(Instance instance) {
-        double[] newVals = new double[instance.size() - count];
-        int index = 0;
-        for (int i = 0; i < instance.size(); i++) {
-            if (i >= binIndices.length || !binIndices[i]) {
-                newVals[index] = instance.value(i);
-                index++;
-            }
-        }
-        return new SimpleInstance(newVals, instance);
-    }
-
-   
-
-    public void build(Dataset data) {
-        // do nothing, this is not required for this filter.
 
     }
 

@@ -76,6 +76,12 @@ public interface Dataset extends List<Instance> {
      */
     public Dataset[] folds(int numFolds, Random rg);
 
+    /**
+     * The number of attributes in each instance. This value can be off when
+     * instances have different number of attributes.
+     * 
+     * @return
+     */
     public int noAttributes();
 
     // /**
@@ -186,6 +192,6 @@ public interface Dataset extends List<Instance> {
      * @return the index of the class value
      */
     public int classIndex(Object clazz);
-    
+
     public Object classValue(int index);
 }

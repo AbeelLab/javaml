@@ -14,6 +14,8 @@ import java.util.zip.ZipInputStream;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.DefaultDataset;
 import net.sf.javaml.core.DenseInstance;
+import net.sf.javaml.core.SparseInstance;
+import be.abeel.util.ColumnIterator;
 import be.abeel.util.LineIterator;
 
 /**
@@ -38,8 +40,6 @@ import be.abeel.util.LineIterator;
  * 
  */
 public class FileHandler {
-    public FileHandler() {
-    }
 
     /**
      * Utility method to load from a file without class set.
@@ -76,6 +76,41 @@ public class FileHandler {
     public static Dataset loadDataset(File f) throws IOException {
         return loadDataset(f, -1);
 
+    }
+
+    private static Dataset loadSparse(java.io.InputStream in, int classIndex, String attSep, String indexSep) {
+
+        ColumnIterator it = new ColumnIterator(in);
+        it.setDelimiter(attSep);
+        it.setSkipBlanks(true);
+        it.setSkipComments(true);
+        Dataset out = new DefaultDataset();
+        for (String[] arr : it) {
+            SparseInstance inst = new SparseInstance();
+            // double[] values;
+            // if (classIndex == -1)
+            // values = new double[arr.length];
+            // else
+            // values = new double[arr.length - 1];
+        
+            for (int i = 0; i < arr.length; i++) {
+                if (i == classIndex) {
+                    inst.setClassValue(arr[i]);
+                } else {
+                    String[]tmp=arr[i].split(indexSep);
+                    double val;
+                    try {
+                        val = Double.parseDouble(tmp[1]);
+                    } catch (NumberFormatException e) {
+                        val = Double.NaN;
+                    }
+                    inst.put(Integer.parseInt(tmp[0]), val);
+                }
+            }
+            out.add(inst);
+
+        }
+        return out;
     }
 
     private static Dataset load(java.io.InputStream in, int classIndex, String separator) {
@@ -145,5 +180,13 @@ public class FileHandler {
 
     }
 
-    
+    public static Dataset loadSparseDataset(File f, int classIndex, String attributeSeparator, String indexSep)
+            throws IOException {
+        if (f.getName().endsWith("gz"))
+            return loadSparse(new GZIPInputStream(new FileInputStream(f)), classIndex, attributeSeparator, indexSep);
+        if (f.getName().endsWith("zip"))
+            return loadSparse(new ZipInputStream(new FileInputStream(f)), classIndex, attributeSeparator, indexSep);
+        return loadSparse(new FileInputStream(f), classIndex, attributeSeparator, indexSep);
+    }
+
 }

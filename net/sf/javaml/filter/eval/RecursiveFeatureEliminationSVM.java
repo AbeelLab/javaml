@@ -5,7 +5,9 @@
  */
 package net.sf.javaml.filter.eval;
 
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.filter.RemoveAttributes;
@@ -74,14 +76,15 @@ public class RecursiveFeatureEliminationSVM implements IAttributeRanking {
             if (numRemove > order.length)
                 numRemove = order.length;
             // System.out.println("remove=" + numRemove);
-            int[] toRemove = new int[numRemove];
+            Set<Integer>toRemove  =new HashSet<Integer>();// new
+                                                            // int[numRemove];
             int[] trueIndices = new int[numRemove];
 
             for (int i = 0; i < numRemove; i++) {
 
                 // System.out.println("Remove=" + order[i] + "/" +
                 // data.noAttributes());
-                toRemove[i] = order[i];
+                toRemove.add( order[i]);
                 // int trueIndex =
                 trueIndices[i] = getTrueIndex(order[i], removedAttributes);
                 // System.out.println("true remove=" + trueIndex);
@@ -101,7 +104,7 @@ public class RecursiveFeatureEliminationSVM implements IAttributeRanking {
             // System.out.println(Arrays.toString(removedAttributes));
             // actually remove the attributes
             RemoveAttributes filter = new RemoveAttributes(toRemove);
-            data = filter.filterDataset(data);
+           filter.filterDataset(data);
 
         }
         int index = 0;
@@ -119,23 +122,7 @@ public class RecursiveFeatureEliminationSVM implements IAttributeRanking {
 
     }
 
-    // public RecursiveFeatureEliminationSVM() {
-    // }
-    //
-    // @Test
-    // public void testTrueIndex() {
-    // boolean[] test = { true, true, false, false, true, false, true, true,
-    // false, false, false, true, false };
-    // // System.out.println("Should be 9");
-    // System.out.println(getTrueIndex(0, test));
-    // System.out.println(getTrueIndex(1, test));
-    // System.out.println(getTrueIndex(2, test));
-    // System.out.println(getTrueIndex(3, test));
-    // System.out.println(getTrueIndex(4, test));
-    // System.out.println(getTrueIndex(5, test));
-    // System.out.println(getTrueIndex(6, test));
-    //
-    // }
+    
 
     private int getTrueIndex(int i, boolean[] removedAttributes) {
         // System.out.println("RA.length = " + removedAttributes.length);

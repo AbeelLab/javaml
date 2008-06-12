@@ -26,7 +26,7 @@ public class SelfOptimizingLinearLibSVM implements Classifier {
 
     private double optimalC;
 
-    private Object positiveClass = 1;
+    private Object positiveClass = "1";
 
     private int folds = 5;
 

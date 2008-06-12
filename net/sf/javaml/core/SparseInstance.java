@@ -3,8 +3,10 @@ package net.sf.javaml.core;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Vector;
 
 public class SparseInstance extends AbstractInstance implements Instance {
 
@@ -111,5 +113,26 @@ public class SparseInstance extends AbstractInstance implements Instance {
         else
             return noAttributes;
 
+    }
+
+    @Override
+    public void removeAttribute(int remove) {
+        data.remove(remove);
+        List<Integer> indices = new Vector<Integer>();
+        indices.addAll(data.keySet());
+        Collections.sort(indices);
+        for (int i = 0; i < indices.size(); i++) {
+            int index = indices.get(i);
+
+            if (index > remove) {
+                data.put(index - 1, data.get(index));
+                data.remove(index);
+            }
+        }
+
+    }
+    @Override
+    public String toString(){
+        return "{"+data.toString()+";"+classValue()+"}";
     }
 }

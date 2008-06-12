@@ -1,8 +1,9 @@
 package net.sf.javaml.core;
 
+import java.io.Serializable;
 import java.util.Map;
 
-public interface Instance extends Map<Integer, Double>, Iterable<Double> {
+public interface Instance extends Map<Integer, Double>, Iterable<Double>, Serializable {
     /**
      * Returns the class value for this instance.
      * 
@@ -54,4 +55,12 @@ public interface Instance extends Map<Integer, Double>, Iterable<Double> {
     public int noAttributes();
 
     public Instance multiply(double value);
+
+
+
+    /**
+     * Removes attribute from the instance
+     * @param i
+     */
+    public void removeAttribute(int i);
 }
