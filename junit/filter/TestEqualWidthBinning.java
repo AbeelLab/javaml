@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 
 import net.sf.javaml.core.Dataset;
+import net.sf.javaml.core.DatasetTools;
 import net.sf.javaml.filter.discretize.EqualWidthBinning;
 import net.sf.javaml.tools.data.FileHandler;
 
@@ -50,6 +51,8 @@ public class TestEqualWidthBinning {
             System.out.println("--");
             System.out.println("After binning: ");
             System.out.println(data);
+            System.out.println(DatasetTools.minAttributes(data));
+            System.out.println(DatasetTools.maxAttributes(data));
 //            System.out.println(ga.evaluateAttribute(0));
 //            System.out.println(ga.evaluateAttribute(1));
 //            System.out.println(ga.evaluateAttribute(2));

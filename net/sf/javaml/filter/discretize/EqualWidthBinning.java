@@ -43,9 +43,11 @@ public class EqualWidthBinning extends AbstractFilter {
      */
     private int numBins = 10;
 
-    private Instance currentMiddle;
+//    private Instance currentMiddle;
 
-    private Instance currentRange;
+    private Instance range;
+
+    private Instance min;
 
     public EqualWidthBinning() {
         this(10);
@@ -56,10 +58,10 @@ public class EqualWidthBinning extends AbstractFilter {
     }
 
     public void build(Dataset data) {
-        Instance min = DatasetTools.minAttributes(data);
+        min = DatasetTools.minAttributes(data);
         Instance max = DatasetTools.maxAttributes(data);
-        currentRange = max.minus(min);
-        currentMiddle = min.plus(max).divide(2);
+//        currentMiddle = min;
+        range = max.minus(min);
 
     }
 
@@ -67,10 +69,12 @@ public class EqualWidthBinning extends AbstractFilter {
 
     @Override
     public void filterInstance(Instance instance) {
-        if (currentRange == null || currentMiddle == null)
+        if (range == null )
             throw new TrainingRequiredException();
-       
-        Instance tmp = instance.minus(currentMiddle).divide(currentRange).multiply(numBins-1).plus((numBins-1) / 2);
+
+        Instance tmp = instance.minus(min).divide(range).multiply(numBins - 1);// .plus((numBins-1)
+                                                                                                // /
+                                                                                                // 2);
         instance.clear();
         instance.putAll(tmp);
         rvf.filterInstance(instance);
@@ -78,7 +82,7 @@ public class EqualWidthBinning extends AbstractFilter {
     }
 
     public void filterDataset(Dataset data) {
-        if (currentRange == null || currentMiddle == null)
+        if (range == null)
             build(data);
         for (Instance i : data)
             filterInstance(i);

@@ -44,8 +44,6 @@ public abstract class AbstractInstance implements Instance {
 
     private Object classValue;
 
-   
-
     protected AbstractInstance() {
         this(null);
     }
@@ -67,7 +65,7 @@ public abstract class AbstractInstance implements Instance {
     @Override
     public Instance minus(Instance min) {
         Instance out = new SparseInstance();
-        for (Integer i : Sets.intersection(this.keySet(), min.keySet())) {
+        for (int i = 0; i < this.noAttributes(); i++) {
             out.put(i, this.get(i) - min.get(i));
         }
         return out;
@@ -77,7 +75,7 @@ public abstract class AbstractInstance implements Instance {
     @Override
     public Instance minus(double min) {
         Instance out = new SparseInstance();
-        for (Integer i : this.keySet()) {
+        for (int i = 0; i < this.noAttributes(); i++) {
             out.put(i, this.get(i) - min);
         }
         return out;
@@ -87,7 +85,7 @@ public abstract class AbstractInstance implements Instance {
     @Override
     public Instance divide(double min) {
         Instance out = new SparseInstance();
-        for (Integer i : this.keySet()) {
+        for (int i = 0; i < this.noAttributes(); i++) {
             out.put(i, this.get(i) / min);
         }
         return out;
@@ -96,7 +94,7 @@ public abstract class AbstractInstance implements Instance {
     @Override
     public Instance multiply(double value) {
         Instance out = new SparseInstance();
-        for (Integer i : this.keySet()) {
+        for (int i = 0; i < this.noAttributes(); i++) {
             out.put(i, this.get(i) * value);
         }
         return out;
@@ -105,7 +103,7 @@ public abstract class AbstractInstance implements Instance {
     @Override
     public Instance divide(Instance min) {
         Instance out = new SparseInstance();
-        for (Integer i : Sets.intersection(this.keySet(), min.keySet())) {
+        for (int i = 0; i < this.noAttributes(); i++) {
             out.put(i, this.get(i) / min.get(i));
         }
         return out;
@@ -114,7 +112,7 @@ public abstract class AbstractInstance implements Instance {
     @Override
     public Instance plus(double min) {
         Instance out = new SparseInstance();
-        for (Integer i : this.keySet()) {
+        for (int i = 0; i < this.noAttributes(); i++) {
             out.put(i, this.get(i) + min);
         }
         return out;
@@ -123,7 +121,7 @@ public abstract class AbstractInstance implements Instance {
     @Override
     public Instance plus(Instance min) {
         Instance out = new SparseInstance();
-        for (Integer i : Sets.intersection(this.keySet(), min.keySet())) {
+        for (int i = 0; i < this.noAttributes(); i++) {
             out.put(i, this.get(i) + min.get(i));
         }
         return out;

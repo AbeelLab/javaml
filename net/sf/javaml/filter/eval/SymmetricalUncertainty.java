@@ -35,8 +35,10 @@ public class SymmetricalUncertainty implements IAttributeEvaluation {
 
     public void build(Dataset data) {
         AbstractFilter discretize = new EqualWidthBinning(bins);
+        discretize.build(data);
         discretize.filterDataset(data);
         this.training = data;
+        
 
     }
 
@@ -55,9 +57,15 @@ public class SymmetricalUncertainty implements IAttributeEvaluation {
         double[][] counts = new double[bins][training.classes().size()];
         List<Object> classes = new Vector<Object>();
         classes.addAll(training.classes());
+//        System.out.println(training);
         for (Instance inst : training) {
 //            ii = (int) inst.value(attribute);
 //            jj = (int) inst.classValue();
+            if((int) inst.value(attribute)>=bins){
+                System.err.println("Exceeding bins: "+bins);
+            }
+            if(classes.indexOf(inst.classValue())>=training.classes().size())
+                System.err.println("Exceeding classes: "+training.classes().size());
             counts[(int) inst.value(attribute)][classes.indexOf(inst.classValue())]++;
         }
         return ContingencyTables.symmetricalUncertainty(counts);
