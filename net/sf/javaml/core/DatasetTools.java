@@ -7,6 +7,8 @@ package net.sf.javaml.core;
 
 import java.util.Random;
 
+import be.abeel.util.Copier;
+
 /**
  * This class provides utility methods on data sets.
  * 
@@ -302,8 +304,9 @@ final public class DatasetTools {
      */
     public static Dataset bootstrap(Dataset data, int size, Random rg) {
         Dataset out = new DefaultDataset();
+        Copier<Instance>ic=new Copier<Instance>();
         while (out.size() < size) {
-            out.add(data.instance(rg.nextInt(data.size())));
+            out.add(ic.copy(data.instance(rg.nextInt(data.size()))));
         }
         return out;
     }
@@ -347,23 +350,6 @@ final public class DatasetTools {
         return min;
     }
 
-    // /**
-    // * Create a random slice from the data set. This is basically sampling
-    // * without replacement.
-    // *
-    // * @param data
-    // * the data set to sample
-    // * @param size
-    // * the percentage of instances in the output data set
-    // * @return a random sample from the input data
-    // */
-    // public static Dataset randomSlice(Dataset data, double d, Random rg) {
-    // Dataset out = data.copy();
-    // while (out.size() > d * data.size()) {
-    // out.remove(rg.nextInt(out.size()));
-    // }
-    // return out;
-    //
-    // }
+  
 
 }

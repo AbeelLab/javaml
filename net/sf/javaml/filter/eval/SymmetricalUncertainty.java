@@ -11,7 +11,10 @@ package net.sf.javaml.filter.eval;
 import java.util.List;
 import java.util.Vector;
 
+import org.junit.Assert;
+
 import net.sf.javaml.core.Dataset;
+import net.sf.javaml.core.DatasetTools;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.filter.AbstractFilter;
 import net.sf.javaml.filter.discretize.EqualWidthBinning;
@@ -37,6 +40,14 @@ public class SymmetricalUncertainty implements IAttributeEvaluation {
         AbstractFilter discretize = new EqualWidthBinning(bins);
         discretize.build(data);
         discretize.filterDataset(data);
+        Instance min=DatasetTools.minAttributes(data);
+        Instance max=DatasetTools.maxAttributes(data);
+        for(int i=0;i<data.noAttributes();i++){
+			if(min.value(i)!=0 || max.value(i)!=9){
+				System.err.println(i +" "+ min.value(i)+"\t"+max.value(i));
+			}
+			
+		}
         this.training = data;
         
 

@@ -29,8 +29,9 @@ public class RankingFromEvaluation implements IAttributeRanking {
     }
 
     public void build(Dataset data) {
+    	int noAttributes=data.noAttributes();
         ae.build(data);
-        double[] values = new double[data.noAttributes()];
+        double[] values = new double[noAttributes];
         for (int i = 0; i < values.length; i++)
             values[i] = ae.evaluateAttribute(i);
 

@@ -62,7 +62,7 @@ public class EqualWidthBinning extends AbstractFilter {
         Instance max = DatasetTools.maxAttributes(data);
 //        currentMiddle = min;
         range = max.minus(min);
-        System.out.println("range: "+range);
+//        System.out.println("range: "+range);
     }
 
     private FloorValueFilter rvf = new FloorValueFilter();
