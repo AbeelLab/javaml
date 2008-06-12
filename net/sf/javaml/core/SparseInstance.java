@@ -108,8 +108,8 @@ public class SparseInstance extends AbstractInstance implements Instance {
 
     @Override
     public int noAttributes() {
-        if (noAttributes == -1)
-            return Collections.max(data.keySet());
+        if (noAttributes < 0)
+            return Collections.max(data.keySet())+1;
         else
             return noAttributes;
 
@@ -129,6 +129,7 @@ public class SparseInstance extends AbstractInstance implements Instance {
                 data.remove(index);
             }
         }
+        noAttributes--;
 
     }
     @Override
