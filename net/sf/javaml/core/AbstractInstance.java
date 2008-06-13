@@ -1,18 +1,23 @@
-/*
- * AbstractInstance.java 
- * -----------------------
- * Copyright (C) 2008  Thomas Abeel
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- * 
- * Author: Thomas Abeel
+/**
+ * AbstractInstance.java
+ *
+ * %SVN.HEADER%
  */
 package net.sf.javaml.core;
 
 import java.util.Iterator;
-
+/**
+ * Implementation of some standard methods for instances.
+ * 
+ * {@jmlSource}
+ * 
+ * @see Instance
+ * 
+ * @version %SVN.REVISION%
+ * 
+ * @author Thomas Abeel
+ *
+ */
 public abstract class AbstractInstance implements Instance {
     class InstanceValueIterator implements Iterator<Double> {
 

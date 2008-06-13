@@ -1,3 +1,8 @@
+/**
+ * SparseInstance.java
+ *
+ * %SVN.HEADER%
+ */
 package net.sf.javaml.core;
 
 import java.util.Collection;
@@ -8,6 +13,19 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
+/**
+ * Implementation of a sparse instance. Attributes for which the value is not set return a default value.
+ * 
+ * {@jmlSource}
+ * 
+ * @see Dataset
+ * @see Instance
+ * 
+ * @version %SVN.REVISION%
+ * 
+ * @author Thomas Abeel
+ *
+ */
 public class SparseInstance extends AbstractInstance implements Instance {
 
     private HashMap<Integer, Double> data = new HashMap<Integer, Double>();
@@ -135,5 +153,35 @@ public class SparseInstance extends AbstractInstance implements Instance {
     @Override
     public String toString(){
         return "{"+data.toString()+";"+classValue()+"}";
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((data == null) ? 0 : data.hashCode());
+        long temp;
+        temp = Double.doubleToLongBits(defaultValue);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        final SparseInstance other = (SparseInstance) obj;
+        if (data == null) {
+            if (other.data != null)
+                return false;
+        } else if (!data.equals(other.data))
+            return false;
+        if (Double.doubleToLongBits(defaultValue) != Double.doubleToLongBits(other.defaultValue))
+            return false;
+        return true;
     }
 }

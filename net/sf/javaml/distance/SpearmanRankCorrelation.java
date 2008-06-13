@@ -5,22 +5,29 @@
  */
 package net.sf.javaml.distance;
 
-import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 
 /**
- * TODO WRITE DOC
+ * Calculates the Spearman rank correlation of two instances. The value on
+ * position 0 of the instance should be the rank of attribute 0. And so on and so forth.
+ * 
+ * 
+ * {@jmlSource}
+ * 
+ * 
+ * @version %SVN.REVISION%
+ * 
+ * @linkplain http://en.wikipedia.org/wiki/Spearman's_rank_correlation_coefficient
+ * 
  * @author Thomas Abeel
- *
+ * 
  */
 public class SpearmanRankCorrelation extends AbstractCorrelation {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = -6347213714272482397L;
 
-    public double calculateDistance(Instance a, Instance b) {
+    @Override
+    public double measure(Instance a, Instance b) {
         if (a.size() != b.size())
             throw new IllegalArgumentException("Instances should be compatible.");
         long k = a.size();
@@ -31,14 +38,6 @@ public class SpearmanRankCorrelation extends AbstractCorrelation {
             sum += (diff * diff);
         }
         return 1.0 - (6.0 * (sum / ((double) denom)));
-    }
-
-    public double getMaximumDistance(Dataset data) {
-        return 1;
-    }
-
-    public double getMinimumDistance(Dataset data) {
-        return 0;
     }
 
 }

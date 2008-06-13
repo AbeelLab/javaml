@@ -14,6 +14,7 @@ import java.util.SortedSet;
 import net.sf.javaml.distance.DistanceMeasure;
 
 /**
+ * Interface for a data set.
  * 
  * {@jmlSource}
  * 

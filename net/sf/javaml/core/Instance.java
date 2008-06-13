@@ -1,8 +1,24 @@
+/**
+ * Instance.java
+ *
+ * %SVN.HEADER%
+ */
 package net.sf.javaml.core;
 
 import java.io.Serializable;
 import java.util.Map;
-
+/**
+ * The interface for instances in a data set.
+ * 
+ * {@jmlSource}
+ * 
+ * @see Dataset
+ * 
+ * @version %SVN.REVISION%
+ * 
+ * @author Thomas Abeel
+ * 
+ */
 public interface Instance extends Map<Integer, Double>, Iterable<Double>, Serializable {
     /**
      * Returns the class value for this instance.

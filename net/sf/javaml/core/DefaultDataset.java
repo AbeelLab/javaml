@@ -1,13 +1,7 @@
-/*
- * DefaultDataset.java 
- * -----------------------
- * Copyright (C) 2008  Thomas Abeel
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- * 
- * Author: Thomas Abeel
+/**
+ * DefaultDataset.java
+ *
+ * %SVN.HEADER%
  */
 package net.sf.javaml.core;
 
@@ -21,7 +15,18 @@ import java.util.TreeSet;
 import java.util.Vector;
 
 import net.sf.javaml.distance.DistanceMeasure;
-
+/**
+ * Provides a standard data set implementation.
+ * 
+ * {@jmlSource}
+ * 
+ * @see Dataset
+ * 
+ * @version %SVN.REVISION%
+ * 
+ * @author Thomas Abeel
+ * 
+ */
 public class DefaultDataset extends Vector<Instance> implements Dataset {
 
     private int maxAttributes = 0;

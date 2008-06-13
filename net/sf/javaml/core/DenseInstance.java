@@ -1,3 +1,8 @@
+/**
+ * DenseInstance.java
+ *
+ * %SVN.HEADER%
+ */
 package net.sf.javaml.core;
 
 import java.util.ArrayList;
@@ -7,14 +12,24 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
+/**
+ * Implementation of a dense instance. 
+ * 
+ * {@jmlSource}
+ * 
+ * @see Dataset
+ * @see Instance
+ * 
+ * @version %SVN.REVISION%
+ * 
+ * @author Thomas Abeel
+ *
+ */
 public class DenseInstance extends AbstractInstance implements Instance {
 
-    private double[] attributes;
+    private static final long serialVersionUID = 3284511291715269081L;
 
-    // public DenseInstance(int noAttributes) {
-    // this.attributes = new double[noAttributes];
-    // }
+    private double[] attributes;
 
     public DenseInstance(double[] att) {
         this(att, null);
@@ -24,8 +39,6 @@ public class DenseInstance extends AbstractInstance implements Instance {
         super(classValue);
         this.attributes = att.clone();
     }
-
-
 
     @Override
     public double value(int pos) {
@@ -132,11 +145,33 @@ public class DenseInstance extends AbstractInstance implements Instance {
 
     @Override
     public void removeAttribute(int i) {
-        double[]tmp=attributes.clone();
-        attributes=new double[tmp.length-1];
+        double[] tmp = attributes.clone();
+        attributes = new double[tmp.length - 1];
         System.arraycopy(tmp, 0, attributes, 0, i);
-        System.arraycopy(tmp, i+1, attributes, i,tmp.length-i-1);
-        
+        System.arraycopy(tmp, i + 1, attributes, i, tmp.length - i - 1);
+
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + Arrays.hashCode(attributes);
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        final DenseInstance other = (DenseInstance) obj;
+        if (!Arrays.equals(attributes, other.attributes))
+            return false;
+        return true;
     }
 
 }
