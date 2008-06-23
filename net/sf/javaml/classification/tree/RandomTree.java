@@ -1,6 +1,4 @@
 /**
- * RandomTree.java
- *
  * %SVN.HEADER%
  * 
  * Based on work by Eibe Frank and Richard Kirkby.
@@ -59,12 +57,12 @@ public class RandomTree extends AbstractClassifier {
     /** The maximum depth of the tree (0 = unlimited) */
     private int m_MaxDepth = 0;
 
-    public RandomTree(){
-        
+    public RandomTree() {
+
     }
-    
+
     private RandomTree(Dataset data) {
-        this.sourceReference=data;
+        this.sourceReference = data;
     }
 
     /**

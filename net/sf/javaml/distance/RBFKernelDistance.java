@@ -24,28 +24,18 @@
  */
 package net.sf.javaml.distance;
 
-import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 
 public class RBFKernelDistance extends AbstractDistance {
 
-    
     /**
      * 
      */
     private static final long serialVersionUID = -7024287104968480288L;
 
-    public double calculateDistance(Instance x, Instance y) {
-        
-        return 1-new RBFKernel().calculateDistance(x, y);
-    }
+    public double measure(Instance x, Instance y) {
 
-    public double getMaximumDistance(Dataset data) {
-        throw new UnsupportedOperationException("Method not implemented");
-    }
-
-    public double getMinimumDistance(Dataset data) {
-        throw new UnsupportedOperationException("Method not implemented");
+        return 1 - new RBFKernel().measure(x, y);
     }
 
 }

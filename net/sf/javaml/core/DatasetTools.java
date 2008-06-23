@@ -350,6 +350,26 @@ final public class DatasetTools {
         return min;
     }
 
+    public static Instance average(Dataset data) {
+        Instance max = new SparseInstance();
+        Instance min = new SparseInstance();
+        for (Instance i : data) {
+            for (Integer index : i.keySet()) {
+                double val = i.value(index);
+                if (!max.containsKey(index))
+                    max.put(index, val);
+                else if (max.get(index) < val)
+                    max.put(index, val);
+                if (!min.containsKey(index))
+                    min.put(index, val);
+                else if (min.get(index) > val)
+                    min.put(index, val);
+            }
+
+        }
+        return max.plus(min).divide(2);
+    }
+
   
 
 }

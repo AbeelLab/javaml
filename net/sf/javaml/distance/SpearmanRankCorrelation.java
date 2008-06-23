@@ -28,12 +28,12 @@ public class SpearmanRankCorrelation extends AbstractCorrelation {
 
     @Override
     public double measure(Instance a, Instance b) {
-        if (a.size() != b.size())
+        if (a.noAttributes() != b.noAttributes())
             throw new IllegalArgumentException("Instances should be compatible.");
-        long k = a.size();
+        long k = a.noAttributes();
         long denom = k * (k * k - 1);
         double sum = 0.0;
-        for (int i = 0; i < a.size(); i++) {
+        for (int i = 0; i < a.noAttributes(); i++) {
             double diff = (a.value(i) - b.value(i));
             sum += (diff * diff);
         }

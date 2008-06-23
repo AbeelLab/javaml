@@ -28,8 +28,6 @@ import java.util.Vector;
 
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.core.SimpleDataset;
-import net.sf.javaml.core.SimpleInstance;
 import net.sf.javaml.distance.DistanceMeasure;
 import net.sf.javaml.distance.EuclideanDistance;
 import net.sf.javaml.utils.GammaFunction;
@@ -77,7 +75,7 @@ public class AQBC implements Clusterer {
      * 
      * FIXME remove output on the console
      */
-    public Dataset[] executeClustering(Dataset data) {
+    public Dataset[] cluster(Dataset data) {
         this.data = data;
         // dm=new NormalizedEuclideanDistance(data);
         dm = new EuclideanDistance();

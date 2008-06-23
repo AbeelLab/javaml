@@ -5,14 +5,12 @@
  */
 package net.sf.javaml.filter.missingvalue;
 
-import java.util.Vector;
+import java.util.Set;
 
 import net.sf.javaml.core.Dataset;
-import net.sf.javaml.core.DatasetTools;
+import net.sf.javaml.core.DenseInstance;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.InstanceTools;
-import net.sf.javaml.core.SimpleDataset;
-import net.sf.javaml.core.SimpleInstance;
 import net.sf.javaml.distance.DistanceMeasure;
 import net.sf.javaml.distance.EuclideanDistance;
 import net.sf.javaml.filter.DatasetFilter;
@@ -45,43 +43,36 @@ public class KNearestNeighbors implements DatasetFilter {
 
     private DistanceMeasure euc = new EuclideanDistance();
 
-    public Dataset filterDataset(Dataset data) {
-        Dataset output = new SimpleDataset();
+    public void filterDataset(Dataset data) {
+        // Dataset output = new SimpleDataset();
         for (Instance i : data) {
-            Instance x = removeMissingValues(i, data);
-            output.add(x);
+            removeMissingValues(i, data);
+            // output.add(x);
         }
-        return output;
+        // return output;
     }
 
-    private Instance removeMissingValues(Instance inst, Dataset data) {
+    private void removeMissingValues(Instance inst, Dataset data) {
         if (InstanceTools.hasMissingValues(inst)) {
-            Vector<Instance> nk = (Vector<Instance>) DatasetTools.getNearestK(data, euc, inst, k);
-            double[] values = new double[inst.size()];
-            for (int i = 0; i < inst.size(); i++) {
-                if (Double.isNaN(inst.value(i))) {
+            Set<Instance> nearest = data.kNearest(k, euc, inst);
 
-                    double sum = 0;
-                    int count = 0;
-                    for (Instance nn : nk) {
-                        if (!Double.isNaN(nn.value(i))) {
-                            sum += nn.value(i);
-                            count++;
-                        }
-                    }
-                    values[i] = sum / count;
-                    if (Double.isNaN(values[i])) {
-                        //TODO Should be done better
+            Instance sum = new DenseInstance(new double[inst.noAttributes()]);
+            for (Instance x : data.kNearest(k, euc, inst)) {
+                sum = sum.plus(x);
+            }
+            sum = sum.divide(nearest.size());
+
+            for (int i = 0; i < inst.noAttributes(); i++) {
+                if (Double.isNaN(inst.value(i))) {
+                    inst.put(i, sum.value(i));
+                    if (Double.isNaN(inst.value(i))) {
+                        // TODO Should be done better
                         System.err.println("Still missing values present in attribute " + i);
                     }
-                } else {
-                    values[i] = inst.value(i);
                 }
             }
-            return new SimpleInstance(values, inst);
-        } else
-            return inst;
+
+        }
     }
 
-    
 }

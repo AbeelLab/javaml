@@ -1,6 +1,4 @@
 /**
- * RandomForest.java
- *
  * %SVN.HEADER%
  */
 package net.sf.javaml.classification.tree;
@@ -36,9 +34,9 @@ public class RandomForest implements Classifier {
 
     private Random rg;
 
-    public RandomForest(int treeCount, boolean calculateOutOfBagErrorEstimate, int numAttributes,Random rg) {
+    public RandomForest(int treeCount, boolean calculateOutOfBagErrorEstimate, int numAttributes, Random rg) {
         this.treeCount = treeCount;
-        this.rg=rg;
+        this.rg = rg;
         this.calculateOutOfBagErrorEstimate = calculateOutOfBagErrorEstimate;
         this.numAttributes = numAttributes;
     }
@@ -53,7 +51,7 @@ public class RandomForest implements Classifier {
             trees[i] = new RandomTree();
             trees[i].setKValue(numAttributes);
         }
-        bagger = new Bagging(trees,rg);
+        bagger = new Bagging(trees, rg);
         bagger.setCalculateOutOfBagErrorEstimate(calculateOutOfBagErrorEstimate);
         bagger.buildClassifier(data);
 
@@ -65,7 +63,7 @@ public class RandomForest implements Classifier {
     }
 
     @Override
-    public Map<Object,Double> distributionForInstance(Instance instance) {
+    public Map<Object, Double> distributionForInstance(Instance instance) {
         return bagger.distributionForInstance(instance);
     }
 

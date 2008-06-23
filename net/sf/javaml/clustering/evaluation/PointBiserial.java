@@ -55,7 +55,7 @@ public class PointBiserial implements ClusterEvaluation {
 				// number.
 				for (int k = j + 1; k < datas[i].size(); k++) {
 					Instance y = datas[i].instance(k);
-					double distance = dm.calculateDistance(x, y);
+					double distance = dm.measure(x, y);
 					dw += distance;
 					fw++;
 				}
@@ -64,7 +64,7 @@ public class PointBiserial implements ClusterEvaluation {
 				for (int k = i + 1; k < datas.length; k++) {
 					for (int l = 0; l < datas[k].size(); l++) {
 						Instance y = datas[k].instance(l);
-						double distance = dm.calculateDistance(x, y);
+						double distance = dm.measure(x, y);
 						db += distance;
 						fb++;
 					}
@@ -83,13 +83,13 @@ public class PointBiserial implements ClusterEvaluation {
 				Instance x = datas[i].instance(j);
 				for (int k = j + 1; k < datas[i].size(); k++) {
 					Instance y = datas[i].instance(k);
-					double distance = dm.calculateDistance(x, y);
+					double distance = dm.measure(x, y);
 					tmpSdw += (distance - meanDw)*(distance - meanDw);
 				}
 				for (int k = i + 1; k < datas.length; k++) {
 					for (int l = 0; l < datas[k].size(); l++) {
 						Instance y = datas[k].instance(l);
-						double distance = dm.calculateDistance(x, y);
+						double distance = dm.measure(x, y);
 						tmpSdb += (distance - meanDb)*(distance - meanDb);
 					}
 				}

@@ -26,7 +26,6 @@ package net.sf.javaml.distance;
 
 import java.util.HashMap;
 
-import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.Pair;
 
@@ -55,12 +54,12 @@ public class CachedDistance implements DistanceMeasure {
     // row map
     HashMap<Pair<Instance, Instance>, Double> cache = new HashMap<Pair<Instance, Instance>, Double>();
 
-    public double calculateDistance(Instance i, Instance j) {
+    public double measure(Instance i, Instance j) {
         Pair<Instance, Instance> pair = new Pair<Instance, Instance>(i, j);
         if (cache.containsKey(pair)) {
             return cache.get(pair);
         } else {
-            double dist = dm.calculateDistance(i, j);
+            double dist = dm.measure(i, j);
             cache.put(pair, dist);
             return dist;
         }
@@ -70,12 +69,6 @@ public class CachedDistance implements DistanceMeasure {
         return dm.compare(x, y);
     }
 
-    public double getMaximumDistance(Dataset data) {
-        return dm.getMaximumDistance(data);
-    }
-
-    public double getMinimumDistance(Dataset data) {
-        return dm.getMinimumDistance(data);
-    }
+  
 
 }

@@ -7,6 +7,7 @@ package net.sf.javaml.core;
 
 import java.io.Serializable;
 import java.util.Map;
+
 /**
  * The interface for instances in a data set.
  * 
@@ -27,8 +28,6 @@ public interface Instance extends Map<Integer, Double>, Iterable<Double>, Serial
      */
     public Object classValue();
 
-   
-
     public void setClassValue(Object value);
 
     // /**
@@ -37,6 +36,10 @@ public interface Instance extends Map<Integer, Double>, Iterable<Double>, Serial
     // * @return
     // */
     // public int noAttributes();
+
+    @Override
+    @Deprecated
+    public int size();
 
     public double value(int pos);
 
@@ -72,11 +75,12 @@ public interface Instance extends Map<Integer, Double>, Iterable<Double>, Serial
 
     public Instance multiply(double value);
 
-
-
     /**
      * Removes attribute from the instance
+     * 
      * @param i
      */
     public void removeAttribute(int i);
+
+    
 }

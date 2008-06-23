@@ -52,10 +52,10 @@ public class ManhattanDistance extends AbstractDistance {
      * @return the Manhattan distance between the two instances.
      */
     public double measure(Instance x, Instance y) {
-        if (x.size() != y.size())
+        if (x.noAttributes() != y.noAttributes())
             throw new RuntimeException("Both instances should contain the same number of values.");
         double sum = 0.0;
-        for (int i = 0; i < x.size(); i++) {
+        for (int i = 0; i < x.noAttributes(); i++) {
             sum += Math.abs(x.value(i) - y.value(i));
         }
         return sum;

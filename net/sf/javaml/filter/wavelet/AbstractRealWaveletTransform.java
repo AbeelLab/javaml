@@ -28,8 +28,6 @@ import net.sf.javaml.core.Complex;
 import net.sf.javaml.core.ComplexInstance;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.core.SimpleDataset;
-import net.sf.javaml.core.SimpleInstance;
 import net.sf.javaml.filter.FastFourierTransform;
 import net.sf.javaml.filter.Filter;
 import net.sf.javaml.utils.MathUtils;

@@ -20,17 +20,17 @@ public class SpearmanFootruleDistance extends AbstractDistance {
      */
     private static final long serialVersionUID = -6347213714272482397L;
 
-    public double calculateDistance(Instance a, Instance b) {
-        if (a.size() != b.size())
+    public double measure(Instance a, Instance b) {
+        if (a.noAttributes() != b.noAttributes())
             throw new IllegalArgumentException("Instances should be compatible.");
-        long k = a.size();
+        long k = a.noAttributes();
         long denom;
         if(k%2==0)
             denom=(k*k)/2;
         else
             denom=((k+1)*(k-1))/2;
         double sum = 0.0;
-        for (int i = 0; i < a.size(); i++) {
+        for (int i = 0; i < a.noAttributes(); i++) {
             double diff = Math.abs(a.value(i) - b.value(i));
             sum += diff;
         }

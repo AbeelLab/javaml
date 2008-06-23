@@ -1,6 +1,4 @@
 /**
- * CrossValidation.java
- *
  * %SVN.HEADER% 
  */
 package net.sf.javaml.classification.evaluation;
@@ -34,9 +32,13 @@ public class CrossValidation {
     }
 
     // private PerformanceMeasure[] foldPerformance = null;
-
+    // TODO use evaluateDataset
     public Map<Object, PerformanceMeasure> crossValidation(Dataset data, int numFolds, Random rg) {
+        // System.out.println("CV:" + data.size());
         Dataset[] folds = data.folds(numFolds, rg);
+        // for(Dataset d:folds){
+        // System.out.println("\t"+d.size());
+        // }
         Map<Object, PerformanceMeasure> out = new HashMap<Object, PerformanceMeasure>();
         for (Object o : data.classes()) {
             out.put(o, new PerformanceMeasure());
@@ -52,7 +54,10 @@ public class CrossValidation {
             }
             // System.out.println("training: "+training.classes());
             // System.out.println("validation: "+validation.classes());
+            // System.out.println("\tTraining:\t"+training.size());
+            // System.out.println("\tValidation\t"+validation.size());
             classifier.buildClassifier(training);
+
             // int tp = 0, tn = 0, fn = 0, fp = 0;
             // System.out.println("real
             // class\tprediction\tpositive\tclassification");

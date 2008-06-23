@@ -25,7 +25,6 @@
 package net.sf.javaml.distance;
 
 import gov.nist.math.jama.Matrix;
-import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 
 public class MahalanobisDistance extends AbstractDistance {
@@ -35,7 +34,7 @@ public class MahalanobisDistance extends AbstractDistance {
      */
     private static final long serialVersionUID = -5844297515283628612L;
 
-    public double calculateDistance(Instance i, Instance j) {
+    public double measure(Instance i, Instance j) {
         //XXX optimize
         double[][] del = new double[3][1];
         for (int m = 0; m < 3; m++) {
@@ -62,14 +61,6 @@ public class MahalanobisDistance extends AbstractDistance {
         return dist;
     }
 
-    public double getMaximumDistance(Dataset data) {
-        // TODO implement
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
-
-    public double getMinimumDistance(Dataset data) {
-        // TODO implement
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
+   
 
 }

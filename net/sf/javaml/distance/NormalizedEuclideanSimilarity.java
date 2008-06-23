@@ -51,22 +51,10 @@ public class NormalizedEuclideanSimilarity extends AbstractSimilarity {
     /**
      * XXX DOC
      */
-    public double calculateDistance(Instance i, Instance j) {
+    public double measure(Instance i, Instance j) {
         return 1 - dm.calculateDistance(i, j);
     }
 
-    /**
-     * XXX DOC
-     */
-    public double getMaximumDistance(Dataset data) {
-        return calculateDistance(data.getMaximumInstance(), data.getMinimumInstance());
-    }
-
-    /**
-     * XXX DOC
-     */
-    public double getMinimumDistance(Dataset data) {
-        return 0;
-    }
+ 
 
 }

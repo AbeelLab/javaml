@@ -15,6 +15,7 @@ import java.util.TreeSet;
 import java.util.Vector;
 
 import net.sf.javaml.distance.DistanceMeasure;
+
 /**
  * Provides a standard data set implementation.
  * 
@@ -30,6 +31,14 @@ import net.sf.javaml.distance.DistanceMeasure;
 public class DefaultDataset extends Vector<Instance> implements Dataset {
 
     private int maxAttributes = 0;
+
+    public DefaultDataset(Collection<Instance> coll) {
+        this.addAll(coll);
+    }
+
+    public DefaultDataset() {
+        // nothing to do.
+    }
 
     private void check(Collection<? extends Instance> c) {
         for (Instance i : c)

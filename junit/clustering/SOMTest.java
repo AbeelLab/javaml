@@ -68,7 +68,7 @@ public class SOMTest {
         SOM km=new SOM(5, 2, GridType.HEXAGONAL, 100, 0.1, 1, LearningType.LINEAR, NeighbourhoodFunction.STEP);
         int count=0;
         for(int i=0;i<100;i++){
-            Dataset[]clusters=km.executeClustering(data);
+            Dataset[]clusters=km.cluster(data);
             for(int j=0;j<clusters.length;j++){
                 if(clusters[j].size()==0)
                     count++;

@@ -55,7 +55,7 @@ public class CIndex implements ClusterEvaluation {
             	Instance x = clusters[i].instance(j);
                 for (int k = j + 1; k < clusters[i].size(); k++) {
                     Instance y = clusters[i].instance(k);
-                    double distance = dm.calculateDistance(x, y);
+                    double distance = dm.measure(x, y);
                     dw += distance;
                     if (maxDw < distance) {
                         maxDw = distance;

@@ -66,7 +66,7 @@ public class KMedoidsTest {
         KMedoids km=new KMedoids();
         int count=0;
         for(int i=0;i<100;i++){
-            Dataset[]clusters=km.executeClustering(data);
+            Dataset[]clusters=km.cluster(data);
             for(int j=0;j<clusters.length;j++){
                 if(clusters[j].size()==0)
                     count++;
@@ -74,7 +74,7 @@ public class KMedoidsTest {
         }
         KMedoids km2=new KMedoids(16,10,new DTWSimilarity());
         for(int i=0;i<10;i++){
-            Dataset[]clusters=km2.executeClustering(data);
+            Dataset[]clusters=km2.cluster(data);
             for(int j=0;j<clusters.length;j++){
                 if(clusters[j].size()==0)
                     count++;

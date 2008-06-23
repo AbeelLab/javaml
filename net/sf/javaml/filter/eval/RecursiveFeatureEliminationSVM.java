@@ -9,6 +9,8 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
+import be.abeel.util.Copier;
+
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.filter.RemoveAttributes;
 import net.sf.javaml.utils.ArrayUtils;
@@ -64,27 +66,28 @@ public class RecursiveFeatureEliminationSVM implements IAttributeRanking {
         int removed = 0;
 
         while (data.noAttributes() > 1) {
-            svm.buildClassifier(data);
+            Dataset training = new Copier<Dataset>().copy(data);
+            svm.buildClassifier(training);
             double[] weights = svm.getWeights();
             // use absolute values of the weights
             ArrayUtils.abs(weights);
             // System.out.println("weights=" + Arrays.toString(weights));
             // order weights
             int[] order = ArrayUtils.sort(weights);
-            // determine the number of attributes to prune 10% round up
+            // determine the number of attributes to prune 10%, round up
             int numRemove = (int) (order.length * removePercentage + 1);
             if (numRemove > order.length)
                 numRemove = order.length;
             // System.out.println("remove=" + numRemove);
-            Set<Integer>toRemove  =new HashSet<Integer>();// new
-                                                            // int[numRemove];
+            Set<Integer> toRemove = new HashSet<Integer>();// new
+            // int[numRemove];
             int[] trueIndices = new int[numRemove];
 
             for (int i = 0; i < numRemove; i++) {
 
                 // System.out.println("Remove=" + order[i] + "/" +
                 // data.noAttributes());
-                toRemove.add( order[i]);
+                toRemove.add(order[i]);
                 // int trueIndex =
                 trueIndices[i] = getTrueIndex(order[i], removedAttributes);
                 // System.out.println("true remove=" + trueIndex);
@@ -104,7 +107,7 @@ public class RecursiveFeatureEliminationSVM implements IAttributeRanking {
             // System.out.println(Arrays.toString(removedAttributes));
             // actually remove the attributes
             RemoveAttributes filter = new RemoveAttributes(toRemove);
-           filter.filterDataset(data);
+            filter.filterDataset(data);
 
         }
         int index = 0;
@@ -121,8 +124,6 @@ public class RecursiveFeatureEliminationSVM implements IAttributeRanking {
         // System.out.println("Ranking: " + Arrays.toString(ranking));
 
     }
-
-    
 
     private int getTrueIndex(int i, boolean[] removedAttributes) {
         // System.out.println("RA.length = " + removedAttributes.length);

@@ -96,13 +96,13 @@ public class MultiKMeans implements Clusterer {
     /**
      * XXX add doc
      */
-	public Dataset[] executeClustering(Dataset data) {
+	public Dataset[] cluster(Dataset data) {
 		KMeans km = new KMeans(this.clusters, this.iterations,
 				this.dm);
-		Dataset[] bestClusters = km.executeClustering(data);
+		Dataset[] bestClusters = km.cluster(data);
 		double bestScore = this.ce.score(bestClusters);
 		for (int i = 0; i < repeats; i++) {
-			Dataset[] tmpClusters = km.executeClustering(data);
+			Dataset[] tmpClusters = km.cluster(data);
 			double tmpScore = this.ce.score(tmpClusters);
 			if (this.ce.compareScore(bestScore, tmpScore)) {
 				bestScore = tmpScore;

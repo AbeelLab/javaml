@@ -62,7 +62,7 @@ public class KMeansTest {
             for (int iter = 5; iter < 100; iter += 5) {
                 for (int size = 2; size <= 6; size++) {
                     KMeans km = new KMeans(size, iter);
-                    Dataset[] clusters = km.executeClustering(data);
+                    Dataset[] clusters = km.cluster(data);
                     for (int j = 0; j < clusters.length; j++) {
                         if (clusters[j].size() == 0)
                             count++;
@@ -111,7 +111,7 @@ public class KMeansTest {
         KMeans km = new KMeans();
         int count = 0;
         for (int i = 0; i < 100; i++) {
-            Dataset[] clusters = km.executeClustering(data);
+            Dataset[] clusters = km.cluster(data);
             for (int j = 0; j < clusters.length; j++) {
                 if (clusters[j].size() == 0)
                     count++;

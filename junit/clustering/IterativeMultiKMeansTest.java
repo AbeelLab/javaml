@@ -66,7 +66,7 @@ public class IterativeMultiKMeansTest {
         IterativeMultiKMeans km=new IterativeMultiKMeans(new AICScore());
         int count=0;
         for(int i=0;i<100;i++){
-            Dataset[]clusters=km.executeClustering(data);
+            Dataset[]clusters=km.cluster(data);
             for(int j=0;j<clusters.length;j++){
                 if(clusters[j].size()==0)
                     count++;

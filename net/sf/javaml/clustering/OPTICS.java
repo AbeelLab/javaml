@@ -35,7 +35,7 @@ import java.util.TreeMap;
 import java.util.Vector;
 
 import net.sf.javaml.core.Dataset;
-import net.sf.javaml.core.SimpleDataset;
+import net.sf.javaml.core.DefaultDataset;
 import net.sf.javaml.distance.DistanceMeasure;
 import net.sf.javaml.distance.NormalizedEuclideanDistance;
 
@@ -125,7 +125,7 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer 
 
         for (int i = 0; i < dataset.size(); i++) {
             DataObject next_dataObject = dataset.get(i);// (DataObject)
-            double dist = dm.calculateDistance(dataObject.instance, next_dataObject.instance);
+            double dist = dm.measure(dataObject.instance, next_dataObject.instance);
 
             if (dist <= epsilon)
                 epsilonRange_List.add(new EpsilonRange_ListElement(dist, next_dataObject));
@@ -253,7 +253,7 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer 
 
     private Vector<DataObject> resultVector;
 
-    public Dataset[] executeClustering(Dataset data) {
+    public Dataset[] cluster(Dataset data) {
         if (dm == null) {
             this.dm = new NormalizedEuclideanDistance(data);
         }
@@ -278,7 +278,7 @@ public class OPTICS extends AbstractDensityBasedClustering implements Clusterer 
         }
         Dataset[] clusters = new Dataset[clusterID];
         for (int i = 0; i < clusters.length; i++) {
-            clusters[i] = new SimpleDataset();
+            clusters[i] = new DefaultDataset();
         }
         int noiseCount = 0;
         int notKnownCount = 0;

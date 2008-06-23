@@ -6,10 +6,9 @@
 package net.sf.javaml.filter;
 
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.core.SimpleInstance;
 
 /**
- * Filter to remove class information from a dataset or instance.
+ * Filter to remove class information from a data set or instance.
  * 
  * 
  * {@jmlSource}
@@ -21,10 +20,8 @@ import net.sf.javaml.core.SimpleInstance;
  */
 public class UnsetClassFilter extends AbstractFilter {
 
-	public Instance filterInstance(Instance inst) {
-		// FIXME it is impossible at the moment to give a weight, but to leave
-		// out the class information.
-		return new SimpleInstance(inst.toArray());
-	}
+    public void filterInstance(Instance inst) {
+        inst.setClassValue(null);
+    }
 
 }

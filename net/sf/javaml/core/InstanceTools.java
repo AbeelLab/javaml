@@ -40,7 +40,7 @@ public class InstanceTools {
         for (int i = 0; i < values.length; i++) {
             values[i] = rg.nextDouble();
         }
-        return new SimpleInstance(values);
+        return new DenseInstance(values);
     }
 
     /**
@@ -53,7 +53,7 @@ public class InstanceTools {
      *         cases.
      */
     public static boolean hasMissingValues(Instance inst) {
-        for (int i = 0; i < inst.size(); i++) {
+        for (int i = 0; i < inst.noAttributes(); i++) {
             if (Double.isNaN(inst.value(i)))
                 return true;
 

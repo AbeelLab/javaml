@@ -24,7 +24,6 @@
  */
 package net.sf.javaml.distance;
 
-import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 
 /**
@@ -67,7 +66,7 @@ public class RBFKernel extends AbstractSimilarity {
      */
     private final double dotProduct(Instance x, Instance y) {
         double result = 0;
-        for (int i = 0; i < x.size(); i++) {
+        for (int i = 0; i < x.noAttributes(); i++) {
             result += x.value(i) * y.value(i);
         }
         return result;
@@ -76,7 +75,7 @@ public class RBFKernel extends AbstractSimilarity {
     /**
      * XXX DOC
      */
-    public double calculateDistance(Instance x, Instance y) {
+    public double measure(Instance x, Instance y) {
         if (x.equals(y))
             return 1.0;
         double result = Math.exp(gamma * (2.0 * dotProduct(x, y) - dotProduct(x, x) - dotProduct(y, y)));
@@ -84,20 +83,5 @@ public class RBFKernel extends AbstractSimilarity {
 
     }
 
-    /**
-     * XXX DOC
-     */
-    public double getMaximumDistance(Dataset data) {
-        // TODO implement
-        throw new UnsupportedOperationException("Method not implemented");
-    }
-
-    /**
-     * XXX DOC
-     */
-    public double getMinimumDistance(Dataset data) {
-        // TODO implement
-        throw new UnsupportedOperationException("Method not implemented");
-    }
 
 }

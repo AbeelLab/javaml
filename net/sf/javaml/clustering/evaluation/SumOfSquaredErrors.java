@@ -47,7 +47,7 @@ public class SumOfSquaredErrors implements ClusterEvaluation {
             double tmpSum = 0;
             for (int j = 0; j < datas[i].size(); j++) {
                 for (int k = 0; k < datas[i].size(); k++) {
-                    double error = dm.calculateDistance(datas[i].instance(j), datas[i].instance(k));
+                    double error = dm.measure(datas[i].instance(j), datas[i].instance(k));
                     tmpSum += error * error;
                 }
 

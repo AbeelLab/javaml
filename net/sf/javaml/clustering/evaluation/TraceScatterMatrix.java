@@ -27,8 +27,8 @@ package net.sf.javaml.clustering.evaluation;
 
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.DatasetTools;
+import net.sf.javaml.core.DefaultDataset;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.core.SimpleDataset;
 import net.sf.javaml.distance.CosineSimilarity;
 import net.sf.javaml.distance.DistanceMeasure;
 
@@ -62,23 +62,23 @@ public class TraceScatterMatrix implements ClusterEvaluation {
        
         // calculate centroids of each cluster
         for (int i = 0; i < clusters.length; i++) {
-            clusterCentroid[i] = DatasetTools.getCentroid(clusters[i]);
+            clusterCentroid[i] = DatasetTools.average(clusters[i]);
             clusterSizes[i]=clusters[i].size();
         }
 
         // calculate centroid all instances
         // firs put all cluster back together
-        Dataset data = new SimpleDataset();
+        Dataset data = new DefaultDataset();
         for (int i = 0; i < clusters.length; i++) {
             for (int j = 0; j < clusters[i].size(); j++) {
                 data.add(clusters[i].instance(j));
             }
         }
-        overAllCentroid = DatasetTools.getCentroid(data);
+        overAllCentroid = DatasetTools.average(data);
         // calculate trace of the between-cluster scatter matrix.
         double sum = 0;
         for (int i = 0; i < clusters.length; i++) {
-            double cos = dm.calculateDistance(clusterCentroid[i], overAllCentroid);
+            double cos = dm.measure(clusterCentroid[i], overAllCentroid);
             sum += cos * clusterSizes[i];
         }
         return sum;

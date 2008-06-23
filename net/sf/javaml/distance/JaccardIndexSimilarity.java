@@ -5,6 +5,9 @@
  */
 package net.sf.javaml.distance;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import net.sf.javaml.core.Instance;
 
 /**
@@ -39,19 +42,29 @@ import net.sf.javaml.core.Instance;
  * @author Thomas Abeel
  * 
  */
-public class JaccardIndexDistance extends AbstractDistance {
+public class JaccardIndexSimilarity extends AbstractSimilarity {
 
     private static final long serialVersionUID = 6715828721744669500L;
 
-    private JaccardIndexSimilarity jci;
-
-    public JaccardIndexDistance() {
-        this.jci = new JaccardIndexSimilarity();
-    }
-
     public double measure(Instance a, Instance b) {
+        HashSet<Integer> set1 = new HashSet<Integer>();
+        HashSet<Integer> set2 = new HashSet<Integer>();
 
-        return 1 - jci.measure(a, b);
+        for (int i = 0; i < a.noAttributes(); i++)
+            set1.add((int) a.value(i));
+
+        for (int i = 0; i < b.noAttributes(); i++)
+            set2.add((int) b.value(i));
+
+        Set<Integer> union = new HashSet<Integer>();
+        union.addAll(set1);
+        union.addAll(set2);
+
+        Set<Integer> intersection = new HashSet<Integer>();
+        intersection.addAll(set1);
+        intersection.retainAll(set2);
+
+        return ((double)intersection.size()) / ((double)union.size());
 
     }
 

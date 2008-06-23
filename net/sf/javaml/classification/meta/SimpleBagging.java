@@ -1,7 +1,5 @@
 /**
- * SimpleBagging.java
- *
- * %SVN.HEADER%
+ * %SVN.HEADER% 
  */
 package net.sf.javaml.classification.meta;
 
@@ -71,7 +69,7 @@ public class SimpleBagging extends AbstractClassifier {
         for (Object o : reference.classes())
             membership.put(o, 0.0);
         for (int i = 0; i < classifiers.length; i++) {
-            Object prediction = classifyInstance(instance);
+            Object prediction = classifiers[i].classifyInstance(instance);
             membership.put(prediction, membership.get(prediction) + (1.0 / classifiers.length));// [classifiers[i].classifyInstance(instance)]++;
         }
         // for (int i = 0; i < this.numClasses; i++)

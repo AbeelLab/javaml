@@ -5,9 +5,10 @@
  */
 package net.sf.javaml.filter;
 
+import java.util.Vector;
+
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.core.SimpleDataset;
 
 /**
  * Keeps all instances from a data set that have a specific class value
@@ -22,17 +23,17 @@ import net.sf.javaml.core.SimpleDataset;
  */
 public class ClassRetainFilter implements DatasetFilter {
 
-    private int classValue;
+    private Object classValue;
 
     public ClassRetainFilter() {
-        this(0);
+        this("0");
     }
 
-    public ClassRetainFilter(int classValue) {
+    public ClassRetainFilter(Object classValue) {
         this.classValue = classValue;
     }
 
-    public void setClass(int classValue) {
+    public void setClass(Object classValue) {
         this.classValue = classValue;
     }
 
@@ -41,12 +42,12 @@ public class ClassRetainFilter implements DatasetFilter {
 
     }
 
-    public Dataset filterDataset(Dataset data) {
-        Dataset out = new SimpleDataset();
+    public void filterDataset(Dataset data) {
+        Vector<Instance> tor = new Vector<Instance>();
         for (Instance i : data)
-            if (i.classValue() == classValue)
-                out.add(i);
-        return out;
+            if (!i.classValue().equals(classValue))
+                tor.add(i);
+        for (Instance i : tor)
+            data.remove(i);
     }
-
 }

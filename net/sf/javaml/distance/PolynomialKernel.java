@@ -24,7 +24,6 @@
  */
 package net.sf.javaml.distance;
 
-import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 
 public class PolynomialKernel implements DistanceMeasure {
@@ -39,7 +38,7 @@ public class PolynomialKernel implements DistanceMeasure {
         this.exponent=exponent;
     }
     
-    public double calculateDistance(Instance i, Instance j) {
+    public double measure(Instance i, Instance j) {
         double result;
         result = dotProd(i, j);
         if (exponent != 1.0) {
@@ -55,7 +54,7 @@ public class PolynomialKernel implements DistanceMeasure {
 
         double result = 0;
 
-        for (int i = 0; i < inst1.size(); i++) {
+        for (int i = 0; i < inst1.noAttributes(); i++) {
             result += inst1.value(i) * inst2.value(i);
         }
         return result;
@@ -65,12 +64,6 @@ public class PolynomialKernel implements DistanceMeasure {
         throw new UnsupportedOperationException("Not implemented");
     }
 
-    public double getMaximumDistance(Dataset data) {
-        throw new UnsupportedOperationException("Not implemented");
-    }
-
-    public double getMinimumDistance(Dataset data) {
-        throw new UnsupportedOperationException("Not implemented");
-    }
+   
 
 }

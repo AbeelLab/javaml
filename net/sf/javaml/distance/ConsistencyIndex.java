@@ -7,7 +7,6 @@ package net.sf.javaml.distance;
 
 import java.util.HashSet;
 
-import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 
 public class ConsistencyIndex extends AbstractDistance {
@@ -16,21 +15,23 @@ public class ConsistencyIndex extends AbstractDistance {
      * 
      */
     private static final long serialVersionUID = -9108138773263724130L;
-    private int n;
+    private double n;
 
+    
+    
     public ConsistencyIndex(int n){
         this.n=n;
     }
     
-    public double calculateDistance(Instance a, Instance b) {
+    public double measure(Instance a, Instance b) {
         HashSet<Integer> set1 = new HashSet<Integer>();
         HashSet<Integer> set2 = new HashSet<Integer>();
 
         
-        for (int i = 0; i < a.size(); i++)
+        for (int i = 0; i < a.noAttributes(); i++)
             set1.add((int)a.value(i));
 
-        for (int i = 0; i < b.size(); i++)
+        for (int i = 0; i < b.noAttributes(); i++)
             set2.add((int)b.value(i));
 
         double k = set1.size();
@@ -41,13 +42,13 @@ public class ConsistencyIndex extends AbstractDistance {
 
     }
 
-    @Override
-    public double getMaximumDistance(Dataset data) {
-        return 1;
-    }
-
-    @Override
-    public double getMinimumDistance(Dataset data) {
-        return 0;
-    }
+//    @Override
+//    public double getMaximumDistance(Dataset data) {
+//        return 1;
+//    }
+//
+//    @Override
+//    public double getMinimumDistance(Dataset data) {
+//        return 0;
+//    }
 }

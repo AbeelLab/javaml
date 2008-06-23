@@ -53,18 +53,18 @@ public class PearsonCorrelationCoefficient extends AbstractCorrelation {
     /**
      * XXX DOC
      */
-    public double calculateDistance(Instance a, Instance b) {
-        if (a.size() != b.size())
+    public double measure(Instance a, Instance b) {
+        if (a.noAttributes() != b.noAttributes())
             throw new RuntimeException("Both instances should have the same length");
         double xy = 0, x = 0, x2 = 0, y = 0, y2 = 0;
-        for (int i = 0; i < a.size(); i++) {
+        for (int i = 0; i < a.noAttributes(); i++) {
             xy += a.value(i) * b.value(i);
             x += a.value(i);
             y += b.value(i);
             x2 += a.value(i) * a.value(i);
             y2 += b.value(i) * b.value(i);
         }
-        int n = a.size();
+        int n = a.noAttributes();
         return (xy - (x * y) / n) / Math.sqrt((x2 - (x * x) / n) * (y2 - (y * y) / n));
     }
 

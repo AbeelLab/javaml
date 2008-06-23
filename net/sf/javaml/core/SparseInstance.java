@@ -45,6 +45,8 @@ public class SparseInstance extends AbstractInstance implements Instance {
         this(noAttributes, 0.0);
     }
 
+    
+    
     public SparseInstance(int noAttributes, double defaultValue) {
         this.defaultValue = defaultValue;
         this.noAttributes = noAttributes;
@@ -113,6 +115,7 @@ public class SparseInstance extends AbstractInstance implements Instance {
     }
 
     @Override
+    @Deprecated
     public int size() {
         return data.size();
     }

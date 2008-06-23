@@ -56,10 +56,10 @@ final class SearchWindow {
     SearchWindow(Instance tsI, Instance tsJ, PAA shrunkI, PAA shrunkJ, WarpPath shrunkWarpPath,
             int searchRadius) {
 
-        minValues = new int[tsI.size()];
-        maxValues = new int[tsI.size()];
+        minValues = new int[tsI.noAttributes()];
+        maxValues = new int[tsI.noAttributes()];
         Arrays.fill(minValues, -1);
-        maxJ = tsJ.size() - 1;
+        maxJ = tsJ.noAttributes() - 1;
         size = 0;
         modCount = 0;
         int currentI = shrunkWarpPath.minI();

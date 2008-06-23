@@ -77,15 +77,15 @@ public class IterativeFarthestFirst implements Clusterer {
     /**
      * XXX DOC
      */
-    public Dataset[] executeClustering(Dataset data) {
+    public Dataset[] cluster(Dataset data) {
 
         FarthestFirst ff = new FarthestFirst(kMin, dm);
-        Dataset[] bestClusters = ff.executeClustering(data);
+        Dataset[] bestClusters = ff.cluster(data);
         double bestScore = ce.score(bestClusters);
 
         for (int i = kMin + 1; i <= kMax; i++) {
             ff = new FarthestFirst(i, dm);
-            Dataset[] tmp = ff.executeClustering(data);
+            Dataset[] tmp = ff.cluster(data);
             double tmpScore = ce.score(tmp);
             if (ce.compareScore(bestScore, tmpScore)) {
                 bestScore = tmpScore;

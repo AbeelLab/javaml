@@ -27,29 +27,29 @@
  */
 package net.sf.javaml.distance.dtw;
 
+import net.sf.javaml.core.DenseInstance;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.core.WrapperInstance;
 
 final class PAA {
 
     private double[] newPoints;
 
     PAA(Instance ts, int shrunkSize) {
-        if (shrunkSize > ts.size())
+        if (shrunkSize > ts.noAttributes())
             throw new InternalError(
                     "ERROR:  The size of an aggregate representation may not be larger than the \noriginal time series (shrunkSize="
-                            + shrunkSize + " , origSize=" + ts.size() + ").");
+                            + shrunkSize + " , origSize=" + ts.noAttributes() + ").");
         if (shrunkSize <= 0)
             throw new InternalError(
                     "ERROR:  The size of an aggregate representation must be greater than zero and \nno larger than the original time series.");
-        originalLength = ts.size();
+        originalLength = ts.noAttributes();
         aggPtSize = new int[shrunkSize];
         newPoints = new double[shrunkSize];
 
-        double reducedPtSize = (double) ts.size() / (double) shrunkSize;
+        double reducedPtSize = (double) ts.noAttributes() / (double) shrunkSize;
         int ptToReadTo;
         int index = 0;
-        for (int ptToReadFrom = 0; ptToReadFrom < ts.size(); ptToReadFrom = ptToReadTo + 1) {
+        for (int ptToReadFrom = 0; ptToReadFrom < ts.noAttributes(); ptToReadFrom = ptToReadTo + 1) {
             ptToReadTo = (int) Math.round(reducedPtSize * (double) (index + 1)) - 1;
             int ptsToRead = (ptToReadTo - ptToReadFrom) + 1;
             double timeSum = 0.0D;
@@ -91,6 +91,6 @@ final class PAA {
     private final int originalLength;
 
     Instance getNewInstance() {
-        return new WrapperInstance(newPoints);
+        return new DenseInstance(newPoints);
     }
 }

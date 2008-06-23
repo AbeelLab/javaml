@@ -11,8 +11,6 @@ package net.sf.javaml.filter.eval;
 import java.util.List;
 import java.util.Vector;
 
-import org.junit.Assert;
-
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.DatasetTools;
 import net.sf.javaml.core.Instance;

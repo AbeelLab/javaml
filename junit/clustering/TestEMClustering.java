@@ -43,7 +43,7 @@ public class TestEMClustering {
 			data.add(new SimpleInstance(d));
 
 			ClusteringBridge em = new ClusteringBridge(new EM());
-			Dataset[] clusters = em.executeClustering(data);
+			Dataset[] clusters = em.cluster(data);
 			System.out.println("Size: " + clusters.length);
 
 			Instances insts = new WekaUtils(data).getDataset();
@@ -103,7 +103,7 @@ public class TestEMClustering {
 	private void process(Dataset data) {
 		try {
 			ClusteringBridge em = new ClusteringBridge(new EM());
-			Dataset[] clusters = em.executeClustering(data);
+			Dataset[] clusters = em.cluster(data);
 			System.out.println("Java-ML size: " + clusters.length);
 
 			Dataset data2 = new UnsetClassFilter().filterDataset(data);

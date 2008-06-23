@@ -31,7 +31,7 @@ public class ClusteringBridge implements Clusterer {
 		this.wekaCluster = wekaCluster;
 	}
 
-	public Dataset[] executeClustering(Dataset data) {
+	public Dataset[] cluster(Dataset data) {
 		try {
 			data = new UnsetClassFilter().filterDataset(data);
 			Instances insts =  new WekaUtils(data).getDataset();

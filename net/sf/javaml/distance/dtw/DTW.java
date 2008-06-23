@@ -29,7 +29,6 @@ package net.sf.javaml.distance.dtw;
 
 import java.util.Iterator;
 
-import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.Pair;
 import net.sf.javaml.distance.AbstractDistance;
@@ -42,9 +41,9 @@ public class DTW extends AbstractDistance {
     private static final long serialVersionUID = 4169875204448943908L;
 
     static Pair<Double, WarpPath> dtw(Instance tsI, Instance tsJ) {
-        double costMatrix[][] = new double[tsI.size()][tsJ.size()];
-        int maxI = tsI.size() - 1;
-        int maxJ = tsJ.size() - 1;
+        double costMatrix[][] = new double[tsI.noAttributes()][tsJ.noAttributes()];
+        int maxI = tsI.noAttributes() - 1;
+        int maxJ = tsJ.noAttributes() - 1;
         costMatrix[0][0] = euclideanDist(tsI.value(0), tsJ.value(0));
         for (int j = 1; j <= maxJ; j++)
             costMatrix[0][j] = costMatrix[0][j - 1] + euclideanDist(tsI.value(0), tsJ.value(j));
@@ -104,8 +103,8 @@ public class DTW extends AbstractDistance {
 
     static Pair<Double, WarpPath> dtw(Instance tsI, Instance tsJ, SearchWindow window) {
         CostMatrix costMatrix = CostMatrix.create(window);
-        int maxI = tsI.size() - 1;
-        int maxJ = tsJ.size() - 1;
+        int maxI = tsI.noAttributes() - 1;
+        int maxJ = tsJ.noAttributes() - 1;
         for (Iterator<Pair<Integer, Integer>> matrixIterator = window.iterator(); matrixIterator.hasNext();) {
             Pair<Integer, Integer> currentCell = matrixIterator.next();
             int i = currentCell.x();
@@ -170,24 +169,8 @@ public class DTW extends AbstractDistance {
         return Math.sqrt((vector1 - vector2) * (vector1 - vector2));
     }
 
-    public double calculateDistance(Instance i, Instance j) {
+    public double measure(Instance i, Instance j) {
         return dtw(i, j).x();
-    }
-
-    /**
-     * XXX doc
-     */
-    public double getMaximumDistance(Dataset data) {
-        // TODO implement
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
-
-    /**
-     * XXX doc
-     */
-    public double getMinimumDistance(Dataset data) {
-        // TODO implement
-        throw new UnsupportedOperationException("Not yet implemented");
     }
 
     public WarpPath getWarpPath(Instance tsI, Instance tsJ) {

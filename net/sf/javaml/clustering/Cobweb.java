@@ -29,8 +29,8 @@ import java.io.Serializable;
 import java.util.Vector;
 
 import net.sf.javaml.core.Dataset;
+import net.sf.javaml.core.DefaultDataset;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.core.SimpleDataset;
 import net.sf.javaml.filter.Filter;
 import net.sf.javaml.filter.NormalizeMean;
 
@@ -207,7 +207,7 @@ public class Cobweb implements Clusterer {
         private CNode(int numAttributes, Instance leafInstance) {
             this(numAttributes);
             if (m_clusterInstances == null) {
-                m_clusterInstances = new SimpleDataset();
+                m_clusterInstances = new DefaultDataset();
             }
             m_clusterInstances.add(leafInstance);
             updateStats(leafInstance, false);
@@ -224,7 +224,7 @@ public class Cobweb implements Clusterer {
         private void addInstance(Instance newInstance) {// Add the instance to
             // this cluster
             if (m_clusterInstances == null) {
-                m_clusterInstances = new SimpleDataset();// (newInstance.dataset(),
+                m_clusterInstances = new DefaultDataset();// (newInstance.dataset(),
                 // 1);
                 m_clusterInstances.add(newInstance);
                 updateStats(newInstance, false);
@@ -302,7 +302,7 @@ public class Cobweb implements Clusterer {
             double mergedCU = -Double.MAX_VALUE;
             // consider merging the best and second
             // best.
-            merged.m_clusterInstances = new SimpleDataset();// (m_clusterInstances,
+            merged.m_clusterInstances = new DefaultDataset();// (m_clusterInstances,
             // 1);
 
             merged.addChildNode(a);
@@ -599,13 +599,13 @@ public class Cobweb implements Clusterer {
             for (int i = 0; i < m_numAttributes; i++) {
                 double value = updateInstance.value(i);
                 if (delete) {
-                    m_attStats[i].subtract(value, updateInstance.weight());
+                    m_attStats[i].subtract(value, 1);
                 } else {
-                    m_attStats[i].add(value, updateInstance.weight());
+                    m_attStats[i].add(value, 1);
                 }
 
             }
-            m_totalInstances += (delete) ? (-1.0 * updateInstance.weight()) : (updateInstance.weight());
+            m_totalInstances += (delete) ? -1.0 : 1;
         }
 
         /**
@@ -729,7 +729,7 @@ public class Cobweb implements Clusterer {
 
     private Filter filter = new NormalizeMean();
 
-    public Dataset[] executeClustering(Dataset data) {
+    public Dataset[] cluster(Dataset data) {
 
         data = filter.filterDataset(data);
         m_numberOfClusters = -1;
@@ -755,7 +755,7 @@ public class Cobweb implements Clusterer {
                 createClusters(y, clusters);
             }
         } else {
-            Dataset tmp = new SimpleDataset();
+            Dataset tmp = new DefaultDataset();
             Dataset fromTree = tree.m_clusterInstances;
             for (int i = 0; i < fromTree.size(); i++) {
                 tmp.add(filter.unfilterInstance(fromTree.instance(i)));

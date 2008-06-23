@@ -28,9 +28,10 @@ package net.sf.javaml.clustering;
 import java.util.Random;
 
 import net.sf.javaml.core.Dataset;
+import net.sf.javaml.core.DatasetTools;
+import net.sf.javaml.core.DefaultDataset;
+import net.sf.javaml.core.DenseInstance;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.core.SimpleDataset;
-import net.sf.javaml.core.SimpleInstance;
 import net.sf.javaml.distance.DistanceMeasure;
 import net.sf.javaml.distance.EuclideanDistance;
 
@@ -124,7 +125,7 @@ public class KMeans implements Clusterer {
     /**
      * XXX add doc
      */
-    public Dataset[] executeClustering(Dataset data) {
+    public Dataset[] cluster(Dataset data) {
         if (data.size() == 0)
             throw new RuntimeException("The dataset should not be empty");
         if (numberOfClusters == 0)
@@ -132,10 +133,11 @@ public class KMeans implements Clusterer {
         // Place K points into the space represented by the objects that are
         // being clustered. These points represent the initial group of
         // centroids.
-        Instance min = data.getMinimumInstance();
-        Instance max = data.getMaximumInstance();
+//        DatasetTools.
+        Instance min = DatasetTools.minAttributes(data);
+        Instance max = DatasetTools.maxAttributes(data);
         this.centroids = new Instance[numberOfClusters];
-        int instanceLength = data.instance(0).size();
+        int instanceLength = data.instance(0).noAttributes();
         for (int j = 0; j < numberOfClusters; j++) {
             double[] randomInstance = new double[instanceLength];
             for (int i = 0; i < instanceLength; i++) {
@@ -143,7 +145,7 @@ public class KMeans implements Clusterer {
                 randomInstance[i] = (float) (min.value(i) + rg.nextDouble() * dist);
 
             }
-            this.centroids[j] = new SimpleInstance(randomInstance);
+            this.centroids[j] = new DenseInstance(randomInstance);
         }
 
         int iterationCount = 0;
@@ -155,9 +157,9 @@ public class KMeans implements Clusterer {
             int[] assignment = new int[data.size()];
             for (int i = 0; i < data.size(); i++) {
                 int tmpCluster = 0;
-                double minDistance = dm.calculateDistance(centroids[0], data.instance(i));
+                double minDistance = dm.measure(centroids[0], data.instance(i));
                 for (int j = 1; j < centroids.length; j++) {
-                    double dist = dm.calculateDistance(centroids[j], data.instance(i));
+                    double dist = dm.measure(centroids[j], data.instance(i));
                     if (dm.compare(dist, minDistance)) {
                         minDistance = dist;
                         tmpCluster = j;
@@ -176,7 +178,7 @@ public class KMeans implements Clusterer {
                 Instance in = data.instance(i);
                 for (int j = 0; j < instanceLength; j++) {
 
-                    sumPosition[assignment[i]][j] += in.weight() * in.value(j);
+                    sumPosition[assignment[i]][j] +=  in.value(j);
 
                 }
                 countPosition[assignment[i]]++;
@@ -189,8 +191,8 @@ public class KMeans implements Clusterer {
                     for (int j = 0; j < instanceLength; j++) {
                         tmp[j] = (float) sumPosition[i][j] / countPosition[i];
                     }
-                    Instance newCentroid = new SimpleInstance(tmp);
-                    if (dm.calculateDistance(newCentroid, centroids[i]) > 0.0001) {
+                    Instance newCentroid = new DenseInstance(tmp);
+                    if (dm.measure(newCentroid, centroids[i]) > 0.0001) {
                         centroidsChanged = true;
                         centroids[i] = newCentroid;
                     }
@@ -202,7 +204,7 @@ public class KMeans implements Clusterer {
 
                     }
                     randomCentroids = true;
-                    this.centroids[i] = new SimpleInstance(randomInstance);
+                    this.centroids[i] = new DenseInstance(randomInstance);
                 }
 
             }
@@ -210,12 +212,12 @@ public class KMeans implements Clusterer {
         }
         Dataset[] output = new Dataset[centroids.length];
         for (int i = 0; i < centroids.length; i++)
-            output[i] = new SimpleDataset();
+            output[i] = new DefaultDataset();
         for (int i = 0; i < data.size(); i++) {
             int tmpCluster = 0;
-            double minDistance = dm.calculateDistance(centroids[0], data.instance(i));
+            double minDistance = dm.measure(centroids[0], data.instance(i));
             for (int j = 0; j < centroids.length; j++) {
-                double dist = dm.calculateDistance(centroids[j], data.instance(i));
+                double dist = dm.measure(centroids[j], data.instance(i));
                 if (dm.compare(dist, minDistance)) {
                     minDistance = dist;
                     tmpCluster = j;

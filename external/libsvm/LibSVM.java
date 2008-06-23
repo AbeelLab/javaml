@@ -6,6 +6,7 @@
 package external.libsvm;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Map;
 
 import net.sf.javaml.classification.Classifier;
@@ -23,18 +24,19 @@ public class LibSVM implements Classifier {
 
     private svm_model model;
 
-     private Dataset data;
+    private Dataset data;
 
     private svm_parameter param = new svm_parameter();
 
-    public LibSVM(){
-        param.C=1;
+    public LibSVM() {
+        param.C = 1;
     }
-    
+
     public void buildClassifier(Dataset data) {
-        // System.out.println("Size: " + data.size());
+        // System.out.println("LSVM input: " + data.size());
+        //        
         // System.out.println("att: " + data.noAttributes());
-         this.data = data;
+        this.data = data;
         // svm_parameter param = new svm_parameter();
         // default values
         param.svm_type = svm_parameter.C_SVC;
@@ -44,14 +46,14 @@ public class LibSVM implements Classifier {
         param.coef0 = 0;
         param.nu = 0.5;
         param.cache_size = 100;
-//        param.C = 1;
+        // param.C = 1;
         param.eps = 1e-3;
         param.p = 0.1;
         param.shrinking = 1;
         param.probability = 0;
         param.nr_weight = 0;
-        param.weight_label = new int[0];
-        param.weight = new double[0];
+        // param.weight_label = new int[0];
+        // param.weight = new double[0];
         // cross_validation = 0;
         // svm.
         // svm s=new svm();
@@ -59,28 +61,20 @@ public class LibSVM implements Classifier {
         p.l = data.size();
         p.y = new double[data.size()];
         p.x = new svm_node[data.size()][data.noAttributes()];
-        for (int i = 0; i < data.size(); i++) {
-            //TODO implement sparseness
-//            System.out.println(data.instance(i).classValue());
-            p.y[i] = data.classIndex(data.instance(i).classValue());
-//            System.out.println(p.y[i]);
-            for (int j = 0; j < data.noAttributes(); j++) {
-                p.x[i][j] = new svm_node();
-                p.x[i][j].index = j;
-                p.x[i][j].value = data.instance(i).value(j);
+        int tmpIndex = 0;
+        int noAttributes = data.noAttributes();
+        while (data.size() > 0) {
+            // TODO implement sparseness
+            Instance tmp = data.remove(0);
+            p.y[tmpIndex] = data.classIndex(tmp.classValue());
+            // System.out.println(p.y[i]);
+            for (int j = 0; j < noAttributes; j++) {
+                p.x[tmpIndex][j] = new svm_node();
+                p.x[tmpIndex][j].index = j;
+                p.x[tmpIndex][j].value = tmp.value(j);
             }
-
+            tmpIndex++;
         }
-        // p.x = new svm_node[data.noAttributes()][data.size()];
-        // for (int i = 0; i < data.size(); i++) {
-        // p.y[i] = data.instance(i).classValue();
-        // for (int j = 0; j < data.noAttributes(); j++) {
-        // p.x[j][i] = new svm_node();
-        // p.x[j][i].index = j;
-        // p.x[j][i].value = data.instance(i).value(j);
-        // }
-        //
-        // }
 
         model = svm.svm_train(p, param);
         // try {
@@ -89,9 +83,11 @@ public class LibSVM implements Classifier {
         // // TOO Auto-generated catch block
         // e.printStackTrace();
         // }
-        // System.out.println(Arrays.toString(model.nSV));
+        // System.out.println("nSV: "+Arrays.toString(model.nSV));
         double[][] coef = model.sv_coef;
         // System.out.println();
+        // System.out.println("LSVM: " + model.SV.length);
+        // System.out.println("LSVM: " + model.SV[0].length);
         double[][] prob = new double[model.SV.length][model.SV[0].length];// model.SV
         for (int i = 0; i < model.SV.length; i++) {
             for (int j = 0; j < model.SV[0].length; j++) {
@@ -152,23 +148,23 @@ public class LibSVM implements Classifier {
     }
 
     public Object classifyInstance(Instance instance) {
-        svm_node[] x = new svm_node[instance.size()];
-        //TODO implement sparseness
+        svm_node[] x = new svm_node[instance.noAttributes()];
+        // TODO implement sparseness
         for (int i = 0; i < instance.size(); i++) {
             x[i] = new svm_node();
             x[i].index = i;
             x[i].value = instance.value(i);
         }
-        double d=svm.svm_predict(model, x);
-        
-//        System.out.print("pp "+instance.classValue()+"\t"+(int)d);
-//        System.out.println("\t"+data.classValue((int)d));
-        return data.classValue((int)d);
+        double d = svm.svm_predict(model, x);
+
+        // System.out.print("pp "+instance.classValue()+"\t"+(int)d);
+        // System.out.println("\t"+data.classValue((int)d));
+        return data.classValue((int) d);
     }
 
-//    public double[] distributionForInstance(Instance instance) {
-//        return null;
-//    }
+    // public double[] distributionForInstance(Instance instance) {
+    // return null;
+    // }
 
     public void setC(double c) {
         param.C = c;

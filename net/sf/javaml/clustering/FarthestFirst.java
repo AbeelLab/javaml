@@ -29,8 +29,8 @@ package net.sf.javaml.clustering;
 import java.util.Random;
 
 import net.sf.javaml.core.Dataset;
+import net.sf.javaml.core.DefaultDataset;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.core.SimpleDataset;
 import net.sf.javaml.distance.DistanceMeasure;
 import net.sf.javaml.distance.EuclideanDistance;
 
@@ -103,7 +103,7 @@ public class FarthestFirst implements Clusterer {
     private void updateMinDistance(double[] minDistance, boolean[] selected, Instance center) {
         for (int i = 0; i < selected.length; i++)
             if (!selected[i]) {
-                double d = dm.calculateDistance(center, data.instance(i));
+                double d = dm.measure(center, data.instance(i));
                 if (d < minDistance[i])
                     minDistance[i] = d;
             }
@@ -155,7 +155,7 @@ public class FarthestFirst implements Clusterer {
     /**
      * XXX DOC
      */
-    public Dataset[] executeClustering(Dataset data) {
+    public Dataset[] cluster(Dataset data) {
         this.data = data;
         centroids = new Instance[m_NumClusters];
 
@@ -185,14 +185,14 @@ public class FarthestFirst implements Clusterer {
         // put data in clusters using the calculated centroids
         Dataset[] clusters = new Dataset[m_NumClusters];
         for (int i = 0; i < m_NumClusters; i++) {
-            clusters[i] = new SimpleDataset();
+            clusters[i] = new DefaultDataset();
         }
         for (int i = 0; i < data.size(); i++) {
             Instance inst = data.instance(i);
-            double min = dm.calculateDistance(inst, centroids[0]);
+            double min = dm.measure(inst, centroids[0]);
             int index = 0;
             for (int j = 1; j < m_NumClusters; j++) {
-                double tmp = dm.calculateDistance(inst, centroids[j]);
+                double tmp = dm.measure(inst, centroids[j]);
                 if (tmp < min) {
                     min = tmp;
                     index = j;

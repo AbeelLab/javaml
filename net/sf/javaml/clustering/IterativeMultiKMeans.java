@@ -120,14 +120,14 @@ public class IterativeMultiKMeans implements Clusterer {
     /**
      * XXX add doc
      */
-    public Dataset[] executeClustering(Dataset data) {
+    public Dataset[] cluster(Dataset data) {
         KMeans km = new KMeans(kMin, this.iterations, this.dm);
-        Dataset[] bestClusters = km.executeClustering(data);
+        Dataset[] bestClusters = km.cluster(data);
         for (clusters = kMin + 1; clusters <= kMax; clusters++) {
             double bestScore = this.ce.score(bestClusters);
             for (int i = 0; i < repeats; i++) {
                 KMeans km2 = new KMeans(clusters, this.iterations, this.dm);
-                Dataset[] tmpClusters = km2.executeClustering(data);
+                Dataset[] tmpClusters = km2.cluster(data);
                 double tmpScore = this.ce.score(tmpClusters);
                 if (this.ce.compareScore(bestScore, tmpScore)) {
                     bestScore = tmpScore;

@@ -29,6 +29,7 @@ package net.sf.javaml.clustering;
 import java.util.Random;
 
 import net.sf.javaml.core.Dataset;
+import net.sf.javaml.core.DefaultDataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.KDTree;
 import net.sf.javaml.core.SimpleDataset;
@@ -164,7 +165,7 @@ public class XMeans implements Clusterer {
      * @throws Exception
      *             if the clusterer has not been generated successfully
      */
-    public Dataset[] executeClustering(Dataset data) {
+    public Dataset[] cluster(Dataset data) {
         this.data = data;
 
         m_NumSplits = 0;
@@ -340,7 +341,7 @@ public class XMeans implements Clusterer {
         }
         Dataset[] out = new Dataset[m_NumClusters];
         for (int i = 0; i < out.length; i++) {
-            out[i] = new SimpleDataset();
+            out[i] = new DefaultDataset();
         }
         for (int i = 0; i < data.size(); i++) {
             Instance inst = data.instance(i);

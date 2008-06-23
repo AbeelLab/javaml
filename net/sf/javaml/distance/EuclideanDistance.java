@@ -30,11 +30,11 @@ public class EuclideanDistance extends NormDistance {
     private static final long serialVersionUID = 6672471509639068507L;
 
     public double calculateDistance(Instance x, Instance y) {
-        if (x.size() != y.size()) {
+        if (x.noAttributes() != x.noAttributes()) {
             throw new RuntimeException("Both instances should contain the same number of values.");
         }
         double sum = 0;
-        for (int i = 0; i < x.size(); i++) {
+        for (int i = 0; i < x.noAttributes(); i++) {
             //ignore missing values
             if (!Double.isNaN(y.value(i)) && !Double.isNaN(x.value(i)))
                 sum += (y.value(i) - x.value(i)) * (y.value(i) - x.value(i));

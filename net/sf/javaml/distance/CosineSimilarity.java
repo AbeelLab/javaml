@@ -24,7 +24,6 @@
  */
 package net.sf.javaml.distance;
 
-import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 
 /**
@@ -43,15 +42,15 @@ public class CosineSimilarity extends AbstractSimilarity {
      */
     private static final long serialVersionUID = 330926456281777694L;
 
-    public double calculateDistance(Instance x, Instance y) {
-        if (x.size() != y.size()) {
+    @Override
+    public double measure(Instance x, Instance y) {
+        if (x.noAttributes() != y.noAttributes()) {
             throw new RuntimeException("Both instances should contain the same number of values.");
         }
         double sumTop = 0;
         double sumOne = 0;
         double sumTwo = 0;
-
-        for (int i = 0; i < x.size(); i++) {
+        for (int i = 0; i < x.noAttributes(); i++) {
             sumTop += x.value(i) * y.value(i);
             sumOne += x.value(i) * x.value(i);
             sumTwo += y.value(i) * y.value(i);
@@ -63,13 +62,5 @@ public class CosineSimilarity extends AbstractSimilarity {
 
     }
 
-    public double getMaximumDistance(Dataset data) {
-        //TODO implement
-        throw new RuntimeException("Method getMaximumDistance is not implemented in CosineSimilarity.");
-    }
-
-    public double getMinimumDistance(Dataset data) {
-        // TODO implement
-        throw new RuntimeException("Method getMinimumDistance is not implemented in CosineSimilarity.");
-    }
+   
 }

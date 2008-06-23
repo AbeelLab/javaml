@@ -30,6 +30,7 @@ import java.util.Random;
 import java.util.Vector;
 
 import net.sf.javaml.core.Dataset;
+import net.sf.javaml.core.DefaultDataset;
 import net.sf.javaml.core.SimpleDataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.distance.DistanceMeasure;
@@ -91,7 +92,7 @@ public class CAST {
 		for (int i = 0; i < data.size(); i++) {
 			for (int j = 0; j < data.size(); j++) {
 				this.dm = new NormalizedEuclideanSimilarity(data);
-				double similarity = dm.calculateDistance(data.instance(i),
+				double similarity = dm.measure(data.instance(i),
 						data.instance(j));
 				if (i == j) {
 					similarityMatrix[i][i] = similarity;
@@ -225,7 +226,7 @@ public class CAST {
 		// write results to output
 		Dataset[] output = new Dataset[clusters.size()];
 		for (int i = 0; i < clusters.size(); i++) {
-			output[i] = new SimpleDataset();
+			output[i] = new DefaultDataset();
 			Vector<Instance> getCluster = new Vector<Instance>();
 			getCluster = clusters.get(i);
 			for (int j = 0; j < getCluster.size(); j++) {

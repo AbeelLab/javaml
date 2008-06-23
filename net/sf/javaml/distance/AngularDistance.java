@@ -24,7 +24,6 @@
  */
 package net.sf.javaml.distance;
 
-import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 
 public class AngularDistance extends AbstractDistance {
@@ -34,7 +33,7 @@ public class AngularDistance extends AbstractDistance {
      */
     private static final long serialVersionUID = 4669057353119949494L;
 
-    public double calculateDistance(Instance i, Instance j) {
+    public double measure(Instance i, Instance j) {
         double theta1 = calcTheta(i);
         double phi1 = calcPhi(i);
         double theta2 = calcTheta(j);
@@ -47,16 +46,6 @@ public class AngularDistance extends AbstractDistance {
         if (dist != 0.0)
             dist = Math.sqrt(dist);
         return dist;
-    }
-
-    public double getMaximumDistance(Dataset data) {
-        // TODO implement
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
-
-    public double getMinimumDistance(Dataset data) {
-        // TODO implement
-        throw new UnsupportedOperationException("Not yet implemented");
     }
 
     private static double calcTheta(Instance pos) {

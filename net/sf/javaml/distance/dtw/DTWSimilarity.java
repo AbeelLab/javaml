@@ -73,23 +73,22 @@ public class DTWSimilarity extends AbstractSimilarity {
     /**
      * XXX DOC
      */
-    public double calculateDistance(Instance x, Instance y) {
-        double[] e1 = x.toArray();
-        double[] e2 = y.toArray();
+    public double measure(Instance x, Instance y) {
+
         ArrayList<Double> l1 = new ArrayList<Double>();
         ArrayList<Double> l2 = new ArrayList<Double>();
         int i, j;
 
         /** Filter NaNs */
-        for (i = 0; i < e1.length; i++) {
-            double value = e1[i];
+        for (i = 0; i < x.noAttributes(); i++) {
+            double value = x.value(i);
             if (!Double.isNaN(value)) {
                 l1.add(value);
             }
         }
 
-        for (i = 0; i < e2.length; i++) {
-            double value = e2[i];
+        for (i = 0; i < y.noAttributes(); i++) {
+            double value = y.value(i);
             if (!Double.isNaN(value)) {
                 l2.add(new Double(value));
             }

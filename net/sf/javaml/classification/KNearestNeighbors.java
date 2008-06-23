@@ -1,7 +1,5 @@
 /**
- * KNearestNeighbors.java
- *
- * %SVN.HEADER%
+ * %SVN.HEADER% 
  */
 package net.sf.javaml.classification;
 

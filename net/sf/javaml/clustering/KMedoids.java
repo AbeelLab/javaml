@@ -28,8 +28,8 @@ import java.util.Random;
 
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.DatasetTools;
+import net.sf.javaml.core.DefaultDataset;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.core.SimpleDataset;
 import net.sf.javaml.distance.DistanceMeasure;
 import net.sf.javaml.distance.EuclideanDistance;
 
@@ -87,9 +87,9 @@ public class KMedoids implements Clusterer {
     /**
      * XXX doc
      */
-    public Dataset[] executeClustering(Dataset data) {
+    public Dataset[] cluster(Dataset data) {
         Instance[] medoids = new Instance[numberOfClusters];
-        Dataset[] output = new SimpleDataset[numberOfClusters];
+        Dataset[] output = new DefaultDataset[numberOfClusters];
         for (int i = 0; i < numberOfClusters; i++) {
             int random = rg.nextInt(data.size());
             medoids[i] = data.instance(random);
@@ -104,15 +104,9 @@ public class KMedoids implements Clusterer {
             changed = recalculateMedoids(assignment, medoids, output, data);
 
         }
-        if (count == maxIterations) {
-            // HACK: in this case there can be empty clusters. When the number of
-            // iterations is set too low or the number of clusters too high, it
-            // may not be possible for the algorithm to find enough non empty
-            // clusters within the maximum number of iterations.
-            return DatasetTools.filterEmpty(output);
-        } else {
-            return output;
-        }
+
+        return output;
+
     }
 
     /**
@@ -125,10 +119,10 @@ public class KMedoids implements Clusterer {
     private int[] assign(Instance[] medoids, Dataset data) {
         int[] out = new int[data.size()];
         for (int i = 0; i < data.size(); i++) {
-            double bestDistance = dm.calculateDistance(data.instance(i), medoids[0]);
+            double bestDistance = dm.measure(data.instance(i), medoids[0]);
             int bestIndex = 0;
             for (int j = 1; j < medoids.length; j++) {
-                double tmpDistance = dm.calculateDistance(data.instance(i), medoids[j]);
+                double tmpDistance = dm.measure(data.instance(i), medoids[j]);
                 if (dm.compare(tmpDistance, bestDistance)) {
                     bestDistance = tmpDistance;
                     bestIndex = j;
@@ -158,7 +152,7 @@ public class KMedoids implements Clusterer {
     private boolean recalculateMedoids(int[] assignment, Instance[] medoids, Dataset[] output, Dataset data) {
         boolean changed = false;
         for (int i = 0; i < numberOfClusters; i++) {
-            output[i] = new SimpleDataset();
+            output[i] = new DefaultDataset();
             for (int j = 0; j < assignment.length; j++) {
                 if (assignment[j] == i) {
                     output[i].add(data.instance(j));
@@ -168,9 +162,9 @@ public class KMedoids implements Clusterer {
                 medoids[i] = data.instance(rg.nextInt(data.size()));
                 changed = true;
             } else {
-                Instance centroid = DatasetTools.getCentroid(output[i]);
+                Instance centroid = DatasetTools.average(output[i]);
                 Instance oldMedoid = medoids[i];
-                medoids[i] = DatasetTools.getNearest(data, dm, centroid);
+                medoids[i] = data.kNearest(1, dm, centroid).iterator().next();//(data, dm, centroid);
                 if (!medoids[i].equals(oldMedoid))
                     changed = true;
             }

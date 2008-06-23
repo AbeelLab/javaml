@@ -32,7 +32,7 @@ import java.util.Vector;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.DatasetTools;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.core.SimpleDataset;
+import net.sf.javaml.core.DefaultDataset;
 import net.sf.javaml.distance.DistanceMeasure;
 import net.sf.javaml.distance.NormalizedEuclideanSimilarity;
 
@@ -189,7 +189,7 @@ public class Ant implements Clusterer {
      * @return mean instance
      */
     private Instance meanH(Dataset heap) {
-        return DatasetTools.getCentroid(heap);
+        return DatasetTools.average(heap);
     }
 
     /**
@@ -201,9 +201,9 @@ public class Ant implements Clusterer {
      */
     private double minSimilarity(Dataset heap) {
         Instance meanH = meanH(heap);
-        double minSimilar = dm.calculateDistance(heap.instance(0), meanH);
+        double minSimilar = dm.measure(heap.instance(0), meanH);
         for (int i = 1; i < heap.size(); i++) {
-            double sim = dm.calculateDistance(heap.instance(i), meanH);
+            double sim = dm.measure(heap.instance(i), meanH);
             minSimilar = Math.min(minSimilar, sim);
         }
         return minSimilar;
@@ -219,10 +219,10 @@ public class Ant implements Clusterer {
      */
     private int leastSim(Dataset heap) {
         Instance meanH = meanH(heap);
-        double sim1 = dm.calculateDistance(heap.instance(0), meanH);
+        double sim1 = dm.measure(heap.instance(0), meanH);
         int index = 0;
         for (int i = 1; i < heap.size(); i++) {
-            double sim2 = dm.calculateDistance(heap.instance(i), meanH);
+            double sim2 = dm.measure(heap.instance(i), meanH);
             if (sim2 > sim1) {
                 sim1 = sim2;
                 index = i;
@@ -242,7 +242,7 @@ public class Ant implements Clusterer {
         double avg = 0;
         Instance meanH = meanH(heap);
         for (int i = 0; i < heap.size(); i++) {
-            avg += dm.calculateDistance(heap.instance(i), meanH);
+            avg += dm.measure(heap.instance(i), meanH);
         }
         avg /= heap.size();
         return avg;
@@ -259,7 +259,7 @@ public class Ant implements Clusterer {
     private double tW(Dataset heapCarried, Dataset heapH) {
         Instance meanCarried = meanH(heapCarried);
         Instance meanH = meanH(heapH);
-        double similarity = dm.calculateDistance(meanCarried, meanH);
+        double similarity = dm.measure(meanCarried, meanH);
         double avgCarried = avg(heapCarried);
         double tW = Math.max(0, similarity + avgCarried - 1);
         return tW;
@@ -346,7 +346,7 @@ public class Ant implements Clusterer {
      * XXX add doc
      */
     // main
-    public Dataset[] executeClustering(Dataset data) {
+    public Dataset[] cluster(Dataset data) {
         if(dm==null)
             dm = new NormalizedEuclideanSimilarity(data);
         if (data.size() == 0) {
@@ -354,7 +354,7 @@ public class Ant implements Clusterer {
         }
         // add one instance to a cluster
         for (int i = 0; i < data.size(); i++) {
-            Dataset tmpHeap = new SimpleDataset();
+            Dataset tmpHeap = new DefaultDataset();
             Instance in = data.instance(i);
             tmpHeap.add(in);
             clusters.add(tmpHeap);
@@ -383,13 +383,13 @@ public class Ant implements Clusterer {
                 // calculated drop probability
                 if (clusters.get(randomHeap).size() == 1) {
                     if (carried.size() == 1) {
-                        probDropC = Math.pow(dm.calculateDistance(clusters.get(randomHeap).instance(0), carried.get(0)), 5);
+                        probDropC = Math.pow(dm.measure(clusters.get(randomHeap).instance(0), carried.get(0)), 5);
                     } else {// never add a large heap to a cluster with a single
                             // element
                         probDropC = 0;
                     }
                 } else if (clusters.get(randomHeap).size() > 1) {
-                    Dataset carriedData = new SimpleDataset(carried);
+                    Dataset carriedData = new DefaultDataset(carried);
                     double avgHeap = avg(clusters.get(randomHeap));
                     double tW = tW(carriedData, clusters.get(randomHeap));
                     double stimToDrop = stimulus(avgHeap, tW, 3);
@@ -418,7 +418,7 @@ public class Ant implements Clusterer {
                 }
 
                 if (failMovesDrop >= maxFailMovesDrop) {
-                   Dataset newHeap = new SimpleDataset(carried);
+                   Dataset newHeap = new DefaultDataset(carried);
                    clusters.add(newHeap);
                     failMovesDrop = 0;
                     carried = null;
@@ -450,7 +450,8 @@ public class Ant implements Clusterer {
                     carried=new Vector<Instance>();
                     int randomIndex=rg.nextInt(2);
                     carried.add(clusters.get(randomHeap).instance(randomIndex));
-                    clusters.set(randomHeap, DatasetTools.removeInstance(clusters.get(randomHeap), randomIndex));
+                    clusters.get(randomHeap).remove(randomIndex);
+//                    clusters.set(randomHeap, DatasetTools.removeInstance(clusters.get(randomHeap), randomIndex));
                     failMovesPick = 0;
                 } else if (clusters.get(randomHeap).size() > 2) {
                     // calculate stimulus and pick probability for picking 1

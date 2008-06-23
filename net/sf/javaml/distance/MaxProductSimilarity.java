@@ -25,7 +25,6 @@
  */
 package net.sf.javaml.distance;
 
-import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 
 /**
@@ -45,42 +44,23 @@ public class MaxProductSimilarity extends AbstractSimilarity {
     /**
      * XXX doc
      */
-    public double calculateDistance(Instance x, Instance y) {
-        double[] e1 = x.toArray();
-        double[] e2 = y.toArray();
+    public double measure(Instance x, Instance y) {
+
         double max = Double.NEGATIVE_INFINITY;
 
-        for (int i = 0; i < e1.length; i++) {
+        for (int i = 0; i < x.noAttributes(); i++) {
 
-            if ((!Double.isNaN(e1[i])) && (!Double.isNaN(e2[i]))) {
+            double v = x.value(i) * y.value(i);
 
-                double v = e2[i] * e1[i];
+            if (v > max)
+                max = v;
 
-                if (v > max)
-                    max = v;
-            }
         }
 
         if (max > 0.0)
             return max;
         else
             return Double.NaN;
-    }
-
-    /**
-     * XXX doc
-     */
-    public double getMaximumDistance(Dataset data) {
-        // TODO implement
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
-
-    /**
-     * XXX doc
-     */
-    public double getMinimumDistance(Dataset data) {
-        // TODO implement
-        throw new UnsupportedOperationException("Not yet implemented");
     }
 
 }

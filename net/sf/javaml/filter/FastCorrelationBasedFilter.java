@@ -86,7 +86,7 @@ public class FastCorrelationBasedFilter extends AbstractFilter {
          * features in descending order of their SU values.
          */
 
-        int numAttrs = data.instance(0).size();
+        int numAttrs = data.noAttributes();
         meta_diff = getDiff(data);
         int len = 0;
 
@@ -176,14 +176,14 @@ public class FastCorrelationBasedFilter extends AbstractFilter {
     } // end of fcbf()
 
     private int[] getDiff(Dataset data) {
-        int[] out = new int[data.instance(0).size() + 1];
+        int[] out = new int[data.noAttributes() + 1];
         for (int i = 0; i < out.length - 1; i++) {
             HashSet<Double> set = new HashSet<Double>();
             for (Instance in : data)
                 set.add(in.value(i));
             out[i] = set.size();
         }
-        out[data.instance(0).size()] = data.numClasses();
+        out[data.noAttributes()] = data.classes().size();
         return out;
     }
 
@@ -266,7 +266,7 @@ public class FastCorrelationBasedFilter extends AbstractFilter {
         int count = 0;
 
         for (int i = 0; i < data.size(); i++) {
-            if (attrIndex == data.instance(0).size()) {
+            if (attrIndex == data.noAttributes()) {
                 if (MathUtils.eq(data.instance(i).classValue(), attrValue)) {
                     count++;
                 }

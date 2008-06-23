@@ -29,8 +29,8 @@ import java.util.Vector;
 
 import net.sf.javaml.clustering.Clusterer;
 import net.sf.javaml.core.Dataset;
+import net.sf.javaml.core.DefaultDataset;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.core.SimpleDataset;
 import net.sf.javaml.distance.AbstractSimilarity;
 import net.sf.javaml.distance.DistanceMeasure;
 
@@ -82,15 +82,15 @@ public class MCL implements Clusterer {
     // maximum value considered zero for pruning operations
     private double maxZero = 0.001;
 
-    public Dataset[] executeClustering(Dataset data) {
+    public Dataset[] cluster(Dataset data) {
         SparseMatrix dataSparseMatrix = new SparseMatrix();
         for (int i = 0; i < data.size(); i++) {
             for (int j = 0; j <= i; j++) {
                 Instance x = data.instance(i);
                 Instance y = data.instance(j);
-                double dist = dm.calculateDistance(x, y);
+                double dist = dm.measure(x, y);
                 if (dist > maxZero)
-                    dataSparseMatrix.add(i, j, dm.calculateDistance(x, y));
+                    dataSparseMatrix.add(i, j, dm.measure(x, y));
             }
         }
 
@@ -126,7 +126,7 @@ public class MCL implements Clusterer {
        
         Dataset[] output = new Dataset[finalClusters.size()];
         for (int i = 0; i < finalClusters.size(); i++) {
-            output[i] = new SimpleDataset();
+            output[i] = new DefaultDataset();
         }
         for (int i = 0; i < finalClusters.size(); i++) {
             Vector<Instance> getCluster = new Vector<Instance>();

@@ -7,18 +7,15 @@ package net.sf.javaml.filter.eval;
 
 import java.util.Random;
 
-import be.abeel.util.Copier;
-
 import net.sf.javaml.classification.evaluation.PerformanceMeasure;
 import net.sf.javaml.classification.tree.RandomTree;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.DatasetTools;
 import net.sf.javaml.core.DefaultDataset;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.core.InstanceTools;
-import net.sf.javaml.filter.eval.IAttributeEvaluation;
 import net.sf.javaml.utils.ArrayUtils;
 import net.sf.javaml.utils.MathUtils;
+import be.abeel.util.Copier;
 
 /**
  * Random Forest based attribute evaluation.

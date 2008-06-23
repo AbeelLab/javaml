@@ -32,6 +32,8 @@ import java.util.Vector;
 
 import net.sf.javaml.classification.Classifier;
 import net.sf.javaml.core.Dataset;
+import net.sf.javaml.core.DefaultDataset;
+import net.sf.javaml.core.DenseInstance;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.SimpleDataset;
 import net.sf.javaml.core.WrapperInstance;
@@ -69,7 +71,7 @@ public class SOM implements Clusterer, Classifier {
      * @return double - returns the distance between two vectors, x and y
      */
     private double getDistance(double[] x, double[] y) {
-        return dm.calculateDistance(new WrapperInstance(x), new WrapperInstance(y));
+        return dm.measure(new DenseInstance(x), new DenseInstance(y));
     }
 
     public class JSomMath {
@@ -1018,7 +1020,7 @@ public class SOM implements Clusterer, Classifier {
     }
 
   private WeightVectors wV;
-    public Dataset[] executeClustering(Dataset data) {
+    public Dataset[] cluster(Dataset data) {
         // hexa || rect
         wV = new WeightVectors(xdim, ydim, data.instance(0).size(), gridType.toString());
         InputVectors iV = convertDataset(data);
@@ -1031,7 +1033,7 @@ public class SOM implements Clusterer, Classifier {
         jst.doTraining();
         Vector<Dataset> clusters = new Vector<Dataset>();
         for (int i = 0; i < wV.size(); i++) {
-            clusters.add(new SimpleDataset());
+            clusters.add(new DefaultDataset());
         }
 
         wV = doLabeling(wV, iV, data, clusters);
@@ -1101,7 +1103,7 @@ public class SOM implements Clusterer, Classifier {
     }
 
     public void buildClassifier(Dataset data) {
-        executeClustering(data);
+        cluster(data);
 
     }
 

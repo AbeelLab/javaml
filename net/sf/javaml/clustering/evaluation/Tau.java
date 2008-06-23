@@ -56,7 +56,7 @@ public class Tau implements ClusterEvaluation {
 				// count t.
 				for (int k = j + 1; k < datas[i].size(); k++) {
 					Instance y = datas[i].instance(k);
-					double distance = dm.calculateDistance(x, y);
+					double distance = dm.measure(x, y);
 					fw++;
 					if (maxIntraDist[i] < distance) {
 						maxIntraDist[i] = distance;
@@ -70,7 +70,7 @@ public class Tau implements ClusterEvaluation {
 				for (int k = i + 1; k < datas.length; k++) {
 					for (int l = 0; l < datas[k].size(); l++) {
 						Instance y = datas[k].instance(l);
-						double distance = dm.calculateDistance(x, y);
+						double distance = dm.measure(x, y);
 						fb++;
 						if (distance < maxIntraDist[i]) {
 							sMin++;

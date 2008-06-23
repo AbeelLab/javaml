@@ -121,6 +121,7 @@ public class DenseInstance extends AbstractInstance implements Instance {
     }
 
     @Override
+    @Deprecated
     public int size() {
         return attributes.length;
     }
