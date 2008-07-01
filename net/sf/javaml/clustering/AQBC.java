@@ -27,6 +27,8 @@ package net.sf.javaml.clustering;
 import java.util.Vector;
 
 import net.sf.javaml.core.Dataset;
+import net.sf.javaml.core.DefaultDataset;
+import net.sf.javaml.core.DenseInstance;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.distance.DistanceMeasure;
 import net.sf.javaml.distance.EuclideanDistance;
@@ -49,16 +51,16 @@ public class AQBC implements Clusterer {
 
     private int E;
 
-    class TaggedInstance extends SimpleInstance {
+    class TaggedInstance {
 
-        /**
-         * 
-         */
+        Instance inst;
+
         private static final long serialVersionUID = 8990262697388049283L;
+
         private int tag;
 
-        TaggedInstance(SimpleInstance i, int tag) {
-            super(i);
+        TaggedInstance(Instance i, int tag) {
+            this.inst = i;
             this.tag = tag;
 
         }
@@ -82,7 +84,7 @@ public class AQBC implements Clusterer {
         // Filter filter=new NormalizeMean();
         // data=filter.filterDataset(data);
         Vector<TaggedInstance> SP = normalize(data);
-        System.out.println("Remaining datapoints = "+SP.size());
+        System.out.println("Remaining datapoints = " + SP.size());
         // Vector<Instance> SP = new Vector<Instance>();
         // for (int i = 0; i < norm.size(); i++) {
         // SP.add(data.getInstance(i));
@@ -94,11 +96,11 @@ public class AQBC implements Clusterer {
         int BPR = 0;
         int RRES = 0;
         int BPRTH = 10;
-        
+
         double REITERTHR = 0.1;
-        E = data.instance(0).size();
+        E = data.noAttributes();
         // int D = E - 2;
-        double R =  Math.sqrt(E - 1);
+        double R = Math.sqrt(E - 1);
         double EXTTRESH = R / 2.0f;
         int MINNRGENES = 2;
         int cluster = 0;
@@ -186,9 +188,9 @@ public class AQBC implements Clusterer {
      */
     private Vector<TaggedInstance> normalize(Dataset data) {
         Vector<TaggedInstance> out = new Vector<TaggedInstance>();
-       
+
         for (int i = 0; i < data.size(); i++) {
-            double[] old = data.instance(i).toArray();
+            Double[] old = data.instance(i).values().toArray(new Double[0]);
             double[] conv = new double[old.length];
             for (int j = 0; j < old.length; j++) {
                 conv[j] = old[j];
@@ -208,11 +210,11 @@ public class AQBC implements Clusterer {
 
                 }
                 // System.out.println("VAL "+i+" = "+Arrays.toString(val));
-                out.add(new TaggedInstance(new SimpleInstance(val), i));
+                out.add(new TaggedInstance(new DenseInstance(val), i));
             }
         }
         // System.out.println("FIRST = "+out.get(0));
-        
+
         return out;
     }
 
@@ -256,7 +258,7 @@ public class AQBC implements Clusterer {
      * @param cluster
      */
     private void outputCluster(Vector<TaggedInstance> q, int index) {
-        Dataset tmp = new SimpleDataset();
+        Dataset tmp = new DefaultDataset();
         for (TaggedInstance i : q) {
             tmp.add(data.instance(i.getTag()));
         }
@@ -267,10 +269,10 @@ public class AQBC implements Clusterer {
     private DistanceMeasure dm;
 
     private Vector<TaggedInstance> retrieveInstances(Vector<TaggedInstance> sp, double[] me2, double radnw2) {
-        Instance tmp = new SimpleInstance(me2);
+        Instance tmp = new DenseInstance(me2);
         Vector<TaggedInstance> out = new Vector<TaggedInstance>();
         for (TaggedInstance inst : sp) {
-            if (dm.calculateDistance(inst, tmp) < radnw2)
+            if (dm.measure(inst.inst, tmp) < radnw2)
                 out.add(inst);
         }
         return out;
@@ -360,7 +362,7 @@ public class AQBC implements Clusterer {
             double PB_new = 1 - PC_new;
             if (Math.abs(VAR_new - VAR) < CDIF && Math.abs(PC_new - PC) < CDIF) {
                 CONV = true;
-            } 
+            }
             PC = PC_new;
             PB = PB_new;
             VAR = VAR_new;
@@ -419,7 +421,7 @@ public class AQBC implements Clusterer {
         double SD1 = (2 * Math.pow(Math.PI, (D + 1) / 2)) / (GammaFunction.gamma((D + 1) / 2));
         double[] out = new double[r.length];
         for (int i = 0; i < out.length; i++) {
-            out[i] =  ((SD / (SD1 * (Math.pow(R, D)))) * (Math.pow(r[i], D - 1)));
+            out[i] = ((SD / (SD1 * (Math.pow(R, D)))) * (Math.pow(r[i], D - 1)));
         }
         return out;
     }
@@ -492,7 +494,7 @@ public class AQBC implements Clusterer {
         // verschil
         double[] out = new double[as.size()];
         for (int i = 0; i < as.size(); i++) {
-            double[] values = as.get(i).toArray();
+            Double[] values = as.get(i).inst.values().toArray(new Double[0]);
             // float[]dif=new float[values.length];
             float sum = 0;
             for (int j = 0; j < values.length; j++) {
@@ -529,7 +531,7 @@ public class AQBC implements Clusterer {
         // System.out.println("FIRSTA = "+A.get(0));
         double[] ME1 = mean(A);
         // System.out.println("A = "+A);
-       // System.out.println("ME1 = " + Arrays.toString(ME1));
+        // System.out.println("ME1 = " + Arrays.toString(ME1));
         // System.out.println("EXTTRESH = "+EXTTRESH);
         double[] DMI = calculateDistances(A, ME1);
         // System.out.println("DMI = "+Arrays.toString(DMI));
@@ -621,17 +623,17 @@ public class AQBC implements Clusterer {
     }
 
     private double[] mean(Vector<TaggedInstance> a) {
-        double[] out = new double[a.get(0).size()];
+        double[] out = new double[a.get(0).inst.noAttributes()];
         for (int i = 0; i < a.size(); i++) {
             // System.out.println("Instance "+i+" = "+a.get(i));
-            for (int j = 0; j < a.get(0).size(); j++)
-                out[j] += a.get(i).value(j);
+            for (int j = 0; j < a.get(0).inst.noAttributes(); j++)
+                out[j] += a.get(i).inst.value(j);
         }
         // System.out.println("OUT = "+Arrays.toString(out));
-        for (int j = 0; j < a.get(0).size(); j++) {
+        for (int j = 0; j < a.get(0).inst.noAttributes(); j++) {
             out[j] /= a.size();
         }
-       return out;
+        return out;
 
     }
 

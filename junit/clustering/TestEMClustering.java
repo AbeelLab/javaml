@@ -13,8 +13,8 @@ import net.sf.javaml.core.SimpleDataset;
 import net.sf.javaml.core.SimpleInstance;
 import net.sf.javaml.filter.UnsetClassFilter;
 import net.sf.javaml.tools.data.FileHandler;
-import net.sf.javaml.tools.weka.ClusteringBridge;
-import net.sf.javaml.tools.weka.WekaUtils;
+import net.sf.javaml.tools.weka.WekaClustering;
+import net.sf.javaml.tools.weka.ToWekaUtils;
 
 import org.junit.Test;
 
@@ -42,11 +42,11 @@ public class TestEMClustering {
 			d = new double[] { 0.0083603, 0.22234, 0.022505, 1 };
 			data.add(new SimpleInstance(d));
 
-			ClusteringBridge em = new ClusteringBridge(new EM());
+			WekaClustering em = new WekaClustering(new EM());
 			Dataset[] clusters = em.cluster(data);
 			System.out.println("Size: " + clusters.length);
 
-			Instances insts = new WekaUtils(data).getDataset();
+			Instances insts = new ToWekaUtils(data).getDataset();
 			EM emWeka = new EM();
 			// emWeka.setNumClusters(3);
 			emWeka.setMaxIterations(50);
@@ -102,12 +102,12 @@ public class TestEMClustering {
 
 	private void process(Dataset data) {
 		try {
-			ClusteringBridge em = new ClusteringBridge(new EM());
+			WekaClustering em = new WekaClustering(new EM());
 			Dataset[] clusters = em.cluster(data);
 			System.out.println("Java-ML size: " + clusters.length);
 
 			Dataset data2 = new UnsetClassFilter().filterDataset(data);
-			Instances insts =  new WekaUtils(data2).getDataset();
+			Instances insts =  new ToWekaUtils(data2).getDataset();
 			EM emWeka = new EM();
 			// emWeka.setNumClusters(3);
 			// emWeka.setMaxIterations(50);

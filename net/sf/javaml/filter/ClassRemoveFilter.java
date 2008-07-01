@@ -1,13 +1,12 @@
 /**
- * ClassFilter.java
- *
  * %SVN.HEADER%
  */
 package net.sf.javaml.filter;
 
+import java.util.Vector;
+
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.core.SimpleDataset;
 
 /**
  * Removes all instances from a data set that have a specific class value
@@ -22,17 +21,17 @@ import net.sf.javaml.core.SimpleDataset;
  */
 public class ClassRemoveFilter implements DatasetFilter {
 
-    private int classValue;
+    private Object classValue;
 
     public ClassRemoveFilter() {
-        this(0);
+        this(null);
     }
-    
-    public ClassRemoveFilter(int classValue) {
+
+    public ClassRemoveFilter(Object classValue) {
         this.classValue = classValue;
     }
 
-    public void setClass(int classValue) {
+    public void setClass(Object classValue) {
         this.classValue = classValue;
     }
 
@@ -41,12 +40,12 @@ public class ClassRemoveFilter implements DatasetFilter {
 
     }
 
-    public Dataset filterDataset(Dataset data) {
-        Dataset out = new SimpleDataset();
+    public void filterDataset(Dataset data) {
+        Vector<Instance> toRemove = new Vector<Instance>();
         for (Instance i : data)
-            if (i.classValue() != classValue)
-                out.add(i);
-        return out;
+            if (i.classValue().equals(classValue))
+                toRemove.add(i);
+        data.removeAll(toRemove);
     }
 
 }

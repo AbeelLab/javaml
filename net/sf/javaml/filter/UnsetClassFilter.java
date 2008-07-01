@@ -1,10 +1,9 @@
 /**
- * UnsetClassFilter.java
- *
  * %SVN.HEADER%
  */
 package net.sf.javaml.filter;
 
+import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 
 /**
@@ -20,8 +19,15 @@ import net.sf.javaml.core.Instance;
  */
 public class UnsetClassFilter extends AbstractFilter {
 
+    @Override
     public void filterInstance(Instance inst) {
         inst.setClassValue(null);
+    }
+
+    @Override
+    public void filterDataset(Dataset d) {
+        super.filterDataset(d);
+        d.classes().clear();
     }
 
 }

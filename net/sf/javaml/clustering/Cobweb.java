@@ -31,7 +31,7 @@ import java.util.Vector;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.DefaultDataset;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.filter.Filter;
+import net.sf.javaml.filter.DatasetFilter;
 import net.sf.javaml.filter.NormalizeMean;
 
 /**
@@ -721,17 +721,17 @@ public class Cobweb implements Clusterer {
         m_numberOfClustersDetermined = false;
 
         if (m_cobwebTree == null) {
-            m_cobwebTree = new CNode(newInstance.size(), newInstance);
+            m_cobwebTree = new CNode(newInstance.noAttributes(), newInstance);
         } else {
             m_cobwebTree.addInstance(newInstance);
         }
     }
 
-    private Filter filter = new NormalizeMean();
+    private DatasetFilter filter = new NormalizeMean();
 
     public Dataset[] cluster(Dataset data) {
 
-        data = filter.filterDataset(data);
+        filter.filterDataset(data);
         m_numberOfClusters = -1;
         m_cobwebTree = null;
         m_numberSplits = 0;
@@ -758,7 +758,7 @@ public class Cobweb implements Clusterer {
             Dataset tmp = new DefaultDataset();
             Dataset fromTree = tree.m_clusterInstances;
             for (int i = 0; i < fromTree.size(); i++) {
-                tmp.add(filter.unfilterInstance(fromTree.instance(i)));
+                tmp.add(fromTree.instance(i));
             }
             clusters.add(tmp);
         }

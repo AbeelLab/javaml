@@ -75,6 +75,8 @@ public interface Instance extends Map<Integer, Double>, Iterable<Double>, Serial
 
     public Instance multiply(double value);
 
+    public Instance multiply(Instance value);
+
     /**
      * Removes attribute from the instance
      * 
@@ -82,5 +84,18 @@ public interface Instance extends Map<Integer, Double>, Iterable<Double>, Serial
      */
     public void removeAttribute(int i);
 
-    
+    /**
+     * Take square root of all attributes.
+     * 
+     * @return instance with a the square root for all attributes
+     */
+    public Instance sqrt();
+
+    /**
+     * Return unique identifier for this instance.
+     * 
+     * @return
+     */
+    public int getID();
+
 }

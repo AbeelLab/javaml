@@ -35,8 +35,6 @@ import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.DefaultDataset;
 import net.sf.javaml.core.DenseInstance;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.core.SimpleDataset;
-import net.sf.javaml.core.WrapperInstance;
 import net.sf.javaml.distance.DistanceMeasure;
 import net.sf.javaml.distance.EuclideanDistance;
 
@@ -53,7 +51,7 @@ import net.sf.javaml.distance.EuclideanDistance;
  * @author Thomas Abeel
  * 
  */
-public class SOM implements Clusterer, Classifier {
+public class SOM implements Clusterer {
     /**
      * 
      */
@@ -603,9 +601,12 @@ public class SOM implements Clusterer, Classifier {
          * @param double[]
          *            values - All the values of this node.
          */
-        public SomNode(String label, double[] values) {
+        public SomNode(String label, Double[] values) {
             this.label = label;
-            this.values = values.clone();
+            this.values=new double[values.length];
+            for(int i=0;i<values.length;i++)
+                this.values[i]=values[i];
+//            this.values = values.clone();
             location = new double[1];
         }
 
@@ -1095,24 +1096,25 @@ public class SOM implements Clusterer, Classifier {
     private InputVectors convertDataset(Dataset data) {
         InputVectors iVS = new InputVectors();
         for (int i = 0; i < data.size(); i++) {
-            double[] values = data.instance(i).toArray();
+           Double[] values = data.instance(i).values().toArray(new Double[0]);
             SomNode tmp = new SomNode("node_" + i, values);
             iVS.add(tmp);
         }
         return iVS;
     }
-
-    public void buildClassifier(Dataset data) {
-        cluster(data);
-
-    }
-
-    public int classifyInstance(Instance instance) {
-        return resolveIndexOfWinningNeuron(instance.toArray());
-    }
-
-    public double[] distributionForInstance(Instance instance) {
-        throw new UnsupportedOperationException("Not implemented");
-    }
+//
+//    public void buildClassifier(Dataset data) {
+//        cluster(data);
+//
+//    }
+//
+//    @Override
+//    public Object classifyInstance(Instance instance) {
+//        return resolveIndexOfWinningNeuron(instance.toArray());
+//    }
+//
+//    public double[] distributionForInstance(Instance instance) {
+//        throw new UnsupportedOperationException("Not implemented");
+//    }
 
 }
