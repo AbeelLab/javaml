@@ -41,7 +41,7 @@ public class RemoveAttributes extends AbstractFilter {
     @Override
     public void filterInstance(Instance instance) {
         for (int i = indices.size() - 1; i >= 0; i--) {
-            instance.removeAttribute(i);
+            instance.removeAttribute(indices.get(i));
         }
 
     }
