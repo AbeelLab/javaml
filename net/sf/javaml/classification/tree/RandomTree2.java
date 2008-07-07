@@ -117,8 +117,10 @@ public class RandomTree2 implements Classifier {
                 C[i] = vectorB[i] * (dotproduct / (normB * normB));
             }
 
-            double normC = norm(C);
 
+            System.out.println("C"+ Arrays.toString(C));
+            double normC = Math.signum(C[0])*norm(C);
+//            double normC =norm(C);
             distanceFromOrigin.put(inst, norm(C));
             sortedDistances.add(norm(C));
             if (normC < normB)
