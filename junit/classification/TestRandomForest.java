@@ -25,19 +25,33 @@ import org.junit.Test;
 
 public class TestRandomForest {
     @Test
-    public void testRFPerformance() {
-
+    public void testRF2Performance() {
+        long seed = System.currentTimeMillis();
         try {
             Dataset data = FileHandler.loadDataset(new File("devtools/data/colon.csv.gz"), 0, ",");
             System.out.println("Loader: " + data.classes());
-            RandomForest2 rf2 = new RandomForest2(10, false, 10, new Random());
+            RandomForest2 rf2 = new RandomForest2(10, false, 20, new Random(seed));
             CrossValidation cv = new CrossValidation(rf2);
             System.out.println("RF2:" + cv.crossValidation(data, 5, new Random(10)));
 
-            RandomForest rf = new RandomForest(10, false, 10, new Random());
-            cv = new CrossValidation(rf);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+    }
+
+    @Test
+    public void testRFPerformance() {
+        long seed = System.currentTimeMillis();
+        try {
+            Dataset data = FileHandler.loadDataset(new File("devtools/data/colon.csv.gz"), 0, ",");
+            System.out.println("Loader: " + data.classes());
+
+            RandomForest rf = new RandomForest(10, false, 20, new Random(seed));
+            CrossValidation cv = new CrossValidation(rf);
             System.out.println("RF:" + cv.crossValidation(data, 5, new Random(10)));
-            
+
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
