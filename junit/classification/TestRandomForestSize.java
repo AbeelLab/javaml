@@ -23,12 +23,16 @@ import net.sf.javaml.tools.data.FileHandler;
 import org.apache.commons.math.stat.StatUtils;
 import org.junit.Test;
 
+import be.abeel.util.TimeInterval;
+
 public class TestRandomForestSize {
 
     @Test
     public void testRandomForest2Size() {
+        System.out.println("RF2");
+        long sumTime=0;
         try {
-            double[] value = new double[20];
+            double[] value = new double[10];
             double[] dataval = new double[value.length];
             long mem = 0;
             for (int i = 0; i < value.length; i++) {
@@ -37,11 +41,14 @@ public class TestRandomForestSize {
                 long dataMem = checkMem();
                 dataval[i] = dataMem;
                 // System.out.println(i);
-                RandomForest2 rt = new RandomForest2(10, false, 5, new Random());
+                long time=System.currentTimeMillis();
+                RandomForest2 rt = new RandomForest2(5, false, 5, new Random());
                 rt.buildClassifier(data);
+                sumTime+=System.currentTimeMillis()-time;
                 mem = checkMem();
                 value[i] = mem;
             }
+            System.out.println("Total time: "+new TimeInterval(sumTime));
             System.out.println("Mean data memory size: " + (StatUtils.mean(dataval)/1024.0)+" kb");
             System.out.println("Mean RF2 memory size: " + (StatUtils.mean(value)/1024.0)+" kb");
 
@@ -54,6 +61,8 @@ public class TestRandomForestSize {
 
     @Test
     public void testRandomForestSize() {
+        System.out.println("RF");
+        long sumTime=0;
         try {
             double[] value = new double[20];
             double[] dataval = new double[value.length];
@@ -64,11 +73,14 @@ public class TestRandomForestSize {
                 long dataMem = checkMem();
                 dataval[i] = dataMem;
                 // System.out.println(i);
-                RandomForest rt = new RandomForest(10, false, 5, new Random());
+                long time=System.currentTimeMillis();
+                RandomForest rt = new RandomForest(5, false, 5, new Random());
                 rt.buildClassifier(data);
+                sumTime+=System.currentTimeMillis()-time;
                 mem = checkMem();
                 value[i] = mem;
             }
+            System.out.println("Total time: "+new TimeInterval(sumTime));
             System.out.println("Mean data memory size: " + (StatUtils.mean(dataval)/1024.0)+" kb");
             System.out.println("Mean RF memory size: " + (StatUtils.mean(value)/1024.0)+" kb");
 
