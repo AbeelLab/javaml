@@ -1,13 +1,5 @@
-/*
- * TestKNN.java 
- * -----------------------
- * Copyright (C) 2008  Thomas Abeel
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- * 
- * Author: Thomas Abeel
+/**
+ * %SVN.HEADER%
  */
 package junit.classification;
 
@@ -15,7 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Random;
 
-import net.sf.javaml.classification.tree.RandomForest;
+
 import net.sf.javaml.classification.tree.RandomForest2;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.tools.data.FileHandler;
@@ -59,37 +51,7 @@ public class TestRandomForestSize {
 
     }
 
-    @Test
-    public void testRandomForestSize() {
-        System.out.println("RF");
-        long sumTime=0;
-        try {
-            double[] value = new double[20];
-            double[] dataval = new double[value.length];
-            long mem = 0;
-            for (int i = 0; i < value.length; i++) {
-                Dataset data = FileHandler.loadDataset(new File("devtools/data/colon.csv.gz"), 0, ",");
-                // System.out.println("Loader: " + data.classes());
-                long dataMem = checkMem();
-                dataval[i] = dataMem;
-                // System.out.println(i);
-                long time=System.currentTimeMillis();
-                RandomForest rt = new RandomForest(5, false, 5, new Random());
-                rt.buildClassifier(data);
-                sumTime+=System.currentTimeMillis()-time;
-                mem = checkMem();
-                value[i] = mem;
-            }
-            System.out.println("Total time: "+new TimeInterval(sumTime));
-            System.out.println("Mean data memory size: " + (StatUtils.mean(dataval)/1024.0)+" kb");
-            System.out.println("Mean RF memory size: " + (StatUtils.mean(value)/1024.0)+" kb");
-
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-    }
+   
 
     private long checkMem() {
         try {

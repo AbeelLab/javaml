@@ -6,7 +6,6 @@ package net.sf.javaml.filter.eval;
 import java.util.Random;
 
 import net.sf.javaml.classification.evaluation.PerformanceMeasure;
-import net.sf.javaml.classification.tree.RandomTree;
 import net.sf.javaml.classification.tree.RandomTree2;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.DatasetTools;

@@ -1,13 +1,5 @@
-/*
- * TestKNN.java 
- * -----------------------
- * Copyright (C) 2008  Thomas Abeel
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- * 
- * Author: Thomas Abeel
+/**
+ * %SVN.HEADER%
  */
 package junit.classification;
 
@@ -18,7 +10,7 @@ import java.util.Random;
 
 import net.sf.javaml.classification.evaluation.CrossValidation;
 import net.sf.javaml.classification.evaluation.PerformanceMeasure;
-import net.sf.javaml.classification.tree.RandomForest;
+
 import net.sf.javaml.classification.tree.RandomForest2;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.tools.data.FileHandler;
@@ -49,26 +41,6 @@ public class TestRandomForest {
 
     }
 
-    @Test
-    public void testRFPerformance() {
-        long seed = System.currentTimeMillis();
-        try {
-            Dataset data = FileHandler.loadDataset(new File("devtools/data/colon.csv.gz"), 0, ",");
-            System.out.println("Loader: " + data.classes());
-
-            RandomForest rf = new RandomForest(10, false, 20, new Random(seed));
-            CrossValidation cv = new CrossValidation(rf);
-            Map<Object,PerformanceMeasure>p=cv.crossValidation(data, 5, new Random(10));
-            System.out.println("RF:" + p);
-            System.out.println("RF:--" + p.get("0").getAccuracy());
-          
-
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        System.out.println(new TimeInterval(System.currentTimeMillis()-seed));
-
-    }
+   
 
 }
