@@ -5,8 +5,6 @@
  */
 package external.libsvm;
 
-import java.io.IOException;
-import java.util.Arrays;
 import java.util.Map;
 
 import net.sf.javaml.classification.Classifier;
@@ -150,15 +148,13 @@ public class LibSVM implements Classifier {
     public Object classifyInstance(Instance instance) {
         svm_node[] x = new svm_node[instance.noAttributes()];
         // TODO implement sparseness
-        for (int i = 0; i < instance.size(); i++) {
+        for (int i = 0; i < instance.noAttributes(); i++) {
             x[i] = new svm_node();
             x[i].index = i;
             x[i].value = instance.value(i);
         }
         double d = svm.svm_predict(model, x);
 
-        // System.out.print("pp "+instance.classValue()+"\t"+(int)d);
-        // System.out.println("\t"+data.classValue((int)d));
         return data.classValue((int) d);
     }
 
