@@ -41,16 +41,57 @@ public class SparseInstance extends AbstractInstance implements Instance {
         this(-1);
     }
 
+    /* defaultValue will be set to 0.0, classValue to null */
     public SparseInstance(int noAttributes) {
-        this(noAttributes, 0.0);
+        this(noAttributes, 0.0, null);
+    }
+    
+    /* classValue will be set to null */
+    public SparseInstance(int noAttributes, double defaultValue) {
+        this(noAttributes, defaultValue, null);
+    }
+    
+    /* defaultValue will be set to 0.0 */
+    public SparseInstance(int noAttributes, Object classValue) {
+        this(noAttributes, 0.0, classValue);
     }
 
-    
-    
-    public SparseInstance(int noAttributes, double defaultValue) {
+    /* Create empty sparse instance */
+    public SparseInstance(int noAttributes, double defaultValue, Object classValue) {
+        super(classValue);
         this.defaultValue = defaultValue;
         this.noAttributes = noAttributes;
-
+    }
+    
+    /* defaultValue will be set to 0.0, classValue to null */
+    public SparseInstance(double[] datavector) {
+        this(datavector, 0.0, null);
+    }
+    
+    /* classValue will be set to null */
+    public SparseInstance(double[] datavector, double defaultValue) {
+        this(datavector, defaultValue, null);
+    }
+    
+    /* defaultValue will be set to 0.0 */
+    public SparseInstance(double[] datavector, Object classValue) {
+        this(datavector, 0.0, classValue);
+    }
+    
+    /* Create sparse instance with values from the datavector */
+    public SparseInstance(double[] datavector, double defaultValue, Object classValue) {
+        super(classValue);
+        this.defaultValue = defaultValue;
+        initiate(datavector);
+    }
+    
+    private void initiate(double[] datavector)
+    {
+        data.clear();
+        noAttributes = datavector.length;
+        for (int i = 0; i < datavector.length; i++)
+            if (datavector[i] != defaultValue)
+                put(i, datavector[i]);
     }
 
     @Override
@@ -61,7 +102,6 @@ public class SparseInstance extends AbstractInstance implements Instance {
     @Override
     public void clear() {
         data.clear();
-
     }
 
     @Override

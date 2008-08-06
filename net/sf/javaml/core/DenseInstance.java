@@ -31,6 +31,7 @@ public class DenseInstance extends AbstractInstance implements Instance {
 
     private double[] attributes;
 
+    /* classValue will be set to null */
     public DenseInstance(double[] att) {
         this(att, null);
     }
