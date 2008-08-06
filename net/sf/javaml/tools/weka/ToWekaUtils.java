@@ -9,6 +9,7 @@ import net.sf.javaml.core.Dataset;
 import weka.core.Attribute;
 import weka.core.FastVector;
 import weka.core.Instance;
+import weka.core.SparseInstance;
 import weka.core.Instances;
 
 /**
@@ -64,6 +65,7 @@ public class ToWekaUtils {
         return wData;
     }
 
+    /* Converts this (dense/sparse) JavaML instance to a (dense/sparse) Weka instance */
     public Instance instanceToWeka(net.sf.javaml.core.Instance inst) {
         double[] values = new double[classSet ? inst.noAttributes() + 1 : inst.noAttributes()];
         // System.arraycopy(i.values().t.toArray(), 0, values, 0, classSet ?
@@ -73,7 +75,13 @@ public class ToWekaUtils {
         }
         // if (classSet)
         // values[values.length - 1] = inst.classValue();
-        Instance wI = new Instance(1, values);
+        
+        Instance wI = null;
+        if (inst instanceof net.sf.javaml.core.SparseInstance)
+            wI = new SparseInstance(1, values);
+        else
+            wI = new Instance(1, values);
+        
         wI.setDataset(wData);
         if (inst.classValue() != null) {
             wI.setClassValue(inst.classValue().toString());
