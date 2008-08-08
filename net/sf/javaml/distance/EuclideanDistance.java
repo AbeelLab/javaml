@@ -1,8 +1,5 @@
 /**
- * EuclideanDistance.java
- *
  * %SVN.HEADER%
- * 
  */
 package net.sf.javaml.distance;
 

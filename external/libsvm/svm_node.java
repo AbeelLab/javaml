@@ -1,3 +1,6 @@
+/**
+ * %SVN.HEADER%
+ */
 package external.libsvm;
 public class svm_node implements java.io.Serializable
 {

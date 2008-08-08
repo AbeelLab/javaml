@@ -1,9 +1,5 @@
 /**
- * DistanceMeasure.java
- *
- *
  * %SVN.HEADER%
- *  
  */
 package net.sf.javaml.distance;
 

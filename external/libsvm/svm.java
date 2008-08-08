@@ -1,3 +1,6 @@
+/**
+ * %SVN.HEADER%
+ */
 package external.libsvm;
 
 import java.io.*;

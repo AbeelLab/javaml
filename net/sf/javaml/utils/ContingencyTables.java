@@ -1,12 +1,6 @@
 /**
- * ContingencyTables.java
- *
  * %SVN.HEADER%
- * 
- * Based on work by Eibe Frank
- * 
  */
-
 package net.sf.javaml.utils;
 
 /**

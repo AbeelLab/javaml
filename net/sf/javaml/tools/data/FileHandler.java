@@ -1,6 +1,4 @@
 /**
- * FileHandler.java
- *
  * %SVN.HEADER%
  */
 package net.sf.javaml.tools.data;

@@ -1,6 +1,4 @@
 /**
- * LinearEnsemble.java
- *
  * %SVN.HEADER%
  */
 package net.sf.javaml.filter.eval.ensemble;

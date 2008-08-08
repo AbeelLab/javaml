@@ -1,6 +1,4 @@
 /**
- * DefaultDataset.java
- *
  * %SVN.HEADER%
  */
 package net.sf.javaml.core;

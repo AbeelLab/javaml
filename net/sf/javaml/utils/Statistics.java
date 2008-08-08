@@ -1,3 +1,6 @@
+/**
+ * %SVN.HEADER%
+ */
 package net.sf.javaml.utils;
 
 /**

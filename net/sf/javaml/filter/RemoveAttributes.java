@@ -1,8 +1,5 @@
 /**
- * RemoveAttributes.java
- *
  * %SVN.HEADER%
- * 
  */
 package net.sf.javaml.filter;
 

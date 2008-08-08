@@ -1,9 +1,6 @@
 /**
- * Dataset.java
- *
  * %SVN.HEADER%
  */
-
 package net.sf.javaml.core;
 
 import java.util.List;

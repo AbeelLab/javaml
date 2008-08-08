@@ -1,11 +1,6 @@
 /**
- * SymmetricalUncertainty.java
- *
  * %SVN.HEADER%
- * 
- * Based on work by Mark Hall
  */
-
 package net.sf.javaml.filter.eval;
 
 import java.util.List;
@@ -24,6 +19,7 @@ import net.sf.javaml.utils.ContingencyTables;
  * 
  * @version %SVN.VERSION%
  * 
+ * @author Mark Hall
  * @author Thomas Abeel
  * 
  */

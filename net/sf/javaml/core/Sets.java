@@ -1,13 +1,5 @@
-/*
- * Sets.java 
- * -----------------------
- * Copyright (C) 2008  Thomas Abeel
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- * 
- * Author: Thomas Abeel
+/**
+ * %SVN.HEADER%
  */
 package net.sf.javaml.core;
 

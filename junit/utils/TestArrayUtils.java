@@ -1,6 +1,4 @@
 /**
- * TestArrayUtils.java
- *
  * %SVN.HEADER%
  */
 package junit.utils;

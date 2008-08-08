@@ -1,6 +1,4 @@
 /**
- * SelfOptimizingLinearLibSVM.java
- *
  * %SVN.HEADER%
  */
 package external.libsvm;

@@ -1,6 +1,4 @@
 /**
- * LibSVM.java
- *
  * %SVN.HEADER%
  */
 package external.libsvm;

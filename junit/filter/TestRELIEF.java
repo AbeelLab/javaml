@@ -1,6 +1,4 @@
 /**
- * TestGainRatio.java
- *
  * %SVN.HEADER%
  */
 package junit.filter;

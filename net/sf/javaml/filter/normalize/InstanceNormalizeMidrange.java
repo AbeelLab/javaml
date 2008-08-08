@@ -1,8 +1,5 @@
 /**
- * DatasetNormalizeMidrange.java
- *
  * %SVN.HEADER%
- * 
  */
 package net.sf.javaml.filter.normalize;
 
