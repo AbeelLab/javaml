@@ -19,7 +19,7 @@ import java.util.Random;
 import javax.management.MBeanServer;
 
 import net.sf.javaml.classification.evaluation.CrossValidation;
-import net.sf.javaml.classification.tree.RandomTree2;
+import net.sf.javaml.classification.tree.RandomTree;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.tools.data.FileHandler;
 import net.sf.javaml.utils.Statistics;
@@ -42,7 +42,7 @@ public class TestRandomTreeSize {
                 long dataMem = checkMem();
                 dataval[i] = dataMem;
                 // System.out.println(i);
-                RandomTree2 rt = new RandomTree2(5, rg);
+                RandomTree rt = new RandomTree(5, rg);
                 rt.buildClassifier(data);
                 mem = checkMem();
                 value[i] = mem;

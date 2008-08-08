@@ -11,7 +11,7 @@ import java.util.Random;
 import net.sf.javaml.classification.evaluation.CrossValidation;
 import net.sf.javaml.classification.evaluation.PerformanceMeasure;
 
-import net.sf.javaml.classification.tree.RandomForest2;
+import net.sf.javaml.classification.tree.RandomForest;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.tools.data.FileHandler;
 
@@ -26,7 +26,7 @@ public class TestRandomForest {
         try {
             Dataset data = FileHandler.loadDataset(new File("devtools/data/colon.csv.gz"), 0, ",");
             System.out.println("Loader: " + data.classes());
-            RandomForest2 rf2 = new RandomForest2(10, false, 20, new Random(seed));
+            RandomForest rf2 = new RandomForest(10, false, 20, new Random(seed));
             CrossValidation cv = new CrossValidation(rf2);
             Map<Object,PerformanceMeasure>p=cv.crossValidation(data, 5, new Random(10));
             System.out.println("RF2:" + p);

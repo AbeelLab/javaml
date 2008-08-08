@@ -12,7 +12,7 @@ import net.sf.javaml.classification.meta.Bagging;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 
-public class RandomForest2 implements Classifier {
+public class RandomForest implements Classifier {
 
     /**
      * 
@@ -34,7 +34,7 @@ public class RandomForest2 implements Classifier {
 
     private Random rg;
 
-    public RandomForest2(int treeCount, boolean calculateOutOfBagErrorEstimate, int numAttributes, Random rg) {
+    public RandomForest(int treeCount, boolean calculateOutOfBagErrorEstimate, int numAttributes, Random rg) {
         this.treeCount = treeCount;
         this.rg = rg;
         this.calculateOutOfBagErrorEstimate = calculateOutOfBagErrorEstimate;
@@ -46,9 +46,9 @@ public class RandomForest2 implements Classifier {
     }
 
     public void buildClassifier(Dataset data) {
-        RandomTree2[] trees = new RandomTree2[treeCount];
+        RandomTree[] trees = new RandomTree[treeCount];
         for (int i = 0; i < trees.length; i++) {
-            trees[i] = new RandomTree2(numAttributes,rg);
+            trees[i] = new RandomTree(numAttributes,rg);
 //            trees[i].setKValue(numAttributes);
         }
         bagger = new Bagging(trees, rg);

@@ -20,7 +20,7 @@ import net.sf.javaml.core.Instance;
  * @author Thomas Abeel
  * 
  */
-public class RandomTree2 implements Classifier {
+public class RandomTree implements Classifier {
     /**
      * 
      */
@@ -39,13 +39,13 @@ public class RandomTree2 implements Classifier {
 
     private Object finalClass = null;
 
-    private RandomTree2 leftChild = null;
+    private RandomTree leftChild = null;
 
-    private RandomTree2 rightChild = null;
+    private RandomTree rightChild = null;
 
     private Vector<Integer> splitAttributes = null;
 
-    public RandomTree2(int attributes, Random rg) {
+    public RandomTree(int attributes, Random rg) {
         this.rg = rg;
         this.noSplitAttributes = attributes;
     }
@@ -107,9 +107,9 @@ public class RandomTree2 implements Classifier {
 
         }
 
-        leftChild = new RandomTree2(noSplitAttributes, rg);
+        leftChild = new RandomTree(noSplitAttributes, rg);
         leftChild.buildClassifier(left);
-        rightChild = new RandomTree2(noSplitAttributes, rg);
+        rightChild = new RandomTree(noSplitAttributes, rg);
         rightChild.buildClassifier(right);
 
     }

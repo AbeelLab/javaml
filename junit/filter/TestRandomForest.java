@@ -9,13 +9,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Random;
 
-import net.sf.javaml.classification.tree.RandomForest2;
+import net.sf.javaml.classification.tree.RandomForest;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.DefaultDataset;
 import net.sf.javaml.core.DenseInstance;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.filter.eval.RELIEF;
-import net.sf.javaml.filter.eval.RandomForestAttributeEvaluation2;
+import net.sf.javaml.filter.eval.RandomForestAttributeEvaluation;
 import net.sf.javaml.tools.data.FileHandler;
 
 import org.junit.Test;
@@ -37,7 +37,7 @@ public class TestRandomForest {
         // Dataset test=dnm.filterDataset(data);
 
         System.out.println(data);
-        RandomForestAttributeEvaluation2 ga = new RandomForestAttributeEvaluation2(5,"1", new Random());
+        RandomForestAttributeEvaluation ga = new RandomForestAttributeEvaluation(5,"1", new Random());
         ga.setK(2);
         // ga.setNumNeigbors(4);
 
@@ -53,7 +53,7 @@ public class TestRandomForest {
     public void testRELIEFReal() {
         try {
             Dataset data = FileHandler.loadDataset(new File("devtools/data/iris.data"), 4, ",");
-            RandomForestAttributeEvaluation2 ga = new RandomForestAttributeEvaluation2(5,"1", new Random());
+            RandomForestAttributeEvaluation ga = new RandomForestAttributeEvaluation(5,"1", new Random());
             ga.setK(2);
             // ga.setNumNeigbors(4);
 

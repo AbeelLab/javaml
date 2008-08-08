@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.Random;
 
 
-import net.sf.javaml.classification.tree.RandomForest2;
+import net.sf.javaml.classification.tree.RandomForest;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.tools.data.FileHandler;
 
@@ -34,7 +34,7 @@ public class TestRandomForestSize {
                 dataval[i] = dataMem;
                 // System.out.println(i);
                 long time=System.currentTimeMillis();
-                RandomForest2 rt = new RandomForest2(5, false, 5, new Random());
+                RandomForest rt = new RandomForest(5, false, 5, new Random());
                 rt.buildClassifier(data);
                 sumTime+=System.currentTimeMillis()-time;
                 mem = checkMem();

@@ -6,7 +6,7 @@ package net.sf.javaml.filter.eval;
 import java.util.Random;
 
 import net.sf.javaml.classification.evaluation.PerformanceMeasure;
-import net.sf.javaml.classification.tree.RandomTree2;
+import net.sf.javaml.classification.tree.RandomTree;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.DatasetTools;
 import net.sf.javaml.core.DefaultDataset;
@@ -35,7 +35,7 @@ import be.abeel.util.Copier;
  * @author Thomas Abeel
  * 
  */
-public class RandomForestAttributeEvaluation2 implements IAttributeEvaluation {
+public class RandomForestAttributeEvaluation implements IAttributeEvaluation {
 
     private int numTrees;
 
@@ -53,7 +53,7 @@ public class RandomForestAttributeEvaluation2 implements IAttributeEvaluation {
         this.numPerturbations = p;
     }
 
-    public RandomForestAttributeEvaluation2(int numTrees, Object positiveClass, Random rg) {
+    public RandomForestAttributeEvaluation(int numTrees, Object positiveClass, Random rg) {
         this.rg = rg;
         this.numTrees = numTrees;
         this.positiveClass = positiveClass;
@@ -87,7 +87,7 @@ public class RandomForestAttributeEvaluation2 implements IAttributeEvaluation {
              * Train a tree and calculate the oob error for the unperturbed oob
              * samples.
              */
-            RandomTree2 tree = new RandomTree2(k, rg);
+            RandomTree tree = new RandomTree(k, rg);
 
             Dataset sample = DatasetTools.bootstrap(data, data.size(), rg);
             tree.buildClassifier(sample);

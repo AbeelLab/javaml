@@ -17,7 +17,7 @@ import java.util.Random;
 
 import net.sf.javaml.classification.KNearestNeighbors;
 import net.sf.javaml.classification.evaluation.CrossValidation;
-import net.sf.javaml.classification.tree.RandomTree2;
+import net.sf.javaml.classification.tree.RandomTree;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.tools.data.FileHandler;
 
@@ -30,7 +30,7 @@ public class TestRandomTree {
         try {
             Dataset data = FileHandler.loadDataset(new File("devtools/data/colon.csv.gz"), 0,",");
             System.out.println("Loader: "+data.classes());
-            RandomTree2 knn=new RandomTree2(5,new Random());
+            RandomTree knn=new RandomTree(5,new Random());
             CrossValidation cv = new CrossValidation(knn);
             System.out.println("Java-ML-0:"+cv.crossValidation(data, 5, new Random(10)));
             
