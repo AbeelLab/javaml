@@ -35,7 +35,7 @@ public interface InstanceFilter {
      *            the instance to apply this filter to
      * @return the modified instance
      */
-    public void filterInstance(Instance inst);
+    public void filter(Instance inst);
 
 
 }

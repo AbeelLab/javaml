@@ -45,7 +45,7 @@ public class TestNormalizeMidrange {
         System.out.println("Before filter");
         System.out.println(data);
         DatasetFilter f = new NormalizeMidrange(0.5, 1);
-        f.filterDataset(data);
+        f.filter(data);
         System.out.println("--");
         System.out.println("After filter");
         System.out.println(data);

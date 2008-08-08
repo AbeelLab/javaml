@@ -79,7 +79,7 @@ public class Bagging extends AbstractClassifier {
             if (calculateOutOfBagErrorEstimate) {
                 Dataset outOfBag = getInverse(data, sample);
                 for (Instance inst : outOfBag) {
-                    Object predClass = classifiers[i].classifyInstance(inst);
+                    Object predClass = classifiers[i].classify(inst);
                     if (predClass == positiveClass) {
                         if (inst.classValue().equals(positiveClass))
                             tp++;
@@ -131,12 +131,12 @@ public class Bagging extends AbstractClassifier {
     // }
 
     @Override
-    public Map<Object, Double> distributionForInstance(Instance instance) {
+    public Map<Object, Double> classDistribution(Instance instance) {
         Map<Object, Double> membership = new HashMap<Object, Double>();
         for (Object o : dataReference.classes())
             membership.put(o, 0.0);
         for (int i = 0; i < classifiers.length; i++) {
-            Object prediction = classifiers[i].classifyInstance(instance);
+            Object prediction = classifiers[i].classify(instance);
             membership.put(prediction, membership.get(prediction) + (1.0 / classifiers.length));// [classifiers[i].classifyInstance(instance)]++;
         }
         // for (int i = 0; i < this.numClasses; i++)

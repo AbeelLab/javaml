@@ -145,7 +145,7 @@ public class LibSVM implements Classifier {
         return weights;
     }
 
-    public Object classifyInstance(Instance instance) {
+    public Object classify(Instance instance) {
         svm_node[] x = new svm_node[instance.noAttributes()];
         // TODO implement sparseness
         for (int i = 0; i < instance.noAttributes(); i++) {
@@ -168,7 +168,7 @@ public class LibSVM implements Classifier {
     }
 
     @Override
-    public Map<Object, Double> distributionForInstance(Instance instance) {
+    public Map<Object, Double> classDistribution(Instance instance) {
         // TODO Auto-generated method stub
         return null;
     }

@@ -42,7 +42,7 @@ public class ClassRetainFilter implements DatasetFilter {
 
     }
 
-    public void filterDataset(Dataset data) {
+    public void filter(Dataset data) {
         Vector<Instance> tor = new Vector<Instance>();
         for (Instance i : data)
             if (!i.classValue().equals(classValue))

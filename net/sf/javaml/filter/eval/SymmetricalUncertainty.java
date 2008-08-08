@@ -37,7 +37,7 @@ public class SymmetricalUncertainty implements IAttributeEvaluation {
     public void build(Dataset data) {
         AbstractFilter discretize = new EqualWidthBinning(bins);
         discretize.build(data);
-        discretize.filterDataset(data);
+        discretize.filter(data);
         Instance min=DatasetTools.minAttributes(data);
         Instance max=DatasetTools.maxAttributes(data);
         for(int i=0;i<data.noAttributes();i++){

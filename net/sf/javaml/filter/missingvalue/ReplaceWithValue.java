@@ -24,7 +24,7 @@ public class ReplaceWithValue extends AbstractFilter {
         this.d = d;
     }
 
-    public void filterInstance(Instance inst) {
+    public void filter(Instance inst) {
         for (int i = 0; i < inst.noAttributes(); i++) {
             if (Double.isNaN(inst.value(i)))
                 inst.put(i, d);

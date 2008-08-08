@@ -30,7 +30,7 @@ public class TestRemoveAttributes {
         toRemove.add(1);
         toRemove.add(4);
         RemoveAttributes ra=new RemoveAttributes(toRemove);
-        ra.filterInstance(i);
+        ra.filter(i);
         Assert.assertTrue(i.noAttributes()==3);
         Assert.assertTrue(i.value(0)==1);
         Assert.assertTrue(i.value(1)==3);

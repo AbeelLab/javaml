@@ -26,7 +26,7 @@ public class ClassReplaceFilter extends AbstractFilter {
     }
 
     @Override
-    public void filterInstance(Instance inst) {
+    public void filter(Instance inst) {
         if (inst.classValue().equals(oldClassValue))
             inst.setClassValue(newClassValue);
 

@@ -48,7 +48,7 @@ public class TestEqualWidthBinning {
 					new Random(7));
 			EqualWidthBinning eb = new EqualWidthBinning();
 			eb.build(bootstrap);
-			eb.filterDataset(bootstrap);
+			eb.filter(bootstrap);
 			Instance min = DatasetTools.minAttributes(bootstrap);
 			Instance max = DatasetTools.maxAttributes(bootstrap);
 			for (int i = 0; i < bootstrap.noAttributes(); i++) {
@@ -69,7 +69,7 @@ public class TestEqualWidthBinning {
 					"devtools/data/lymphoma.csv.gz"), 0, ",");
 			EqualWidthBinning eb = new EqualWidthBinning();
 			eb.build(data);
-			eb.filterDataset(data);
+			eb.filter(data);
 			Instance min = DatasetTools.minAttributes(data);
 			Instance max = DatasetTools.maxAttributes(data);
 			for (int i = 0; i < data.noAttributes(); i++) {
@@ -90,7 +90,7 @@ public class TestEqualWidthBinning {
 					"devtools/data/colon.csv.gz"), 0, ",");
 			EqualWidthBinning eb = new EqualWidthBinning();
 			eb.build(data);
-			eb.filterDataset(data);
+			eb.filter(data);
 			Instance min = DatasetTools.minAttributes(data);
 			Instance max = DatasetTools.maxAttributes(data);
 			for (int i = 0; i < data.noAttributes(); i++) {
@@ -118,7 +118,7 @@ public class TestEqualWidthBinning {
 			System.out.println(DatasetTools.maxAttributes(data));
 			System.out.println("Binning...");
 			eb.build(data);
-			eb.filterDataset(data);
+			eb.filter(data);
 			System.out.println("--");
 			System.out.println("After binning: ");
 			System.out.println(data);

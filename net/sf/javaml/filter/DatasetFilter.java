@@ -42,6 +42,6 @@ public interface DatasetFilter {
      * @param data
      *            the dataset to apply this filter to
      */
-    public void filterDataset(Dataset data);
+    public void filter(Dataset data);
 
 }

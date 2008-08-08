@@ -76,20 +76,20 @@ public class NormalizeMidrange extends AbstractFilter {
     }
 
     @Override
-    public void filterInstance(Instance instance) {
+    public void filter(Instance instance) {
         if (currentRange == null || currentMiddle == null)
             throw new TrainingRequiredException();
         Instance tmp = instance.minus(currentMiddle).divide(currentRange).multiply(normalRange).plus(normalMiddle);
         instance.clear();
         instance.putAll(tmp);
-        new ReplaceValueFilter(Double.NaN,normalMiddle).filterInstance(instance);
+        new ReplaceValueFilter(Double.NaN,normalMiddle).filter(instance);
     }
 
-    public void filterDataset(Dataset data) {
+    public void filter(Dataset data) {
         if (currentRange == null || currentMiddle == null)
             build(data);
         for (Instance i : data)
-            filterInstance(i);
+            filter(i);
     }
 
 }

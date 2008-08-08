@@ -35,7 +35,7 @@ public class GainRatio implements IAttributeEvaluation {
 
     public void build(Dataset data) {
         AbstractFilter discretize = new EqualWidthBinning(bins);
-        discretize.filterDataset(data);
+        discretize.filter(data);
         this.training = data;
 
     }

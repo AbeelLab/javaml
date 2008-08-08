@@ -58,13 +58,13 @@ public class RandomForest2 implements Classifier {
     }
 
     @Override
-    public Object classifyInstance(Instance instance) {
-        return bagger.classifyInstance(instance);
+    public Object classify(Instance instance) {
+        return bagger.classify(instance);
     }
 
     @Override
-    public Map<Object, Double> distributionForInstance(Instance instance) {
-        return bagger.distributionForInstance(instance);
+    public Map<Object, Double> classDistribution(Instance instance) {
+        return bagger.classDistribution(instance);
     }
 
 }

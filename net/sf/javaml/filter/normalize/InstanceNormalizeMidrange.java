@@ -61,13 +61,13 @@ public class InstanceNormalizeMidrange extends AbstractFilter {
     }
 
     @Override
-    public void filterDataset(Dataset data) {
+    public void filter(Dataset data) {
         for (Instance i : data)
-            filterInstance(i);
+            filter(i);
     }
 
     @Override
-    public void filterInstance(Instance instance) {
+    public void filter(Instance instance) {
         // Find min and max values
         double min = instance.value(0);
         double max = min;

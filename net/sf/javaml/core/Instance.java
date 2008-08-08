@@ -30,12 +30,12 @@ public interface Instance extends Map<Integer, Double>, Iterable<Double>, Serial
 
     public void setClassValue(Object value);
 
-    // /**
-    // * Returns the number of attributes this instance has.
-    // *
-    // * @return
-    // */
-    // public int noAttributes();
+    /**
+     * Returns the number of attributes this instance has.
+     * 
+     * @return
+     */
+    public int noAttributes();
 
     @Override
     @Deprecated
@@ -70,8 +70,6 @@ public interface Instance extends Map<Integer, Double>, Iterable<Double>, Serial
     public Instance divide(Instance currentRange);
 
     public Instance plus(double value);
-
-    public int noAttributes();
 
     public Instance multiply(double value);
 

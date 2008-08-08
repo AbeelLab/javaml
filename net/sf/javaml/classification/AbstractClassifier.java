@@ -9,8 +9,8 @@ import net.sf.javaml.core.Instance;
 
 public abstract class AbstractClassifier implements Classifier {
     @Override
-    public Object classifyInstance(Instance instance) {
-        Map<Object, Double> distribution = distributionForInstance(instance);
+    public Object classify(Instance instance) {
+        Map<Object, Double> distribution = classDistribution(instance);
         double max = 0;
         Object out = null;
         for (Object key : distribution.keySet()) {

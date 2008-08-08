@@ -79,7 +79,8 @@ public interface Dataset extends List<Instance> {
 
     /**
      * The number of attributes in each instance. This value can be off when
-     * instances have different number of attributes.
+     * instances have different number of attributes. When the data set contains
+     * no instances, this method should return 0.
      * 
      * @return
      */

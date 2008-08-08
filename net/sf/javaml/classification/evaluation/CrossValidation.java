@@ -62,7 +62,7 @@ public class CrossValidation {
             // System.out.println("real
             // class\tprediction\tpositive\tclassification");
             for (Instance instance : validation) {
-                Object prediction = classifier.classifyInstance(instance);
+                Object prediction = classifier.classify(instance);
                 if (instance.classValue().equals(prediction)) {// prediction
                     // ==class
                     for (Object o : out.keySet()) {

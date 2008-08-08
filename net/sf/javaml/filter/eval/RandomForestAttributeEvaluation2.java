@@ -97,7 +97,7 @@ public class RandomForestAttributeEvaluation2 implements IAttributeEvaluation {
             outOfBag.removeAll(sample);
 
             for (Instance inst : outOfBag) {
-                Object predClass = tree.classifyInstance(inst);
+                Object predClass = tree.classify(inst);
                 if (predClass.equals(positiveClass)) {
                     if (inst.classValue().equals(positiveClass))
                         tp++;
@@ -130,7 +130,7 @@ public class RandomForestAttributeEvaluation2 implements IAttributeEvaluation {
 
                     }
                     for (Instance inst : perturbed) {
-                        Object predClass = tree.classifyInstance(inst);
+                        Object predClass = tree.classify(inst);
                         if (predClass.equals(positiveClass)) {
                             if (inst.classValue().equals(positiveClass))
                                 tpR[k][j]++;

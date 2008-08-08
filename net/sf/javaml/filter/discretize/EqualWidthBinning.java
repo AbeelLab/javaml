@@ -68,7 +68,7 @@ public class EqualWidthBinning extends AbstractFilter {
     private FloorValueFilter rvf = new FloorValueFilter();
 
     @Override
-    public void filterInstance(Instance instance) {
+    public void filter(Instance instance) {
         if (range == null )
             throw new TrainingRequiredException();
 
@@ -77,15 +77,15 @@ public class EqualWidthBinning extends AbstractFilter {
                                                                                                 // 2);
         instance.clear();
         instance.putAll(tmp);
-        rvf.filterInstance(instance);
+        rvf.filter(instance);
 
     }
 
-    public void filterDataset(Dataset data) {
+    public void filter(Dataset data) {
         if (range == null)
             build(data);
         for (Instance i : data)
-            filterInstance(i);
+            filter(i);
     }
 
 }

@@ -32,7 +32,7 @@ public class WekaClassifier implements Classifier {
     }
 
     @Override
-    public Object classifyInstance(Instance instance) {
+    public Object classify(Instance instance) {
 
         try {
             return utils.convertClass(wekaClass.classifyInstance(utils.instanceToWeka(instance)));
@@ -42,7 +42,7 @@ public class WekaClassifier implements Classifier {
     }
 
     @Override
-    public Map<Object, Double> distributionForInstance(Instance instance) {
+    public Map<Object, Double> classDistribution(Instance instance) {
         try {
             Map<Object, Double> out = new HashMap<Object, Double>();
             double[] distr = wekaClass.distributionForInstance(utils.instanceToWeka(instance));

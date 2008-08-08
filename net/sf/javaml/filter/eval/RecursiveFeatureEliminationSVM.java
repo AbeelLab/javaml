@@ -107,7 +107,7 @@ public class RecursiveFeatureEliminationSVM implements IAttributeRanking {
             // System.out.println(Arrays.toString(removedAttributes));
             // actually remove the attributes
             RemoveAttributes filter = new RemoveAttributes(toRemove);
-            filter.filterDataset(data);
+            filter.filter(data);
 
         }
         int index = 0;

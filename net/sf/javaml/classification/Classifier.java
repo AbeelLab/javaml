@@ -34,7 +34,7 @@ public interface Classifier extends Serializable {
 	 * @return the class to which this instance belongs or null if it doesn't
 	 *         belong to any of the known classes.
 	 */
-	public Object classifyInstance(Instance instance);
+	public Object classify(Instance instance);
 
 	/**
 	 * Generate the membership distribution for this instance using this
@@ -45,6 +45,6 @@ public interface Classifier extends Serializable {
 	 * @return an array with membership degrees for all the various classes in
 	 *         the data set
 	 */
-	public Map<Object,Double> distributionForInstance(Instance instance);
+	public Map<Object,Double> classDistribution(Instance instance);
 
 }

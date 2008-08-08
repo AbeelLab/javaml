@@ -40,7 +40,7 @@ public class ClassRemoveFilter implements DatasetFilter {
 
     }
 
-    public void filterDataset(Dataset data) {
+    public void filter(Dataset data) {
         Vector<Instance> toRemove = new Vector<Instance>();
         for (Instance i : data)
             if (i.classValue().equals(classValue))

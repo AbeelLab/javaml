@@ -23,7 +23,7 @@ public class ReplaceValueFilter implements InstanceFilter{
     }
 
     @Override
-    public void filterInstance(Instance inst) {
+    public void filter(Instance inst) {
        for(Integer i:inst.keySet()){
            if(inst.get(i).equals(from))
                inst.put(i, to);

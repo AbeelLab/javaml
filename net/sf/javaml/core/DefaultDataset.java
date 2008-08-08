@@ -206,6 +206,8 @@ public class DefaultDataset extends Vector<Instance> implements Dataset {
 
     @Override
     public int noAttributes() {
+        if (this.size() == 0)
+            return 0;
         return this.get(0).noAttributes();
     }
 

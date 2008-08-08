@@ -22,18 +22,18 @@ public class NormalizeMean extends AbstractFilter {
     private Instance std = null;
 
     @Override
-    public void filterDataset(Dataset data) {
+    public void filter(Dataset data) {
         if (data.size() == 0)
             return;
         mean = DatasetTools.average(data);// new double[instanceLength];
         std = DatasetTools.standardDeviation(data, mean);
         for (Instance i : data)
-            filterInstance(i);
+            filter(i);
 
     }
 
     @Override
-    public void filterInstance(Instance instance) {
+    public void filter(Instance instance) {
         if (mean == null || std == null)
             throw new RuntimeException(
                     "You should first call filterDataset for this filter, some parameters are not yet set.");

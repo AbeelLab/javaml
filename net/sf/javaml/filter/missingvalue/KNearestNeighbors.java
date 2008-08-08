@@ -43,7 +43,7 @@ public class KNearestNeighbors implements DatasetFilter {
 
     private DistanceMeasure euc = new EuclideanDistance();
 
-    public void filterDataset(Dataset data) {
+    public void filter(Dataset data) {
         // Dataset output = new SimpleDataset();
         for (Instance i : data) {
             removeMissingValues(i, data);

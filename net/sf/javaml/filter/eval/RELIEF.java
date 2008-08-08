@@ -53,7 +53,7 @@ public class RELIEF implements IAttributeEvaluation {
         // Normalize the data to [0,1]
         // System.out.println(data);
         NormalizeMidrange dnm = new NormalizeMidrange(0.5, 1);
-        dnm.filterDataset(data);
+        dnm.filter(data);
         // System.out.println("--");
         // System.out.println("Normalized data");
         // System.out.println(data);

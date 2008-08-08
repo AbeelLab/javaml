@@ -5,7 +5,7 @@
 	<!-- set global properties for this build -->
 	<property name="src" location="." />
 	<property name="build" location="build" />
-	<property name="version" value="0.1" />
+	<property name="version" value="0.1.0" />
 	<property name="revision" value="notset" />
 	<property name="statusText" value="notset" />
 	<property name="dist" location="javaml-${version}" />

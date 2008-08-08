@@ -29,7 +29,7 @@ public class EvaluateDataset {
         }
 
         for (Instance instance : data) {
-            Object prediction = cls.classifyInstance(instance);
+            Object prediction = cls.classify(instance);
             if (instance.classValue().equals(prediction)) {// prediction
                 // ==class
                 for (Object o : out.keySet()) {

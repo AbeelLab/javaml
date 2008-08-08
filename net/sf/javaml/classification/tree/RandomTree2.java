@@ -123,7 +123,7 @@ public class RandomTree2 implements Classifier {
     }
 
     @Override
-    public Object classifyInstance(Instance instance) {
+    public Object classify(Instance instance) {
 
         if (finalClass != null)
             return finalClass;
@@ -141,14 +141,14 @@ public class RandomTree2 implements Classifier {
             double distLeft = dist(tmp, leftCenter);
             double distRight = dist(tmp, rightCenter);
             if (distLeft > distRight)
-                return rightChild.classifyInstance(instance);
+                return rightChild.classify(instance);
             else
-                return leftChild.classifyInstance(instance);
+                return leftChild.classify(instance);
         }
     }
 
     @Override
-    public Map<Object, Double> distributionForInstance(Instance instance) {
+    public Map<Object, Double> classDistribution(Instance instance) {
         throw new UnsupportedOperationException("Random trees do not provide class distribution information");
     }
 

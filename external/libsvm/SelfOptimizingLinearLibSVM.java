@@ -75,13 +75,13 @@ public class SelfOptimizingLinearLibSVM implements Classifier {
     }
 
     @Override
-    public Object classifyInstance(Instance instance) {
-        return optimal.classifyInstance(instance);
+    public Object classify(Instance instance) {
+        return optimal.classify(instance);
     }
 
     @Override
-    public Map<Object, Double> distributionForInstance(Instance instance) {
-        return optimal.distributionForInstance(instance);
+    public Map<Object, Double> classDistribution(Instance instance) {
+        return optimal.classDistribution(instance);
     }
 
     public double getC() {

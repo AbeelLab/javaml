@@ -23,7 +23,7 @@ import net.sf.javaml.filter.InstanceFilter;
 public class RoundValueFilter implements InstanceFilter {
 
     @Override
-    public void filterInstance(Instance inst) {
+    public void filter(Instance inst) {
         for (Integer i : inst.keySet()) {
             inst.put(i, (double) (int) (inst.get(i) + 0.5));
         }

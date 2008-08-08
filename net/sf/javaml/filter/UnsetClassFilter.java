@@ -20,13 +20,13 @@ import net.sf.javaml.core.Instance;
 public class UnsetClassFilter extends AbstractFilter {
 
     @Override
-    public void filterInstance(Instance inst) {
+    public void filter(Instance inst) {
         inst.setClassValue(null);
     }
 
     @Override
-    public void filterDataset(Dataset d) {
-        super.filterDataset(d);
+    public void filter(Dataset d) {
+        super.filter(d);
         d.classes().clear();
     }
 

@@ -40,7 +40,7 @@ public class KNearestNeighbors extends AbstractClassifier{
     
 
     @Override
-    public Map<Object, Double> distributionForInstance(Instance instance) {
+    public Map<Object, Double> classDistribution(Instance instance) {
         Set<Instance> neighbors = training.kNearest(k, euc, instance);
 //        System.out.println(neighbors);
         HashMap<Object, Double> out = new HashMap<Object, Double>();

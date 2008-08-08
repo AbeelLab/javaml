@@ -28,7 +28,7 @@ public class TestClassifierBridge {
             cb.buildClassifier(data);
             
             for (Instance i : data) {
-               System.out.println(i.classValue()+"\t"+cb.classifyInstance(i));
+               System.out.println(i.classValue()+"\t"+cb.classify(i));
             }
         } catch (IOException e) {
             // TODO Auto-generated catch block

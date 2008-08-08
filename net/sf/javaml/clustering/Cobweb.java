@@ -731,7 +731,7 @@ public class Cobweb implements Clusterer {
 
     public Dataset[] cluster(Dataset data) {
 
-        filter.filterDataset(data);
+        filter.filter(data);
         m_numberOfClusters = -1;
         m_cobwebTree = null;
         m_numberSplits = 0;

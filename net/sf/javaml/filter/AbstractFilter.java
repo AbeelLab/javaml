@@ -29,12 +29,12 @@ public abstract class AbstractFilter implements DatasetFilter, InstanceFilter {
         // do nothing
     }
 
-    public void filterDataset(Dataset data) {
+    public void filter(Dataset data) {
         for (Instance i : data)
-            filterInstance(i);
+            filter(i);
 
     }
 
-    public abstract void filterInstance(Instance inst);
+    public abstract void filter(Instance inst);
 
 }

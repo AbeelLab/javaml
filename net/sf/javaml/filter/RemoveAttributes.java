@@ -33,13 +33,13 @@ public class RemoveAttributes extends AbstractFilter {
     }
 
     @Override
-    public void filterDataset(Dataset data) {
+    public void filter(Dataset data) {
         for (Instance i : data)
-            filterInstance(i);
+            filter(i);
     }
 
     @Override
-    public void filterInstance(Instance instance) {
+    public void filter(Instance instance) {
         for (int i = indices.size() - 1; i >= 0; i--) {
             instance.removeAttribute(indices.get(i));
         }
