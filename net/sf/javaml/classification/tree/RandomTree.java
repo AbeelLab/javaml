@@ -3,8 +3,10 @@
  */
 package net.sf.javaml.classification.tree;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.SortedSet;
 import java.util.Vector;
 
 import net.sf.javaml.classification.Classifier;
@@ -45,13 +47,21 @@ public class RandomTree implements Classifier {
 
     private Vector<Integer> splitAttributes = null;
 
-    public RandomTree(int attributes, Random rg) {
+    private SortedSet<Object>parentClasses=null;
+    private RandomTree(int attributes, Random rg,SortedSet<Object>classes) {
         this.rg = rg;
         this.noSplitAttributes = attributes;
+        this.parentClasses=classes;
+    }
+    public RandomTree(int attributes, Random rg) {
+        this(attributes,rg,null);
     }
 
     @Override
     public void buildClassifier(Dataset data) {
+        if(parentClasses==null)
+            parentClasses=data.classes();
+        
         if (data.classes().size() == 1) {
             finalClass = data.classes().first();
             data.clear();
@@ -107,9 +117,9 @@ public class RandomTree implements Classifier {
 
         }
 
-        leftChild = new RandomTree(noSplitAttributes, rg);
+        leftChild = new RandomTree(noSplitAttributes, rg,parentClasses);
         leftChild.buildClassifier(left);
-        rightChild = new RandomTree(noSplitAttributes, rg);
+        rightChild = new RandomTree(noSplitAttributes, rg,parentClasses);
         rightChild.buildClassifier(right);
 
     }
@@ -147,9 +157,16 @@ public class RandomTree implements Classifier {
         }
     }
 
+    
     @Override
     public Map<Object, Double> classDistribution(Instance instance) {
-        throw new UnsupportedOperationException("Random trees do not provide class distribution information");
+        HashMap<Object, Double>out=new HashMap<Object, Double>();
+        for(Object o:parentClasses){
+            out.put(o,0.0);
+        }
+        out.put(classify(instance),1.0);
+        return out;
+
     }
 
 }
