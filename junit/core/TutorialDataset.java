@@ -3,6 +3,16 @@
  */
 package junit.core;
 
+import java.util.SortedSet;
+
+import net.sf.javaml.core.Dataset;
+import net.sf.javaml.core.DefaultDataset;
+import net.sf.javaml.core.Instance;
+import net.sf.javaml.core.InstanceTools;
+
+import org.junit.Assert;
+import org.junit.Test;
+
 /**
  * This tutorial show how to create a {@link net.sf.javaml.core.Dataset} from a
  * collection of instances. This tutorial assumes you know how to create an
@@ -31,11 +41,22 @@ package junit.core;
 public class TutorialDataset {
 
     /**
-     * 
-     * @warning Nothing is implemented yet.
-     * 
+     * Create a data set and put some instances in it.
      */
-    public void testMethod() {
+    @Test
+    public void testConstruction() {
+        Dataset data = new DefaultDataset();
+        for (int i = 0; i < 10; i++) {
+            Instance tmpInstance = InstanceTools.randomInstance(25);
+            data.add(tmpInstance);
+        }
+        /* Retrieve all class values that are ever used in the data set */
+        SortedSet<Object> classValues = data.classes();
+        
+
+        Assert.assertEquals(data.noAttributes(), 25);
+        Assert.assertEquals(data.size(), 10);
+        Assert.assertEquals(classValues.size(), 0);
 
     }
 }
