@@ -1,7 +1,7 @@
 /**
  * %SVN.HEADER%
  */
-package net.sf.javaml.filter.eval;
+package net.sf.javaml.featureselection;
 
 import java.util.Random;
 import java.util.Vector;

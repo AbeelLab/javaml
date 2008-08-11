@@ -1,14 +1,14 @@
 /**
  * %SVN.HEADER%
  */
-package net.sf.javaml.filter.eval.ensemble;
+package net.sf.javaml.featureselection.ensemble;
 
 import java.util.Random;
 
 
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.DatasetTools;
-import net.sf.javaml.filter.eval.IAttributeRanking;
+import net.sf.javaml.featureselection.IAttributeRanking;
 import net.sf.javaml.utils.ArrayUtils;
 
 public class LinearRankingEnsemble implements IAttributeRanking {
