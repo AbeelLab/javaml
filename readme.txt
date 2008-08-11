@@ -6,7 +6,7 @@ The Java Machine Learning Library is licensed under GNU-GPL.
 
 More elaborate documentation can be found on the documentation website for 
 the project:
-http://java-ml.sourceforge.net/ or http://www.abeel.be/java-ml
+http://java-ml.sourceforge.net/
 
 +-----------------+
 | 1. Overview   |
