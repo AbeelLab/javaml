@@ -12,9 +12,9 @@ import net.sf.javaml.core.DatasetTools;
 import net.sf.javaml.core.DefaultDataset;
 import net.sf.javaml.core.DenseInstance;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.filter.eval.IAttributeRanking;
-import net.sf.javaml.filter.eval.RankingFromEvaluation;
-import net.sf.javaml.filter.eval.SymmetricalUncertainty;
+import net.sf.javaml.featureselection.IAttributeRanking;
+import net.sf.javaml.featureselection.RankingFromEvaluation;
+import net.sf.javaml.featureselection.SymmetricalUncertainty;
 import net.sf.javaml.tools.data.FileHandler;
 
 import org.junit.Assert;

@@ -10,9 +10,9 @@ import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.DefaultDataset;
 import net.sf.javaml.core.DenseInstance;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.filter.eval.GainRatio;
-import net.sf.javaml.filter.eval.RELIEF;
-import net.sf.javaml.filter.eval.SymmetricalUncertainty;
+import net.sf.javaml.featureselection.GainRatio;
+import net.sf.javaml.featureselection.RELIEF;
+import net.sf.javaml.featureselection.SymmetricalUncertainty;
 import net.sf.javaml.tools.data.FileHandler;
 
 import org.junit.Test;
