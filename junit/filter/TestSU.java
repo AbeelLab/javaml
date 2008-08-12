@@ -12,7 +12,7 @@ import net.sf.javaml.core.DatasetTools;
 import net.sf.javaml.core.DefaultDataset;
 import net.sf.javaml.core.DenseInstance;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.featureselection.IAttributeRanking;
+import net.sf.javaml.featureselection.AttributeRanking;
 import net.sf.javaml.featureselection.RankingFromEvaluation;
 import net.sf.javaml.featureselection.SymmetricalUncertainty;
 import net.sf.javaml.tools.data.FileHandler;
@@ -55,7 +55,7 @@ public class TestSU {
 					"devtools/data/lymphoma.csv.gz"), 0, ",");
 			Dataset bootstrap = DatasetTools.bootstrap(data, data.size(),
 					new Random(7));
-			IAttributeRanking ar=new RankingFromEvaluation(new SymmetricalUncertainty());
+			AttributeRanking ar=new RankingFromEvaluation(new SymmetricalUncertainty());
 			ar.build(bootstrap);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

@@ -23,7 +23,7 @@ import net.sf.javaml.utils.ContingencyTables;
  * @author Thomas Abeel
  * 
  */
-public class GainRatio implements IAttributeEvaluation {
+public class GainRatio implements AttributeEvaluation {
 
     private Dataset training;
 

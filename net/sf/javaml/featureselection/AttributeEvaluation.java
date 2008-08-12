@@ -18,7 +18,7 @@ import net.sf.javaml.core.Dataset;
  * @author Thomas Abeel
  * 
  */
-public interface IAttributeEvaluation {
+public interface AttributeEvaluation {
 
     /**
      * Build the attribute evaluation on the supplied data set.

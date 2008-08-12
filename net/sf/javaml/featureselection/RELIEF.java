@@ -24,7 +24,7 @@ import net.sf.javaml.filter.normalize.NormalizeMidrange;
  * @author Thomas Abeel
  * 
  */
-public class RELIEF implements IAttributeEvaluation {
+public class RELIEF implements AttributeEvaluation {
 
     private double[] weights = null;
 

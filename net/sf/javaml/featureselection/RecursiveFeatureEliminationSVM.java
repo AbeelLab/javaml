@@ -29,7 +29,7 @@ import external.libsvm.SelfOptimizingLinearLibSVM;
  * @author Thomas Abeel
  * 
  */
-public class RecursiveFeatureEliminationSVM implements IAttributeRanking {
+public class RecursiveFeatureEliminationSVM implements AttributeRanking {
 
     private int[] ranking;
 

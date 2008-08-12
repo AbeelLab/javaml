@@ -16,13 +16,13 @@ import net.sf.javaml.utils.ArrayUtils;
  * @author Thomas Abeel
  * 
  */
-public class RankingFromEvaluation implements IAttributeRanking {
+public class RankingFromEvaluation implements AttributeRanking {
 
     private int[] ranking;
 
-    private IAttributeEvaluation ae;
+    private AttributeEvaluation ae;
 
-    public RankingFromEvaluation(IAttributeEvaluation ae) {
+    public RankingFromEvaluation(AttributeEvaluation ae) {
         this.ae = ae;
     }
 

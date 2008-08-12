@@ -23,7 +23,7 @@ import net.sf.javaml.utils.ContingencyTables;
  * @author Thomas Abeel
  * @author Mark Hall
  */
-public class SymmetricalUncertainty implements IAttributeEvaluation {
+public class SymmetricalUncertainty implements AttributeEvaluation {
 
     private Dataset training;
 

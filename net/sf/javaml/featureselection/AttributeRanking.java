@@ -18,7 +18,7 @@ import net.sf.javaml.core.Dataset;
  * @author Thomas Abeel
  * 
  */
-public interface IAttributeRanking {
+public interface AttributeRanking {
 
     /**
      * Build the attribute ranking on the supplied data set.

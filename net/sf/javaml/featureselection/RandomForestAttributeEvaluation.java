@@ -35,7 +35,7 @@ import be.abeel.util.Copier;
  * @author Thomas Abeel
  * 
  */
-public class RandomForestAttributeEvaluation implements IAttributeEvaluation {
+public class RandomForestAttributeEvaluation implements AttributeEvaluation {
 
     private int numTrees;
 
