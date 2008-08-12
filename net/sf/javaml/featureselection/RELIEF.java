@@ -132,7 +132,7 @@ public class RELIEF implements AttributeEvaluation {
         vector.remove(tmp);
     }
 
-    public double evaluateAttribute(int attribute) {
+    public double score(int attribute) {
         return weights[attribute];
     }
 

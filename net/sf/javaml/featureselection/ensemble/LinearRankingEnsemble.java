@@ -28,7 +28,7 @@ public class LinearRankingEnsemble implements AttributeRanking {
         for (AttributeRanking ae : aes) {
             ae.build(DatasetTools.bootstrap(data, (int) (data.size() * 0.9 + 1),rg));
             for (int i = 0; i < numAtt; i++)
-                sum[i] += ae.getRank(i);
+                sum[i] += ae.rank(i);
         }
         toRank(sum);
 
@@ -48,7 +48,7 @@ public class LinearRankingEnsemble implements AttributeRanking {
         }
     }
 
-    public int getRank(int attIndex) {
+    public int rank(int attIndex) {
         return ranking[attIndex];
     }
 

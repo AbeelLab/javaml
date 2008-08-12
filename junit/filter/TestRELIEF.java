@@ -37,9 +37,9 @@ public class TestRELIEF {
      
         ga.build(data);
      
-        System.out.println(ga.evaluateAttribute(0));
-        System.out.println(ga.evaluateAttribute(1));
-        System.out.println(ga.evaluateAttribute(2));
+        System.out.println(ga.score(0));
+        System.out.println(ga.score(1));
+        System.out.println(ga.score(2));
         
       
        
@@ -55,10 +55,10 @@ public class TestRELIEF {
          
             ga.build(data);
          
-            System.out.println(ga.evaluateAttribute(0));
-            System.out.println(ga.evaluateAttribute(1));
-            System.out.println(ga.evaluateAttribute(2));
-            System.out.println(ga.evaluateAttribute(3));
+            System.out.println(ga.score(0));
+            System.out.println(ga.score(1));
+            System.out.println(ga.score(2));
+            System.out.println(ga.score(3));
             
         } catch (IOException e) {
             // TODO Auto-generated catch block

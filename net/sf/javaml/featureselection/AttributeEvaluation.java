@@ -38,6 +38,6 @@ public interface AttributeEvaluation {
      * 
      * @return the worth of that attribute, a value between 0 and 1.
      */
-    public double evaluateAttribute(int attribute);
+    public double score(int attribute);
 
 }

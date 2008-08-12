@@ -173,7 +173,7 @@ public class RandomForestAttributeEvaluation implements AttributeEvaluation {
 
     private double[] importance;
 
-    public double evaluateAttribute(int attribute) {
+    public double score(int attribute) {
         return importance[attribute];
     }
 

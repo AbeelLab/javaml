@@ -136,7 +136,7 @@ public class RecursiveFeatureEliminationSVM implements AttributeRanking {
         return index - 1;
     }
 
-    public int getRank(int attIndex) {
+    public int rank(int attIndex) {
         return ranking[attIndex];
     }
 }

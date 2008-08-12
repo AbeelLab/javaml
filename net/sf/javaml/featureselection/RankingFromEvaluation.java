@@ -31,7 +31,7 @@ public class RankingFromEvaluation implements AttributeRanking {
         ae.build(data);
         double[] values = new double[noAttributes];
         for (int i = 0; i < values.length; i++)
-            values[i] = ae.evaluateAttribute(i);
+            values[i] = ae.score(i);
 
         ranking = new int[values.length];
         int[] order = ArrayUtils.sort(values);
@@ -40,7 +40,7 @@ public class RankingFromEvaluation implements AttributeRanking {
         }
     }
 
-    public int getRank(int attIndex) {
+    public int rank(int attIndex) {
 
         return ranking[attIndex];
     }

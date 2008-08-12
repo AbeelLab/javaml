@@ -43,12 +43,12 @@ public class TestFilter {
         relief.build(data);
         gr.build(data);
         System.out.println("SU\tRELIEF\tGR");
-        System.out.println(su.evaluateAttribute(0) + "\t" + relief.evaluateAttribute(0) + "\t"
-                + gr.evaluateAttribute(0));
-        System.out.println(su.evaluateAttribute(1) + "\t" + relief.evaluateAttribute(1) + "\t"
-                + gr.evaluateAttribute(1));
-        System.out.println(su.evaluateAttribute(2) + "\t" + relief.evaluateAttribute(2) + "\t"
-                + gr.evaluateAttribute(2));
+        System.out.println(su.score(0) + "\t" + relief.score(0) + "\t"
+                + gr.score(0));
+        System.out.println(su.score(1) + "\t" + relief.score(1) + "\t"
+                + gr.score(1));
+        System.out.println(su.score(2) + "\t" + relief.score(2) + "\t"
+                + gr.score(2));
 
     }
 
@@ -67,14 +67,14 @@ public class TestFilter {
             relief.build(data);
             gr.build(data);
             System.out.println("SU\tRELIEF\tGR");
-            System.out.println(su.evaluateAttribute(0) + "\t" + relief.evaluateAttribute(0) + "\t"
-                    + gr.evaluateAttribute(0));
-            System.out.println(su.evaluateAttribute(1) + "\t" + relief.evaluateAttribute(1) + "\t"
-                    + gr.evaluateAttribute(1));
-            System.out.println(su.evaluateAttribute(2) + "\t" + relief.evaluateAttribute(2) + "\t"
-                    + gr.evaluateAttribute(2));
-            System.out.println(su.evaluateAttribute(3) + "\t" + relief.evaluateAttribute(3) + "\t"
-                    + gr.evaluateAttribute(3));
+            System.out.println(su.score(0) + "\t" + relief.score(0) + "\t"
+                    + gr.score(0));
+            System.out.println(su.score(1) + "\t" + relief.score(1) + "\t"
+                    + gr.score(1));
+            System.out.println(su.score(2) + "\t" + relief.score(2) + "\t"
+                    + gr.score(2));
+            System.out.println(su.score(3) + "\t" + relief.score(3) + "\t"
+                    + gr.score(3));
 
         } catch (IOException e) {
             // TODO Auto-generated catch block

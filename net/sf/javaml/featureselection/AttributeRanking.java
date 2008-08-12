@@ -29,11 +29,12 @@ public interface AttributeRanking {
     public void build(Dataset data);
 
     /**
-     * Get the ranking of the given attribute.
+     * Get the ranking of the given attribute. The first rank is 0 and is the
+     * best. The higher the rank, the worse the attribute.
      * 
      * @param attIndex
      *            the index of the attribute to rank
      * @return the rank of the attribute
      */
-    public int getRank(int attIndex);
+    public int rank(int attIndex);
 }

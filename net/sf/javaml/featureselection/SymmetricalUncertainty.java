@@ -54,7 +54,7 @@ public class SymmetricalUncertainty implements AttributeEvaluation {
      *            the index of the attribute to be evaluated
      * @return the symmetrical uncertainty
      */
-    public double evaluateAttribute(int attribute) {
+    public double score(int attribute) {
         // int ii, jj;
         // int ni = training.numValues(attribute) + 1;
         // int nj = training.numClasses() + 1;
