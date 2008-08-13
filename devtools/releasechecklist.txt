@@ -4,3 +4,4 @@
 - Add news on Java-ML website
 - Upload and add API docs to Java-ML website
 - Upload new source code
+- tag source code in SVN
