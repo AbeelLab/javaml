@@ -3,6 +3,7 @@
  */
 package external.libsvm;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import net.sf.javaml.classification.Classifier;
@@ -167,8 +168,13 @@ public class LibSVM implements Classifier {
 
     @Override
     public Map<Object, Double> classDistribution(Instance instance) {
-        // TODO Auto-generated method stub
-        return null;
+        HashMap<Object, Double>out=new HashMap<Object, Double>();
+        for(Object o:data.classes()){
+            out.put(o,0.0);
+        }
+        out.put(classify(instance),1.0);
+        return out;
+
     }
 
 }
