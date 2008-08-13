@@ -1,0 +1,6 @@
+- Build project
+- Upload and publish files on SF
+- Add news on SF project
+- Add news on Java-ML website
+- Upload and add API docs to Java-ML website
+- Upload new source code
