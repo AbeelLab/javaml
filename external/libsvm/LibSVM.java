@@ -125,7 +125,7 @@ public class LibSVM implements Classifier {
                 // printf("\n");
             }
         }
-        // crap, brol weights.
+        // weights?
         // System.out.println(Arrays.deepToString(model.SV));
 
         // System.out.println("SV coef");
@@ -157,9 +157,6 @@ public class LibSVM implements Classifier {
         return data.classValue((int) d);
     }
 
-    // public double[] distributionForInstance(Instance instance) {
-    // return null;
-    // }
 
     public void setC(double c) {
         param.C = c;
