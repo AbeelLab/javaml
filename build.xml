@@ -6,27 +6,12 @@
 	<property name="src" location="." />
 	<property name="build" location="build" />
 	<property name="version" value="0.1.0" />
-	<property name="revision" value="notset" />
-	<property name="statusText" value="notset" />
+
 	<property name="dist" location="javaml-${version}" />
 
 
 
-	<!-- Specify the build type, if this variable is set the current version -->
-	<!-- of the SVN will be tagged with the version number -->
-	<!-- Comment this out to do test runs of the build script -->
-	<!-- Uncomment this if you want to make a real release -->
-	<!-- <property name="isRelease" value="set" /> -->
 
-	<target name="tag" if="isRelease">
-		<taskdef name="query" classname="com.jera.anttasks.Query" classpath="devtools/lib/JeraAntTasks.jar" />
-		<query name="user" />
-		<query name="pass" password="true" />
-		<echo message="SVN tagging ${version}" />
-		<svn username="${user}" password="${pass}">
-			<copy message="tagging for release ${version}" srcUrl="https://java-ml.svn.sourceforge.net/svnroot/java-ml/trunk/" destURL="https://java-ml.svn.sourceforge.net/svnroot/java-ml/tags/${version}/" />
-		</svn>
-	</target>
 
 	<target name="javadoc">
 		<replaceregexp flags="g" match="Thomas Abeel" replace="Thomas Abeel (&lt;a href=&quot;mailto:thomas@abeel.be&quot;&gt;thomas@abeel.be&lt;&#47;a&gt;)">
@@ -34,12 +19,12 @@
 				<include name="**/*.java" />
 			</fileset>
 		</replaceregexp>
-		<javadoc classpath="ajt-1.14.jar:commons-math-1.1.jar" packagenames="net.sf.javaml.*,gov.nist.math.jama.*,nz.ac.waikato.cs.weka.*" sourcepath="${build}/src" defaultexcludes="yes" destdir="${dist}/doc" author="true" version="true" use="true" windowtitle="Java Machine Learning Library ${version}">
+		<javadoc verbose="true" classpath="lib/ajt-1.15.jar:lib/commons-math-1.1.jar" packagenames="tutorials.*,net.sf.javaml.*,gov.nist.math.jama.*,nz.ac.waikato.cs.weka.*" sourcepath="${build}/src" defaultexcludes="yes" destdir="${dist}/doc" author="true" version="true" use="true" windowtitle="Java Machine Learning Library ${version}">
 			<doctitle>
 				<![CDATA[<h1>Java Machine Learning Library ${version} - ${TODAY_LOCAL}</h1>]]></doctitle>
 		<bottom>
 			<![CDATA[<i>Copyright &#169; 2006-2008 - <a target="_blank" href="http://www.abeel.be/">Thomas Abeel</a> - All Rights Reserved.</i>]]></bottom>
-	<taglet name="net.sourceforge.taglets.Taglets" path="ajt-1.14.jar:devtools/lib/taglets.jar" />
+	<taglet name="net.sourceforge.taglets.Taglets" path="lib/ajt-1.15.jar:devtools/lib/taglets.jar" />
 </javadoc>
 </target>
 
@@ -53,9 +38,9 @@
 		<include name="*.txt" />
 	</fileset>
 </copy>
-<copy file="commons-math-1.1.jar" todir="${dist}/" />
-<copy file="ajt-1.14.jar" todir="${dist}/" />
-	<copy file="weka.jar" todir="${dist}/" />
+<copy file="lib/commons-math-1.1.jar" todir="${dist}/lib/" />
+<copy file="lib/ajt-1.15.jar" todir="${dist}/lib/" />
+<copy file="lib/weka.jar" todir="${dist}/lib/" />
 
 <zip destfile="${dist}.zip" basedir="${dist}" />
 <tar tarfile="${dist}.tar" basedir="${dist}" excludes="${dist}.zip" />
@@ -72,34 +57,17 @@
 </tstamp>
 <!-- Create the build directory structure used by compile -->
 <mkdir dir="${build}" />
-
-
-<!-- path to the svnant libraries. Usually they will be located in ANT_HOME/lib -->
-<path id="svnant.classpath">
-	<fileset dir="devtools/lib/">
-		<include name="**/*.jar" />
-	</fileset>
-</path>
-
-<!-- load the svn task -->
-<typedef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="svnant.classpath" />
-
-<svn>
-	<update dir="." />
-	<status path="." revisionProperty="revision" />
-</svn>
-<echo message="Building with revision: ${revision}" />
 </target>
 
-<target name="compile" depends="init,tag" description="compile the source ">
+<target name="compile" depends="init" description="compile the source ">
 <!-- Compile the java code from ${src} into ${build} -->
-<javac debug="true" debuglevel="lines,vars,source" source="1.5" target="1.5" classpath="ajt-1.14.jar:junit-4.3.1.jar:commons-math-1.1.jar:weka.jar" srcdir="${src}" destdir="${build}" excludes="devtools/**" />
+<javac debug="true" debuglevel="lines,vars,source" source="1.6" target="1.6" classpath="lib/ajt-1.15.jar:lib/junit-4.3.1.jar:lib/commons-math-1.1.jar:lib/weka.jar" srcdir="${src}" destdir="${build}" excludes="devtools/**" />
 </target>
 
 <target name="dist" depends="compile" description="generate the distribution">
 <!-- Create the distribution directory -->
 <mkdir dir="${dist}" />
-
+<mkdir dir="${dist}/lib" />
 <!-- Put everything in ${build} into the javaml-${version}.jar file -->
 <jar jarfile="${dist}/javaml-${version}.jar" basedir="${build}" />
 
@@ -149,8 +117,8 @@
 	</fileset>
 </replaceregexp>
 
-
-<jar jarfile="${dist}/javaml-${version}-src.jar" basedir="${build}/src" />
+	
+<zip destfile="${dist}/javaml-${version}-src.zip" basedir="${build}/src" />
 </target>
 
 <target name="clean" description="clean up">
