@@ -1,7 +1,7 @@
 /**
  * %SVN.HEADER%
  */
-package junit.clustering;
+package tutorials.clustering;
 
 import java.io.File;
 import java.io.IOException;

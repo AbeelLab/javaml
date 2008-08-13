@@ -1,13 +1,12 @@
 /**
  * %SVN.HEADER%
  */
-package junit.classification;
+package tutorials.classification;
 
 import java.io.File;
 import java.io.IOException;
 
 import net.sf.javaml.classification.Classifier;
-import net.sf.javaml.classification.KNearestNeighbors;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.tools.data.FileHandler;
@@ -15,29 +14,30 @@ import net.sf.javaml.tools.data.FileHandler;
 import org.junit.Assert;
 import org.junit.Test;
 
+import external.libsvm.LibSVM;
+
 /**
- * This tutorial show how to use a the k-nearest neighbors classifier.
+ * This tutorial show how to use a the LibSVM classifier.
  * 
  * @author Thomas Abeel
  * 
  */
-public class TutorialKNN {
+public class TutorialLibSVM {
 	/**
-	 * Shows the default usage of the KNN algorithm.
+	 * Shows the default usage of the LibSVM algorithm.
 	 */
 	@Test
-	public void testDefaultKNN() {
+	public void testDefaultLibSVM() {
 
 		try {
 			/* Load a data set */
 			Dataset data = FileHandler.loadDataset(new File(
 					"devtools/data/iris.data"), 4, ",");
 			/*
-			 * Contruct a KNN classifier that uses 5 neighbors to make a
-			 * decision.
+			 * Contruct a LibSVM classifier with default settings.
 			 */
-			Classifier knn = new KNearestNeighbors(5);
-			knn.buildClassifier(data);
+			Classifier svm = new LibSVM();
+			svm.buildClassifier(data);
 
 			/*
 			 * Load a data set, this can be a different one, but we will use the
@@ -49,7 +49,7 @@ public class TutorialKNN {
 			int correct = 0, wrong = 0;
 			/* Classify all instances and check with the correct class values */
 			for (Instance inst : dataForClassification) {
-				Object predictedClassValue = knn.classify(inst);
+				Object predictedClassValue = svm.classify(inst);
 				Object realClassValue = inst.classValue();
 				if (predictedClassValue.equals(realClassValue))
 					correct++;

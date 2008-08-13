@@ -1,7 +1,7 @@
 /**
  * %SVN.HEADER%
  */
-package junit.core;
+package tutorials.core;
 
 import java.util.SortedSet;
 
