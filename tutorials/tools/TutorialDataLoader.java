@@ -1,7 +1,7 @@
 /**
  * %SVN.HEADER%
  */
-package junit.tools;
+package tutorials.tools;
 
 import java.io.File;
 import java.io.IOException;
