@@ -9,8 +9,6 @@ import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.DenseInstance;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.InstanceTools;
-import net.sf.javaml.distance.DistanceMeasure;
-import net.sf.javaml.distance.EuclideanDistance;
 import net.sf.javaml.filter.DatasetFilter;
 
 /**
@@ -39,23 +37,18 @@ public class KNearestNeighbors implements DatasetFilter {
 
     }
 
-    private DistanceMeasure euc = new EuclideanDistance();
-
     public void filter(Dataset data) {
-        // Dataset output = new SimpleDataset();
         for (Instance i : data) {
             removeMissingValues(i, data);
-            // output.add(x);
         }
-        // return output;
     }
 
     private void removeMissingValues(Instance inst, Dataset data) {
         if (InstanceTools.hasMissingValues(inst)) {
-            Set<Instance> nearest = data.kNearest(k, euc, inst);
+            Set<Instance> nearest = data.kNearest(k, inst);
 
             Instance sum = new DenseInstance(new double[inst.noAttributes()]);
-            for (Instance x : data.kNearest(k, euc, inst)) {
+            for (Instance x : data.kNearest(k, inst)) {
                 sum = sum.plus(x);
             }
             sum = sum.divide(nearest.size());
