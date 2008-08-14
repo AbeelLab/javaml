@@ -21,6 +21,20 @@ import java.util.Random;
 public class InstanceTools {
 
     /**
+     * Create an array representation of the instance attributes.
+     * 
+     * @param inst
+     * @return
+     */
+    public static double[] array(Instance inst) {
+        double[] out = new double[inst.noAttributes()];
+        for (int i = 0; i < inst.noAttributes(); i++) {
+            out[i] = inst.value(i);
+        }
+        return out;
+    }
+
+    /**
      * Random generator to create random instances.
      */
     private static Random rg = new Random(System.currentTimeMillis());
@@ -58,20 +72,20 @@ public class InstanceTools {
         }
         return false;
     }
-    
-//    /**
-//     * Returns the same instance with a single attribute perturbed.
-//     * 
-//     * @param i
-//     * @param attIndex
-//     * @return
-//     */
-//    public static void perturb(Instance i,int attIndex){
-//        i.put(attIndex, Math.random());
-//        
-////        double[] values = i.toArray();
-////        values[attIndex]=Math.random();
-////        return new SimpleInstance(values,i);
-//    }
+
+    // /**
+    // * Returns the same instance with a single attribute perturbed.
+    // *
+    // * @param i
+    // * @param attIndex
+    // * @return
+    // */
+    // public static void perturb(Instance i,int attIndex){
+    // i.put(attIndex, Math.random());
+    //        
+    // // double[] values = i.toArray();
+    // // values[attIndex]=Math.random();
+    // // return new SimpleInstance(values,i);
+    // }
 
 }
