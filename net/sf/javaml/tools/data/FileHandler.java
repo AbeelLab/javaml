@@ -85,17 +85,12 @@ public class FileHandler {
         Dataset out = new DefaultDataset();
         for (String[] arr : it) {
             SparseInstance inst = new SparseInstance();
-            // double[] values;
-            // if (classIndex == -1)
-            // values = new double[arr.length];
-            // else
-            // values = new double[arr.length - 1];
-        
+
             for (int i = 0; i < arr.length; i++) {
                 if (i == classIndex) {
                     inst.setClassValue(arr[i]);
                 } else {
-                    String[]tmp=arr[i].split(indexSep);
+                    String[] tmp = arr[i].split(indexSep);
                     double val;
                     try {
                         val = Double.parseDouble(tmp[1]);
@@ -127,14 +122,7 @@ public class FileHandler {
             String classValue = null;
             for (int i = 0; i < arr.length; i++) {
                 if (i == classIndex) {
-                    try {
-                        classValue = arr[i];
-
-                    } catch (Exception e) {
-                        // System.err.println(f);
-                        System.err.println("$" + line + "$");
-                        System.exit(-1);
-                    }
+                    classValue = arr[i];
                 } else {
                     double val;
                     try {
@@ -168,6 +156,13 @@ public class FileHandler {
      * 
      * @param f
      *            the file to be loaded.
+     * @param classIndex
+     *            the index of the class value
+     * @param separator
+     *            the symbol used to separate two fields, typically ,(comma)
+     *            ;(semi-colon) or \t (tab).
+     * @return a data set containing the data from the file
+     * @throws IOException
      */
     public static Dataset loadDataset(File f, int classIndex, String separator) throws IOException {
         if (f.getName().endsWith("gz"))
