@@ -12,6 +12,7 @@ import java.util.zip.ZipInputStream;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.DefaultDataset;
 import net.sf.javaml.core.DenseInstance;
+import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.SparseInstance;
 import be.abeel.util.ColumnIterator;
 import be.abeel.util.LineIterator;
@@ -83,6 +84,8 @@ public class FileHandler {
         it.setSkipBlanks(true);
         it.setSkipComments(true);
         Dataset out = new DefaultDataset();
+        /* to keep track of the maximum number of attributes */
+        int maxAttributes = 0;
         for (String[] arr : it) {
             SparseInstance inst = new SparseInstance();
 
@@ -100,8 +103,13 @@ public class FileHandler {
                     inst.put(Integer.parseInt(tmp[0]), val);
                 }
             }
+            if (inst.noAttributes() > maxAttributes)
+                maxAttributes = inst.noAttributes();
             out.add(inst);
 
+        }
+        for (Instance inst : out) {
+            ((SparseInstance) inst).setNoAttributes(maxAttributes);
         }
         return out;
     }
