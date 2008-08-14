@@ -12,7 +12,8 @@ import java.util.Set;
 import java.util.Vector;
 
 /**
- * Implementation of a sparse instance. Attributes for which the value is not set return a default value.
+ * Implementation of a sparse instance. Attributes for which the value is not
+ * set return a default value.
  * 
  * {@jmlSource}
  * 
@@ -22,9 +23,18 @@ import java.util.Vector;
  * @version %SVN.REVISION%
  * 
  * @author Thomas Abeel
- *
+ * 
  */
 public class SparseInstance extends AbstractInstance implements Instance {
+
+    /**
+     * Sets the number of attributes that this sparse instance has.
+     * 
+     * @param noAttributes
+     */
+    public void setNoAttributes(int noAttributes) {
+        this.noAttributes = noAttributes;
+    }
 
     private HashMap<Integer, Double> data = new HashMap<Integer, Double>();
 
@@ -43,12 +53,12 @@ public class SparseInstance extends AbstractInstance implements Instance {
     public SparseInstance(int noAttributes) {
         this(noAttributes, 0.0, null);
     }
-    
+
     /* classValue will be set to null */
     public SparseInstance(int noAttributes, double defaultValue) {
         this(noAttributes, defaultValue, null);
     }
-    
+
     /* defaultValue will be set to 0.0 */
     public SparseInstance(int noAttributes, Object classValue) {
         this(noAttributes, 0.0, classValue);
@@ -60,31 +70,30 @@ public class SparseInstance extends AbstractInstance implements Instance {
         this.defaultValue = defaultValue;
         this.noAttributes = noAttributes;
     }
-    
+
     /* defaultValue will be set to 0.0, classValue to null */
     public SparseInstance(double[] datavector) {
         this(datavector, 0.0, null);
     }
-    
+
     /* classValue will be set to null */
     public SparseInstance(double[] datavector, double defaultValue) {
         this(datavector, defaultValue, null);
     }
-    
+
     /* defaultValue will be set to 0.0 */
     public SparseInstance(double[] datavector, Object classValue) {
         this(datavector, 0.0, classValue);
     }
-    
+
     /* Create sparse instance with values from the datavector */
     public SparseInstance(double[] datavector, double defaultValue, Object classValue) {
         super(classValue);
         this.defaultValue = defaultValue;
         initiate(datavector);
     }
-    
-    private void initiate(double[] datavector)
-    {
+
+    private void initiate(double[] datavector) {
         data.clear();
         noAttributes = datavector.length;
         for (int i = 0; i < datavector.length; i++)
@@ -168,7 +177,7 @@ public class SparseInstance extends AbstractInstance implements Instance {
     @Override
     public int noAttributes() {
         if (noAttributes < 0)
-            return Collections.max(data.keySet())+1;
+            return Collections.max(data.keySet()) + 1;
         else
             return noAttributes;
 
@@ -191,9 +200,10 @@ public class SparseInstance extends AbstractInstance implements Instance {
         noAttributes--;
 
     }
+
     @Override
-    public String toString(){
-        return "{"+data.toString()+";"+classValue()+"}";
+    public String toString() {
+        return "{" + data.toString() + ";" + classValue() + "}";
     }
 
     @Override
