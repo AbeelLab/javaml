@@ -47,79 +47,113 @@ public class RandomTree implements Classifier {
 
     private Vector<Integer> splitAttributes = null;
 
-    private SortedSet<Object>parentClasses=null;
-    private RandomTree(int attributes, Random rg,SortedSet<Object>classes) {
+    private SortedSet<Object> parentClasses = null;
+
+    private RandomTree(int attributes, Random rg, SortedSet<Object> classes) {
         this.rg = rg;
         this.noSplitAttributes = attributes;
-        this.parentClasses=classes;
+        this.parentClasses = classes;
     }
+
     public RandomTree(int attributes, Random rg) {
-        this(attributes,rg,null);
+        this(attributes, rg, null);
     }
 
     @Override
     public void buildClassifier(Dataset data) {
-        if(parentClasses==null)
-            parentClasses=data.classes();
-        
+        if (parentClasses == null)
+            parentClasses = data.classes();
+
         if (data.classes().size() == 1) {
             finalClass = data.classes().first();
             data.clear();
             return;
         }
+        Dataset left = null, right = null;
+        boolean correctSplit = false;
+        /* To keep track of how many times we already tried to split the data */
+        int iterationCount = 0;
+        while (!correctSplit) {
+            iterationCount++;
+            
+            
+            /*
+             * Select the attributes on which to split the data.
+             * 
+             * When we face problems to split, we start using more attributes,
+             * to force a split.
+             */
+            splitAttributes = new Vector<Integer>();
+            for (int i = 0; i < data.noAttributes(); i++)
+                splitAttributes.add(i);
+            
+            while (splitAttributes.size() / (iterationCount * iterationCount) > noSplitAttributes) {
+                splitAttributes.remove(rg.nextInt(splitAttributes.size()));
+            }
 
-        /* determine attributes to split on */
-        splitAttributes = new Vector<Integer>();
-        for (int i = 0; i < data.noAttributes(); i++)
-            splitAttributes.add(i);
-        while (splitAttributes.size() > noSplitAttributes) {
-            splitAttributes.remove(rg.nextInt(splitAttributes.size()));
-        }
-
-        /* calculate mean for each class */
-        int count0 = 0, count1 = 0;
-        leftCenter = new float[noSplitAttributes];
-        rightCenter = new float[noSplitAttributes];
-        for (Instance inst : data) {
-            if (data.classIndex(inst.classValue()) == 0) {
-                count0++;
-                for (int j = 0; j < splitAttributes.size(); j++) {
-                    leftCenter[j] += inst.value(splitAttributes.get(j));
+            /* calculate mean for each class */
+            int count0 = 0, count1 = 0;
+            leftCenter = new float[splitAttributes.size()];
+            rightCenter = new float[splitAttributes.size()];
+            for (Instance inst : data) {
+                if (data.classIndex(inst.classValue()) == 0) {
+                    count0++;
+                    for (int j = 0; j < splitAttributes.size(); j++) {
+                        leftCenter[j] += inst.value(splitAttributes.get(j));
+                    }
+                } else {
+                    count1++;
+                    for (int j = 0; j < splitAttributes.size(); j++) {
+                        rightCenter[j] += inst.value(splitAttributes.get(j));
+                    }
                 }
-            } else {
-                count1++;
-                for (int j = 0; j < splitAttributes.size(); j++) {
-                    rightCenter[j] += inst.value(splitAttributes.get(j));
+            }
+
+            for (int i = 0; i < splitAttributes.size(); i++) {
+                leftCenter[i] /= count0;
+                rightCenter[i] /= count1;
+            }
+
+            /* place-holder for instances */
+            double[] tmp = new double[splitAttributes.size()];
+            /* data sets to construct children */
+            left = new DefaultDataset();
+            right = new DefaultDataset();
+            for (Instance inst : data) {
+                for (int i = 0; i < splitAttributes.size(); i++) {
+                    tmp[i] = inst.value(splitAttributes.get(i));
+                }
+                double distLeft = dist(tmp, leftCenter);
+                double distRight = dist(tmp, rightCenter);
+                if (distLeft > distRight)
+                    right.add(inst);
+                else
+                    left.add(inst);
+
+            }
+            correctSplit = left.size() != 0 && right.size() != 0;
+            /* If there is no split, reconstruct data set for another try */
+            if (!correctSplit) {
+                if ((iterationCount * iterationCount) * noSplitAttributes > data.noAttributes()) {
+                    /*
+                     * This data set can not be split properly. This is most
+                     * likely due to ambiguous training data. Randomly select
+                     * one of the possible classes as output class.
+                     */
+                    Vector<Object> possibleClasses = new Vector<Object>();
+                    possibleClasses.addAll(data.classes());
+                    this.finalClass = possibleClasses.get(rg.nextInt(possibleClasses.size()));
+                    data.clear();
+                    left = null;
+                    right = null;
+                    return;
+
                 }
             }
         }
-
-        for (int i = 0; i < noSplitAttributes; i++) {
-            leftCenter[i] /= count0;
-            rightCenter[i] /= count1;
-        }
-
-        /* place-holder for instances */
-        double[] tmp = new double[noSplitAttributes];
-        /* data sets to construct children */
-        Dataset left = new DefaultDataset();
-        Dataset right = new DefaultDataset();
-        for (Instance inst : data) {
-            for (int i = 0; i < noSplitAttributes; i++) {
-                tmp[i] = inst.value(splitAttributes.get(i));
-            }
-            double distLeft = dist(tmp, leftCenter);
-            double distRight = dist(tmp, rightCenter);
-            if (distLeft > distRight)
-                right.add(inst);
-            else
-                left.add(inst);
-
-        }
-
-        leftChild = new RandomTree(noSplitAttributes, rg,parentClasses);
+        leftChild = new RandomTree(noSplitAttributes, rg, parentClasses);
         leftChild.buildClassifier(left);
-        rightChild = new RandomTree(noSplitAttributes, rg,parentClasses);
+        rightChild = new RandomTree(noSplitAttributes, rg, parentClasses);
         rightChild.buildClassifier(right);
 
     }
@@ -157,14 +191,13 @@ public class RandomTree implements Classifier {
         }
     }
 
-    
     @Override
     public Map<Object, Double> classDistribution(Instance instance) {
-        HashMap<Object, Double>out=new HashMap<Object, Double>();
-        for(Object o:parentClasses){
-            out.put(o,0.0);
+        HashMap<Object, Double> out = new HashMap<Object, Double>();
+        for (Object o : parentClasses) {
+            out.put(o, 0.0);
         }
-        out.put(classify(instance),1.0);
+        out.put(classify(instance), 1.0);
         return out;
 
     }
