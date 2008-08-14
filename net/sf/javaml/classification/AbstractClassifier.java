@@ -19,9 +19,6 @@ public abstract class AbstractClassifier implements Classifier {
                 out = key;
             }
         }
-        // System.out.println("pred: "+out);
-        // System.out.println("--");
-
         return out;
     }
 }
