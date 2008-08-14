@@ -12,8 +12,6 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.Vector;
 
-import net.sf.javaml.distance.DistanceMeasure;
-
 public class Fold implements Dataset {
     private int[] indices;
 
@@ -51,7 +49,7 @@ public class Fold implements Dataset {
     }
 
     @Override
-    public Set<Instance> kNearest(int k, DistanceMeasure dm, Instance inst) {
+    public Set<Instance> kNearest(int k, Instance inst) {
         // TODO this method can be implemented on a fold.
         throw new UnsupportedOperationException("Method is not yet implemented");
     }

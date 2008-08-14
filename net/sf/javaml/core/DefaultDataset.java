@@ -4,15 +4,14 @@
 package net.sf.javaml.core;
 
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.Vector;
-
-import net.sf.javaml.distance.DistanceMeasure;
 
 /**
  * Provides a standard data set implementation.
@@ -125,48 +124,56 @@ public class DefaultDataset extends Vector<Instance> implements Dataset {
      * @return the instances from the supplied data set that are closest to the
      *         supplied instance
      * 
-     * TODO bad implementation, this could be written much more efficient.
-     * 
      */
-    public Set<Instance> kNearest(int k, DistanceMeasure dm, Instance inst) {
-
-        Set<Instance> closest = new HashSet<Instance>();
-        // double bestDistance = dm.calculateDistance(inst, closest);
+    public Set<Instance> kNearest(int k, Instance inst) {
+        Map<Instance, Double> closest = new HashMap<Instance, Double>();
+        double max = Double.POSITIVE_INFINITY;
         for (Instance tmp : this) {
-            if (!inst.equals(tmp)) {
-                closest.add(tmp);
+            double d = measure(inst, tmp, max);
+            if (d < max && !inst.equals(tmp)) {
+                closest.put(tmp, d);
                 if (closest.size() > k)
-                    removeFarthest(closest, inst, dm);
+                    max = removeFarthest(closest);
             }
-            // double tmpDistance = dm.calculateDistance(inst,
-            // data.instance(i));
-            // if (dm.compare(tmpDistance, bestDistance)) {
-            // bestDistance = tmpDistance;
-            // closest = data.instance(i);
-            // }
+
         }
-        return closest;
+        return closest.keySet();
+    }
+
+    /**
+     * Measures square of the euclidean distance between two instances, but
+     * stops at max.
+     * 
+     * @param inst
+     * @param tmp
+     * @return
+     */
+    private double measure(Instance a, Instance b, double max) {
+        double sum = 0;
+        for (int i = 0; i < a.noAttributes(); i++) {
+            sum += (a.value(i) - b.value(i)) * (a.value(i) - b.value(i));
+            if (sum > max)
+                return Double.POSITIVE_INFINITY;
+        }
+        return sum;
     }
 
     /*
      * Removes the element from the vector that is farthest from the supplied
      * element.
      */
-    private void removeFarthest(Set<Instance> vector, Instance supplied, DistanceMeasure dist) {
+    private double removeFarthest(Map<Instance, Double> vector) {
         Instance tmp = null;// ; = vector.get(0);
-        double max = 0;// dist.calculateDistance(vector.get(0), supplied);
-        for (Instance inst : vector) {
-            double tmpDist = dist.measure(inst, supplied);
-            if (dist.compare(max, tmpDist)) {
-                max = tmpDist;
+        double max = 0;
+        for (Instance inst : vector.keySet()) {
+            double d = vector.get(inst);
+            if (d > max) {
+                max = d;
                 tmp = inst;
             }
         }
-
-        if (!vector.remove(tmp)) {
-            System.out.println(tmp);
-            throw new RuntimeException("This should not happen...");
-        }
+        vector.remove(tmp);
+        return max;
 
     }
 

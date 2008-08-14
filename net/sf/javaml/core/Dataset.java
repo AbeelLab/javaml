@@ -8,8 +8,6 @@ import java.util.Random;
 import java.util.Set;
 import java.util.SortedSet;
 
-import net.sf.javaml.distance.DistanceMeasure;
-
 /**
  * Interface for a data set.
  * 
@@ -30,7 +28,7 @@ public interface Dataset extends List<Instance> {
      * @param inst
      * @return
      */
-    public Set<Instance> kNearest(int k, DistanceMeasure dm, Instance inst);
+    public Set<Instance> kNearest(int k, Instance inst);
 
     /**
      * Returns a set containing all different classes in this data set. If no

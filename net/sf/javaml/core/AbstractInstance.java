@@ -22,9 +22,10 @@ public abstract class AbstractInstance implements Instance {
 
     private final int ID;
 
-    public int getID(){
+    public int getID() {
         return ID;
     }
+
     class InstanceValueIterator implements Iterator<Double> {
 
         private int index = 0;
@@ -111,6 +112,25 @@ public abstract class AbstractInstance implements Instance {
             out.put(i, this.get(i) * value);
         }
         return out;
+    }
+
+    @Override
+    public int hashCode() {
+        return ID;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        final AbstractInstance other = (AbstractInstance) obj;
+        if (ID != other.ID)
+            return false;
+        return true;
     }
 
     @Override
