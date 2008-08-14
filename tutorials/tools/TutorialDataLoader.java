@@ -46,4 +46,16 @@ public class TutorialDataLoader {
 			Assert.assertFalse(true);
 		}
 	}
+	
+	@Test
+	public void testSparseLoader(){
+	    try{
+	        Dataset data =  FileHandler.loadSparseDataset(new File(
+            "devtools/data/sparse.txt.gz"), 0, ";",":");
+	        System.out.println(data.classes());
+	        
+	    }catch(IOException e){
+	        Assert.assertFalse(true);
+	    }
+	}
 }
