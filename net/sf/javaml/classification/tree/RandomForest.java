@@ -34,6 +34,10 @@ public class RandomForest implements Classifier {
 
     private Random rg;
 
+    public RandomForest(int treeCount){
+        
+    }
+    
     public RandomForest(int treeCount, boolean calculateOutOfBagErrorEstimate, int numAttributes, Random rg) {
         this.treeCount = treeCount;
         this.rg = rg;
@@ -46,10 +50,11 @@ public class RandomForest implements Classifier {
     }
 
     public void buildClassifier(Dataset data) {
+        if(treeCount<0)
+            treeCount=(int)Math.sqrt(data.noAttributes())+1;
         RandomTree[] trees = new RandomTree[treeCount];
         for (int i = 0; i < trees.length; i++) {
             trees[i] = new RandomTree(numAttributes,rg);
-//            trees[i].setKValue(numAttributes);
         }
         bagger = new Bagging(trees, rg);
         bagger.setCalculateOutOfBagErrorEstimate(calculateOutOfBagErrorEstimate);

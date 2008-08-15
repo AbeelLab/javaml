@@ -75,8 +75,7 @@ public class RandomTree implements Classifier {
         int iterationCount = 0;
         while (!correctSplit) {
             iterationCount++;
-            
-            
+
             /*
              * Select the attributes on which to split the data.
              * 
@@ -86,7 +85,7 @@ public class RandomTree implements Classifier {
             splitAttributes = new Vector<Integer>();
             for (int i = 0; i < data.noAttributes(); i++)
                 splitAttributes.add(i);
-            
+
             while (splitAttributes.size() / (iterationCount * iterationCount) > noSplitAttributes) {
                 splitAttributes.remove(rg.nextInt(splitAttributes.size()));
             }
@@ -132,7 +131,7 @@ public class RandomTree implements Classifier {
 
             }
             correctSplit = left.size() != 0 && right.size() != 0;
-            /* If there is no split, reconstruct data set for another try */
+
             if (!correctSplit) {
                 if ((iterationCount * iterationCount) * noSplitAttributes > data.noAttributes()) {
                     /*
