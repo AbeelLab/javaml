@@ -38,6 +38,7 @@ public class ConsistencyIndex extends AbstractDistance {
         this.n = n;
     }
 
+    @Override
     public double measure(Instance a, Instance b) {
         HashSet<Integer> set1 = new HashSet<Integer>();
         HashSet<Integer> set2 = new HashSet<Integer>();
@@ -56,7 +57,6 @@ public class ConsistencyIndex extends AbstractDistance {
         /* normal calculation */
         set1.retainAll(set2);
         double r = set1.size(); //
-        System.out.println("n=" + n + ";" + "r=" + r + ";" + "k=" + k);
         return (r * n - k * k) / (k * (n - k));
     }
 }
