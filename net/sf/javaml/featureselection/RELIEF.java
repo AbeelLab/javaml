@@ -47,25 +47,21 @@ public class RELIEF implements AttributeEvaluation {
 
     public void build(Dataset data) {
         weights = new double[data.noAttributes()];
-        // System.out.println("Building RELIEF");
-        // Normalize the data to [0,1]
-        // System.out.println(data);
+
+        /* Normalize the data to [0,1] */
+
         NormalizeMidrange dnm = new NormalizeMidrange(0.5, 1);
         dnm.filter(data);
-        // System.out.println("--");
-        // System.out.println("Normalized data");
-        // System.out.println(data);
-        // // weights = new double[data.numAttributes()];
-        // // number of iterations
+
+        /* Number of iterations */
         int m = data.size();
 
         for (int i = 0; i < m; i++) {
             Instance random = data.instance(rg.nextInt(data.size()));
-            // System.out.println("random=" + random);
             findNearest(data, random);
             for (int j = 0; j < weights.length; j++)
                 weights[j] = weights[j] - diff(j, random, nearestHit) / m + diff(j, random, nearestMiss) / m;
-            // System.out.println(Arrays.toString(weights));
+          
         }
     }
 
@@ -109,9 +105,6 @@ public class RELIEF implements AttributeEvaluation {
 
             }
         }
-        // System.out.println("Nearest hit: "+nearestHit);
-        // System.out.println("--");
-        // System.out.println("Nearest hit: "+nearestMiss);
 
     }
 
