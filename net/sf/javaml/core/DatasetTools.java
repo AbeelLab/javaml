@@ -23,6 +23,23 @@ import be.abeel.util.Copier;
 final public class DatasetTools {
 
     /**
+     * All data will be merged together in the first supplied data set.
+     * 
+     * @param datasets
+     *            a number of data sets
+     * 
+     */
+    public static void merge(Dataset... datasets) {
+        Dataset out = null;
+        for (Dataset data : datasets) {
+            if (out == null)
+                out = data;
+            else
+                out.addAll(data);
+        }
+    }
+
+    /**
      * Generate a bootstrap sample from the data set with a particular size,
      * using the given random generator.
      * 
