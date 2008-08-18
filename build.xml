@@ -19,7 +19,7 @@
 				<include name="**/*.java" />
 			</fileset>
 		</replaceregexp>
-		<javadoc verbose="true" classpath="lib/ajt-1.15.jar:lib/commons-math-1.1.jar" packagenames="tutorials.*,net.sf.javaml.*,gov.nist.math.jama.*,nz.ac.waikato.cs.weka.*" sourcepath="${build}/src" defaultexcludes="yes" destdir="${dist}/doc" author="true" version="true" use="true" windowtitle="Java Machine Learning Library ${version}">
+		<javadoc verbose="false" classpath="lib/ajt-1.15.jar:lib/commons-math-1.1.jar:lib/junit-4.3.1.jar" packagenames="tutorials.*,net.sf.javaml.*" sourcepath="${build}/src" defaultexcludes="yes" destdir="${dist}/doc" author="true" version="true" use="true" windowtitle="Java Machine Learning Library ${version}">
 			<doctitle>
 				<![CDATA[<h1>Java Machine Learning Library ${version} - ${TODAY_LOCAL}</h1>]]></doctitle>
 		<bottom>
@@ -81,7 +81,7 @@
 </copy>
 <!-- Replace the SVN.REVISION tag with the current SVN revision number -->
 <echo message="Replacing revision number" />
-<replaceregexp match="%SVN.REVISION%" replace="${revision}">
+<replaceregexp match="%SVN.REVISION%" replace="${version}">
 	<fileset dir="${build}/src">
 		<include name="**/*.java" />
 	</fileset>
