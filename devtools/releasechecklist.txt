@@ -5,3 +5,4 @@
 - Upload and add API docs to Java-ML website
 - Upload new source code
 - tag source code in SVN
+- modify download latest link on Java-ML website
