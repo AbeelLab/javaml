@@ -110,7 +110,7 @@
 * ${line.separator}
 * Copyright (c) 2006-2008, Thomas Abeel${line.separator}
 * ${line.separator}
-* Project: http://sourceforge.net/projects/java-ml/${line.separator}
+* Project: http://java-ml.sourceforge.net/${line.separator}
 * ">
 	<fileset dir="${build}/src">
 		<include name="**/*.java" />
