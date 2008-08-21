@@ -6,6 +6,7 @@ package net.sf.javaml.tools.data;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipInputStream;
 
@@ -15,6 +16,7 @@ import net.sf.javaml.core.DenseInstance;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.SparseInstance;
 import be.abeel.util.ColumnIterator;
+import be.abeel.util.GZIPPrintWriter;
 import be.abeel.util.LineIterator;
 
 /**
@@ -181,6 +183,11 @@ public class FileHandler {
 
     }
 
+    public static Dataset loadSparseDataset(File f, int classIndex) throws IOException {
+        return loadSparseDataset(f, classIndex, "\t", ":");
+
+    }
+
     public static Dataset loadSparseDataset(File f, int classIndex, String attributeSeparator, String indexSep)
             throws IOException {
         if (f.getName().endsWith("gz"))
@@ -188,6 +195,58 @@ public class FileHandler {
         if (f.getName().endsWith("zip"))
             return loadSparse(new ZipInputStream(new FileInputStream(f)), classIndex, attributeSeparator, indexSep);
         return loadSparse(new FileInputStream(f), classIndex, attributeSeparator, indexSep);
+    }
+
+    /**
+     * Exports a data set to a file. Each instance is output separately with the
+     * class label on position 0. The fields are delimited with a tab character.
+     * 
+     * Note: data sets with mixed sparse and dense instances may not be loadable
+     * with the load methods.
+     * 
+     * @param data
+     *            data set
+     * @param outFile
+     *            file to write data to
+     * @param compress
+     *            flag to indicate whether GZIP compression should be used.
+     * @throws IOException
+     *             when something went wrong during the export
+     */
+    public static void exportDataset(Dataset data, File outFile, boolean compress) throws IOException {
+        PrintWriter out;
+        if (compress)
+            out = new GZIPPrintWriter(outFile);
+        else
+            out = new PrintWriter(outFile);
+        for (Instance inst : data) {
+            if (inst.classValue() != null)
+                out.print(inst.classValue() + "\t");
+            out.println(string(inst));
+        }
+
+        out.close();
+
+    }
+
+    private static String string(Instance inst) {
+        StringBuffer out = new StringBuffer();
+        if (inst instanceof SparseInstance) {
+            for (Integer index : inst.keySet()) {
+                if (out.length() != 0)
+                    out.append("\t" + inst.value(index));
+                else
+                    out.append(inst.value(index));
+
+            }
+        } else {
+            out.append(inst.value(0));
+            for (int i = 1; i < inst.noAttributes(); i++)
+                out.append("\t"+inst.value(i));
+
+        }
+
+        return out.toString();
     }
 
 }
