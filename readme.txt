@@ -52,16 +52,14 @@ They can all be found in the devtools/lib directory when checking out the projec
 
 3. Requirements
 ===============
-The library is coded for Java 1.5+ so you will need a JDK that is at least
-version 1.5+
+The library is coded for Java 1.6+ so you will need a JDK that is at least
+version 1.6+
 
 4. Contact
 ==========
 You can contact us by using the Sourceforge contact page:
 http://sourceforge.net/users/thomasabeel/
-or send an email to the me:
-http://www.abeel.be/contact
-or send an email with your mail program
+or send an email to the me
 thomas@abeel.be
 
 
