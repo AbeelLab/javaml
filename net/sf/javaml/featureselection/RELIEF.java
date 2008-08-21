@@ -45,6 +45,7 @@ public class RELIEF implements AttributeEvaluation {
         numNeighbors = num;
     }
 
+    @Override
     public void build(Dataset data) {
         weights = new double[data.noAttributes()];
 
@@ -114,7 +115,7 @@ public class RELIEF implements AttributeEvaluation {
      */
     private void removeFarthest(Vector<Instance> vector, Instance supplied) {
         Instance tmp = null;
-        double max = 0;// dist.calculateDistance(vector.get(0), supplied);
+        double max = 0;
         for (Instance inst : vector) {
             double tmpDist = dist.measure(inst, supplied);
             if (tmpDist > max) {
@@ -125,6 +126,7 @@ public class RELIEF implements AttributeEvaluation {
         vector.remove(tmp);
     }
 
+    @Override
     public double score(int attribute) {
         return weights[attribute];
     }
