@@ -4,51 +4,31 @@ This document covers the basic documentation of the library.
 
 The Java Machine Learning Library is licensed under GNU-GPL.
 
-More elaborate documentation can be found on the documentation website for 
-the project:
+More elaborate documentation can be found on the web site
 http://java-ml.sourceforge.net/
-
-+-----------------+
-| 1. Overview   |
-| 2. Dependencies |
-| 3. Requirements |
-| 4. Contact      |
-+-----------------+
 
 
 
 1. Overview
 =============
-The Java Machine Learning Library is a collection of machine learning and data
-mining algorithms with accompanying documentation.
+Java-ML in a nutshell:
 
-2. Dependencies
-===============
-* Jakarta commons-math
-----------------------
-The library requires the commons-math library of the Jakarta project which is 
-bundled with the library.
+    * A collection of machine learning algorithms
+    * Common interface for each type of algorithms
+    * Library aimed at software engineers and programmers, so no GUI, but clear interfaces
+    * Reference implementations for algorithms described in the scientific literature.
+    * Well documented source code.
+    * Plenty of code samples and tutorials.
 
-* JUnit 4.0
------------
-For the SVN download you will also need JUnit 4.0 to compile the unit tests.
 
-* JAMA 1.0.2
-------------
-Since version 0.0.10 we have incorporated the JAMA version 1.0.2 into the library.
 
-* AJT
------
-Since version 0.0.14 the AJT library is required. This library is supplied with Java-ML
+2. How to get started
+=====================
+When you are reading this, you most probably already downloaded the library. To use it, include the javaml-<version>.jar in your classpath.
 
-* LibSVM
----------
-LibSVM 2.85 is integrated in the library
-
-* Third party libraries needed to build
----------------------------------------
-If you want the project yourself, you need several libraries that are required by the build script.
-They can all be found in the devtools/lib directory when checking out the project from the SVN.
+Code samples can be found
+here: http://java-ml.sourceforge.net/tutorials
+or here: http://java-ml.sourceforge.net/src/tutorials/
 
 3. Requirements
 ===============
