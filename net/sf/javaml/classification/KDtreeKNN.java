@@ -5,9 +5,6 @@ package net.sf.javaml.classification;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
-
-import weka.gui.streams.InstanceTable;
 
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
@@ -15,7 +12,6 @@ import net.sf.javaml.core.InstanceTools;
 import net.sf.javaml.core.kdtree.KDTree;
 import net.sf.javaml.core.kdtree.KeyDuplicateException;
 import net.sf.javaml.core.kdtree.KeySizeException;
-import net.sf.javaml.distance.EuclideanDistance;
 
 /**
  * Implementation of the K nearest neighbor (KNN) classification algorithm with
