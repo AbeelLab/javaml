@@ -21,7 +21,12 @@ package net.sf.javaml.distance;
  */
 public abstract class AbstractDistance implements DistanceMeasure {
 
-    public boolean compare(double x, double y) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -5437432787091767310L;
+
+	public boolean compare(double x, double y) {
         return x < y;
     }
 

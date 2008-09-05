@@ -7,7 +7,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Random;
 
-import net.sf.javaml.classification.KNearestNeighbors;
 import net.sf.javaml.classification.evaluation.CrossValidation;
 import net.sf.javaml.classification.tree.RandomTree;
 import net.sf.javaml.core.Dataset;

@@ -4,6 +4,10 @@
 package external.libsvm;
 public class svm_parameter implements Cloneable,java.io.Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7334922071833010217L;
 	/* svm_type */
 	public static final int C_SVC = 0;
 	public static final int NU_SVC = 1;

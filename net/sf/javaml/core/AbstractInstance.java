@@ -18,7 +18,12 @@ import java.util.Iterator;
  * 
  */
 public abstract class AbstractInstance implements Instance {
-    static int nextID = 0;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -1712202124913999825L;
+
+	static int nextID = 0;
 
     private final int ID;
 

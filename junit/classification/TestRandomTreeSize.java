@@ -5,17 +5,11 @@ package junit.classification;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.management.ManagementFactory;
 import java.util.Random;
 
-import javax.management.MBeanServer;
-
-import net.sf.javaml.classification.evaluation.CrossValidation;
 import net.sf.javaml.classification.tree.RandomTree;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.tools.data.FileHandler;
-import net.sf.javaml.utils.Statistics;
-
 import org.apache.commons.math.stat.StatUtils;
 import org.junit.Test;
 

@@ -1,8 +1,5 @@
 package net.sf.javaml.core.kdtree;
 
-
-import java.util.*;
-
 // Bjoern Heckel's solution to the KD-Tree n-nearest-neighbor problem
 
 class NearestNeighborList {

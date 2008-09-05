@@ -8,7 +8,12 @@ import java.util.Map;
 import net.sf.javaml.core.Instance;
 
 public abstract class AbstractClassifier implements Classifier {
-    @Override
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -4461661354949399603L;
+
+	@Override
     public Object classify(Instance instance) {
         Map<Object, Double> distribution = classDistribution(instance);
         double max = 0;

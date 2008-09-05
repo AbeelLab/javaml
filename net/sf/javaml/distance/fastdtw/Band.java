@@ -18,7 +18,12 @@ import net.sf.javaml.distance.fastdtw.timeseries.TimeSeries;
  */
 public class Band extends AbstractDistance {
 
-    // PUBLIC FUNCTIONS
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1279757837120934014L;
+
+	// PUBLIC FUNCTIONS
     public static void main(String[] args) {
         if (args.length != 3) {
             System.out.println("USAGE:  java Band timeSeries1 timeSeries2 radius");

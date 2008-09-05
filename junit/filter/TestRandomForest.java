@@ -7,12 +7,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Random;
 
-import net.sf.javaml.classification.tree.RandomForest;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.DefaultDataset;
 import net.sf.javaml.core.DenseInstance;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.featureselection.RELIEF;
 import net.sf.javaml.featureselection.RandomForestAttributeEvaluation;
 import net.sf.javaml.tools.data.FileHandler;
 
