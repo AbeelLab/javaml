@@ -139,4 +139,10 @@ public class RecursiveFeatureEliminationSVM implements AttributeRanking {
     public int rank(int attIndex) {
         return ranking[attIndex];
     }
+
+    @Override
+    public int noFeatures() {
+      return ranking.length;
+        
+    }
 }

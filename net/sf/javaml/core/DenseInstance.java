@@ -10,8 +10,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
 /**
- * Implementation of a dense instance. 
+ * Implementation of a dense instance.
  * 
  * {@jmlSource}
  * 
@@ -21,7 +22,7 @@ import java.util.Set;
  * @version %SVN.REVISION%
  * 
  * @author Thomas Abeel
- *
+ * 
  */
 public class DenseInstance extends AbstractInstance implements Instance {
 
@@ -37,6 +38,9 @@ public class DenseInstance extends AbstractInstance implements Instance {
     public DenseInstance(double[] att, Object classValue) {
         super(classValue);
         this.attributes = att.clone();
+    }
+
+    private DenseInstance() {
     }
 
     @Override
@@ -172,6 +176,14 @@ public class DenseInstance extends AbstractInstance implements Instance {
         if (!Arrays.equals(attributes, other.attributes))
             return false;
         return true;
+    }
+
+    @Override
+    public Instance copy() {
+        DenseInstance out = new DenseInstance();
+        out.attributes = this.attributes.clone();
+        out.setClassValue(this.classValue());
+        return out;
     }
 
 }

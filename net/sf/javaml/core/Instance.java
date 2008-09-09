@@ -94,4 +94,10 @@ public interface Instance extends Map<Integer, Double>, Iterable<Double>, Serial
      */
     public int getID();
 
+    /**
+     * Create a deep copy of this instance
+     * @return
+     */
+    public Instance copy();
+
 }

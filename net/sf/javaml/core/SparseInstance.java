@@ -235,4 +235,16 @@ public class SparseInstance extends AbstractInstance implements Instance {
             return false;
         return true;
     }
+
+    @Override
+    public Instance copy() {
+        SparseInstance out = new SparseInstance();
+        out.data = new HashMap<Integer, Double>();
+        out.data.putAll(this.data);
+        out.defaultValue = this.defaultValue;
+        out.noAttributes = this.noAttributes;
+        setClassValue(this.classValue());
+        return out;
+
+    }
 }

@@ -57,19 +57,26 @@ public class LibSVM implements Classifier {
         svm_problem p = new svm_problem();
         p.l = data.size();
         p.y = new double[data.size()];
-        p.x = new svm_node[data.size()][data.noAttributes()];
+        p.x = new svm_node[data.size()][];
         int tmpIndex = 0;
         int noAttributes = data.noAttributes();
         while (data.size() > 0) {
-            // TODO implement sparseness
+
             Instance tmp = data.remove(0);
             p.y[tmpIndex] = data.classIndex(tmp.classValue());
-            // System.out.println(p.y[i]);
-            for (int j = 0; j < noAttributes; j++) {
-                p.x[tmpIndex][j] = new svm_node();
-                p.x[tmpIndex][j].index = j;
-                p.x[tmpIndex][j].value = tmp.value(j);
+            p.x[tmpIndex] = new svm_node[tmp.keySet().size()];
+            int i = 0;
+            for (int index : tmp.keySet()) {
+                p.x[tmpIndex][i] = new svm_node();
+                p.x[tmpIndex][i].index = index;
+                p.x[tmpIndex][i].value = tmp.value(index);
+                i++;
             }
+            // for (int j = 0; j < noAttributes; j++) {
+            // p.x[tmpIndex][j] = new svm_node();
+            // p.x[tmpIndex][j].index = j;
+            // p.x[tmpIndex][j].value = tmp.value(j);
+            // }
             tmpIndex++;
         }
 
@@ -85,9 +92,10 @@ public class LibSVM implements Classifier {
         // System.out.println();
         // System.out.println("LSVM: " + model.SV.length);
         // System.out.println("LSVM: " + model.SV[0].length);
-        double[][] prob = new double[model.SV.length][model.SV[0].length];// model.SV
+        double[][] prob = new double[model.SV.length][noAttributes];// model
+        // .SV
         for (int i = 0; i < model.SV.length; i++) {
-            for (int j = 0; j < model.SV[0].length; j++) {
+            for (int j = 0; j < model.SV[i].length; j++) {
                 prob[i][j] = model.SV[i][j].value;
             }
         }
@@ -157,7 +165,6 @@ public class LibSVM implements Classifier {
         return data.classValue((int) d);
     }
 
-
     public void setC(double c) {
         param.C = c;
 
@@ -165,11 +172,11 @@ public class LibSVM implements Classifier {
 
     @Override
     public Map<Object, Double> classDistribution(Instance instance) {
-        HashMap<Object, Double>out=new HashMap<Object, Double>();
-        for(Object o:data.classes()){
-            out.put(o,0.0);
+        HashMap<Object, Double> out = new HashMap<Object, Double>();
+        for (Object o : data.classes()) {
+            out.put(o, 0.0);
         }
-        out.put(classify(instance),1.0);
+        out.put(classify(instance), 1.0);
         return out;
 
     }

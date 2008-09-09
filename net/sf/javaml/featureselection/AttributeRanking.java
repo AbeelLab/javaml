@@ -37,4 +37,6 @@ public interface AttributeRanking {
      * @return the rank of the attribute
      */
     public int rank(int attIndex);
+
+    public int noFeatures();
 }

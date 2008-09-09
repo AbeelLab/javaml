@@ -45,4 +45,10 @@ public class RankingFromEvaluation implements AttributeRanking {
         return ranking[attIndex];
     }
 
+    @Override
+    public int noFeatures() {
+       return ranking.length;
+        
+    }
+
 }
