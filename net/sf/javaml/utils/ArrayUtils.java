@@ -362,4 +362,26 @@ public class ArrayUtils {
         for (int i = 0; i < array.length; i++)
             array[i] = Math.abs(array[i]);
     }
+
+    public static double[] multiply(double[] a, double[] b) {
+        double[]out=a.clone();
+        for(int i=0;i<out.length;i++)
+            out[i]*=b[i];
+        return out;
+    }
+
+    public static double[] sum(double[] a, double[] b) {
+        double[]out=a.clone();
+        for(int i=0;i<out.length;i++)
+            out[i]+=b[i];
+        return out;
+    }
+
+    public static double[] divide(double[] a, double[] b) {
+        double[]out=a.clone();
+        for(int i=0;i<out.length;i++)
+            out[i]/=b[i];
+        return out;
+        
+    }
 }
