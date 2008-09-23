@@ -23,6 +23,8 @@ public interface AttributeEvaluation {
     /**
      * Build the attribute evaluation on the supplied data set.
      * 
+     * Note: This method can change the data set that is supplied to the method!
+     * 
      * @param data
      *            data set to train the attribute evaluation algorithm on.
      */
