@@ -3,14 +3,20 @@
  */
 package junit.filter;
 
+import java.util.Random;
+
 import junit.framework.Assert;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.DefaultDataset;
 import net.sf.javaml.core.DenseInstance;
+import net.sf.javaml.core.Instance;
+import net.sf.javaml.core.InstanceTools;
 import net.sf.javaml.filter.DatasetFilter;
 import net.sf.javaml.filter.normalize.NormalizeMidrange;
 
 import org.junit.Test;
+
+import be.abeel.util.FrequencyMap;
 
 public class TestNormalizeMidrange {
 
@@ -45,4 +51,23 @@ public class TestNormalizeMidrange {
         data.add(in);
     }
 
+    @Test
+    public void testRange() {
+        // Random rg = new Random(System.currentTimeMillis());
+        NormalizeMidrange nm = new NormalizeMidrange(50, 100);
+
+        Dataset data = new DefaultDataset();
+        for (int i = 0; i < 1000; i++) {
+            Instance tmp = InstanceTools.randomInstance(30);
+
+            data.add(tmp);
+
+        }
+        nm.filter(data);
+        FrequencyMap freq = new FrequencyMap();
+        for (int i = 0; i < 30; i++)
+            for (int j = 0; j < 1000; j++)
+                freq.count((int) data.get(j).value(i));
+        freq.plot("testnormal");
+    }
 }
