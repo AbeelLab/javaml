@@ -19,7 +19,7 @@
 				<include name="**/*.java" />
 			</fileset>
 		</replaceregexp>
-		<javadoc verbose="false" classpath="lib/weka.jar:lib/ajt-1.15.jar:lib/commons-math-1.1.jar:lib/junit-4.3.1.jar" packagenames="tutorials.*,net.sf.javaml.*" sourcepath="${build}/src" defaultexcludes="yes" destdir="${dist}/doc" author="true" version="true" use="true" windowtitle="Java Machine Learning Library ${version}">
+		<javadoc verbose="false" classpath="lib/weka.jar:lib/ajt-1.17.jar:lib/commons-math-1.1.jar:lib/junit-4.3.1.jar" packagenames="tutorials.*,net.sf.javaml.*" sourcepath="${build}/src" defaultexcludes="yes" destdir="${dist}/doc" author="true" version="true" use="true" windowtitle="Java Machine Learning Library ${version}">
 			<doctitle>
 				<![CDATA[<h1>Java Machine Learning Library ${version} - ${TODAY_LOCAL}</h1>]]>
 			</doctitle>
@@ -43,7 +43,7 @@
 	</fileset>
 </copy>
 <copy file="lib/commons-math-1.1.jar" todir="${dist}/lib/" />
-<copy file="lib/ajt-1.15.jar" todir="${dist}/lib/" />
+<copy file="lib/ajt-1.17.jar" todir="${dist}/lib/" />
 <copy file="lib/weka.jar" todir="${dist}/lib/" />
 
 <zip destfile="${dist}.zip" basedir="${dist}" />
@@ -65,7 +65,7 @@
 
 <target name="compile" depends="init" description="compile the source ">
 <!-- Compile the java code from ${src} into ${build} -->
-<javac debug="true" debuglevel="lines,vars,source" source="1.6" target="1.6" classpath="lib/ajt-1.15.jar:lib/junit-4.3.1.jar:lib/commons-math-1.1.jar:lib/weka.jar" srcdir="${src}" destdir="${build}" excludes="devtools/**" />
+<javac debug="true" debuglevel="lines,vars,source" source="1.6" target="1.6" classpath="lib/ajt-1.17.jar:lib/junit-4.3.1.jar:lib/commons-math-1.1.jar:lib/weka.jar" srcdir="${src}" destdir="${build}" excludes="devtools/**" />
 </target>
 
 <target name="dist" depends="compile" description="generate the distribution">
