@@ -24,9 +24,6 @@ import net.sf.javaml.core.Instance;
  */
 public class SimpleBagging extends AbstractClassifier {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 208101377048893813L;
 
     private Classifier[] classifiers;
@@ -38,30 +35,17 @@ public class SimpleBagging extends AbstractClassifier {
         this.rg = rg;
     }
 
+    /* Reference to the training data */
     private Dataset reference = null;
 
+    @Override
     public void buildClassifier(Dataset data) {
-        // this.numClasses = data.numClasses();
         this.reference = data;
         for (int i = 0; i < classifiers.length; i++) {
             Dataset sample = DatasetTools.bootstrap(data, data.size(), rg);
             classifiers[i].buildClassifier(sample);
         }
     }
-
-    // public int classifyInstance(Instance instance) {
-    // double[] membership = this.distributionForInstance(instance);
-    // double max = membership[0];
-    // int index = 0;
-    //
-    // for (int i = 1; i < membership.length; i++) {
-    // if (membership[i] > max) {
-    // max = membership[i];
-    // index = 1;
-    // }
-    // }
-    // return index;
-    // }
 
     @Override
     public Map<Object, Double> classDistribution(Instance instance) {
@@ -70,10 +54,9 @@ public class SimpleBagging extends AbstractClassifier {
             membership.put(o, 0.0);
         for (int i = 0; i < classifiers.length; i++) {
             Object prediction = classifiers[i].classify(instance);
-            membership.put(prediction, membership.get(prediction) + (1.0 / classifiers.length));// [classifiers[i].classifyInstance(instance)]++;
+            membership.put(prediction, membership.get(prediction) + (1.0 / classifiers.length));
         }
-        // for (int i = 0; i < this.numClasses; i++)
-        // membership[i] /= classifiers.length;
+
         return membership;
 
     }
