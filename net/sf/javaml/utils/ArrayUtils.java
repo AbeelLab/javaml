@@ -364,24 +364,29 @@ public class ArrayUtils {
     }
 
     public static double[] multiply(double[] a, double[] b) {
-        double[]out=a.clone();
-        for(int i=0;i<out.length;i++)
-            out[i]*=b[i];
+        double[] out = a.clone();
+        for (int i = 0; i < out.length; i++)
+            out[i] *= b[i];
         return out;
     }
 
     public static double[] sum(double[] a, double[] b) {
-        double[]out=a.clone();
-        for(int i=0;i<out.length;i++)
-            out[i]+=b[i];
+        double[] out = a.clone();
+        for (int i = 0; i < out.length; i++)
+            out[i] += b[i];
         return out;
     }
 
     public static double[] divide(double[] a, double[] b) {
-        double[]out=a.clone();
-        for(int i=0;i<out.length;i++)
-            out[i]/=b[i];
+        double[] out = a.clone();
+        for (int i = 0; i < out.length; i++)
+            out[i] /= b[i];
         return out;
-        
+
+    }
+
+    public static void flipSign(double[] values) {
+       for(int i=0;i<values.length;i++)
+           values[i]=-values[i];
     }
 }
