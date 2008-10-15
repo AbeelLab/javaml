@@ -9,6 +9,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 /**
  * Class with utility methods for serialization.
@@ -24,7 +26,7 @@ public class Serial {
 
     public static boolean store(Object p, String fileName) {
         try {
-            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(fileName));
+            ObjectOutputStream out = new ObjectOutputStream(new GZIPOutputStream(new FileOutputStream(fileName)));
             out.writeObject(p);
             out.close();
             return true;
@@ -35,7 +37,7 @@ public class Serial {
 
     public static Object load(String fileName) {
         try {
-            ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName));
+            ObjectInputStream in = new ObjectInputStream(new GZIPInputStream(new FileInputStream(fileName)));
             return in.readObject();
         } catch (Exception e) {
             return null;
