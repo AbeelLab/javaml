@@ -5,8 +5,6 @@ package net.sf.javaml.core;
 
 import java.util.Random;
 
-import be.abeel.util.Copier;
-
 /**
  * This class provides utility methods on data sets.
  * 
@@ -47,9 +45,8 @@ final public class DatasetTools {
      */
     public static Dataset bootstrap(Dataset data, int size, Random rg) {
         Dataset out = new DefaultDataset();
-        Copier<Instance> ic = new Copier<Instance>();
         while (out.size() < size) {
-            out.add(ic.copy(data.instance(rg.nextInt(data.size()))));
+            out.add(data.instance(rg.nextInt(data.size())).copy());
         }
         return out;
     }
