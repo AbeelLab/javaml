@@ -236,4 +236,13 @@ public class DefaultDataset extends Vector<Instance> implements Dataset {
         }
         return null;
     }
+
+    @Override
+    public Dataset copy() {
+        DefaultDataset out = new DefaultDataset();
+        for (Instance i : this) {
+            out.add(i.copy());
+        }
+        return out;
+    }
 }

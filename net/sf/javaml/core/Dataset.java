@@ -191,4 +191,6 @@ public interface Dataset extends List<Instance> {
     public int classIndex(Object clazz);
 
     public Object classValue(int index);
+    
+    public Dataset copy();
 }

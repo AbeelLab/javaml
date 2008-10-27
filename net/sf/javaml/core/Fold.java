@@ -257,4 +257,10 @@ public class Fold implements Dataset {
     public Object classValue(int index) {
         return parent.classValue(index);
     }
+
+    @Override
+    public Dataset copy() {
+        // TODO this method can be implemented on a fold.
+        throw new UnsupportedOperationException("Method is not yet implemented");
+    }
 }
