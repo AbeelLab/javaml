@@ -11,6 +11,7 @@ import net.sf.javaml.core.DefaultDataset;
 import net.sf.javaml.core.DenseInstance;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.featureselection.GainRatio;
+import net.sf.javaml.featureselection.KullbackLeiblerDivergence;
 import net.sf.javaml.featureselection.RELIEF;
 import net.sf.javaml.featureselection.SymmetricalUncertainty;
 import net.sf.javaml.tools.data.FileHandler;
@@ -39,16 +40,15 @@ public class TestFilter {
         RELIEF relief = new RELIEF();
         // ga.setNumNeigbors(4);
         GainRatio gr = new GainRatio();
+        KullbackLeiblerDivergence kl = new KullbackLeiblerDivergence(data.classes().first());
+        kl.build(data.copy());
         su.build(data);
         relief.build(data);
         gr.build(data);
         System.out.println("SU\tRELIEF\tGR");
-        System.out.println(su.score(0) + "\t" + relief.score(0) + "\t"
-                + gr.score(0));
-        System.out.println(su.score(1) + "\t" + relief.score(1) + "\t"
-                + gr.score(1));
-        System.out.println(su.score(2) + "\t" + relief.score(2) + "\t"
-                + gr.score(2));
+        System.out.println(su.score(0) + "\t" + relief.score(0) + "\t" + gr.score(0)+ "\t" + kl.score(0));
+        System.out.println(su.score(1) + "\t" + relief.score(1) + "\t" + gr.score(1)+ "\t" + kl.score(1));
+        System.out.println(su.score(2) + "\t" + relief.score(2) + "\t" + gr.score(2)+ "\t" + kl.score(2));
 
     }
 
@@ -58,23 +58,21 @@ public class TestFilter {
             System.out.println("==");
             System.out.println("Iris data set");
             Dataset data = FileHandler.loadDataset(new File("devtools/data/iris.data"), 4, ",");
+            Dataset data2 = FileHandler.loadDataset(new File("devtools/data/iris.data"), 4, ",");
             SymmetricalUncertainty su = new SymmetricalUncertainty();
             RELIEF relief = new RELIEF();
             GainRatio gr = new GainRatio();
             // ga.setNumNeigbors(4);
-
+            KullbackLeiblerDivergence kl = new KullbackLeiblerDivergence(data.classes().first());
             su.build(data);
             relief.build(data);
             gr.build(data);
-            System.out.println("SU\tRELIEF\tGR");
-            System.out.println(su.score(0) + "\t" + relief.score(0) + "\t"
-                    + gr.score(0));
-            System.out.println(su.score(1) + "\t" + relief.score(1) + "\t"
-                    + gr.score(1));
-            System.out.println(su.score(2) + "\t" + relief.score(2) + "\t"
-                    + gr.score(2));
-            System.out.println(su.score(3) + "\t" + relief.score(3) + "\t"
-                    + gr.score(3));
+            kl.build(data2);
+            System.out.println("SU\tRELIEF\tGR\tKL");
+            System.out.println(su.score(0) + "\t" + relief.score(0) + "\t" + gr.score(0) + "\t" + kl.score(0));
+            System.out.println(su.score(1) + "\t" + relief.score(1) + "\t" + gr.score(1) + "\t" + kl.score(1));
+            System.out.println(su.score(2) + "\t" + relief.score(2) + "\t" + gr.score(2) + "\t" + kl.score(2));
+            System.out.println(su.score(3) + "\t" + relief.score(3) + "\t" + gr.score(3) + "\t" + kl.score(3));
 
         } catch (IOException e) {
             // TODO Auto-generated catch block
