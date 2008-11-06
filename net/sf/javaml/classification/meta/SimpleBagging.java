@@ -30,6 +30,10 @@ public class SimpleBagging extends AbstractClassifier {
 
     private Random rg;
 
+    public SimpleBagging(Classifier[] classifiers){
+        this(classifiers,new Random(System.currentTimeMillis()));
+    }
+    
     public SimpleBagging(Classifier[] classifiers, Random rg) {
         this.classifiers = classifiers;
         this.rg = rg;
