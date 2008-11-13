@@ -35,12 +35,15 @@ public class Serial {
         }
     }
 
-    public static Object load(String fileName) {
+    public static Object load(File fileName) {
         try {
             ObjectInputStream in = new ObjectInputStream(new GZIPInputStream(new FileInputStream(fileName)));
             return in.readObject();
         } catch (Exception e) {
             return null;
         }
+    }
+    public static Object load(String fileName) {
+        return load(new File(fileName));
     }
 }
