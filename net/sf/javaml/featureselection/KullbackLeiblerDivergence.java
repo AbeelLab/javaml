@@ -3,6 +3,8 @@
  */
 package net.sf.javaml.featureselection;
 
+import be.abeel.util.HashMap2D;
+
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.filter.normalize.NormalizeMidrange;
@@ -12,31 +14,50 @@ import net.sf.javaml.filter.normalize.NormalizeMidrange;
  * distributions of features.
  * 
  * 
- * Note: Calling the build method is destructive to the supplied data set.
+ * Note: Calling the build method will normalize the data.
  * 
  * @author Thomas Abeel
  * 
  */
 public class KullbackLeiblerDivergence implements AttributeEvaluation {
 
-    /*
-     * Positive class. Q in the formula.
-     */
-    private Object positive;
+    private double[] maxDivergence;
 
-    public KullbackLeiblerDivergence(Object positiveClass) {
-        this.positive = positiveClass;
-    }
-
-    private double[] divergence;
+    private HashMap2D<Object, Object, double[]> pairWiseDivergence = new HashMap2D<Object, Object, double[]>();
 
     @Override
     public void build(Dataset data) {
-        divergence = new double[data.noAttributes()];
+        maxDivergence = new double[data.noAttributes()];
         /* Normalize to [0,100[ */
         NormalizeMidrange nm = new NormalizeMidrange(50, 99.99999);
         nm.build(data);
         nm.filter(data);
+        /* Calculate all pairwise divergencies */
+        for (Object p : data.classes()) {
+            for (Object q : data.classes()) {
+                if (!p.equals(q)) {
+                    double[] d = pairWise(p, q, data);
+                    pairWiseDivergence.put(p, q, d);
+                }
+            }
+        }
+        /* Search for maximum pairwise divergencies */
+        for (Object p : data.classes()) {
+            for (Object q : data.classes()) {
+                double[] d = pairWiseDivergence.get(p, q);
+                if (d != null) {
+                    for (int i = 0; i < d.length; i++) {
+                        if (d[i] > maxDivergence[i])
+                            maxDivergence[i] = d[i];
+                    }
+                }
+            }
+        }
+
+    }
+
+    private double[] pairWise(Object p, Object q, Dataset data) {
+        double[] divergence = new double[data.noAttributes()];
         /*
          * For probability distributions P and Q of a discrete random variable
          * the K–L divergence of Q from P is defined to be:
@@ -45,16 +66,16 @@ public class KullbackLeiblerDivergence implements AttributeEvaluation {
          */
         double maxSum = 0;
         for (int i = 0; i < data.noAttributes(); i++) {
-            // System.out.println("Attribute " + i);
             double sum = 0;
             double[] countQ = new double[100];
             double[] countP = new double[100];
             double pCount = 0, qCount = 0;
             for (Instance inst : data) {
-                if (inst.classValue().equals(positive)) {
+                if (inst.classValue().equals(q)) {
                     countQ[(int) inst.value(i)]++;
                     qCount++;
-                } else {
+                }
+                if (inst.classValue().equals(p)) {
                     countP[(int) inst.value(i)]++;
                     pCount++;
                 }
@@ -82,12 +103,12 @@ public class KullbackLeiblerDivergence implements AttributeEvaluation {
         for (int i = 0; i < data.noAttributes(); i++) {
             divergence[i] /= maxSum;
         }
-
+        return divergence;
     }
 
     @Override
     public double score(int attribute) {
-        return divergence[attribute];
+        return maxDivergence[attribute];
     }
 
 }
