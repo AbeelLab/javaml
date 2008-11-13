@@ -33,7 +33,7 @@ public class TestKullbackLeibler {
         // Dataset test=dnm.filterDataset(data);
 
         System.out.println(data);
-        KullbackLeiblerDivergence ga = new KullbackLeiblerDivergence(data.classes().first());
+        KullbackLeiblerDivergence ga = new KullbackLeiblerDivergence();
         // ga.setNumNeigbors(4);
 
         ga.build(data);
@@ -48,7 +48,7 @@ public class TestKullbackLeibler {
     public void testKLReal() {
         try {
             Dataset data = FileHandler.loadDataset(new File("devtools/data/iris.data"), 4, ",");
-            KullbackLeiblerDivergence ga = new KullbackLeiblerDivergence(data.classes().first());
+            KullbackLeiblerDivergence ga = new KullbackLeiblerDivergence();
             // ga.setNumNeigbors(4);
 
             ga.build(data);

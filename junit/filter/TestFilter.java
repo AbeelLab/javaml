@@ -40,7 +40,7 @@ public class TestFilter {
         RELIEF relief = new RELIEF();
         // ga.setNumNeigbors(4);
         GainRatio gr = new GainRatio();
-        KullbackLeiblerDivergence kl = new KullbackLeiblerDivergence(data.classes().first());
+        KullbackLeiblerDivergence kl = new KullbackLeiblerDivergence();
         kl.build(data.copy());
         su.build(data);
         relief.build(data);
@@ -63,7 +63,7 @@ public class TestFilter {
             RELIEF relief = new RELIEF();
             GainRatio gr = new GainRatio();
             // ga.setNumNeigbors(4);
-            KullbackLeiblerDivergence kl = new KullbackLeiblerDivergence(data.classes().first());
+            KullbackLeiblerDivergence kl = new KullbackLeiblerDivergence();
             su.build(data);
             relief.build(data);
             gr.build(data);
