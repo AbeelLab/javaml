@@ -31,6 +31,7 @@ public class Serial {
             out.close();
             return true;
         } catch (IOException e) {
+            e.printStackTrace();
             return false;
         }
     }
@@ -40,6 +41,7 @@ public class Serial {
             ObjectInputStream in = new ObjectInputStream(new GZIPInputStream(new FileInputStream(fileName)));
             return in.readObject();
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }
