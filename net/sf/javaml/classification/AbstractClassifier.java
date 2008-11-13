@@ -12,12 +12,10 @@ import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 
 public abstract class AbstractClassifier implements Classifier {
-    /**
-	 * 
-	 */
+    
     private static final long serialVersionUID = -4461661354949399603L;
 
-    private Set<Object> parentClasses = null;
+    protected Set<Object> parentClasses = null;
 
     @Override
     public Object classify(Instance instance) {
