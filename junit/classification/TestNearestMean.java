@@ -12,13 +12,10 @@ import net.sf.javaml.classification.NearestMeanClassifier;
 import net.sf.javaml.classification.evaluation.CrossValidation;
 import net.sf.javaml.classification.evaluation.PerformanceMeasure;
 
-import net.sf.javaml.classification.tree.RandomForest;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.tools.data.FileHandler;
 
 import org.junit.Test;
-
-import be.abeel.util.TimeInterval;
 
 public class TestNearestMean {
     @Test
