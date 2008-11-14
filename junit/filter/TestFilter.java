@@ -20,8 +20,66 @@ import org.junit.Test;
 
 public class TestFilter {
     @Test
+    public void testSparseSU() throws IOException {
+        Dataset data = FileHandler.loadSparseDataset(new File("devtools/data/sparse.tsv"), 0, " ", ":");
+
+        SymmetricalUncertainty su = new SymmetricalUncertainty();
+
+        su.build(data);
+
+        System.out.println("SU\tRELIEF\tGR");
+        System.out.println(su.score(0));
+        System.out.println(su.score(1));
+        System.out.println(su.score(2));
+
+    }
+
+    @Test
+    public void testSparseGR() throws IOException {
+        Dataset data = FileHandler.loadSparseDataset(new File("devtools/data/sparse.tsv"), 0, " ", ":");
+
+        GainRatio gr = new GainRatio();
+
+        gr.build(data);
+        System.out.println("SU\tRELIEF\tGR");
+        System.out.println(gr.score(0));
+        System.out.println(gr.score(1));
+        System.out.println(gr.score(2));
+
+    }
+
+    @Test
+    public void testSparseRELIEF() throws IOException {
+        Dataset data = FileHandler.loadSparseDataset(new File("devtools/data/sparse.tsv"), 0, " ", ":");
+
+        RELIEF relief = new RELIEF();
+
+        relief.build(data);
+
+        System.out.println("SU\tRELIEF\tGR");
+        System.out.println(relief.score(0));
+        System.out.println(relief.score(1));
+        System.out.println(relief.score(2));
+
+    }
+
+    @Test
+    public void testSparseKL() throws IOException {
+        Dataset data = FileHandler.loadSparseDataset(new File("devtools/data/sparse.tsv"), 0, " ", ":");
+
+        KullbackLeiblerDivergence kl = new KullbackLeiblerDivergence();
+        kl.build(data.copy());
+
+        System.out.println("SU\tRELIEF\tGR");
+        System.out.println(kl.score(0));
+        System.out.println(kl.score(1));
+        System.out.println(kl.score(2));
+
+    }
+
+    @Test
     public void testCompareSUandRELIEF() {
-        // double[] vals = { 1, 2, 3, 4, 5, 6 };
+
         System.out.println("==");
         System.out.println("Synthetic data set");
         Dataset data = new DefaultDataset();
@@ -31,14 +89,9 @@ public class TestFilter {
             data.add(inst);
 
         }
-        // NOrma dnm=new DatasetNormalizeMidrange(0.5,1);
-        // dnm.build(data);
-        // Dataset test=dnm.filterDataset(data);
 
-        // System.out.println(data);
         SymmetricalUncertainty su = new SymmetricalUncertainty();
         RELIEF relief = new RELIEF();
-        // ga.setNumNeigbors(4);
         GainRatio gr = new GainRatio();
         KullbackLeiblerDivergence kl = new KullbackLeiblerDivergence();
         kl.build(data.copy());
@@ -46,9 +99,9 @@ public class TestFilter {
         relief.build(data);
         gr.build(data);
         System.out.println("SU\tRELIEF\tGR");
-        System.out.println(su.score(0) + "\t" + relief.score(0) + "\t" + gr.score(0)+ "\t" + kl.score(0));
-        System.out.println(su.score(1) + "\t" + relief.score(1) + "\t" + gr.score(1)+ "\t" + kl.score(1));
-        System.out.println(su.score(2) + "\t" + relief.score(2) + "\t" + gr.score(2)+ "\t" + kl.score(2));
+        System.out.println(su.score(0) + "\t" + relief.score(0) + "\t" + gr.score(0) + "\t" + kl.score(0));
+        System.out.println(su.score(1) + "\t" + relief.score(1) + "\t" + gr.score(1) + "\t" + kl.score(1));
+        System.out.println(su.score(2) + "\t" + relief.score(2) + "\t" + gr.score(2) + "\t" + kl.score(2));
 
     }
 

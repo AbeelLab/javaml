@@ -5,7 +5,9 @@ package net.sf.javaml.filter.normalize;
 
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.DatasetTools;
+import net.sf.javaml.core.DenseInstance;
 import net.sf.javaml.core.Instance;
+import net.sf.javaml.core.SparseInstance;
 import net.sf.javaml.core.exception.TrainingRequiredException;
 import net.sf.javaml.filter.AbstractFilter;
 import net.sf.javaml.filter.DatasetFilter;
@@ -76,10 +78,20 @@ public class NormalizeMidrange extends AbstractFilter {
     public void filter(Instance instance) {
         if (currentRange == null || currentMiddle == null)
             throw new TrainingRequiredException();
-        Instance tmp = instance.minus(currentMiddle).divide(currentRange).multiply(normalRange).plus(normalMiddle);
-        instance.clear();
-        instance.putAll(tmp);
-        new ReplaceValueFilter(Double.NaN,normalMiddle).filter(instance);
+
+        if (instance instanceof DenseInstance) {
+            Instance tmp = instance.minus(currentMiddle).divide(currentRange).multiply(normalRange).plus(normalMiddle);
+            instance.clear();
+            instance.putAll(tmp);
+
+        }
+        if (instance instanceof SparseInstance) {
+            for (int index : instance.keySet()) {
+                instance.put(index, ((instance.value(index) - currentMiddle.value(index)) / currentRange.value(index))
+                        * normalRange + normalMiddle);
+            }
+        }
+        new ReplaceValueFilter(Double.NaN, normalMiddle).filter(instance);
     }
 
     public void filter(Dataset data) {
