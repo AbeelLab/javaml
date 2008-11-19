@@ -3,13 +3,11 @@
  */
 package net.sf.javaml.filter.missingvalue;
 
-import java.util.Set;
-
 import net.sf.javaml.core.Dataset;
-import net.sf.javaml.core.DenseInstance;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.InstanceTools;
 import net.sf.javaml.filter.DatasetFilter;
+import net.sf.javaml.utils.ArrayUtils;
 
 /**
  * Replaces the missing value with the average of the values of its nearest
@@ -45,21 +43,22 @@ public class KNearestNeighbors implements DatasetFilter {
 
     private void removeMissingValues(Instance inst, Dataset data) {
         if (InstanceTools.hasMissingValues(inst)) {
-            Set<Instance> nearest = data.kNearest(k, inst);
-
-            Instance sum = new DenseInstance(new double[inst.noAttributes()]);
+            double[] sum = new double[inst.noAttributes()];
+            double[] count = new double[inst.noAttributes()];
             for (Instance x : data.kNearest(k, inst)) {
-                sum = sum.plus(x);
+                for (int i = 0; i < x.noAttributes(); i++) {
+                    if (!Double.isNaN(x.value(i))) {
+                        sum[i] += x.value(i);
+                        count[i]++;
+                    }
+
+                }
             }
-            sum = sum.divide(nearest.size());
+            sum = ArrayUtils.divide(sum, count);
 
             for (int i = 0; i < inst.noAttributes(); i++) {
-                if (Double.isNaN(inst.value(i))) {
-                    inst.put(i, sum.value(i));
-                    if (Double.isNaN(inst.value(i))) {
-                        // TODO Should be done better
-                        System.err.println("Still missing values present in attribute " + i);
-                    }
+                if (count[i] != 0) {
+                    inst.put(i, sum[i]);
                 }
             }
 
