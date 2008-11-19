@@ -3,11 +3,10 @@
  */
 package net.sf.javaml.featureselection;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
-
-import be.abeel.util.Copier;
 
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.filter.RemoveAttributes;
@@ -37,13 +36,18 @@ public class RecursiveFeatureEliminationSVM implements AttributeRanking {
 
     private int folds;
 
-    // public RecursiveFeatureEliminationSVM() {
-    // }
-
     private double removePercentage = 0.20;
 
     private Random rg;
 
+    /**
+     * 
+     * @param folds
+     *            the number of internal folds to eliminate features
+     * @param positiveClass
+     * @param removePercentage
+     * @param rg
+     */
     public RecursiveFeatureEliminationSVM(int folds, Object positiveClass, double removePercentage, Random rg) {
         this.folds = folds;
         this.positiveClass = positiveClass;
@@ -56,23 +60,24 @@ public class RecursiveFeatureEliminationSVM implements AttributeRanking {
         int[] ordering = new int[data.noAttributes()];
         SelfOptimizingLinearLibSVM svm = new SelfOptimizingLinearLibSVM(positiveClass, rg);
         svm.setFolds(folds);
-        // svm.setPositiveClass(positiveClass);
-        // bitmap of removed attributes
+        /* Bitmap of removed attributes */
         boolean[] removedAttributes = new boolean[data.noAttributes()];
-        // number of remove attributes, is equal to the number of trues in the
-        // above bitmap
+        /*
+         * Number of removed attributes, is always equal to the number of true
+         * values in the above bitmap
+         */
         int removed = 0;
 
         while (data.noAttributes() > 1) {
-            Dataset training = new Copier<Dataset>().copy(data);
+            Dataset training = data.copy();
             svm.buildClassifier(training);
             double[] weights = svm.getWeights();
-            // use absolute values of the weights
+            System.out.println(Arrays.toString(weights));
+            /* Use absolute values of the weights */
             ArrayUtils.abs(weights);
-            // System.out.println("weights=" + Arrays.toString(weights));
-            // order weights
+            /* Order weights */
             int[] order = ArrayUtils.sort(weights);
-            // determine the number of attributes to prune 10%, round up
+            // determine the number of attributes to prune, round up
             int numRemove = (int) (order.length * removePercentage + 1);
             if (numRemove > order.length)
                 numRemove = order.length;
@@ -142,7 +147,7 @@ public class RecursiveFeatureEliminationSVM implements AttributeRanking {
 
     @Override
     public int noFeatures() {
-      return ranking.length;
-        
+        return ranking.length;
+
     }
 }
