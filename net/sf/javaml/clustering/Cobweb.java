@@ -10,7 +10,8 @@ import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.DefaultDataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.filter.DatasetFilter;
-import net.sf.javaml.filter.NormalizeMean;
+import net.sf.javaml.filter.normalize.NormalizeMean;
+
 
 /**
  * Class implementing the Cobweb and Classit clustering algorithms.<br/> <br/>

@@ -1,14 +1,18 @@
 /**
  * %SVN.HEADER%
  */
-package net.sf.javaml.filter;
+package net.sf.javaml.filter.normalize;
 
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.DatasetTools;
 import net.sf.javaml.core.Instance;
+import net.sf.javaml.filter.AbstractFilter;
 
 /**
  * This filter will normalize the data set with mean 0 and standard deviation 1
+ * 
+ * The normalization will be done on the attributes, so each attribute will have
+ * mean 0 and std 1.
  * 
  * @linkplain http://www.faqs.org/faqs/ai-faq/neural-nets/part2/section-16.html
  * 
