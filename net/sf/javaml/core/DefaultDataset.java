@@ -151,7 +151,9 @@ public class DefaultDataset extends Vector<Instance> implements Dataset {
     private double measure(Instance a, Instance b, double max) {
         double sum = 0;
         for (int i = 0; i < a.noAttributes(); i++) {
-            sum += (a.value(i) - b.value(i)) * (a.value(i) - b.value(i));
+            if (!Double.isNaN(a.value(i)) && !Double.isNaN(b.value(i))) {
+                sum += (a.value(i) - b.value(i)) * (a.value(i) - b.value(i));
+            }
             if (sum > max)
                 return Double.POSITIVE_INFINITY;
         }
