@@ -260,7 +260,9 @@ public class Fold implements Dataset {
 
     @Override
     public Dataset copy() {
-        // TODO this method can be implemented on a fold.
-        throw new UnsupportedOperationException("Method is not yet implemented");
+        Dataset out=new DefaultDataset();
+        for(Instance i:this)
+            out.add(i.copy());
+        return out;
     }
 }
