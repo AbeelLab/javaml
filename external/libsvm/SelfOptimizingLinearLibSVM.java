@@ -3,6 +3,8 @@
  */
 package external.libsvm;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -35,19 +37,31 @@ public class SelfOptimizingLinearLibSVM implements Classifier {
         this.rg = rg;
     }
 
+    /**
+     * Returns a map of all f-measure that were encountered while searching for
+     * the optimal C value.
+     * 
+     * @return
+     */
+    public double[] getFMeasures() {
+        return fmeasures;
+    }
+
+    private double[] fmeasures;
+
     // commit test
     public void buildClassifier(Dataset data) {
         double[] result = new double[24];
-
         int min = -12, max = 12;
+
         for (int i = min; i < max; i++) {
-            // System.out.println("I="+i);
             LibSVM svm = new LibSVM();
             svm.setC(Math.pow(2, i));
             CrossValidation cv = new CrossValidation(svm);
             Map<Object, PerformanceMeasure> score = cv.crossValidation(data, folds, rg);
             try {
                 result[i - min] = score.get(positiveClass).getFMeasure();
+
             } catch (RuntimeException e) {
                 // TODO Auto-generated catch block
                 System.out.println(positiveClass.getClass());
@@ -60,16 +74,13 @@ public class SelfOptimizingLinearLibSVM implements Classifier {
             }
 
         }
-
+        fmeasures = result;
         int index = ArrayUtils.maxIndex(result);
         optimal = new LibSVM();
         optimalC = Math.pow(2, index + min);
         optimal.setC(optimalC);
 
         optimal.buildClassifier(data);
-        // for (double d : result) {
-        // System.out.println(d);
-        // }
     }
 
     @Override
