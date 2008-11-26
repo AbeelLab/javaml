@@ -5,6 +5,7 @@ package external.libsvm;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.SortedSet;
 
 import net.sf.javaml.classification.Classifier;
 import net.sf.javaml.core.Dataset;
@@ -30,9 +31,6 @@ public class LibSVM implements Classifier {
     }
 
     public void buildClassifier(Dataset data) {
-        // System.out.println("LSVM input: " + data.size());
-        //        
-        // System.out.println("att: " + data.noAttributes());
         this.data = data;
         // svm_parameter param = new svm_parameter();
         // default values
@@ -43,57 +41,40 @@ public class LibSVM implements Classifier {
         param.coef0 = 0;
         param.nu = 0.5;
         param.cache_size = 100;
-        // param.C = 1;
         param.eps = 1e-3;
         param.p = 0.1;
         param.shrinking = 1;
         param.probability = 0;
         param.nr_weight = 0;
-        // param.weight_label = new int[0];
-        // param.weight = new double[0];
-        // cross_validation = 0;
-        // svm.
-        // svm s=new svm();
+        param.weight_label = new int[0];
+        param.weight = new double[0];
+
         svm_problem p = new svm_problem();
         p.l = data.size();
         p.y = new double[data.size()];
         p.x = new svm_node[data.size()][];
         int tmpIndex = 0;
         int noAttributes = data.noAttributes();
-        while (data.size() > 0) {
-
-            Instance tmp = data.remove(0);
+        for (int j = 0; j < data.size(); j++) {
+            Instance tmp = data.instance(j);
             p.y[tmpIndex] = data.classIndex(tmp.classValue());
             p.x[tmpIndex] = new svm_node[tmp.keySet().size()];
             int i = 0;
-            for (int index : tmp.keySet()) {
+            SortedSet<Integer> tmpSet = tmp.keySet();
+            for (int index : tmpSet) {
                 p.x[tmpIndex][i] = new svm_node();
                 p.x[tmpIndex][i].index = index;
                 p.x[tmpIndex][i].value = tmp.value(index);
                 i++;
             }
-            // for (int j = 0; j < noAttributes; j++) {
-            // p.x[tmpIndex][j] = new svm_node();
-            // p.x[tmpIndex][j].index = j;
-            // p.x[tmpIndex][j].value = tmp.value(j);
-            // }
             tmpIndex++;
         }
 
         model = svm.svm_train(p, param);
-        // try {
-        // svm.svm_save_model("test", model);
-        // } catch (IOException e) {
-        // // TOO Auto-generated catch block
-        // e.printStackTrace();
-        // }
-        // System.out.println("nSV: "+Arrays.toString(model.nSV));
+
         double[][] coef = model.sv_coef;
-        // System.out.println();
-        // System.out.println("LSVM: " + model.SV.length);
-        // System.out.println("LSVM: " + model.SV[0].length);
-        double[][] prob = new double[model.SV.length][noAttributes];// model
-        // .SV
+
+        double[][] prob = new double[model.SV.length][noAttributes];
         for (int i = 0; i < model.SV.length; i++) {
             for (int j = 0; j < model.SV[i].length; j++) {
                 prob[i][j] = model.SV[i][j].value;
@@ -111,11 +92,7 @@ public class LibSVM implements Classifier {
                     index += (k == 0) ? 0 : model.nSV[k - 1];
                     end = index + model.nSV[k];
                     for (int m = index; m < end; ++m) {
-                        // System.out.println("m=" + m + " j=" + j + " i=" + i);
-                        // System.out.println("coef=" + coef.length + "
-                        // coef[x]=" + coef[0].length);
                         acc += coef[j][m] * prob[m][i];
-                        // acc += coef[m][j] * prob[m][i];
                     }
                     w_list[k][j][i] = acc;
                 }
@@ -127,23 +104,10 @@ public class LibSVM implements Classifier {
             for (int j = i + 1, k = i; j < model.nr_class; ++j, ++k) {
                 for (int m = 0; m < model.SV[0].length; ++m) {
                     weights[m] = (w_list[i][k][m] + w_list[j][i][m]);
-                    // System.out.println(m + ":" + (w_list[i][k][m] +
-                    // w_list[j][i][m]));
+
                 }
-                // printf("\n");
             }
         }
-        // weights?
-        // System.out.println(Arrays.deepToString(model.SV));
-
-        // System.out.println("SV coef");
-        // System.out.println(Arrays.deepToString(model.sv_coef));
-        // System.out.println("SV coef - weight?");
-        // System.out.println(Arrays.toString(model.sv_coef[0]));
-        // System.out.println("Rho coef");
-        // System.out.println(Arrays.toString(model.rho));
-        // svm_model model=svm.svm_train(p, param);
-
     }
 
     private double[] weights;
