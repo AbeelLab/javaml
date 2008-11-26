@@ -7,9 +7,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * Implementation of a dense instance.
@@ -95,8 +96,8 @@ public class DenseInstance extends AbstractInstance implements Instance {
     }
 
     @Override
-    public Set<Integer> keySet() {
-        HashSet<Integer> keys = new HashSet<Integer>();
+    public SortedSet<Integer> keySet() {
+        TreeSet<Integer> keys = new TreeSet<Integer>();
         for (int i = 0; i < attributes.length; i++)
             keys.add(i);
         return keys;
@@ -184,6 +185,18 @@ public class DenseInstance extends AbstractInstance implements Instance {
         out.attributes = this.attributes.clone();
         out.setClassValue(this.classValue());
         return out;
+    }
+
+    @Override
+    public void removeAttributes(Set<Integer> indices) {
+        double[] tmp = attributes.clone();
+        attributes = new double[tmp.length - indices.size()];
+        int index=0;
+        for(int i=0;i<tmp.length;i++){
+            if(!indices.contains(i)){
+                attributes[index++]=tmp[i];
+            }
+        }
     }
 
 }

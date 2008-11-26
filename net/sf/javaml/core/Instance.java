@@ -5,6 +5,8 @@ package net.sf.javaml.core;
 
 import java.io.Serializable;
 import java.util.Map;
+import java.util.Set;
+import java.util.SortedSet;
 
 /**
  * The interface for instances in a data set.
@@ -51,6 +53,9 @@ public interface Instance extends Map<Integer, Double>, Iterable<Double>, Serial
      */
     public Instance minus(Instance min);
 
+    @Override
+    public SortedSet<Integer> keySet();
+
     /**
      * Subtract an scalar from this instance and returns the results.
      * 
@@ -76,7 +81,8 @@ public interface Instance extends Map<Integer, Double>, Iterable<Double>, Serial
     /**
      * Removes an attribute from the instance.
      * 
-     * @param i the index of the attribute to remove
+     * @param i
+     *            the index of the attribute to remove
      */
     public void removeAttribute(int i);
 
@@ -100,5 +106,13 @@ public interface Instance extends Map<Integer, Double>, Iterable<Double>, Serial
      * @return a deep copy of this instance
      */
     public Instance copy();
+
+    /**
+     * Removes a set of attributes from the instance.
+     * 
+     * @param indices
+     *            set of indices that should be removed
+     */
+    public void removeAttributes(Set<Integer> indices);
 
 }

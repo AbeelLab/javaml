@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.Vector;
 
 /**
@@ -140,8 +141,10 @@ public class SparseInstance extends AbstractInstance implements Instance {
     }
 
     @Override
-    public Set<Integer> keySet() {
-        return data.keySet();
+    public TreeSet<Integer> keySet() {
+        TreeSet<Integer> set=new TreeSet<Integer>();
+        set.addAll(data.keySet());
+        return set;
     }
 
     @Override
@@ -246,5 +249,13 @@ public class SparseInstance extends AbstractInstance implements Instance {
         setClassValue(this.classValue());
         return out;
 
+    }
+
+    @Override
+    public void removeAttributes(Set<Integer> indices) {
+        //TODO this is a rather naive implementation
+       for(int i:indices)
+           removeAttribute(i);
+        
     }
 }
