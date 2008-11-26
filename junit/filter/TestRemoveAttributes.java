@@ -31,4 +31,22 @@ public class TestRemoveAttributes {
         
 
     }
+    
+    @Test
+    public void testRemoveAttributes2() {
+        Set<Integer>toRemove=new HashSet<Integer>();
+        toRemove.add(1);
+        toRemove.add(3);
+        toRemove.add(0);
+        Instance i = new DenseInstance(new double[] { 1, 2, 3, 4, 5});
+        RemoveAttributes ra=new RemoveAttributes(toRemove);
+        ra.filter(i);
+        Assert.assertTrue(i.noAttributes()==2);
+        Assert.assertTrue(i.value(0)==3);
+        Assert.assertTrue(i.value(1)==5);
+        
+        
+        
+
+    }
 }
