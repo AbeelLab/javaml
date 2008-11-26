@@ -3,16 +3,13 @@
  */
 package net.sf.javaml.filter;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 
 /**
- * Filter to retain all wanted features and removal of all other features.
+ * Filter to retain a set of wanted attributes and remove all others
  * 
  * 
  * @author Thomas Abeel
@@ -22,7 +19,7 @@ public class RetainAttributes extends AbstractFilter {
 
     private Set<Integer> toKeep = new HashSet<Integer>();
 
-    private List<Integer> toRemove = new ArrayList<Integer>();
+    private Set<Integer> toRemove = new HashSet<Integer>();
 
     /**
      * Construct a filter that retains all the attributes with the indices given
@@ -38,25 +35,17 @@ public class RetainAttributes extends AbstractFilter {
     }
 
     @Override
-    public void filter(Dataset data) {
-        for (Instance i : data)
-            filter(i);
-    }
-
-    @Override
     public void filter(Instance instance) {
         if (toRemove.size() + toKeep.size() != instance.noAttributes())
             buildRemove(instance.noAttributes());
-        for (int r : toRemove) {
-            instance.removeAttribute(r);
-        }
+        instance.removeAttributes(toRemove);
     }
 
     private void buildRemove(int noAttributes) {
         toRemove.clear();
         for (int i = 0; i < noAttributes; i++) {
             if (!toKeep.contains(i)) {
-                toRemove.add(0, i);
+                toRemove.add(i);
             }
         }
 
