@@ -81,105 +81,7 @@ public interface Dataset extends List<Instance> {
      */
     public int noAttributes();
 
-    // /**
-    // * Get the index of a certain instance.
-    // *
-    // * @param inst
-    // * the instance you want the index of
-    // * @return
-    // */
-    // public int getIndex(Instance inst);
-
-    // /**
-    // * Returns the size of the data set
-    // *
-    // * @return the number of instances in the data set.
-    // */
-    // public int size();
-
-    // /**
-    // * Get the 'minimum instance' of this data set. This is a virtual instance
-    // * with for each index the lowest value found in the data set.
-    // *
-    // * If this method is not supported by the implementation, the method
-    // should
-    // * return null.
-    // *
-    // * @return an instance with for every index it's lowest value, null if the
-    // * data set is empty
-    // */
-    // public Instance getMinimumInstance();
-    //
-    // public double getMinimumAttribute(int index);
-    //
-    // /**
-    // * Get the 'maximum instance' of this data set. This is a virtual instance
-    // * with for each index the highest value found in the data set.
-    // *
-    // * If this method is not supported by the implementation, the method
-    // should
-    // * return null.
-    // *
-    // * @return an instance with for every index it's highest value, null if
-    // the
-    // * data set is empty
-    // */
-    // public Instance getMaximumInstance();
-    //
-    // public double getMaximumAttribute(int index);
-    //
-    // /**
-    // * Get the 'average instance' of this data set. This is a virtual instance
-    // * with for each index the average value found in the data set.
-    // *
-    // * If this method is not supported by the implementation, the method
-    // should
-    // * return null.
-    // *
-    // * @return an instance with for every index it's average value, null if
-    // the
-    // * data set is empty
-    // */
-    // public Instance getAverageInstance();
-    //
-    // public double getAverageAttribute(int index);
-
-    // /**
-    // * Returns the number of different classes in the data set.
-    // *
-    // * @return
-    // */
-    // public int numClasses();
-
-    // /**
-    // * Sorts the data set according to the attribute with the given index.
-    // *
-    // */
-    // public void sort(int index);
-
-    // /**
-    // *
-    // */
-
-    // /**
-    // * Returns the number of attributes each instance has in this data set.
-    // *
-    // * @return the number of attributes
-    // */
-    // public int numAttributes();
-    //
-    // /**
-    // * Returns a deep copy of this data set.
-    // *
-    // */
-    // public Dataset copy();
-    //
-    // /**
-    // * Returns the number of values that exist for the attribute
-    // */
-    // public int numValues(int attIndex);
-
-    // public boolean remove(int index);
+   
     /**
      * Returns the index of the class value in the supplied data set. This
      * method will return -1 if the class value of this instance is not set.
@@ -190,7 +92,14 @@ public interface Dataset extends List<Instance> {
      */
     public int classIndex(Object clazz);
 
+    /**
+     * Returns the class value of the supplied class index.
+     * 
+     * @param index
+     *            the index to give the class value for
+     * @return the class value of the index
+     */
     public Object classValue(int index);
-    
+
     public Dataset copy();
 }
