@@ -3,17 +3,13 @@
  */
 package net.sf.javaml.filter;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Vector;
+import java.util.Set;
 
-import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 
 public class RemoveAttributes extends AbstractFilter {
 
- 
-    private List<Integer> indices;
+    private Set<Integer> indices;
 
     /**
      * Construct a remove filter that removes all the attributes with the
@@ -23,24 +19,12 @@ public class RemoveAttributes extends AbstractFilter {
      *            the indices of the columns that will be removed.
      */
     public RemoveAttributes(java.util.Set<Integer> indices) {
-        this.indices = new Vector<Integer>();
-        this.indices.addAll(indices);
-        Collections.sort(this.indices);
-       
-    }
-
-    @Override
-    public void filter(Dataset data) {
-        for (Instance i : data)
-            filter(i);
+        this.indices = indices;
     }
 
     @Override
     public void filter(Instance instance) {
-        for (int i = indices.size() - 1; i >= 0; i--) {
-            instance.removeAttribute(indices.get(i));
-        }
-
+        instance.removeAttributes(indices);
     }
 
 }
