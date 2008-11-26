@@ -49,4 +49,43 @@ public class TestDefaultDataset {
         Assert.assertEquals(data.get(4).value(0), 5.0, delta);
         
     }
+    @Test
+    public void testDatasetRemoveClass() {
+        Dataset data = new DefaultDataset();
+        double[] val = new double[] { 0.0 };
+        data.add(new DenseInstance(val,"0"));
+        val[0]++;
+        data.add(new DenseInstance(val,"1"));
+        val[0]++;
+        data.add(new DenseInstance(val,"2"));
+        val[0]++;
+        data.add(new DenseInstance(val,"3"));
+        val[0]++;
+        data.add(new DenseInstance(val,"4"));
+        val[0]++;
+        data.add(new DenseInstance(val,"5"));
+        val[0]++;
+        Assert.assertEquals(data.size(),6);
+        Assert.assertEquals(data.classes().size(),6);
+        Assert.assertEquals(data.get(0).value(0), 0.0, delta);
+        Assert.assertEquals(data.get(1).value(0), 1.0, delta);
+        Assert.assertEquals(data.get(2).value(0), 2.0, delta);
+        Assert.assertEquals(data.get(3).value(0), 3.0, delta);
+        Assert.assertEquals(data.get(4).value(0), 4.0, delta);
+        Assert.assertEquals(data.get(5).value(0), 5.0, delta);
+        
+        Instance i=data.remove(4);
+        Assert.assertEquals(i.value(0), 4.0, delta);
+        Assert.assertEquals(data.size(),5);
+        Assert.assertEquals(5,data.classes().size());
+        
+        Assert.assertEquals(data.get(0).value(0), 0.0, delta);
+        Assert.assertEquals(data.get(1).value(0), 1.0, delta);
+        Assert.assertEquals(data.get(2).value(0), 2.0, delta);
+        Assert.assertEquals(data.get(3).value(0), 3.0, delta);
+        Assert.assertEquals(data.get(4).value(0), 5.0, delta);
+        
+    }
+    
 }
+
