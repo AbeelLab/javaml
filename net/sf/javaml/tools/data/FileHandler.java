@@ -242,11 +242,32 @@ public class FileHandler {
         } else {
             out.append(inst.value(0));
             for (int i = 1; i < inst.noAttributes(); i++)
-                out.append("\t"+inst.value(i));
+                out.append("\t" + inst.value(i));
 
         }
 
         return out.toString();
+    }
+
+    /**
+     * Exports a data set to a file. Each instance is output separately with the
+     * class label on position 0. The fields are delimited with a tab character.
+     * 
+     * Note: data sets with mixed sparse and dense instances may not be loadable
+     * with the load methods.
+     * 
+     * By default compression of the output is turned off.
+     * 
+     * @param data
+     *            data set
+     * @param outFile
+     *            file to write data to
+     * @throws IOException
+     *             when something went wrong during the export
+     */
+    public static void exportDataset(Dataset data, File file) throws IOException {
+        exportDataset(data, file, false);
+
     }
 
 }
