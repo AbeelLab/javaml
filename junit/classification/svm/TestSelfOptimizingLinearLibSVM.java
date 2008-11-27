@@ -29,12 +29,10 @@ public class TestSelfOptimizingLinearLibSVM {
 					"devtools/data/iris.data"), 4,",");
 			System.out.println("Size: " + data.size());
 			System.out.println("numAtt: " + data.noAttributes());
-			SelfOptimizingLinearLibSVM smo = new SelfOptimizingLinearLibSVM(data.classes().first(),new Random(10));
-//			smo.buildClassifier(data);
-//			System.out.println(smo.getC());
-//			System.out.println(Arrays.toString(smo.getWeights()));
+			SelfOptimizingLinearLibSVM smo = new SelfOptimizingLinearLibSVM();
 			CrossValidation cv = new CrossValidation(smo);
-            Map<Object,PerformanceMeasure>results=cv.crossValidation(data, 5, new Random(10));
+			Map<Object,PerformanceMeasure>results=cv.crossValidation(data, 5, new Random(10));
+            
             for(Object o:results.keySet()){
                 PerformanceMeasure pm=results.get(o);
                 System.out.println(o+"\t"+pm);
@@ -45,11 +43,4 @@ public class TestSelfOptimizingLinearLibSVM {
 			Assert.assertTrue(false);
 		}
 	}
-
-//	@Test
-//	public void testPow2() {
-//		for (int i = -10; i < 11; i++)
-//			System.out.println(Math.pow(2, i));
-//	}
-
 }
