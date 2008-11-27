@@ -1,3 +1,9 @@
+/**
+ * %SVN.HEADER%
+ * 
+ * based on work by Simon Levy
+ * http://www.cs.wlu.edu/~levy/software/kd/
+ */
 package net.sf.javaml.core.kdtree;
 
 // Hyper-Rectangle class supporting KDTree class

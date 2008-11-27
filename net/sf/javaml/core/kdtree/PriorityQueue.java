@@ -1,3 +1,9 @@
+/**
+ * %SVN.HEADER%
+ * 
+ * based on work by Simon Levy
+ * http://www.cs.wlu.edu/~levy/software/kd/
+ */
 package net.sf.javaml.core.kdtree;
 
 class PriorityQueue implements java.io.Serializable {

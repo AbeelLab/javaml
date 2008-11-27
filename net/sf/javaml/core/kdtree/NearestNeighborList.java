@@ -1,3 +1,9 @@
+/**
+ * %SVN.HEADER%
+ * 
+ * based on work by Simon Levy
+ * http://www.cs.wlu.edu/~levy/software/kd/
+ */
 package net.sf.javaml.core.kdtree;
 
 // Bjoern Heckel's solution to the KD-Tree n-nearest-neighbor problem
