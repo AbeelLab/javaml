@@ -23,7 +23,6 @@ public class TestRandomTree {
             System.out.println("noAttributes: " + data.noAttributes());
             System.out.println("instances: " + data.size());
             RandomTree rt = new RandomTree(5, new Random());
-            // rt.buildClassifier(data);
             CrossValidation cv = new CrossValidation(rt);
             System.out.println(cv.crossValidation(data, 2, new Random()));
         } catch (IOException e) {

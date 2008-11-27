@@ -24,10 +24,8 @@ public class TestRandomTreeSize {
             long mem = 0;
             for (int i = 0; i < value.length; i++) {
                 Dataset data = FileHandler.loadDataset(new File("devtools/data/colon.csv.gz"), 0, ",");
-//                System.out.println("Loader: " + data.classes());
                 long dataMem = checkMem();
                 dataval[i] = dataMem;
-                // System.out.println(i);
                 RandomTree rt = new RandomTree(5, rg);
                 rt.buildClassifier(data);
                 mem = checkMem();

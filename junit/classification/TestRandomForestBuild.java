@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Random;
 
+import net.sf.javaml.classification.evaluation.EvaluateDataset;
 import net.sf.javaml.classification.tree.RandomForest;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.tools.data.FileHandler;
@@ -20,15 +21,16 @@ public class TestRandomForestBuild {
     public void testRF2Performance() {
         long seed = System.currentTimeMillis();
         try {
-            Dataset data = FileHandler.loadSparseDataset(new File("devtools/data/sparse.txt.gz"), 0, ";", ":");
+            Dataset data = FileHandler.loadDataset(new File("devtools/data/iris.tsv"), 4, "\t");
             System.out.println("Loader: " + data.classes());
-            RandomForest rf2 = new RandomForest(5, false, 2000, new Random(seed));
+            RandomForest rf2 = new RandomForest(5, false, 2, new Random(seed));
             System.out.println("Building 1");
-            rf2.buildClassifier(data);
+            rf2.buildClassifier(data.copy());
             System.out.println("Building 2");
-            rf2.buildClassifier(data);
+            rf2.buildClassifier(data.copy());
             System.out.println("Building 3");
-            rf2.buildClassifier(data);
+            rf2.buildClassifier(data.copy());
+            System.out.println(EvaluateDataset.testDataset(rf2, data));
 
         } catch (IOException e) {
             // TODO Auto-generated catch block
