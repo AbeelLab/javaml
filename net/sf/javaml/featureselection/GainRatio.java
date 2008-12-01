@@ -29,6 +29,7 @@ public class GainRatio implements AttributeEvaluation {
 
     private int bins = 10;
 
+    
     public void build(Dataset data) {
         AbstractFilter discretize = new EqualWidthBinning(bins);
         discretize.filter(data);
@@ -52,10 +53,15 @@ public class GainRatio implements AttributeEvaluation {
         List<Object> classes = new Vector<Object>();
         classes.addAll(training.classes());
         for (Instance inst : training) {
-//            ii = (int) inst.value(attribute);
-//            jj = (int) inst.classValue();
+            // ii = (int) inst.value(attribute);
+            // jj = (int) inst.classValue();
             counts[(int) inst.value(attribute)][classes.indexOf(inst.classValue())]++;
         }
         return ContingencyTables.gainRatio(counts);
+    }
+
+    @Override
+    public int noAttributes() {
+       return training.noAttributes();
     }
 }

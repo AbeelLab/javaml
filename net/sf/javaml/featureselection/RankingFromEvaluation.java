@@ -46,7 +46,7 @@ public class RankingFromEvaluation implements AttributeRanking {
     }
 
     @Override
-    public int noFeatures() {
+    public int noAttributes() {
        return ranking.length;
         
     }

@@ -3,7 +3,6 @@
  */
 package net.sf.javaml.featureselection;
 
-import net.sf.javaml.core.Dataset;
 
 /**
  * Interface for algorithms that can generate an attribute ranking. Higher
@@ -18,15 +17,7 @@ import net.sf.javaml.core.Dataset;
  * @author Thomas Abeel
  * 
  */
-public interface AttributeRanking {
-
-    /**
-     * Build the attribute ranking on the supplied data set.
-     * 
-     * @param data
-     *            data set to train the attribute ranking algorithm on.
-     */
-    public void build(Dataset data);
+public interface AttributeRanking extends FeatureSelection {
 
     /**
      * Get the ranking of the given attribute. The first rank is 0 and is the
@@ -38,5 +29,4 @@ public interface AttributeRanking {
      */
     public int rank(int attIndex);
 
-    public int noFeatures();
 }

@@ -62,7 +62,7 @@ public class RELIEF implements AttributeEvaluation {
             findNearest(data, random);
             for (int j = 0; j < weights.length; j++)
                 weights[j] = weights[j] - diff(j, random, nearestHit) / m + diff(j, random, nearestMiss) / m;
-          
+
         }
     }
 
@@ -129,6 +129,11 @@ public class RELIEF implements AttributeEvaluation {
     @Override
     public double score(int attribute) {
         return weights[attribute];
+    }
+
+    @Override
+    public int noAttributes() {
+        return weights.length;
     }
 
 }

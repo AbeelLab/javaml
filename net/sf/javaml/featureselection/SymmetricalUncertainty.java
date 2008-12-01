@@ -33,16 +33,15 @@ public class SymmetricalUncertainty implements AttributeEvaluation {
         AbstractFilter discretize = new EqualWidthBinning(bins);
         discretize.build(data);
         discretize.filter(data);
-        Instance min=DatasetTools.minAttributes(data);
-        Instance max=DatasetTools.maxAttributes(data);
-        for(int i=0;i<data.noAttributes();i++){
-			if(min.value(i)!=0 || max.value(i)!=9){
-				System.err.println(i +" "+ min.value(i)+"\t"+max.value(i));
-			}
-			
-		}
+        Instance min = DatasetTools.minAttributes(data);
+        Instance max = DatasetTools.maxAttributes(data);
+        for (int i = 0; i < data.noAttributes(); i++) {
+            if (min.value(i) != 0 || max.value(i) != 9) {
+                System.err.println(i + " " + min.value(i) + "\t" + max.value(i));
+            }
+
+        }
         this.training = data;
-        
 
     }
 
@@ -61,17 +60,22 @@ public class SymmetricalUncertainty implements AttributeEvaluation {
         double[][] counts = new double[bins][training.classes().size()];
         List<Object> classes = new Vector<Object>();
         classes.addAll(training.classes());
-//        System.out.println(training);
+        // System.out.println(training);
         for (Instance inst : training) {
-//            ii = (int) inst.value(attribute);
-//            jj = (int) inst.classValue();
-            if((int) inst.value(attribute)>=bins){
-                System.err.println("Exceeding bins: "+bins);
+            // ii = (int) inst.value(attribute);
+            // jj = (int) inst.classValue();
+            if ((int) inst.value(attribute) >= bins) {
+                System.err.println("Exceeding bins: " + bins);
             }
-            if(classes.indexOf(inst.classValue())>=training.classes().size())
-                System.err.println("Exceeding classes: "+training.classes().size());
+            if (classes.indexOf(inst.classValue()) >= training.classes().size())
+                System.err.println("Exceeding classes: " + training.classes().size());
             counts[(int) inst.value(attribute)][classes.indexOf(inst.classValue())]++;
         }
         return ContingencyTables.symmetricalUncertainty(counts);
+    }
+
+    @Override
+    public int noAttributes() {
+        return training.noAttributes();
     }
 }

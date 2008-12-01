@@ -3,23 +3,26 @@
  */
 package net.sf.javaml.featureselection;
 
+import net.sf.javaml.core.Dataset;
 
-public class FeatureSelection {
+public interface FeatureSelection {
 
     /**
-     * Returns the indices of the best <code>threshold</code> fraction features. The AttributeRanking
-     * should be pre-trained.
+     * Build the attribute evaluation on the supplied data set.
      * 
+     * Note: This method can change the data set that is supplied to the method!
+     * 
+     * @param data
+     *            data set to train the attribute evaluation algorithm on.
      */
-    public static int[] bestFeatures(AttributeRanking ar, double threshold) {
+    public void build(Dataset data);
 
-        int[] tmpRanking = new int[ar.noFeatures()];
-        for (int i = 0; i < ar.noFeatures(); i++)
-            tmpRanking[ar.rank(i)] = i;
+    /**
+     * Returns the number of attributes that have been ranked and for which the
+     * rank(int index) method will return a rank.
+     * 
+     * @return the number of ranked attributes
+     */
+    public int noAttributes();
 
-        int[] outRanking = new int[(int) (ar.noFeatures() * threshold + 0.5)];
-        System.arraycopy(tmpRanking, 0, outRanking, 0, outRanking.length);
-        return outRanking;
-
-    }
 }

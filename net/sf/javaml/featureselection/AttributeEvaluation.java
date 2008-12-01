@@ -3,8 +3,6 @@
  */
 package net.sf.javaml.featureselection;
 
-import net.sf.javaml.core.Dataset;
-
 /**
  * Interface for all attribute evaluation methods. Attribute evaluation methods
  * can be used to calculate the worth of a certain attribute. This is
@@ -18,17 +16,7 @@ import net.sf.javaml.core.Dataset;
  * @author Thomas Abeel
  * 
  */
-public interface AttributeEvaluation {
-
-    /**
-     * Build the attribute evaluation on the supplied data set.
-     * 
-     * Note: This method can change the data set that is supplied to the method!
-     * 
-     * @param data
-     *            data set to train the attribute evaluation algorithm on.
-     */
-    public void build(Dataset data);
+public interface AttributeEvaluation extends FeatureSelection {
 
     /**
      * Evaluate a single attribute. This should return a value between 0 and 1.

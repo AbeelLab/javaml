@@ -177,4 +177,9 @@ public class RandomForestAttributeEvaluation implements AttributeEvaluation {
         return importance[attribute];
     }
 
+    @Override
+    public int noAttributes() {
+        return importance.length;
+    }
+
 }

@@ -26,20 +26,20 @@ public class KullbackLeiblerDivergence implements AttributeEvaluation {
     private HashMap2D<Object, Object, double[]> pairWiseDivergence = new HashMap2D<Object, Object, double[]>();
 
     private int bins;
-    
-    public KullbackLeiblerDivergence(){
+
+    public KullbackLeiblerDivergence() {
         this(100);
     }
-    
+
     public KullbackLeiblerDivergence(int i) {
-        this.bins=i;
+        this.bins = i;
     }
 
     @Override
     public void build(Dataset data) {
         maxDivergence = new double[data.noAttributes()];
         /* Normalize to [0,100[ */
-        NormalizeMidrange nm = new NormalizeMidrange(bins/2, bins-0.000001);
+        NormalizeMidrange nm = new NormalizeMidrange(bins / 2, bins - 0.000001);
         nm.build(data);
         nm.filter(data);
         /* Calculate all pairwise divergencies */
@@ -119,6 +119,11 @@ public class KullbackLeiblerDivergence implements AttributeEvaluation {
     @Override
     public double score(int attribute) {
         return maxDivergence[attribute];
+    }
+
+    @Override
+    public int noAttributes() {
+        return maxDivergence.length;
     }
 
 }
