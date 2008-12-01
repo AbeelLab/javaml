@@ -3,9 +3,6 @@
  */
 package tutorials.core;
 
-import org.junit.Test;
-
-import junit.framework.Assert;
 import net.sf.javaml.core.DenseInstance;
 import net.sf.javaml.core.Instance;
 
@@ -38,8 +35,7 @@ public class TutorialDenseInstance {
      * Here we will construct an instance with 10 attributes.
      * 
      */
-    @Test
-    public void createDenseInstance() {
+    public static void main(String[] args) {
         /* values of the attributes. */
         double[] values = new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
 
@@ -54,10 +50,6 @@ public class TutorialDenseInstance {
         System.out.println("Instance with only values set: ");
         System.out.println(instance);
         System.out.println();
-        /* Check whether the values actually correspond to what we put in there */
-        for (int i = 0; i < values.length; i++)
-            Assert.assertEquals(instance.value(i), values[i]);
-
         /*
          * To create instances that have a class value set, you can use the two
          * argument constructor which takes the values and the class value as
@@ -68,8 +60,6 @@ public class TutorialDenseInstance {
         System.out.println("Instance with class value set to 1: ");
         System.out.println(instanceWithClassValue);
         System.out.println();
-        /* Check whether attribute is actually one */
-        Assert.assertEquals(instanceWithClassValue.classValue(), 1);
 
     }
 

@@ -6,9 +6,6 @@ package tutorials.core;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.SparseInstance;
 
-import org.junit.Assert;
-import org.junit.Test;
-
 /**
  * Shows how to create a SparseInstance. A SparseInstance has a default value of
  * 0 for all it attributes, but you can set some of them to other values. Just
@@ -22,8 +19,7 @@ public class TutorialSparseInstance {
     /**
      * Shows how to construct a SparseInstance.
      */
-    @Test
-    public void testSparseInstance() {
+    public static void main(String[]args){
         /*
          * Here we will create an instance with 10 attributes, but will only set
          * the attributes with index 1,3 and 7 with a value.
@@ -34,19 +30,5 @@ public class TutorialSparseInstance {
         instance.put(1, 1.0);
         instance.put(3, 2.0);
         instance.put(7, 4.0);
-        
-        /* Check whether values are properly set */
-        for(int i=0;i<10;i++){
-            if(i==1)
-                Assert.assertEquals(1.0, instance.value(i),1e-6);
-            else if(i==3)
-                Assert.assertEquals(2.0, instance.value(i),1e-6);
-            else if(i==7)
-                Assert.assertEquals(4.0, instance.value(i),1e-6);
-            else
-                Assert.assertEquals(0.0, instance.value(i),1e-6);
-            
-        }
-
     }
 }

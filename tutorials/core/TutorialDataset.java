@@ -11,7 +11,6 @@ import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.InstanceTools;
 
 import org.junit.Assert;
-import org.junit.Test;
 
 /**
  * This tutorial show how to create a {@link net.sf.javaml.core.Dataset} from a
@@ -43,8 +42,7 @@ public class TutorialDataset {
     /**
      * Create a data set and put some instances in it.
      */
-    @Test
-    public void testConstruction() {
+   public static void main(String[]args){
         Dataset data = new DefaultDataset();
         for (int i = 0; i < 10; i++) {
             Instance tmpInstance = InstanceTools.randomInstance(25);
