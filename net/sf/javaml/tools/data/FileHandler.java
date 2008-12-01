@@ -234,9 +234,9 @@ public class FileHandler {
         if (inst instanceof SparseInstance) {
             for (Integer index : inst.keySet()) {
                 if (out.length() != 0)
-                    out.append("\t" + inst.value(index));
+                    out.append("\t" + index + ":" + inst.value(index));
                 else
-                    out.append(inst.value(index));
+                    out.append(index + ":" + inst.value(index));
 
             }
         } else {
