@@ -44,7 +44,7 @@ public class CrossValidation {
      * @return the results of the cross-validation.
      */
     public Map<Object, PerformanceMeasure> crossValidation(Dataset data, int numFolds, Random rg) {
-        //TODO use EvaluateDataset
+        // TODO use EvaluateDataset
         Dataset[] folds = data.folds(numFolds, rg);
         Map<Object, PerformanceMeasure> out = new HashMap<Object, PerformanceMeasure>();
         for (Object o : data.classes()) {
@@ -110,6 +110,20 @@ public class CrossValidation {
     public Map<Object, PerformanceMeasure> crossValidation(Dataset data, int folds) {
         return crossValidation(data, folds, new Random(System.currentTimeMillis()));
 
+    }
+
+    /**
+     * Performs cross validation with the specified parameters. By default the
+     * number of folds is 10.
+     * 
+     * @param data
+     *            the data set to use in the cross validation. This data set is
+     *            split in the appropriate number of folds.
+     * 
+     * @return the results of the cross-validation.
+     */
+    public Map<Object, PerformanceMeasure> crossValidation(Dataset data) {
+        return crossValidation(data, 10);
     }
 
 }
