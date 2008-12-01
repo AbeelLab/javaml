@@ -1,13 +1,11 @@
 The Java Machine Learning Library readme documentation. 
 
-This document covers the basic documentation of the library. 
+This document covers the very basic documentation of the library. 
 
 The Java Machine Learning Library is licensed under GNU-GPL.
 
 More elaborate documentation can be found on the web site
 http://java-ml.sourceforge.net/
-
-
 
 1. Overview
 =============
@@ -20,15 +18,13 @@ Java-ML in a nutshell:
     * Well documented source code.
     * Plenty of code samples and tutorials.
 
-
-
 2. How to get started
 =====================
-When you are reading this, you most probably already downloaded the library. To use it, include the javaml-<version>.jar in your classpath.
+When you are reading this, you most probably already downloaded the library. 
+To use it, include the javaml-<version>.jar in your classpath.
 
-Code samples can be found
-here: http://java-ml.sourceforge.net/tutorials
-or here: http://java-ml.sourceforge.net/src/tutorials/
+How to get started, code samples, tutorials on various tasks can be found
+at http://java-ml.sourceforge.net
 
 3. Requirements
 ===============
@@ -39,7 +35,7 @@ version 1.6+
 ==========
 You can contact us by using the Sourceforge contact page:
 http://sourceforge.net/users/thomasabeel/
-or send an email to the me
+or send an email to me
 thomas@abeel.be
 
 
