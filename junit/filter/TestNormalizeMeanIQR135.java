@@ -54,13 +54,18 @@ public class TestNormalizeMeanIQR135 {
         NormalizeMeanIQR135 nm = new NormalizeMeanIQR135();
 
         Dataset data = new DefaultDataset();
-        for (int i = 0; i < 1000; i++) {
-            Instance tmp = InstanceTools.randomInstance(30);
 
+        for (int i = 0; i < 1000; i++) {
+            Instance tmp = InstanceTools.randomGaussianInstance(30);
             data.add(tmp);
 
         }
+        // System.out.println("Data = "+data);
+        nm.build(data);
+        // System.out.println("Mean = " + nm.getMean());
+        // System.out.println("Std = " + nm.getStd());
         nm.filter(data);
-       
+        // System.out.println(data);
+
     }
 }
