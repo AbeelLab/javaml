@@ -54,7 +54,7 @@ public class TestRetainAttributeFilter {
             FileHandler.exportDataset(data, io);
             Dataset data2 = FileHandler.loadSparseDataset(io, 0, "\t", ":");
             Assert.assertEquals(data.size(), data2.size());
-            Assert.assertEquals(data.noAttributes(), data2.noAttributes());
+            Assert.assertTrue(data.noAttributes()>=data2.noAttributes());
             io.delete();
         } catch (IOException e) {
             // TODO Auto-generated catch block

@@ -77,7 +77,7 @@ public class TestDefaultDataset {
         Instance i=data.remove(4);
         Assert.assertEquals(i.value(0), 4.0, delta);
         Assert.assertEquals(data.size(),5);
-        Assert.assertEquals(5,data.classes().size());
+        Assert.assertEquals(6,data.classes().size());
         
         Assert.assertEquals(data.get(0).value(0), 0.0, delta);
         Assert.assertEquals(data.get(1).value(0), 1.0, delta);
