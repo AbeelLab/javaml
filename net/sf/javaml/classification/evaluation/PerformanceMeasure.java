@@ -159,6 +159,10 @@ public class PerformanceMeasure {
 
     }
 
+    public double getBCR(){
+        return 0.5*(tp/(tp+fn)+tn/(tn+fp));
+    }
+    
     @Override
     public String toString() {
         return "[TP=" + this.tp + ", FP=" + this.fp + ", TN=" + this.tn + ", FN="
