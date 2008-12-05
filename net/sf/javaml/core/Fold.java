@@ -12,7 +12,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.Vector;
 
-public class Fold implements Dataset {
+class Fold implements Dataset {
     private int[] indices;
 
     private Dataset parent;
