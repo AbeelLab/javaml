@@ -3,7 +3,9 @@
  */
 package net.sf.javaml.clustering;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Vector;
 
@@ -13,7 +15,7 @@ import net.sf.javaml.distance.DistanceMeasure;
 import net.sf.javaml.distance.NormalizedEuclideanDistance;
 
 /**
- * XXX add doc XXX add reference XXX add pseudocode
+ * Provides the density-based-spatial-scanning clustering algorithm.
  * 
  * @author Thomas Abeel
  * 
@@ -37,19 +39,21 @@ public class DensityBasedSpatialClustering extends AbstractDensityBasedClusterin
     private int clusterID;
 
     /**
-     * default constructor epsilon= 0.1, minPoints=6,
-     * distancemeasure=NormalizedEuclidean
-     * XXX DOC
+     * Creates a density based clusterer with default parameters. Epsilon = 0.6,
+     * minpoints = 6 and a normalized version of the euclidean distance.
      */
     public DensityBasedSpatialClustering() {
         this(0.1, 6);
     }
 
     /**
-     * XXX add doc
+     * Create a new Density based clusterer with the provided parameters.
      * 
      * @param epsilon
+     *            epsilon range query parameter
      * @param minPoints
+     *            the minimum number of points that should fall within the
+     *            epsilon range query
      * 
      */
     public DensityBasedSpatialClustering(double epsilon, int minPoints) {
@@ -57,11 +61,16 @@ public class DensityBasedSpatialClustering extends AbstractDensityBasedClusterin
     }
 
     /**
-     * XXX DOC
+     * Create a new Density based clusterer with the provided parameters.
      * 
      * @param epsilon
+     *            the epsilon value for the epsilon range query to determining
+     *            whether the density is high engou
      * @param minPoints
+     *            the minimum number of points that should fall within the
+     *            epsilon range query.
      * @param dm
+     *            the distance measure to use for the epsilon range query.
      */
     public DensityBasedSpatialClustering(double epsilon, int minPoints, DistanceMeasure dm) {
         this.dm = dm;
@@ -77,9 +86,10 @@ public class DensityBasedSpatialClustering extends AbstractDensityBasedClusterin
      * @return true, if the DataObject could be assigned, else false
      */
     private boolean expandCluster(DataObject dataObject) {
+        HashSet<DataObject> usedSeeds = new HashSet<DataObject>();
         List<DataObject> seedList = epsilonRangeQuery(epsilon, dataObject);
-        // System.out.println("Created initial seedlist with " + seedList.size()
-        // + " nodes");
+        usedSeeds.addAll(seedList);
+
         /** dataObject is NO coreObject */
         if (seedList.size() < minPoints) {
             // System.out.println("This is noise...");
@@ -88,19 +98,12 @@ public class DensityBasedSpatialClustering extends AbstractDensityBasedClusterin
         }
 
         // System.out.println("Object is core object");
-        /** dataObject is coreObject */
+        /** dataObject is coreObject, it has sufficient neighboring points */
         for (int i = 0; i < seedList.size(); i++) {
-            // System.out.println("Getting dataobject from seedList, size =
-            // "+seedList.size());
             DataObject seedListDataObject = seedList.get(i);
-            /**
-             * label this seedListDataObject with the current clusterID, because
-             * it is in epsilon-range
-             */
+            /* Label seedListDataObject with the current clusterID */
             seedListDataObject.clusterIndex = clusterID;
-
             if (seedListDataObject.equals(dataObject)) {
-                // System.out.println("Remove core object");
                 seedList.remove(i);
                 i--;
             }
@@ -108,11 +111,9 @@ public class DensityBasedSpatialClustering extends AbstractDensityBasedClusterin
 
         // System.out.println("Seedlist is labeled and pruned");
         /** Iterate the seedList of the startDataObject */
-        for (int j = 0; j < seedList.size(); j++) {
-            // System.out.println("Add neighbours, seedList size: " +
-            // seedList.size());
-
-            DataObject seedListDataObject = seedList.get(j);
+        // for (int j = 0; j < seedList.size(); j++) {
+        while (seedList.size() > 0) {
+            DataObject seedListDataObject = seedList.get(0);
             List<DataObject> seedListDataObject_Neighbourhood = epsilonRangeQuery(epsilon, seedListDataObject);
 
             /** seedListDataObject is coreObject */
@@ -121,31 +122,28 @@ public class DensityBasedSpatialClustering extends AbstractDensityBasedClusterin
                     DataObject p = seedListDataObject_Neighbourhood.get(i);
                     if (p.clusterIndex == DataObject.UNCLASSIFIED || p.clusterIndex == DataObject.NOISE) {
                         if (p.clusterIndex == DataObject.UNCLASSIFIED) {
-                            if (!seedList.contains(p))
+                            if (!usedSeeds.contains(p)) {
                                 seedList.add(p);
-                            p.clusterIndex = clusterID;
+                                usedSeeds.add(p);
+                            }
+
                         }
 
                     }
+                    p.clusterIndex = clusterID;
                 }
             }
-            seedList.remove(j);
-            j--;
+            seedList.remove(0);
+
         }
 
         return true;
     }
 
-    /**
-     * XXX add doc
-     * 
-     */
+    /* Reference to the original data set */
     private Dataset originalData = null;
 
-    /**
-     * XXX add doc
-     * 
-     */
+    @Override
     public Dataset[] cluster(Dataset data) {
         this.originalData = data;
         if (dm == null) {
@@ -158,31 +156,32 @@ public class DensityBasedSpatialClustering extends AbstractDensityBasedClusterin
 
         }
 
-        Collections.shuffle(dataset);//make clustering algorithm random
+        Collections.shuffle(dataset);// make clustering algorithm random
+        ArrayList<Dataset> output = new ArrayList<Dataset>();
         for (DataObject dataObject : dataset) {
             if (dataObject.clusterIndex == DataObject.UNCLASSIFIED) {
                 if (expandCluster(dataObject)) {
+                    /* Extract cluster here */
+                    /* Cluster ids may be overwritten in further iterations */
+                    output.add(extract(clusterID));
                     clusterID++;
                 }
             }
         }
 
-        Dataset[] clusters = new Dataset[clusterID];
-        for (int i = 0; i < clusters.length; i++) {
-            clusters[i] = new DefaultDataset();
-        }
-        int noiseCount = 0;
-        int notKnownCount = 0;
+        return output.toArray(new Dataset[0]);
+
+    }
+
+    /* Extract a cluster from the DataObject vector */
+    private Dataset extract(int clusterID) {
+        Dataset cluster = new DefaultDataset();
         for (DataObject dataObject : dataset) {
-            if (dataObject.clusterIndex >= 0)
-                clusters[dataObject.clusterIndex].add(dataObject.instance);
-            if (DataObject.NOISE == dataObject.clusterIndex) {
-                noiseCount++;
-            }
-            if (DataObject.UNCLASSIFIED == dataObject.clusterIndex)
-                notKnownCount++;
+            if (dataObject.clusterIndex == clusterID)
+                cluster.add(dataObject.instance);
+
         }
-        return clusters;
+        return cluster;
     }
 
 }
