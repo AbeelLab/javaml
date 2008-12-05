@@ -57,12 +57,11 @@ public class KNearestNeighbors implements DatasetFilter {
             sum = ArrayUtils.divide(sum, count);
 
             for (int i = 0; i < inst.noAttributes(); i++) {
-                if (count[i] != 0) {
+                if (Double.isNaN(inst.value(i)) && count[i] != 0) {
                     inst.put(i, sum[i]);
                 }
             }
 
         }
     }
-
 }
