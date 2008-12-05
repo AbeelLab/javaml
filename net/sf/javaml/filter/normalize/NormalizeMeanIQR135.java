@@ -31,13 +31,14 @@ public class NormalizeMeanIQR135 extends AbstractFilter {
 
     @Override
     public void build(Dataset data) {
-        mean = DatasetTools.percentile(data, 0.50);
+        mean = DatasetTools.percentile(data, 50);
         Dataset tmp = new DefaultDataset();
         for (Instance i : data)
             tmp.add(i.minus(mean));
 
-        Instance q1 = DatasetTools.percentile(tmp, 0.25);
-        Instance q3 = DatasetTools.percentile(tmp, 0.75);
+        Instance q1 = DatasetTools.percentile(tmp, 25);
+        Instance q3 = DatasetTools.percentile(tmp, 75);
+
         std = q3.minus(q1).divide(1.35);
     }
 
@@ -59,6 +60,16 @@ public class NormalizeMeanIQR135 extends AbstractFilter {
         Instance tmp = instance.minus(mean).divide(std);
         for (int i = 0; i < instance.noAttributes(); i++)
             instance.put(i, tmp.value(i));
+    }
+
+    public Instance getStd() {
+        return std;
+
+    }
+
+    public Instance getMean() {
+        return mean;
+
     }
 
 }
