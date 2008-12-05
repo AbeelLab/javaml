@@ -27,7 +27,7 @@ public class TestKNN {
 
         try {
             /* Load a data set */
-            Dataset data = FileHandler.loadSparseDataset(new File("devtools/data/sparse.txt.gz"), 0, ";", ":");
+            Dataset data = FileHandler.loadSparseDataset(new File("devtools/data/smallsparse.tsv"), 0, "\t", ":");
             /*
              * Contruct a KNN classifier that uses 5 neighbors to make a
              * decision.
@@ -39,22 +39,25 @@ public class TestKNN {
              * Load a data set, this can be a different one, but we will use the
              * same one.
              */
-            Dataset dataForClassification = FileHandler.loadSparseDataset(new File("devtools/data/sparse.txt.gz"), 0,
-                    ";", ":");
+            Dataset dataForClassification = FileHandler.loadSparseDataset(new File("devtools/data/smallsparse.tsv"), 0,
+                    "\t", ":");
             /* Counters for correct and wrong predictions. */
             int correct = 0, wrong = 0;
-            int count=0;
+            int count = 0;
             /* Classify all instances and check with the correct class values */
-            for (Instance inst : dataForClassification) {
-                long time=System.currentTimeMillis();
-                System.out.print("Processing instance: " + ++count+"\t");
+            for (int i = 0; i < 50; i++) {
+                Instance inst = dataForClassification.instance(i);
+
+                long time = System.currentTimeMillis();
+                System.out.print("Processing instance: " + ++count + "\t");
                 Object predictedClassValue = knn.classify(inst);
                 Object realClassValue = inst.classValue();
                 if (predictedClassValue.equals(realClassValue))
                     correct++;
                 else
                     wrong++;
-                System.out.println(new TimeInterval(System.currentTimeMillis()-time));
+                System.out.println(new TimeInterval(System.currentTimeMillis() - time));
+
             }
             System.out.println("Correct predictions  " + correct);
             System.out.println("Wrong predictions " + wrong);

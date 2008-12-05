@@ -69,7 +69,7 @@ public class TestKDTreeKNN {
         try {
             /* Load a data set */
             System.out.println("Loading data...");
-            Dataset data = FileHandler.loadSparseDataset(new File("devtools/data/sparse.txt.gz"), 0, ";", ":");
+            Dataset data = FileHandler.loadSparseDataset(new File("devtools/data/smallsparse.tsv"), 0, "\t", ":");
             System.out.println("Data loaded!");
             /*
              * Contruct a KNN classifier that uses 5 neighbors to make a
@@ -83,8 +83,8 @@ public class TestKDTreeKNN {
              * same one.
              */
             System.out.println("Loading data...");
-            Dataset dataForClassification = FileHandler.loadSparseDataset(new File("devtools/data/sparse.txt.gz"), 0,
-                    ";", ":");
+            Dataset dataForClassification = FileHandler.loadSparseDataset(new File("devtools/data/smallsparse.tsv"), 0,
+                    "\t", ":");
             System.out.println("Loading complete!");
             /* Counters for correct and wrong predictions. */
             int correct = 0, wrong = 0;

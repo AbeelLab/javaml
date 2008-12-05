@@ -82,11 +82,14 @@ public class TestLibSVM {
             ls.buildClassifier(data);
             data = FileHandler.loadSparseDataset(new File("devtools/data/sparse.tsv"), 0, " ", ":");
             int t = 0, f = 0;
-            for (Instance i : data)
+            for (Instance i : data){
                 if (i.classValue().equals(ls.classify(i)))
                     t++;
                 else
                     f++;
+                break;
+            }
+            
             System.out.println("Correct: " + t);
             System.out.println("Wrong: " + f);
 

@@ -20,7 +20,7 @@ public class TestRandomTreeBuild {
     public void testRTPerformance() {
         long seed = System.currentTimeMillis();
         try {
-            Dataset data = FileHandler.loadSparseDataset(new File("devtools/data/sparse.txt.gz"), 0, ";", ":");
+            Dataset data = FileHandler.loadSparseDataset(new File("devtools/data/smallsparse.tsv"), 0, "\t", ":");
             System.out.println("Loader: " + data.classes());
             RandomTree rt=new RandomTree(10,new Random());
             System.out.println("Building 1");

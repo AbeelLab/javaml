@@ -5,13 +5,11 @@ package junit.filter;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Random;
 
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.DefaultDataset;
 import net.sf.javaml.core.DenseInstance;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.featureselection.RELIEF;
 import net.sf.javaml.featureselection.RecursiveFeatureEliminationSVM;
 import net.sf.javaml.tools.data.FileHandler;
 
@@ -34,7 +32,7 @@ public class TestRFESVM {
 //        Dataset test=dnm.filterDataset(data);
         
         System.out.println(data);
-        RecursiveFeatureEliminationSVM ga = new RecursiveFeatureEliminationSVM(5,1,0.20,new Random(1));
+        RecursiveFeatureEliminationSVM ga = new RecursiveFeatureEliminationSVM(0.2);
         //ga.setNumNeigbors(4);
      
         ga.build(data);
@@ -53,7 +51,7 @@ public class TestRFESVM {
         try {
             Dataset data = FileHandler.loadDataset(new File("devtools/data/iris.data"), 4,",");
             System.out.println(data.classes());
-            RecursiveFeatureEliminationSVM ga = new RecursiveFeatureEliminationSVM(5,"Iris-setosa",0.20,new Random(1));
+            RecursiveFeatureEliminationSVM ga = new RecursiveFeatureEliminationSVM(0.20);
             //ga.setNumNeigbors(4);
          
             ga.build(data);

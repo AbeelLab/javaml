@@ -16,19 +16,19 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class TestRandomTree {
-    @Test
-    public void testRTSparse() {
-        try {
-            Dataset data = FileHandler.loadSparseDataset(new File("devtools/data/sparse.txt.gz"), 0, ";", ":");
-            System.out.println("noAttributes: " + data.noAttributes());
-            System.out.println("instances: " + data.size());
-            RandomTree rt = new RandomTree(5, new Random());
-            CrossValidation cv = new CrossValidation(rt);
-            System.out.println(cv.crossValidation(data, 2, new Random()));
-        } catch (IOException e) {
-            Assert.assertTrue(false);
-        }
-    }
+//    @Test
+//    public void testRTSparse() {
+//        try {
+//            Dataset data = FileHandler.loadSparseDataset(new File("devtools/data/sparse.txt.gz"), 0, ";", ":");
+//            System.out.println("noAttributes: " + data.noAttributes());
+//            System.out.println("instances: " + data.size());
+//            RandomTree rt = new RandomTree(5, new Random());
+//            CrossValidation cv = new CrossValidation(rt);
+//            System.out.println(cv.crossValidation(data, 2, new Random()));
+//        } catch (IOException e) {
+//            Assert.assertTrue(false);
+//        }
+//    }
 
     @Test
     public void testRT() {

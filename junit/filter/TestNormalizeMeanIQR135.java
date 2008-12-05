@@ -10,11 +10,12 @@ import net.sf.javaml.core.DenseInstance;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.InstanceTools;
 import net.sf.javaml.filter.DatasetFilter;
+import net.sf.javaml.filter.normalize.NormalizeMeanIQR135;
 import net.sf.javaml.filter.normalize.NormalizeMidrange;
 
 import org.junit.Test;
 
-public class TestNormalizeMidrange {
+public class TestNormalizeMeanIQR135 {
 
     @Test
     public void testNaNWhenAllSameValues() {
@@ -50,7 +51,7 @@ public class TestNormalizeMidrange {
     @Test
     public void testRange() {
         // Random rg = new Random(System.currentTimeMillis());
-        NormalizeMidrange nm = new NormalizeMidrange(50, 100);
+        NormalizeMeanIQR135 nm = new NormalizeMeanIQR135();
 
         Dataset data = new DefaultDataset();
         for (int i = 0; i < 1000; i++) {

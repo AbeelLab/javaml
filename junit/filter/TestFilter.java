@@ -40,7 +40,7 @@ public class TestFilter {
         RELIEF relief = new RELIEF();
         GainRatio gr = new GainRatio();
         KullbackLeiblerDivergence kl = new KullbackLeiblerDivergence();
-        RecursiveFeatureEliminationSVM rfe = new RecursiveFeatureEliminationSVM(5, 1, 0.20, new Random(1));
+        RecursiveFeatureEliminationSVM rfe = new RecursiveFeatureEliminationSVM(0.20);
         rfe.build(data.copy());
         kl.build(data.copy());
         su.build(data);
@@ -69,7 +69,7 @@ public class TestFilter {
             GainRatio gr = new GainRatio();
             // ga.setNumNeigbors(4);
             KullbackLeiblerDivergence kl = new KullbackLeiblerDivergence();
-            RecursiveFeatureEliminationSVM rfe = new RecursiveFeatureEliminationSVM(5, "Iris-setosa", 0.20, new Random(1));
+            RecursiveFeatureEliminationSVM rfe = new RecursiveFeatureEliminationSVM(0.20);
             rfe.build(data.copy());
             su.build(data);
             relief.build(data);
@@ -96,7 +96,7 @@ public class TestFilter {
     }
     @Test
     public void testSparseSU() throws IOException {
-        Dataset data = FileHandler.loadSparseDataset(new File("devtools/data/sparse.tsv"), 0, " ", ":");
+        Dataset data = FileHandler.loadSparseDataset(new File("devtools/data/smallsparse.tsv"), 0, "\t", ":");
 
         SymmetricalUncertainty su = new SymmetricalUncertainty();
 
@@ -111,7 +111,7 @@ public class TestFilter {
 
     @Test
     public void testSparseGR() throws IOException {
-        Dataset data = FileHandler.loadSparseDataset(new File("devtools/data/sparse.tsv"), 0, " ", ":");
+        Dataset data = FileHandler.loadSparseDataset(new File("devtools/data/smallsparse.tsv"), 0, "\t", ":");
 
         GainRatio gr = new GainRatio();
 
@@ -125,7 +125,7 @@ public class TestFilter {
 
     @Test
     public void testSparseRELIEF() throws IOException {
-        Dataset data = FileHandler.loadSparseDataset(new File("devtools/data/sparse.tsv"), 0, " ", ":");
+        Dataset data = FileHandler.loadSparseDataset(new File("devtools/data/smallsparse.tsv"), 0, "\t", ":");
 
         RELIEF relief = new RELIEF();
 
@@ -140,7 +140,7 @@ public class TestFilter {
 
     @Test
     public void testSparseKL() throws IOException {
-        Dataset data = FileHandler.loadSparseDataset(new File("devtools/data/sparse.tsv"), 0, " ", ":");
+        Dataset data = FileHandler.loadSparseDataset(new File("devtools/data/smallsparse.tsv"), 0, "\t", ":");
 
         KullbackLeiblerDivergence kl = new KullbackLeiblerDivergence();
         kl.build(data.copy());
