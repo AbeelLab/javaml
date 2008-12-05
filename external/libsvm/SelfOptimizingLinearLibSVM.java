@@ -6,14 +6,18 @@ package external.libsvm;
 import java.util.Map;
 import java.util.Random;
 
-import net.sf.javaml.classification.Classifier;
 import net.sf.javaml.classification.evaluation.CrossValidation;
 import net.sf.javaml.classification.evaluation.PerformanceMeasure;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.utils.ArrayUtils;
-
-public class SelfOptimizingLinearLibSVM implements Classifier {
+/**
+ * 
+ * 
+ * @author Thomas Abeel
+ *
+ */
+public class SelfOptimizingLinearLibSVM extends LibSVM {
 
     /**
      * 
@@ -24,15 +28,25 @@ public class SelfOptimizingLinearLibSVM implements Classifier {
 
     private double optimalC;
 
-    private Object positiveClass = "1";
+    private int folds;
 
-    private int folds = 5;
+    private Random rg = new Random(System.currentTimeMillis());
 
-    private Random rg;
+    private int lowerC, upperC;
 
-    public SelfOptimizingLinearLibSVM(Object positiveClass, Random rg) {
-        this.positiveClass = positiveClass;
-        this.rg = rg;
+    public SelfOptimizingLinearLibSVM() {
+        this(-5, 5);
+    }
+
+    public SelfOptimizingLinearLibSVM(int lowerC, int upperC) {
+        this(lowerC, upperC, 4);
+
+    }
+
+    public SelfOptimizingLinearLibSVM(int lowerC, int upperC, int internalFolds) {
+        this.lowerC = lowerC;
+        this.upperC = upperC;
+        this.folds = internalFolds;
     }
 
     /**
@@ -49,24 +63,24 @@ public class SelfOptimizingLinearLibSVM implements Classifier {
 
     // commit test
     public void buildClassifier(Dataset data) {
-        double[] result = new double[24];
-        int min = -12, max = 12;
+        double[] result = new double[upperC-lowerC];
 
-        for (int i = min; i < max; i++) {
+        for (int i = lowerC; i < upperC; i++) {
             LibSVM svm = new LibSVM();
             svm.setC(Math.pow(2, i));
             CrossValidation cv = new CrossValidation(svm);
             Map<Object, PerformanceMeasure> score = cv.crossValidation(data, folds, rg);
             try {
-                result[i - min] = score.get(positiveClass).getFMeasure();
+                for (Object o : score.keySet())
+                    result[i - lowerC] += score.get(o).getFMeasure();
 
             } catch (RuntimeException e) {
                 // TODO Auto-generated catch block
-                System.out.println(positiveClass.getClass());
+                // System.out.println(positiveClass.getClass());
                 System.err.println(score.keySet().iterator().next().getClass());
-                System.err.println(positiveClass);
+                // System.err.println(positiveClass);
                 System.err.println(score);
-                System.err.println(score.get(positiveClass));
+                // System.err.println(score.get(positiveClass));
                 e.printStackTrace();
                 System.exit(-1);
             }
@@ -75,7 +89,7 @@ public class SelfOptimizingLinearLibSVM implements Classifier {
         fmeasures = result;
         int index = ArrayUtils.maxIndex(result);
         optimal = new LibSVM();
-        optimalC = Math.pow(2, index + min);
+        optimalC = Math.pow(2, index + lowerC);
         optimal.setC(optimalC);
 
         optimal.buildClassifier(data);
@@ -97,10 +111,6 @@ public class SelfOptimizingLinearLibSVM implements Classifier {
 
     public double[] getWeights() {
         return optimal.getWeights();
-    }
-
-    public final void setPositiveClass(Object positiveClass) {
-        this.positiveClass = positiveClass;
     }
 
     public final void setFolds(int folds) {
