@@ -127,7 +127,7 @@ final public class DatasetTools {
      * @param data
      *            data set to calculate percentile for
      * @param perc
-     *            percentile to calculate, Q1=0.25, Q2=median=0.50,Q3=0.75
+     *            percentile to calculate, Q1=25, Q2=median=50,Q3=75
      * @return
      */
     public static Instance percentile(Dataset data, double perc) {
