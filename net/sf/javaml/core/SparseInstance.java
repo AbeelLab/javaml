@@ -142,7 +142,7 @@ public class SparseInstance extends AbstractInstance implements Instance {
 
     @Override
     public TreeSet<Integer> keySet() {
-        TreeSet<Integer> set=new TreeSet<Integer>();
+        TreeSet<Integer> set = new TreeSet<Integer>();
         set.addAll(data.keySet());
         return set;
     }
@@ -179,9 +179,14 @@ public class SparseInstance extends AbstractInstance implements Instance {
 
     @Override
     public int noAttributes() {
-        if (noAttributes < 0)
-            return Collections.max(data.keySet()) + 1;
-        else
+        if (noAttributes < 0) {
+            if (data.keySet().size() == 0) {
+                return 0;
+            } else {
+                return Collections.max(data.keySet()) + 1;
+            }
+
+        } else
             return noAttributes;
 
     }
@@ -253,9 +258,12 @@ public class SparseInstance extends AbstractInstance implements Instance {
 
     @Override
     public void removeAttributes(Set<Integer> indices) {
-        //TODO this is a rather naive implementation
-       for(int i:indices)
-           removeAttribute(i);
-        
+        List<Integer> indix = new Vector<Integer>();
+        indix.addAll(indices);
+        Collections.sort(indix);
+        for (int i = indix.size()-1; i >= 0; i--) {
+            removeAttribute(indix.get(i));
+        }
+
     }
 }
