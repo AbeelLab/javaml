@@ -5,6 +5,8 @@ package net.sf.javaml.core;
 
 import java.util.Random;
 
+import org.apache.commons.math.stat.StatUtils;
+
 /**
  * This class provides utility methods on data sets.
  * 
@@ -118,5 +120,29 @@ final public class DatasetTools {
         }
         return max.plus(min).divide(2);
     }
+
+    /**
+     * Calculates the percentile hinge for a given percentile.
+     * 
+     * @param data
+     *            data set to calculate percentile for
+     * @param perc
+     *            percentile to calculate, Q1=0.25, Q2=median=0.50,Q3=0.75
+     * @return
+     */
+    public static Instance percentile(Dataset data, double perc) {
+        double[] tmpOut = new double[data.noAttributes()];
+        for (int i = 0; i < data.noAttributes(); i++) {
+            double[] vals = new double[data.size()];
+            for (int j = 0; j < data.size(); j++) {
+                vals[j] = data.get(j).value(i);
+            }
+            tmpOut[i] = StatUtils.percentile(vals, perc);
+
+        }
+        return new DenseInstance(tmpOut);
+    }
+
+   
 
 }
