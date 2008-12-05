@@ -56,6 +56,22 @@ public class InstanceTools {
     }
 
     /**
+     * Creates a random instance with the given number of attributes. The values
+     * of the attributes follow a normal distribution with mean 0 and std 1.
+     * 
+     * @param length
+     *            the number of attributes in the instance.
+     * @return a random instance
+     */
+    public static Instance randomGaussianInstance(int length) {
+        double[] values = new double[length];
+        for (int i = 0; i < values.length; i++) {
+            values[i] = rg.nextGaussian();
+        }
+        return new DenseInstance(values);
+    }
+
+    /**
      * Checks if there are any missing values in the instance. Missing values
      * are denoted by Double.NaN.
      * 
