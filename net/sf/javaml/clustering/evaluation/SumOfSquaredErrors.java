@@ -5,6 +5,7 @@ package net.sf.javaml.clustering.evaluation;
 
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.distance.DistanceMeasure;
+import net.sf.javaml.distance.EuclideanDistance;
 
 /**
  * I_3 from the Zhao 2001 paper
@@ -14,6 +15,20 @@ import net.sf.javaml.distance.DistanceMeasure;
  * @author Andreas De Rijcke
  */
 public class SumOfSquaredErrors implements ClusterEvaluation {
+    /**
+     * Construct a new SumOfSquaredErrors cluster evaluation measure that will
+     * use the Euclidean distance to measure the errors.
+     * 
+     */
+    public SumOfSquaredErrors() {
+        this(new EuclideanDistance());
+    }
+
+    /**
+     * Construct a new SumOfSquaredErrors cluster evaluation measure that will
+     * use the supplied distance metric to measure the errors.
+     * 
+     */
     public SumOfSquaredErrors(DistanceMeasure dm) {
         this.dm = dm;
     }
@@ -38,7 +53,7 @@ public class SumOfSquaredErrors implements ClusterEvaluation {
 
     public boolean compareScore(double score1, double score2) {
         // TODO solve bug: score is NaN when clusters with 0 instances
-    	// should be minimized
+        // should be minimized
         return score2 < score1;
     }
 
