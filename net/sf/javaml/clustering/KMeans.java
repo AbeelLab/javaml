@@ -21,7 +21,6 @@ import net.sf.javaml.distance.EuclideanDistance;
  * Mathematical Statistics and Probability", Berkeley, University of California
  * Press, 1:281-297 </bibtex>
  * 
- * XXX add pseudocode of the algorithm
  * 
  * @author Thomas Abeel
  * 
@@ -51,20 +50,30 @@ public class KMeans implements Clusterer {
      */
     private DistanceMeasure dm;
 
-
     /**
      * The centroids of the different clusters.
      */
     private Instance[] centroids;
 
     /**
-     * Constuct a default Simple K-means clusterer with 100 iterations, 2
-     * clusters, a default random generator and using the Euclidean distance.
+     * Constuct a default K-means clusterer with 100 iterations, 4 clusters, a
+     * default random generator and using the Euclidean distance.
      */
     public KMeans() {
-    	this(4, 100);
+        this(4);
     }
-    
+
+    /**
+     * Constuct a default K-means clusterer with the specified number of
+     * clusters, 100 iterations, a default random generator and using the
+     * Euclidean distance.
+     * 
+     * @param k the number of clusters to create
+     */
+    public KMeans(int k) {
+        this(k, 100);
+    }
+
     /**
      * Create a new Simple K-means clusterer with the given number of clusters
      * and iterations. The internal random generator is a new one based upon the
@@ -111,7 +120,7 @@ public class KMeans implements Clusterer {
         // Place K points into the space represented by the objects that are
         // being clustered. These points represent the initial group of
         // centroids.
-//        DatasetTools.
+        // DatasetTools.
         Instance min = DatasetTools.minAttributes(data);
         Instance max = DatasetTools.maxAttributes(data);
         this.centroids = new Instance[numberOfClusters];
@@ -128,8 +137,8 @@ public class KMeans implements Clusterer {
 
         int iterationCount = 0;
         boolean centroidsChanged = true;
-        boolean randomCentroids=true;
-        while (randomCentroids ||(iterationCount < this.numberOfIterations && centroidsChanged)) {
+        boolean randomCentroids = true;
+        while (randomCentroids || (iterationCount < this.numberOfIterations && centroidsChanged)) {
             iterationCount++;
             // Assign each object to the group that has the closest centroid.
             int[] assignment = new int[data.size()];
@@ -156,13 +165,13 @@ public class KMeans implements Clusterer {
                 Instance in = data.instance(i);
                 for (int j = 0; j < instanceLength; j++) {
 
-                    sumPosition[assignment[i]][j] +=  in.value(j);
+                    sumPosition[assignment[i]][j] += in.value(j);
 
                 }
                 countPosition[assignment[i]]++;
             }
             centroidsChanged = false;
-            randomCentroids=false;
+            randomCentroids = false;
             for (int i = 0; i < this.numberOfClusters; i++) {
                 if (countPosition[i] > 0) {
                     double[] tmp = new double[instanceLength];
