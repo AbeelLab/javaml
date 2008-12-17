@@ -151,7 +151,7 @@ final public class DatasetTools {
      * @param i
      * @return
      */
-    public Instance createInstanceFromClass(Dataset data) {
+    public static Instance createInstanceFromClass(Dataset data) {
         Instance out = new DenseInstance(data.size());
         int index = 0;
         for (Instance inst : data)
@@ -167,7 +167,7 @@ final public class DatasetTools {
      * @param i
      * @return
      */
-    public Instance createInstanceFromAttribute(Dataset data, int i) {
+    public static Instance createInstanceFromAttribute(Dataset data, int i) {
         Instance out = new DenseInstance(data.size());
         int index = 0;
         for (Instance inst : data)
