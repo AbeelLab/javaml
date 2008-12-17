@@ -44,6 +44,17 @@ public class DenseInstance extends AbstractInstance implements Instance {
     private DenseInstance() {
     }
 
+    /**
+     * Creates an instance that has space for the supplied number of attributes.
+     * By default all attributes are initialized by zero.
+     * 
+     * @param size
+     *            the number of attributes
+     */
+    public DenseInstance(int size) {
+        this(new double[size]);
+    }
+
     @Override
     public double value(int pos) {
         return attributes[pos];
@@ -191,10 +202,10 @@ public class DenseInstance extends AbstractInstance implements Instance {
     public void removeAttributes(Set<Integer> indices) {
         double[] tmp = attributes.clone();
         attributes = new double[tmp.length - indices.size()];
-        int index=0;
-        for(int i=0;i<tmp.length;i++){
-            if(!indices.contains(i)){
-                attributes[index++]=tmp[i];
+        int index = 0;
+        for (int i = 0; i < tmp.length; i++) {
+            if (!indices.contains(i)) {
+                attributes[index++] = tmp[i];
             }
         }
     }
