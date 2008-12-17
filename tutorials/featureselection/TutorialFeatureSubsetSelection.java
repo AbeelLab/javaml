@@ -25,7 +25,7 @@ public class TutorialFeatureSubsetSelection {
          * Construct a greedy forward subset selector that will use the Pearson
          * correlation to determine the relation between each attribute and the
          * class label. The first parameter indicates that only one, i.e. 'the
-         * best' atribute will be selected.
+         * best' attribute will be selected.
          */
         GreedyForwardSelection ga = new GreedyForwardSelection(1, new PearsonCorrelationCoefficient());
         /* Apply the algorithm to the data set */
