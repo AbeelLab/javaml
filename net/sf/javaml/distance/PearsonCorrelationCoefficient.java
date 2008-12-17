@@ -3,7 +3,6 @@
  */
 package net.sf.javaml.distance;
 
-import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 
 /**
@@ -24,13 +23,17 @@ import net.sf.javaml.core.Instance;
  * 
  */
 public class PearsonCorrelationCoefficient extends AbstractCorrelation {
-    /**
-     * 
-     */
+
     private static final long serialVersionUID = -5805322724874919246L;
 
     /**
-     * XXX DOC
+     * Measures the Pearson Correlation Coefficient between the two supplied
+     * instances.
+     * 
+     * @param a
+     *            the first instance
+     * @param b
+     *            the second instance
      */
     public double measure(Instance a, Instance b) {
         if (a.noAttributes() != b.noAttributes())
@@ -45,22 +48,6 @@ public class PearsonCorrelationCoefficient extends AbstractCorrelation {
         }
         int n = a.noAttributes();
         return (xy - (x * y) / n) / Math.sqrt((x2 - (x * x) / n) * (y2 - (y * y) / n));
-    }
-
-    /**
-     * XXX DOC
-     */
-    public double getMaximumDistance(Dataset data) {
-        // TODO implement
-        throw new UnsupportedOperationException("Method not implemented");
-    }
-
-    /**
-     * XXX DOC
-     */
-    public double getMinimumDistance(Dataset data) {
-        // TODO implement
-        throw new UnsupportedOperationException("Method not implemented");
     }
 
 }
