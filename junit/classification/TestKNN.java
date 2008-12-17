@@ -5,9 +5,13 @@ package junit.classification;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
+import java.util.Random;
 
 import net.sf.javaml.classification.Classifier;
 import net.sf.javaml.classification.KNearestNeighbors;
+import net.sf.javaml.classification.evaluation.CrossValidation;
+import net.sf.javaml.classification.evaluation.PerformanceMeasure;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.tools.data.FileHandler;
@@ -18,6 +22,22 @@ import org.junit.Test;
 import be.abeel.util.TimeInterval;
 
 public class TestKNN {
+
+    @Test
+    public void testKNNIris() {
+        try {
+            Dataset data = FileHandler.loadDataset(new File("devtools/data/iris.data"), 4, ",");
+            System.out.println("Loader: " + data.classes());
+            Classifier knn = new KNearestNeighbors(5);
+            CrossValidation cv = new CrossValidation(knn);
+            Map<Object, PerformanceMeasure> p = cv.crossValidation(data, 5, new Random(10));
+            System.out.println(p);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Test KNN usage on the sparse sample.
      * 
@@ -45,7 +65,7 @@ public class TestKNN {
             int correct = 0, wrong = 0;
             int count = 0;
             /* Classify all instances and check with the correct class values */
-            for (int i = 0; i < 50; i++) {
+            for (int i = 0; i < 15; i++) {
                 Instance inst = dataForClassification.instance(i);
 
                 long time = System.currentTimeMillis();

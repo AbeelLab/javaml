@@ -6,6 +6,7 @@ package net.sf.javaml.filter.missingvalue;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.InstanceTools;
+import net.sf.javaml.distance.EuclideanDistance;
 import net.sf.javaml.filter.DatasetFilter;
 import net.sf.javaml.utils.ArrayUtils;
 
@@ -45,7 +46,7 @@ public class KNearestNeighbors implements DatasetFilter {
         if (InstanceTools.hasMissingValues(inst)) {
             double[] sum = new double[inst.noAttributes()];
             double[] count = new double[inst.noAttributes()];
-            for (Instance x : data.kNearest(k, inst)) {
+            for (Instance x : data.kNearest(k, inst, new EuclideanDistance())) {
                 for (int i = 0; i < x.noAttributes(); i++) {
                     if (!Double.isNaN(x.value(i))) {
                         sum[i] += x.value(i);

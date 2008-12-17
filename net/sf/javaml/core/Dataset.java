@@ -8,6 +8,8 @@ import java.util.Random;
 import java.util.Set;
 import java.util.SortedSet;
 
+import net.sf.javaml.distance.DistanceMeasure;
+
 /**
  * Interface for a data set.
  * 
@@ -19,16 +21,6 @@ import java.util.SortedSet;
  * 
  */
 public interface Dataset extends List<Instance> {
-
-    /**
-     * Returns the k closest instances.
-     * 
-     * @param k
-     * @param dm
-     * @param inst
-     * @return
-     */
-    public Set<Instance> kNearest(int k, Instance inst);
 
     /**
      * Returns a set containing all different classes in this data set. If no
@@ -81,7 +73,6 @@ public interface Dataset extends List<Instance> {
      */
     public int noAttributes();
 
-   
     /**
      * Returns the index of the class value in the supplied data set. This
      * method will return -1 if the class value of this instance is not set.
@@ -102,4 +93,17 @@ public interface Dataset extends List<Instance> {
     public Object classValue(int index);
 
     public Dataset copy();
+
+    /**
+     * Returns the k closest instances.
+     * 
+     * @param k
+     *            the number of neighbors to select
+     * @param instance
+     *            the instance to determine the neighbors for
+     * @param dm
+     *            the distance metric to use
+     * @return a set of closest neighbors
+     */
+    public Set<Instance> kNearest(int k, Instance instance, DistanceMeasure dm);
 }

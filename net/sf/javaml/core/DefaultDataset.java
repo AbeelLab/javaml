@@ -13,6 +13,8 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.Vector;
 
+import net.sf.javaml.distance.DistanceMeasure;
+
 /**
  * Provides a standard data set implementation.
  * 
@@ -125,12 +127,13 @@ public class DefaultDataset extends Vector<Instance> implements Dataset {
      *         supplied instance
      * 
      */
-    public Set<Instance> kNearest(int k, Instance inst) {
+    @Override
+    public Set<Instance> kNearest(int k, Instance inst, DistanceMeasure dm) {
         Map<Instance, Double> closest = new HashMap<Instance, Double>();
         double max = Double.POSITIVE_INFINITY;
         for (Instance tmp : this) {
-            double d = measure(inst, tmp, max);
-            if (d < max && !inst.equals(tmp)) {
+            double d = dm.measure(inst, tmp);
+            if (dm.compare(d, max) && !inst.equals(tmp)) {
                 closest.put(tmp, d);
                 if (closest.size() > k)
                     max = removeFarthest(closest);
@@ -138,26 +141,6 @@ public class DefaultDataset extends Vector<Instance> implements Dataset {
 
         }
         return closest.keySet();
-    }
-
-    /**
-     * Measures square of the euclidean distance between two instances, but
-     * stops at max.
-     * 
-     * @param inst
-     * @param tmp
-     * @return
-     */
-    private double measure(Instance a, Instance b, double max) {
-        double sum = 0;
-        for (int i = 0; i < a.noAttributes(); i++) {
-            if (!Double.isNaN(a.value(i)) && !Double.isNaN(b.value(i))) {
-                sum += (a.value(i) - b.value(i)) * (a.value(i) - b.value(i));
-            }
-            if (sum > max)
-                return Double.POSITIVE_INFINITY;
-        }
-        return sum;
     }
 
     /*

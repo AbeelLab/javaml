@@ -9,6 +9,8 @@ import java.util.Set;
 
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
+import net.sf.javaml.distance.DistanceMeasure;
+import net.sf.javaml.distance.EuclideanDistance;
 
 /**
  * Implementation of the K nearest neighbor (KNN) classification algorithm.
@@ -24,6 +26,8 @@ public class KNearestNeighbors extends AbstractClassifier {
 
     private int k;
 
+    private DistanceMeasure dm;
+
     /**
      * Instantiate the k-nearest neighbors algorithm with a specified number of
      * neighbors.
@@ -32,7 +36,19 @@ public class KNearestNeighbors extends AbstractClassifier {
      *            the number of neighbors to use
      */
     public KNearestNeighbors(int k) {
+        this(k, new EuclideanDistance());
+    }
+
+    /**
+     * Instantiate the k-nearest neighbors algorithm with a specified number of
+     * neighbors.
+     * 
+     * @param k
+     *            the number of neighbors to use
+     */
+    public KNearestNeighbors(int k, DistanceMeasure dm) {
         this.k = k;
+        this.dm = dm;
     }
 
     @Override
@@ -43,7 +59,7 @@ public class KNearestNeighbors extends AbstractClassifier {
     @Override
     public Map<Object, Double> classDistribution(Instance instance) {
         /* Get nearest neighbors */
-        Set<Instance> neighbors = training.kNearest(k, instance);
+        Set<Instance> neighbors = training.kNearest(k, instance, dm);
         /* Build distribution map */
         HashMap<Object, Double> out = new HashMap<Object, Double>();
         for (Object o : training.classes())
@@ -68,5 +84,4 @@ public class KNearestNeighbors extends AbstractClassifier {
 
         return out;
     }
-
 }

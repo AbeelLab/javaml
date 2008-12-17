@@ -143,7 +143,7 @@ public class KMedoids implements Clusterer {
             } else {
                 Instance centroid = DatasetTools.average(output[i]);
                 Instance oldMedoid = medoids[i];
-                medoids[i] = data.kNearest(1, centroid).iterator().next();
+                medoids[i] = data.kNearest(1, centroid, dm).iterator().next();
                 if (!medoids[i].equals(oldMedoid))
                     changed = true;
             }

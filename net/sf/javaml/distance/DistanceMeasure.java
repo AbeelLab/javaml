@@ -40,45 +40,12 @@ public interface DistanceMeasure extends Serializable {
 	 */
     public double measure(Instance x, Instance y);
 
-//	/**
-//	 * Maximal distance, minimal similarity for distance measures this value
-//	 * should be high, for similarity measures this value should be low.
-//	 * 
-//	 * For some distance measures this will be a very expensive operation as all
-//	 * possible distances have to be calculated.
-//	 * 
-//	 * It is allowed to return an upper bound of the distance, although it may
-//	 * not actually be reached within the data set.
-//	 * 
-//	 * 
-//	 * @param data
-//	 *            the data set to calculate the maximum distance for.
-//	 * @return the maximum distance within this data set
-//	 */
-//	public double getMaximum(Dataset data);
-//
-//	/**
-//	 * Minimal distance, maximal similarity for distance measures this value
-//	 * should be low, for similarity measures this value should be high.
-//	 * 
-//	 * For some distance measures this will be a very expensive operation as all
-//	 * possible distances have to be calculated.
-//	 * 
-//	 * It is allowed to return a lower bound of the distance, although it may
-//	 * not actually be reached within the data set.
-//	 * 
-//	 * 
-//	 * @param data
-//	 *            the data set to calculate the minimum distance for.
-//	 * @return the minimum distance within this data set
-//	 */
-//	public double getMinimum(Dataset data);
 
 	/**
 	 * Returns whether the first distance, similarity or correlation is better
-	 * than the second distance, similarity or correlation.
+	 * than the second distance, similarity or correlation. 
 	 * 
-	 * Both values should bee calculated using the same measure.
+	 * Both values should be calculated using the same measure.
 	 * 
 	 * For similarity measures the higher the similarity the better the measure,
 	 * for distance measures it is the lower the better and for correlation
