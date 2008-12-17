@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.sf.javaml.core.Dataset;
-import net.sf.javaml.core.DenseInstance;
+import net.sf.javaml.core.DatasetTools;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.distance.DistanceMeasure;
 import net.sf.javaml.featureselection.AttributeSubsetSelection;
@@ -23,40 +23,6 @@ public class GreedyForwardSelection implements AttributeSubsetSelection {
     private int n;
 
     private DistanceMeasure dm;
-
-    /**
-     * Creates an Instance from the class labels over all Instances in a data
-     * set.
-     * 
-     * @param data
-     * @param i
-     * @return
-     */
-    // TODO this method probably belongs to DatasetTools
-    private Instance createInstanceFromClass(Dataset data) {
-        Instance out = new DenseInstance(data.size());
-        int index = 0;
-        for (Instance inst : data)
-            out.put(index++, (double) data.classIndex(inst.classValue()));
-        return out;
-    }
-
-    /**
-     * Creates an Instance from the values of one particular attribute over all
-     * Instances in a data set.
-     * 
-     * @param data
-     * @param i
-     * @return
-     */
-    // TODO this method probably belongs to DatasetTools
-    private Instance createInstanceFromAttribute(Dataset data, int i) {
-        Instance out = new DenseInstance(data.size());
-        int index = 0;
-        for (Instance inst : data)
-            out.put(index++, inst.value(i));
-        return out;
-    }
 
     /**
      * Creates a new GreedyForwardSelection that will select the supplied number
@@ -86,7 +52,7 @@ public class GreedyForwardSelection implements AttributeSubsetSelection {
          * Regular procedure, add iteratively the best attribute till we have
          * enough attributes selected.
          */
-        Instance classInstance = createInstanceFromClass(data);
+        Instance classInstance = DatasetTools.createInstanceFromClass(data);
         selectedAttributes = new HashSet<Integer>();
         while (selectedAttributes.size() < n) {
             selectNext(data, classInstance);
@@ -99,15 +65,15 @@ public class GreedyForwardSelection implements AttributeSubsetSelection {
         double bestScore = Double.NaN;
         for (int i = 0; i < data.noAttributes(); i++) {
             if (!selectedAttributes.contains(i)) {
-                Instance attributeInstance = createInstanceFromAttribute(data, i);
-               
+                Instance attributeInstance = DatasetTools.createInstanceFromAttribute(data, i);
+
                 double score = dm.measure(attributeInstance, classInstance);
-              
-                if (!Double.isNaN(score)&&bestIndex == -1) {
+
+                if (!Double.isNaN(score) && bestIndex == -1) {
                     bestIndex = i;
                     bestScore = score;
                 } else {
-                    if (!Double.isNaN(score)&&dm.compare(score, bestScore)) {
+                    if (!Double.isNaN(score) && dm.compare(score, bestScore)) {
                         bestIndex = i;
                         bestScore = score;
 
