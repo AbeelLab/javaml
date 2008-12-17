@@ -143,6 +143,36 @@ final public class DatasetTools {
         return new DenseInstance(tmpOut);
     }
 
-   
+    /**
+     * Creates an Instance from the class labels over all Instances in a data
+     * set.
+     * 
+     * @param data
+     * @param i
+     * @return
+     */
+    public Instance createInstanceFromClass(Dataset data) {
+        Instance out = new DenseInstance(data.size());
+        int index = 0;
+        for (Instance inst : data)
+            out.put(index++, (double) data.classIndex(inst.classValue()));
+        return out;
+    }
+
+    /**
+     * Creates an Instance from the values of one particular attribute over all
+     * Instances in a data set.
+     * 
+     * @param data
+     * @param i
+     * @return
+     */
+    public Instance createInstanceFromAttribute(Dataset data, int i) {
+        Instance out = new DenseInstance(data.size());
+        int index = 0;
+        for (Instance inst : data)
+            out.put(index++, inst.value(i));
+        return out;
+    }
 
 }
