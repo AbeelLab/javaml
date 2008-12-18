@@ -5,8 +5,6 @@ package net.sf.javaml.featureselection;
 
 import java.util.Set;
 
-import net.sf.javaml.core.Dataset;
-
 /**
  * Interface for all attribute subset selection algorithms. An attribute subset
  * selection algorithms consists of two parts. First an attribute evaluation
@@ -16,9 +14,7 @@ import net.sf.javaml.core.Dataset;
  * @author Thomas Abeel
  * 
  */
-public interface AttributeSubsetSelection {
-
-    public void build(Dataset data);
+public interface FeatureSubsetSelection extends FeatureSelection {
 
     /**
      * Returns the set of indices of attributes that are selected by the

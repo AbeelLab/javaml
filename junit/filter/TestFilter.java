@@ -11,11 +11,11 @@ import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.DefaultDataset;
 import net.sf.javaml.core.DenseInstance;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.featureselection.GainRatio;
-import net.sf.javaml.featureselection.KullbackLeiblerDivergence;
-import net.sf.javaml.featureselection.RELIEF;
-import net.sf.javaml.featureselection.RecursiveFeatureEliminationSVM;
-import net.sf.javaml.featureselection.SymmetricalUncertainty;
+import net.sf.javaml.featureselection.ranking.RecursiveFeatureEliminationSVM;
+import net.sf.javaml.featureselection.scoring.GainRatio;
+import net.sf.javaml.featureselection.scoring.KullbackLeiblerDivergence;
+import net.sf.javaml.featureselection.scoring.RELIEF;
+import net.sf.javaml.featureselection.scoring.SymmetricalUncertainty;
 import net.sf.javaml.tools.data.FileHandler;
 
 import org.junit.Test;

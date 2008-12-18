@@ -16,7 +16,7 @@ package net.sf.javaml.featureselection;
  * @author Thomas Abeel
  * 
  */
-public interface AttributeEvaluation extends FeatureSelection {
+public interface FeatureScoring extends FeatureSelection {
 
     /**
      * Evaluate a single attribute. This should return a value between 0 and 1.

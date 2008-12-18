@@ -10,7 +10,7 @@ import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.DatasetTools;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.distance.DistanceMeasure;
-import net.sf.javaml.featureselection.AttributeSubsetSelection;
+import net.sf.javaml.featureselection.FeatureSubsetSelection;
 
 /**
  * Provides an implementation of the forward greedy attribute subset selection.
@@ -18,10 +18,14 @@ import net.sf.javaml.featureselection.AttributeSubsetSelection;
  * @author Thomas Abeel
  * 
  */
-public class GreedyForwardSelection implements AttributeSubsetSelection {
+public class GreedyForwardSelection implements FeatureSubsetSelection {
     /* Number of features that should be selected */
     private int n;
 
+    /*
+     * DistanceMetric to determine the relation between each attribute and the
+     * class labels.
+     */
     private DistanceMeasure dm;
 
     /**
@@ -91,4 +95,8 @@ public class GreedyForwardSelection implements AttributeSubsetSelection {
         return selectedAttributes;
     }
 
+    @Override
+    public int noAttributes() {
+        return selectedAttributes.size();
+    }
 }

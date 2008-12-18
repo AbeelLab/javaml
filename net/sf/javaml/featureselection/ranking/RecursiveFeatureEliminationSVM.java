@@ -1,12 +1,13 @@
 /**
  * %SVN.HEADER%
  */
-package net.sf.javaml.featureselection;
+package net.sf.javaml.featureselection.ranking;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import net.sf.javaml.core.Dataset;
+import net.sf.javaml.featureselection.FeatureRanking;
 import net.sf.javaml.filter.RemoveAttributes;
 import net.sf.javaml.utils.ArrayUtils;
 import external.libsvm.LibSVM;
@@ -31,7 +32,7 @@ import external.libsvm.SelfOptimizingLinearLibSVM;
  * @author Thomas Abeel
  * 
  */
-public class RecursiveFeatureEliminationSVM implements AttributeRanking {
+public class RecursiveFeatureEliminationSVM implements FeatureRanking {
 
     /*
      * The final ranking of the attributes, this is constructed with the build

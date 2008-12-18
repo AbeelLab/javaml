@@ -1,7 +1,7 @@
 /**
  * %SVN.HEADER%
  */
-package net.sf.javaml.featureselection;
+package net.sf.javaml.featureselection.scoring;
 
 import java.util.Random;
 
@@ -11,6 +11,7 @@ import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.DatasetTools;
 import net.sf.javaml.core.DefaultDataset;
 import net.sf.javaml.core.Instance;
+import net.sf.javaml.featureselection.FeatureScoring;
 import net.sf.javaml.utils.ArrayUtils;
 import net.sf.javaml.utils.MathUtils;
 import be.abeel.util.Copier;
@@ -35,7 +36,7 @@ import be.abeel.util.Copier;
  * @author Thomas Abeel
  * 
  */
-public class RandomForestAttributeEvaluation implements AttributeEvaluation {
+public class RandomForestAttributeEvaluation implements FeatureScoring {
 
     private int numTrees;
 

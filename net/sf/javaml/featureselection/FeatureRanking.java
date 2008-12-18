@@ -17,7 +17,7 @@ package net.sf.javaml.featureselection;
  * @author Thomas Abeel
  * 
  */
-public interface AttributeRanking extends FeatureSelection {
+public interface FeatureRanking extends FeatureSelection {
 
     /**
      * Get the ranking of the given attribute. The first rank is 0 and is the

@@ -10,7 +10,7 @@ import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.DatasetTools;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.distance.DistanceMeasure;
-import net.sf.javaml.featureselection.AttributeSubsetSelection;
+import net.sf.javaml.featureselection.FeatureSubsetSelection;
 
 /**
  * Provides an implementation of the backward greedy attribute subset
@@ -19,7 +19,7 @@ import net.sf.javaml.featureselection.AttributeSubsetSelection;
  * @author Thomas Abeel
  * 
  */
-public class GreedyBackwardElimination implements AttributeSubsetSelection {
+public class GreedyBackwardElimination implements FeatureSubsetSelection {
     /* Number of features that the algorithm should keep */
     private int n;
 
@@ -103,6 +103,11 @@ public class GreedyBackwardElimination implements AttributeSubsetSelection {
     @Override
     public Set<Integer> selectedAttributes() {
         return selectedAttributes;
+    }
+
+    @Override
+    public int noAttributes() {
+        return selectedAttributes.size();
     }
 
 }

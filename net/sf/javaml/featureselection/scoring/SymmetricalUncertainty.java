@@ -1,7 +1,7 @@
 /**
  * %SVN.HEADER%
  */
-package net.sf.javaml.featureselection;
+package net.sf.javaml.featureselection.scoring;
 
 import java.util.List;
 import java.util.Vector;
@@ -9,6 +9,7 @@ import java.util.Vector;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.DatasetTools;
 import net.sf.javaml.core.Instance;
+import net.sf.javaml.featureselection.FeatureScoring;
 import net.sf.javaml.filter.AbstractFilter;
 import net.sf.javaml.filter.discretize.EqualWidthBinning;
 import net.sf.javaml.utils.ContingencyTables;
@@ -23,7 +24,7 @@ import net.sf.javaml.utils.ContingencyTables;
  * @author Thomas Abeel
  * @author Mark Hall
  */
-public class SymmetricalUncertainty implements AttributeEvaluation {
+public class SymmetricalUncertainty implements FeatureScoring {
 
     private Dataset training;
 

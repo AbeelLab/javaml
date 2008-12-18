@@ -1,12 +1,13 @@
 /**
  * %SVN.HEADER%
  */
-package net.sf.javaml.featureselection;
+package net.sf.javaml.featureselection.scoring;
 
 import be.abeel.util.HashMap2D;
 
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
+import net.sf.javaml.featureselection.FeatureScoring;
 import net.sf.javaml.filter.normalize.NormalizeMidrange;
 
 /**
@@ -19,7 +20,7 @@ import net.sf.javaml.filter.normalize.NormalizeMidrange;
  * @author Thomas Abeel
  * 
  */
-public class KullbackLeiblerDivergence implements AttributeEvaluation {
+public class KullbackLeiblerDivergence implements FeatureScoring {
 
     private double[] maxDivergence;
 

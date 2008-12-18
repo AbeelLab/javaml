@@ -1,9 +1,11 @@
 /**
  * %SVN.HEADER%
  */
-package net.sf.javaml.featureselection;
+package net.sf.javaml.featureselection.ranking;
 
 import net.sf.javaml.core.Dataset;
+import net.sf.javaml.featureselection.FeatureRanking;
+import net.sf.javaml.featureselection.FeatureScoring;
 import net.sf.javaml.utils.ArrayUtils;
 
 /**
@@ -16,13 +18,13 @@ import net.sf.javaml.utils.ArrayUtils;
  * @author Thomas Abeel
  * 
  */
-public class RankingFromEvaluation implements AttributeRanking {
+public class RankingFromScoring implements FeatureRanking {
 
     private int[] ranking;
 
-    private AttributeEvaluation ae;
+    private FeatureScoring ae;
 
-    public RankingFromEvaluation(AttributeEvaluation ae) {
+    public RankingFromScoring(FeatureScoring ae) {
         this.ae = ae;
     }
 

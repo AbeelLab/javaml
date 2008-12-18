@@ -1,7 +1,7 @@
 /**
  * %SVN.HEADER%
  */
-package net.sf.javaml.featureselection;
+package net.sf.javaml.featureselection.scoring;
 
 import java.util.Random;
 import java.util.Vector;
@@ -9,6 +9,7 @@ import java.util.Vector;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.distance.ManhattanDistance;
+import net.sf.javaml.featureselection.FeatureScoring;
 import net.sf.javaml.filter.normalize.NormalizeMidrange;
 
 /**
@@ -24,7 +25,7 @@ import net.sf.javaml.filter.normalize.NormalizeMidrange;
  * @author Thomas Abeel
  * 
  */
-public class RELIEF implements AttributeEvaluation {
+public class RELIEF implements FeatureScoring {
 
     private double[] weights = null;
 

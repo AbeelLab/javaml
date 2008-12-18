@@ -7,16 +7,16 @@ import java.util.Random;
 
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.DatasetTools;
-import net.sf.javaml.featureselection.AttributeRanking;
+import net.sf.javaml.featureselection.FeatureRanking;
 import net.sf.javaml.utils.ArrayUtils;
 
-public class LinearRankingEnsemble implements AttributeRanking {
+public class LinearRankingEnsemble implements FeatureRanking {
 
-    private AttributeRanking[] aes;
+    private FeatureRanking[] aes;
 
     private Random rg;
 
-    public LinearRankingEnsemble(AttributeRanking[] aes, Random rg) {
+    public LinearRankingEnsemble(FeatureRanking[] aes, Random rg) {
         this.aes = aes;
     }
 
@@ -25,7 +25,7 @@ public class LinearRankingEnsemble implements AttributeRanking {
     public void build(Dataset data) {
         int numAtt = data.noAttributes();
         double[] sum = new double[numAtt];
-        for (AttributeRanking ae : aes) {
+        for (FeatureRanking ae : aes) {
             ae.build(DatasetTools.bootstrap(data, (int) (data.size() * 0.9 + 1), rg));
             for (int i = 0; i < numAtt; i++)
                 sum[i] += ae.rank(i);
