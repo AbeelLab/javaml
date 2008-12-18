@@ -27,6 +27,7 @@ public class TestDataExport {
         }
         try {
             FileHandler.exportDataset(data, new File("test.out.tsv"), true);
+            new File("test.out.tsv.gz").delete();
         } catch (IOException e) {
            Assert.assertTrue(false);
         }

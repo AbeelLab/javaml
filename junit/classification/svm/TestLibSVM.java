@@ -66,7 +66,7 @@ public class TestLibSVM {
             System.out.println("Correct: " + t);
             System.out.println("Wrong: " + f);
             out.close();
-
+            new File("bupa010.txt").delete();
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
