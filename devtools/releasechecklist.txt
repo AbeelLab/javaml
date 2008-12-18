@@ -6,3 +6,4 @@
 - Upload new source code
 - tag source code in SVN
 - modify download latest link on Java-ML website
+- upload and publish PDF version of the documentation
