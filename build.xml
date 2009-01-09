@@ -21,7 +21,7 @@
 		</replaceregexp>
 		<javadoc verbose="false" classpath="lib/weka.jar:lib/ajt-1.20.jar:lib/commons-math-1.1.jar:lib/junit-4.3.1.jar" packagenames="external.*,tutorials.*,net.sf.javaml.*" sourcepath="${build}/src" defaultexcludes="yes" destdir="${dist}/doc" author="true" version="true" use="true" windowtitle="Java Machine Learning Library ${version}">
 			<doctitle>
-				<![CDATA[<h1>Java Machine Learning Library ${version} - ${TODAY_LOCAL}</h1>]]>
+				<![CDATA[<h1>Java Machine Learning Library ${version}</h1>]]>
 			</doctitle>		
 		<bottom>
 			<![CDATA[<i>Copyright &#169; 2006-2009 - <a target="_blank" href="http://www.abeel.be/">Thomas Abeel</a> - All Rights Reserved.</i>]]>
