@@ -33,8 +33,8 @@ public class PerformanceMeasure {
      * actually true. In other words, this is the error of accepting an
      * alternative hypothesis (the real hypothesis of interest) when the results
      * can be attributed to chance. Plainly speaking, it occurs when we are
-     * observing a difference when in truth there is none (or more specifically -
-     * no statistically significant difference).
+     * observing a difference when in truth there is none (or more specifically
+     * - no statistically significant difference).
      */
     public double fp;
 
@@ -58,9 +58,7 @@ public class PerformanceMeasure {
 
     public double getCorrelationCoefficient() {
 
-        return (tp * tn - fp * fn)
-                / Math.sqrt((tp + fp) * (tp + fn)
-                        * (tn + fp) * (tn + fn));
+        return (tp * tn - fp * fn) / Math.sqrt((tp + fp) * (tp + fn) * (tn + fp) * (tn + fn));
     }
 
     public double getCost() {
@@ -129,14 +127,25 @@ public class PerformanceMeasure {
 
     public double getCorrelation() {
         return (this.tp * this.tn + this.fp * this.fn)
-                / Math.sqrt((this.tn + this.fn) * (this.tp + this.fp)
-                        * (this.tn + this.fp) * (this.fn + this.tp));
+                / Math.sqrt((this.tn + this.fn) * (this.tp + this.fp) * (this.tn + this.fp) * (this.fn + this.tp));
     }
 
+    /**
+     * Calculates F-score for beta equal to 1.
+     * 
+     * @return f-score
+     */
     public double getFMeasure() {
         return getFMeasure(1);
     }
 
+    /**
+     * Returns the F-score. When recall and precision are zero, this method will
+     * return 0.
+     * 
+     * @param beta
+     * @return f-score
+     */
     public double getFMeasure(int beta) {
         double f = ((beta * beta + 1) * this.getPrecision() * this.getRecall())
                 / (beta * beta * this.getPrecision() + this.getRecall());
@@ -154,19 +163,19 @@ public class PerformanceMeasure {
         } else
             return 1
                     - Math.sqrt(2)
-                    * Math.sqrt(Math.pow(this.fn / (this.tp + this.fn), 2)
-                            + Math.pow(this.fp / (this.tn + this.fp), 2));
+                    * Math
+                            .sqrt(Math.pow(this.fn / (this.tp + this.fn), 2)
+                                    + Math.pow(this.fp / (this.tn + this.fp), 2));
 
     }
 
-    public double getBCR(){
-        return 0.5*(tp/(tp+fn)+tn/(tn+fp));
+    public double getBCR() {
+        return 0.5 * (tp / (tp + fn) + tn / (tn + fp));
     }
-    
+
     @Override
     public String toString() {
-        return "[TP=" + this.tp + ", FP=" + this.fp + ", TN=" + this.tn + ", FN="
-                + this.fn + "]";
+        return "[TP=" + this.tp + ", FP=" + this.fp + ", TN=" + this.tn + ", FN=" + this.fn + "]";
     }
 
     public double getTotal() {
