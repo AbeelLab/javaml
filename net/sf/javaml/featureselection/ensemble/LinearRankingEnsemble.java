@@ -10,11 +10,27 @@ import net.sf.javaml.core.DatasetTools;
 import net.sf.javaml.featureselection.FeatureRanking;
 import net.sf.javaml.utils.ArrayUtils;
 
+/**
+ * Provides a linear aggregation feature selection ensemble as described in
+ * Saeys et al. 2008.
+ * 
+ * <pre>
+ * Saeys, Y., Abeel, T., Van de Peer, Y. (2008) Robust Feature Selection using 
+ * Ensemble Feature Selection Techniques. Proceedings of ECML/PKDD 5212, 313-25.
+ * </pre>
+ * 
+ * @author Thomas Abeel
+ * 
+ */
 public class LinearRankingEnsemble implements FeatureRanking {
 
     private FeatureRanking[] aes;
 
     private Random rg;
+
+    public LinearRankingEnsemble(FeatureRanking[] aes) {
+        this(aes, new Random(System.currentTimeMillis()));
+    }
 
     public LinearRankingEnsemble(FeatureRanking[] aes, Random rg) {
         this.aes = aes;
@@ -46,6 +62,7 @@ public class LinearRankingEnsemble implements FeatureRanking {
         }
     }
 
+    @Override
     public int rank(int attIndex) {
         return ranking[attIndex];
     }
