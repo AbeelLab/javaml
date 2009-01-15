@@ -22,11 +22,11 @@ import weka.core.Instances;
  * @author Thomas Abeel
  * 
  */
-public class WekaClustering implements Clusterer {
+public class WekaClusterer implements Clusterer {
 
     private weka.clusterers.Clusterer wekaCluster;
 
-    public WekaClustering(weka.clusterers.Clusterer wekaCluster) {
+    public WekaClusterer(weka.clusterers.Clusterer wekaCluster) {
         this.wekaCluster = wekaCluster;
     }
 
