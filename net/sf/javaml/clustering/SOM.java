@@ -36,17 +36,15 @@ public class SOM implements Clusterer {
      * that was supplied during creation of the SOM. If no distance measure was
      * specified, the Euclidean Distance will be used by default.
      * 
-     * @param double[]
-     *            x - 1st vector.
-     * @param double[]
-     *            y - 2nd vector.
+     * @param double[] x - 1st vector.
+     * @param double[] y - 2nd vector.
      * @return double - returns the distance between two vectors, x and y
      */
     private double getDistance(double[] x, double[] y) {
         return dm.measure(new DenseInstance(x), new DenseInstance(y));
     }
 
-    public class JSomMath {
+    private class JSomMath {
 
         private double[] cacheVector; // cache vector for temporary storage.
 
@@ -57,10 +55,9 @@ public class SOM implements Clusterer {
         /**
          * Constructor.
          * 
-         * @param int
-         *            vectorSize - Size of a weight/input vector.
+         * @param int vectorSize - Size of a weight/input vector.
          */
-        public JSomMath(int vectorSize) {
+        private JSomMath(int vectorSize) {
             cacheVector = new double[vectorSize];
             sizeVector = cacheVector.length;
         }
@@ -68,80 +65,64 @@ public class SOM implements Clusterer {
         /**
          * Calculates the exponential learning-rate parameter value.
          * 
-         * @param int
-         *            n - current step (time).
-         * @param double
-         *            a - initial value for learning-rate parameter (should be
-         *            close to 0.1).
-         * @param int
-         *            A - time constant (usually the number of iterations in the
-         *            learning process).
+         * @param int n - current step (time).
+         * @param double a - initial value for learning-rate parameter (should
+         *        be close to 0.1).
+         * @param int A - time constant (usually the number of iterations in the
+         *        learning process).
          * @return double - exponential learning-rate parameter value.
          */
-        public double expLRP(int n, double a, int A) {
+        private double expLRP(int n, double a, int A) {
             return (a * Math.exp(-1.0 * ((double) n) / ((double) A)));
         }
 
         /**
          * Calculates the linear learning-rate parameter value.
          * 
-         * @param int
-         *            n - current step (time).
-         * @param double
-         *            a - initial value for learning-rate parameter (should be
-         *            close to 0.1).
-         * @param int
-         *            A - another constant (usually the number of iterations in
-         *            the learning process).
+         * @param int n - current step (time).
+         * @param double a - initial value for learning-rate parameter (should
+         *        be close to 0.1).
+         * @param int A - another constant (usually the number of iterations in
+         *        the learning process).
          * @return double - linear learning-rate parameter value.
          */
-        public double linLRP(int n, double a, int A) {
+        private double linLRP(int n, double a, int A) {
             return (a * (1 - ((double) n) / ((double) A)));
         }
 
         /**
          * Calculates the inverse time learning-rate parameter value.
          * 
-         * @param int
-         *            n - current step (time).
-         * @param double
-         *            a - initial value for learning-rate parameter (should be
-         *            close to 0.1).
-         * @param double
-         *            A - another constant.
-         * @param double
-         *            B - another constant.
+         * @param int n - current step (time).
+         * @param double a - initial value for learning-rate parameter (should
+         *        be close to 0.1).
+         * @param double A - another constant.
+         * @param double B - another constant.
          * @return double - inverse time learning-rate parameter value.
          */
-        public double invLRP(int n, double a, double A, double B) {
+        private double invLRP(int n, double a, double A, double B) {
             return (a * (A / (B + n)));
         }
 
         /**
          * Calculates the gaussian neighbourhood width value.
          * 
-         * @param double
-         *            g - initial width value of the neighbourhood.
-         * @param int
-         *            n - current step (time).
-         * @param int
-         *            t - time constant (usually the number of iterations in the
-         *            learning process).
+         * @param double g - initial width value of the neighbourhood.
+         * @param int n - current step (time).
+         * @param int t - time constant (usually the number of iterations in the
+         *        learning process).
          * @return double - adapted gaussian neighbourhood function value.
          */
-        public double gaussianWidth(double g, int n, int t) {
+        private double gaussianWidth(double g, int n, int t) {
             return (g * Math.exp(-1.0 * ((double) n) / ((double) t)));
         }
 
         /**
          * Calculates the Gaussian neighbourhood value.
          * 
-         * @param double[]
-         *            i - winning neuron location in the lattice.
-         * @param double[]
-         *            j - excited neuron location in the lattice.
-         * @param double
-         *            width - width value of the neighbourhood.
+         * @param double[] i - winning neuron location in the lattice.
+         * @param double[] j - excited neuron location in the lattice.
+         * @param double width - width value of the neighbourhood.
          * @return double - Gaussian neighbourhood value.
          */
         private double gaussianNF(double[] i, double[] j, double width) {
@@ -153,12 +134,9 @@ public class SOM implements Clusterer {
          * Calculates whether the excited neuron is in the Bubble neighbourhood
          * set.
          * 
-         * @param double[]
-         *            i - winning neuron location in the lattice.
-         * @param double[]
-         *            j - excited neuron location in the lattice.
-         * @param double
-         *            g - width value of the neighbourhood.
+         * @param double[] i - winning neuron location in the lattice.
+         * @param double[] j - excited neuron location in the lattice.
+         * @param double g - width value of the neighbourhood.
          * @return boolean - true if located in the Bubble neighbourhood set.
          */
         private boolean bubbleNF(double[] i, double[] j, double g) {
@@ -172,21 +150,15 @@ public class SOM implements Clusterer {
          * Calculates the new adapted values for a weight vector, based on
          * Bubble neighbourhood.
          * 
-         * @param double[]
-         *            x - input vector.
-         * @param double[]
-         *            w - weight vector.
-         * @param double[]
-         *            i - winning neuron location in the lattice.
-         * @param double[]
-         *            j - excited neuron location in the lattice.
-         * @param double
-         *            g - adapted width value of the neighbourhood.
-         * @param double
-         *            lrp - adapted learning-rate parameter value.
+         * @param double[] x - input vector.
+         * @param double[] w - weight vector.
+         * @param double[] i - winning neuron location in the lattice.
+         * @param double[] j - excited neuron location in the lattice.
+         * @param double g - adapted width value of the neighbourhood.
+         * @param double lrp - adapted learning-rate parameter value.
          * @return double[] - Returns the adapted neuron values.
          */
-        public double[] bubbleAdaptation(double[] x, double[] w, double[] i, double[] j, double g, double lrp) {
+        private double[] bubbleAdaptation(double[] x, double[] w, double[] i, double[] j, double g, double lrp) {
             if (bubbleNF(i, j, g)) {
                 for (int k = 0; k < sizeVector; k++) {
                     cacheVector[k] = w[k] + lrp * (x[k] - w[k]);
@@ -201,21 +173,15 @@ public class SOM implements Clusterer {
          * Calculates the new adapted values for a weight vector, based on
          * Gaussian neighbourhood.
          * 
-         * @param double[]
-         *            x - input vector.
-         * @param double[]
-         *            w - weight vector.
-         * @param double[]
-         *            i - winning neuron location in the lattice.
-         * @param double[]
-         *            j - excited neuron location in the lattice.
-         * @param double
-         *            width - adapted width value of the neighbourhood.
-         * @param double
-         *            lrp - adapted learning-rate parameter value.
+         * @param double[] x - input vector.
+         * @param double[] w - weight vector.
+         * @param double[] i - winning neuron location in the lattice.
+         * @param double[] j - excited neuron location in the lattice.
+         * @param double width - adapted width value of the neighbourhood.
+         * @param double lrp - adapted learning-rate parameter value.
          * @return double[] - Returns the adapted neuron values.
          */
-        public double[] gaussianAdaptation(double[] x, double[] w, double[] i, double[] j, double width, double lrp) {
+        private double[] gaussianAdaptation(double[] x, double[] w, double[] i, double[] j, double width, double lrp) {
             gaussianCache = gaussianNF(i, j, width);
             for (int k = 0; k < sizeVector; k++) {
                 cacheVector[k] = w[k] + lrp * gaussianCache * (x[k] - w[k]);
@@ -224,7 +190,7 @@ public class SOM implements Clusterer {
         }
     }
 
-    public class InputVectors extends ArrayList<SomNode> {
+    private class InputVectors extends ArrayList<SomNode> {
 
         // private ArrayList input; //input vectors
 
@@ -236,7 +202,7 @@ public class SOM implements Clusterer {
         /**
          * Main constructor for this map. Used to contain all the input vectors.
          */
-        public InputVectors() {
+        private InputVectors() {
             super(1000);
         }
 
@@ -246,29 +212,8 @@ public class SOM implements Clusterer {
          * @param capacity
          *            Number of input vectors.
          */
-        public InputVectors(int capacity) {
+        private InputVectors(int capacity) {
             super(capacity);
-        }
-
-        /**
-         * Adds a new input vector.
-         * 
-         * @param node
-         *            The SomNode object added.
-         */
-        public void addInputVector(SomNode node) {
-            add(node);
-        }
-
-        /**
-         * Returns a input vector from the specified index.
-         * 
-         * @param index
-         *            The index of SomNode.
-         * @return SomNode - returns the SomNode object at the specified index.
-         */
-        public SomNode getSomNodeAt(int index) {
-            return ((SomNode) get(index));
         }
 
         /**
@@ -279,23 +224,9 @@ public class SOM implements Clusterer {
          *            The index of SomNode.
          * @return double[] - returns the Node values from the specified index.
          */
-        public double[] getNodeValuesAt(int index) {
+        private double[] getNodeValuesAt(int index) {
             SomNode cache = (SomNode) get(index);
             return (cache.getValues());
-        }
-
-        /**
-         * Sets the node values at a specific node.
-         * 
-         * @param index
-         *            Index of the SomNode
-         * @param values
-         *            Values of the SomNode
-         */
-        public void setNodeValuesAt(int index, double[] values) {
-            SomNode cache = (SomNode) get(index);
-            cache.setValues(values);
-            set(index, cache);
         }
 
         /**
@@ -306,7 +237,7 @@ public class SOM implements Clusterer {
          *            The index of SomNode.
          * @return String - returns the Node label from the specified index.
          */
-        public String getNodeLabelAt(int index) {
+        private String getNodeLabelAt(int index) {
             SomNode cache = (SomNode) get(index);
             return (cache.getLabel());
         }
@@ -316,12 +247,12 @@ public class SOM implements Clusterer {
          * 
          * @return int - returns the number of input vectors.
          */
-        public int getCount() {
+        private int getCount() {
             return size();
         }
     }
 
-    public class WeightVectors extends ArrayList<SomNode> {
+    private class WeightVectors extends ArrayList<SomNode> {
 
         /**
          * 
@@ -335,10 +266,6 @@ public class SOM implements Clusterer {
         private String lattice; // topology of the map
 
         private Random generator;
-
-        private int xDim;
-
-        private int yDim;
 
         private int dimension; // dimensionality of a node
 
@@ -358,11 +285,10 @@ public class SOM implements Clusterer {
          * @param type
          *            Lattice type of the map constructed (hexa or rect)
          */
-        public WeightVectors(int xDim, int yDim, int dimension, String type) {
+        private WeightVectors(int xDim, int yDim, int dimension, String type) {
             super(xDim * yDim);
             int size = xDim * yDim;
-            this.xDim = xDim;
-            this.yDim = yDim;
+
             this.dimension = dimension;
             values = new double[dimension];
             location = new double[2];
@@ -424,31 +350,13 @@ public class SOM implements Clusterer {
         }
 
         /**
-         * Returns the x-dimension of this map.
-         * 
-         * @return int - X-dimensionality of the map.
-         */
-        public int getXDimension() {
-            return xDim;
-        }
-
-        /**
-         * Returns the y-dimension of this map.
-         * 
-         * @return int - Yy-dimensionality of the map.
-         */
-        public int getYDimension() {
-            return yDim;
-        }
-
-        /**
          * Returns the node values at a specific node.
          * 
          * @param index
          *            Index of the SomNode
          * @return double[] - Returns the Node values from the specified index.
          */
-        public double[] getNodeValuesAt(int index) {
+        private double[] getNodeValuesAt(int index) {
             SomNode cache = (SomNode) get(index);
             return (cache.getValues());
         }
@@ -461,7 +369,7 @@ public class SOM implements Clusterer {
          * @param values
          *            Values of the SomNode
          */
-        public void setNodeValuesAt(int index, double[] values) {
+        private void setNodeValuesAt(int index, double[] values) {
             SomNode cache = (SomNode) get(index);
             cache.setValues(values);
             set(index, cache);
@@ -475,7 +383,7 @@ public class SOM implements Clusterer {
          * @return double[] - Returns the Node location from the specified
          *         index.
          */
-        public double[] getNodeLocationAt(int index) {
+        private double[] getNodeLocationAt(int index) {
             SomNode cache = (SomNode) get(index);
             return (cache.getLocation());
         }
@@ -486,7 +394,7 @@ public class SOM implements Clusterer {
          * 
          * @return int - Dimensionality of nodes.
          */
-        public int getDimensionalityOfNodes() {
+        private int getDimensionalityOfNodes() {
             return dimension;
         }
 
@@ -495,7 +403,7 @@ public class SOM implements Clusterer {
          * 
          * @return int - Returns the number of weight vectors.
          */
-        public int getCount() {
+        private int getCount() {
             return size();
         }
 
@@ -508,7 +416,7 @@ public class SOM implements Clusterer {
          *            The new label for this SomNode.
          * @return String - Returns the Node label from the specified index.
          */
-        public void setNodeLabelAt(int index, String label) {
+        private void setNodeLabelAt(int index, String label) {
             SomNode cache = (SomNode) get(index);
             if (cache.isLabeled()) {
                 cache.addLabel(label);
@@ -518,31 +426,11 @@ public class SOM implements Clusterer {
             set(index, cache);
         }
 
-        /**
-         * Returns a Node label of a specific weight vector from the specified
-         * index.
-         * 
-         * @param index
-         *            The index of SomNode.
-         * @return String - Returns the Node label from the specified index.
-         */
-        public String getNodeLabelAt(int index) {
-            SomNode cache = (SomNode) get(index);
-            return (cache.getLabel());
-        }
-
-        /**
-         * Returns the lattice type used in initializing node locations.
-         * 
-         * @return String - Lattice :: hexa | rect.
-         */
-        public String getLatticeType() {
-            return lattice;
-        }
     }
 
-    public class SomNode {
+    private class SomNode {
 
+        @Override
         public String toString() {
             String out = "";
             out += "\tVAL: " + Arrays.toString(values);
@@ -561,7 +449,7 @@ public class SOM implements Clusterer {
         /**
          * Main constructor.
          */
-        public SomNode() {
+        private SomNode() {
             label = "";
             values = new double[1];
             location = new double[1];
@@ -572,10 +460,9 @@ public class SOM implements Clusterer {
          * 
          * @param String
          *            label - Name of this node.
-         * @param double[]
-         *            values - All the values of this node.
+         * @param double[] values - All the values of this node.
          */
-        public SomNode(String label, Double[] values) {
+        private SomNode(String label, Double[] values) {
             this.label = label;
             this.values = new double[values.length];
             for (int i = 0; i < values.length; i++)
@@ -589,12 +476,10 @@ public class SOM implements Clusterer {
          * 
          * @param String
          *            label - Name of this node.
-         * @param double[]
-         *            values - All the values of this node.
-         * @param double[]
-         *            location - The location of this node.
+         * @param double[] values - All the values of this node.
+         * @param double[] location - The location of this node.
          */
-        public SomNode(double[] values, double[] location) {
+        private SomNode(double[] values, double[] location) {
             label = "";
             this.values = values.clone();
             this.location = location.clone();
@@ -603,10 +488,9 @@ public class SOM implements Clusterer {
         /**
          * Sets values for every dimension in this node.
          * 
-         * @param double[]
-         *            values - Sets all the values for this node.
+         * @param double[] values - Sets all the values for this node.
          */
-        public void setValues(double[] values) {
+        private void setValues(double[] values) {
             this.values = values.clone();
         }
 
@@ -615,27 +499,27 @@ public class SOM implements Clusterer {
          * 
          * @return double[] - Returns the numerical presentation of this node.
          */
-        public double[] getValues() {
+        private double[] getValues() {
             return values.clone();
         }
 
         /**
          * Set the label name for this node.
          * 
-         * @param String -
-         *            Label of this node.
+         * @param String
+         *            - Label of this node.
          */
-        public void setLabel(String label) {
+        private void setLabel(String label) {
             this.label = label;
         }
 
         /**
          * Set the secondary label(s) for this node.
          * 
-         * @param String -
-         *            Another label of this node.
+         * @param String
+         *            - Another label of this node.
          */
-        public void addLabel(String label) {
+        private void addLabel(String label) {
             this.label += ", " + label;
         }
 
@@ -644,7 +528,7 @@ public class SOM implements Clusterer {
          * 
          * @return String - Returns the label of this node if any.
          */
-        public String getLabel() {
+        private String getLabel() {
             return label;
         }
 
@@ -653,7 +537,7 @@ public class SOM implements Clusterer {
          * 
          * @return double[] - Returns the location of this node if any.
          */
-        public double[] getLocation() {
+        private double[] getLocation() {
             return location.clone();
         }
 
@@ -663,12 +547,12 @@ public class SOM implements Clusterer {
          * @return boolean - Returns true if this node has been labeled
          *         otherwise false.
          */
-        public boolean isLabeled() {
+        private boolean isLabeled() {
             return label.length() > 0;
         }
     }
 
-    public class JSomTraining {
+    private class JSomTraining {
 
         private int index; // caching
 
@@ -706,7 +590,7 @@ public class SOM implements Clusterer {
          * @param InputVectors
          *            iVector - input vectors.
          */
-        public JSomTraining(InputVectors iVector) {
+        private JSomTraining(InputVectors iVector) {
             // this.wVector = wVector;
             this.iVector = iVector;
             math = new JSomMath(wV.getDimensionalityOfNodes());
@@ -716,13 +600,10 @@ public class SOM implements Clusterer {
         /**
          * Sets the ordering instructions for the ordering process.
          * 
-         * @param int
-         *            steps - number of steps in this ordering phase.
-         * @param double
-         *            lrate - initial value for learning rate (usually near
-         *            0.1).
-         * @param int
-         *            radius - initial radius of neighbors.
+         * @param int steps - number of steps in this ordering phase.
+         * @param double lrate - initial value for learning rate (usually near
+         *        0.1).
+         * @param int radius - initial radius of neighbors.
          * @param String
          *            lrateType - states which learning-rate parameter function
          *            is used :: exponential | linear | inverse
@@ -730,7 +611,7 @@ public class SOM implements Clusterer {
          *            neigh - the neighborhood function type used ::
          *            step(bubble) | gaussian
          */
-        public void setTrainingInstructions(int steps, double lrate, int radius, String lrateType, String neigh) {
+        private void setTrainingInstructions(int steps, double lrate, int radius, String lrateType, String neigh) {
             this.steps = steps;
             this.lrate = lrate;
             this.lrateType = lrateType;
@@ -743,7 +624,7 @@ public class SOM implements Clusterer {
          * 
          * @return WeightVectors - Returns the trained weight vectors.
          */
-        public void doTraining() {
+        private void doTraining() {
             // fireBatchStart("Training phase");
             iVectorSize = iVector.getCount();
             wVectorSize = wV.getCount();
@@ -906,15 +787,25 @@ public class SOM implements Clusterer {
         }
     }
 
+    /**
+     * Enumeration of all grid types that are supported in a self organizing
+     * map.
+     * 
+     * @author Thomas Abeel
+     * 
+     */
     public enum GridType {
-
-        HEXAGONAL("hexa"), RECTANGLES("rect");
+        /** Hexagonal grid */
+        HEXAGONAL("hexa"),
+        /** Rectangular grid */
+        RECTANGLES("rect");
         private String tag;
 
         private GridType(String tag) {
             this.tag = tag;
         }
 
+        @Override
         public String toString() {
             return tag;
         }
@@ -928,6 +819,7 @@ public class SOM implements Clusterer {
             this.tag = tag;
         }
 
+        @Override
         public String toString() {
             return tag;
         }
@@ -941,11 +833,18 @@ public class SOM implements Clusterer {
             this.tag = tag;
         }
 
+        @Override
         public String toString() {
             return tag;
         }
     }
 
+    /**
+     * Create a 2 by 2 Self-organizing map, using a hexagonal grid, 1000
+     * iteration, 0.1 learning rate, 8 initial radius, linear learning, a
+     * step-wise neighborhood function and the Euclidean distance as distance
+     * measure.
+     */
     public SOM() {
         this(2, 2, GridType.HEXAGONAL, 1000, 0.1, 8, LearningType.LINEAR, NeighbourhoodFunction.STEP);
     }
@@ -962,11 +861,56 @@ public class SOM implements Clusterer {
 
     private DistanceMeasure dm;
 
+    /**
+     * 
+     * Create a new self-organizing map with the provided parameters and the
+     * Euclidean distance as distance metric.
+     * 
+     * @param xdim
+     *            number of dimension on x-axis
+     * @param ydim
+     *            number of dimension on y-axis
+     * @param grid
+     *            type of grid
+     * @param iterations
+     *            number of iterations
+     * @param learningRate
+     *            learning rate of the algorithm
+     * @param initialRadius
+     *            initial radius
+     * @param learning
+     *            type of learning to use
+     * @param nbf
+     *            neighborhood function
+     */
     public SOM(int xdim, int ydim, GridType grid, int iterations, double learningRate, int initialRadius,
             LearningType learning, NeighbourhoodFunction nbf) {
         this(xdim, ydim, grid, iterations, learningRate, initialRadius, learning, nbf, new EuclideanDistance());
     }
 
+    /**
+     * 
+     * Create a new self-organizing map with the provided parameters.
+     * 
+     * @param xdim
+     *            number of dimension on x-axis
+     * @param ydim
+     *            number of dimension on y-axis
+     * @param grid
+     *            type of grid
+     * @param iterations
+     *            number of iterations
+     * @param learningRate
+     *            learning rate of the algorithm
+     * @param initialRadius
+     *            initial radius
+     * @param learning
+     *            type of learning to use
+     * @param nbf
+     *            neighborhood function
+     * @param dm
+     *            distance measure to use
+     */
     public SOM(int xdim, int ydim, GridType grid, int iterations, double learningRate, int initialRadius,
             LearningType learning, NeighbourhoodFunction nbf, DistanceMeasure dm) {
         this.gridType = grid;
@@ -980,22 +924,9 @@ public class SOM implements Clusterer {
         this.dm = dm;
     }
 
-    public class GridDataset {
-        public Dataset data;
-
-        public double x, y;
-
-        public GridDataset(Dataset data, double x, double y) {
-            super();
-            this.data = data;
-            this.x = x;
-            this.y = y;
-        }
-
-    }
-
     private WeightVectors wV;
 
+    @Override
     public Dataset[] cluster(Dataset data) {
         // hexa || rect
         wV = new WeightVectors(xdim, ydim, data.noAttributes(), gridType.toString());
@@ -1037,7 +968,7 @@ public class SOM implements Clusterer {
      * 
      * @return WeightVectors - Returns the labeled weight vectors.
      */
-    public WeightVectors doLabeling(WeightVectors wVector, InputVectors iVector, Dataset data, Vector<Dataset> clusters) {
+    private WeightVectors doLabeling(WeightVectors wVector, InputVectors iVector, Dataset data, Vector<Dataset> clusters) {
 
         for (int i = 0; i < data.size(); i++) {
             int index = resolveIndexOfWinningNeuron(iVector.getNodeValuesAt(i));
@@ -1051,8 +982,7 @@ public class SOM implements Clusterer {
      * Finds the winning neuron for this input vector. Determines the winning
      * neuron by calculating the distance of two vectors.
      * 
-     * @param double[]
-     *            values - values of an input vector.
+     * @param double[] values - values of an input vector.
      * @return int - index of the winning neuron.
      */
     private int resolveIndexOfWinningNeuron(double[] values) {
