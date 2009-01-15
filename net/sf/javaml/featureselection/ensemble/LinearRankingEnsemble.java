@@ -23,21 +23,39 @@ import net.sf.javaml.utils.ArrayUtils;
  * 
  */
 public class LinearRankingEnsemble implements FeatureRanking {
-
+    /* Feature rankers */
     private FeatureRanking[] aes;
 
+    /* Random generator for bootstraps */
     private Random rg;
 
+    /**
+     * Creates a ranking ensemble with the provided single feature rankers.
+     * 
+     * @param aes
+     *            array of feature rankers
+     */
     public LinearRankingEnsemble(FeatureRanking[] aes) {
         this(aes, new Random(System.currentTimeMillis()));
     }
 
+    /**
+     * Creates a ranking ensemble with the provided single feature rankers and a
+     * specified random generator used for the generation of bootstraps.
+     * 
+     * @param aes
+     *            array of feature rankers
+     * @param rg
+     *            random generator to create bootstraps
+     */
     public LinearRankingEnsemble(FeatureRanking[] aes, Random rg) {
         this.aes = aes;
+        this.rg = rg;
     }
 
     private int[] ranking;
 
+    @Override
     public void build(Dataset data) {
         int numAtt = data.noAttributes();
         double[] sum = new double[numAtt];
