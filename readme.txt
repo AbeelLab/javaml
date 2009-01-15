@@ -34,7 +34,18 @@ Version for JDK 1.5 and 1.6 are available. The source is originally written for
 
 Version 1.5 is available since release 0.1.3
 
-4. Contact
+4. Dependencies
+===============
+Required libraries:
+- Apache Commons Math: use in some algorithms, version 1.1 is included
+- Abeel Java Toolkit: used in some classes, version 1.20 is included
+
+Optional libraries:
+- Weka: if you like to use algorithms from Weka. Weka 3.6.0 is included in the distribution
+- JUnit: if you want to run the unit tests. JUnit 3.4.1 is included in the distribution.
+Unit tests are only available from the SVN!
+
+5. Contact
 ==========
 You can contact us by using the Sourceforge contact page:
 http://sourceforge.net/users/thomasabeel/
