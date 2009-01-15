@@ -10,8 +10,22 @@ import net.sf.javaml.distance.fastdtw.timeseries.TimeSeries;
 
 /**
  * 
+ * Implementation of the FastDTW algorithm as described by Salvador and Chan.
+ * 
+ * Stan Salvador and Philip Chan, FastDTW: Toward Accurate Dynamic Time Warping
+ * in Linear Time and Space, KDD Workshop on Mining Temporal and Sequential
+ * Data, pp. 70-80, 2004. http://www.cs.fit.edu/~pkc/papers/tdm04.pdf
+ * 
+ * 
+ * Stan Salvador and Philip Chan, Toward Accurate Dynamic Time Warping in Linear
+ * Time and Space, Intelligent Data Analysis, 11(5):561-580, 2007.
+ * http://www.cs.fit.edu/~pkc/papers/ida07.pdf
+ * 
  * @author Thomas Abeel
  * @author Stan Salvador, stansalvador@hotmail.com
+ * @author Philip Chan, pkc@cs.fit.edu
+ * 
+ * 
  * 
  */
 public class FastDTW extends AbstractDistance {
@@ -21,23 +35,6 @@ public class FastDTW extends AbstractDistance {
      */
     private static final long serialVersionUID = -3604661850260159935L;
 
-    // PUBLIC FUNCTIONS
-    public static void main(String[] args) {
-        if (args.length != 3) {
-            System.out.println("USAGE:  java FastDTW timeSeries1 timeSeries2 radius");
-            System.exit(1);
-        } else {
-            final TimeSeries tsI = new TimeSeries(args[0], false, false, ',');
-            final TimeSeries tsJ = new TimeSeries(args[1], false, false, ',');
-            final TimeWarpInfo info = net.sf.javaml.distance.fastdtw.dtw.FastDTW.getWarpInfoBetween(tsI, tsJ, Integer
-                    .parseInt(args[2]));
-
-            System.out.println("Warp Distance: " + info.getDistance());
-            System.out.println("Warp Path:     " + info.getPath());
-        } // end if
-
-    } // end main()
-
     private int radius;
 
     @Override
@@ -45,9 +42,6 @@ public class FastDTW extends AbstractDistance {
         final TimeSeries tsI = new TimeSeries(x);
         final TimeSeries tsJ = new TimeSeries(y);
         final TimeWarpInfo info = net.sf.javaml.distance.fastdtw.dtw.FastDTW.getWarpInfoBetween(tsI, tsJ, radius);
-
-        System.out.println("Warp Distance: " + info.getDistance());
-        System.out.println("Warp Path:     " + info.getPath());
         return info.getDistance();
     }
 
@@ -56,4 +50,4 @@ public class FastDTW extends AbstractDistance {
         this.radius = radius;
     }
 
-} // end class FastDTW
+}
