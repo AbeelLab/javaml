@@ -9,7 +9,7 @@ import java.io.IOException;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.tools.data.FileHandler;
-import net.sf.javaml.tools.weka.WekaClustering;
+import net.sf.javaml.tools.weka.WekaClusterer;
 
 import org.junit.Test;
 
@@ -24,7 +24,7 @@ public class TestClusteringBridge {
             System.out.println(data);
             SimpleKMeans km = new SimpleKMeans();
             km.setNumClusters(3);
-            WekaClustering wc = new WekaClustering(km);
+            WekaClusterer wc = new WekaClusterer(km);
 
             Dataset[] clusters = wc.cluster(data);
             for (Dataset d : clusters) {
