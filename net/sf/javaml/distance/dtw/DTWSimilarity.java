@@ -5,7 +5,6 @@ package net.sf.javaml.distance.dtw;
 
 import java.util.ArrayList;
 
-import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.distance.AbstractSimilarity;
 
@@ -19,38 +18,19 @@ import net.sf.javaml.distance.AbstractSimilarity;
  * 
  */
 public class DTWSimilarity extends AbstractSimilarity {
-    /**
-     * 
-     */
+
     private static final long serialVersionUID = -8898553450277603746L;
 
-    /**
-     * XXX DOC
-     * 
-     * @param i
-     * @param j
-     * @param ts1
-     * @param ts2
-     * @return
-     */
     private double pointDistance(int i, int j, double[] ts1, double[] ts2) {
         double diff = ts1[i] - ts2[j];
         return (diff * diff);
     }
 
-    /**
-     * XXX DOC
-     * 
-     * @param x
-     * @return
-     */
     private double distance2Similarity(double x) {
         return (1.0 - (x / (1 + x)));
     }
 
-    /**
-     * XXX DOC
-     */
+    @Override
     public double measure(Instance x, Instance y) {
 
         ArrayList<Double> l1 = new ArrayList<Double>();
@@ -177,22 +157,6 @@ public class DTWSimilarity extends AbstractSimilarity {
         }
 
         return distance2Similarity(Math.sqrt(dist) / k);
-    }
-
-    /**
-     * XXX doc
-     */
-    public double getMaximumDistance(Dataset data) {
-        // TODO implement
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
-
-    /**
-     * XXX doc
-     */
-    public double getMinimumDistance(Dataset data) {
-        // TODO implement
-        throw new UnsupportedOperationException("Not yet implemented");
     }
 
 }
