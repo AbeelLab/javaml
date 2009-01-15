@@ -13,8 +13,9 @@ import java.util.TreeSet;
 import java.util.Vector;
 
 /**
- * Implementation of a sparse instance. Attributes for which the value is not
- * set return a default value.
+ * Implementation of a sparse instance. This implementation maps attribute
+ * indices to values. Attributes for which the value is not set return a default
+ * value.
  * 
  * {@jmlSource}
  * 
@@ -261,7 +262,7 @@ public class SparseInstance extends AbstractInstance implements Instance {
         List<Integer> indix = new Vector<Integer>();
         indix.addAll(indices);
         Collections.sort(indix);
-        for (int i = indix.size()-1; i >= 0; i--) {
+        for (int i = indix.size() - 1; i >= 0; i--) {
             removeAttribute(indix.get(i));
         }
 
