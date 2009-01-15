@@ -44,6 +44,14 @@ final public class DatasetTools {
      * using the given random generator.
      * 
      * This is done by sampling with replacement.
+     * 
+     * @param data
+     *            data set to bootstrap from
+     * @param size
+     *            number of instances in the output data
+     * @param rg
+     *            random generator to use for the bootstrapping
+     * @return bootstrap of the supplied data
      */
     public static Dataset bootstrap(Dataset data, int size, Random rg) {
         Dataset out = new DefaultDataset();
@@ -58,7 +66,8 @@ final public class DatasetTools {
      * attributes.
      * 
      * @param data
-     * @return
+     *            data set to find minimum attribute values for
+     * @return Instance representing the minimum values for each attribute
      */
     public static Instance maxAttributes(Dataset data) {
         Instance max = new SparseInstance();
@@ -76,6 +85,14 @@ final public class DatasetTools {
         return max;
     }
 
+    /**
+     * Create an instance that contains all the minimum values for the
+     * attributes.
+     * 
+     * @param data
+     *            data set to calculate minimum attribute values for
+     * @return Instance representing all minimum attribute values
+     */
     public static Instance minAttributes(Dataset data) {
         Instance min = new SparseInstance();
         for (Instance i : data) {
@@ -90,6 +107,17 @@ final public class DatasetTools {
         return min;
     }
 
+    /**
+     * Creates an instance that contains the standard deviation of the values
+     * for each attribute.
+     * 
+     * @param data
+     *            data set to calculate attribute value standard deviations for
+     * @param avg
+     *            the average instance for the data set
+     * @return Instance representing the standard deviation of the values for
+     *         each attribute
+     */
     public static Instance standardDeviation(Dataset data, Instance avg) {
         Instance sum = new DenseInstance(new double[avg.noAttributes()]);
         for (Instance i : data) {
@@ -101,6 +129,13 @@ final public class DatasetTools {
 
     }
 
+    /**
+     * Creates an instance that contains the average values for the attributes.
+     * 
+     * @param data
+     *            data set to calculate average attribute values for
+     * @return Instance representing the average attribute values
+     */
     public static Instance average(Dataset data) {
         Instance max = new SparseInstance();
         Instance min = new SparseInstance();
@@ -147,9 +182,12 @@ final public class DatasetTools {
      * Creates an Instance from the class labels over all Instances in a data
      * set.
      * 
+     * The indices of the class labels are used because the class labels can be
+     * any Object.
+     * 
      * @param data
-     * @param i
-     * @return
+     *            data set to create class label instance for
+     * @return instance with class label indices as values.
      */
     public static Instance createInstanceFromClass(Dataset data) {
         Instance out = new DenseInstance(data.size());
