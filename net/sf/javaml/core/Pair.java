@@ -23,6 +23,14 @@ public class Pair<S, T> {
 
     private int hashCode;
 
+    /**
+     * Create a pair
+     * 
+     * @param x
+     *            first object
+     * @param y
+     *            second object
+     */
     public Pair(S x, T y) {
         this.x = x;
         this.y = y;
@@ -30,11 +38,21 @@ public class Pair<S, T> {
         this.hashCode = (1 << x.hashCode()) + y.hashCode();
     }
 
+    /**
+     * Get the first object
+     * 
+     * @return first object
+     */
     public S x() {
         return x;
 
     }
 
+    /**
+     * Get the second object
+     * 
+     * @return second object
+     */
     public T y() {
         return y;
     }
