@@ -92,6 +92,12 @@ public interface Dataset extends List<Instance> {
      */
     public Object classValue(int index);
 
+    /**
+     * Create a deep copy of the data set. This method should also create deep
+     * copies of the instances in the data set.
+     * 
+     * @return deep copy of this data set.
+     */
     public Dataset copy();
 
     /**
