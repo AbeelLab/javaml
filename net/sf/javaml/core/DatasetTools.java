@@ -94,7 +94,7 @@ final public class DatasetTools {
         Instance sum = new DenseInstance(new double[avg.noAttributes()]);
         for (Instance i : data) {
             Instance diff = i.minus(avg);
-            sum = sum.plus(diff.multiply(diff));
+            sum = sum.add(diff.multiply(diff));
         }
         sum = sum.divide(data.size());
         return sum.sqrt();
@@ -118,7 +118,7 @@ final public class DatasetTools {
             }
 
         }
-        return max.plus(min).divide(2);
+        return max.add(min).divide(2);
     }
 
     /**

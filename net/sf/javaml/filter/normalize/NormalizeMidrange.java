@@ -70,7 +70,7 @@ public class NormalizeMidrange extends AbstractFilter {
         Instance max = DatasetTools.maxAttributes(data);
         Instance min = DatasetTools.minAttributes(data);
         currentRange = max.minus(min);
-        currentMiddle = min.plus(max).divide(2);
+        currentMiddle = min.add(max).divide(2);
 
     }
 
@@ -80,7 +80,7 @@ public class NormalizeMidrange extends AbstractFilter {
             throw new TrainingRequiredException();
 
         if (instance instanceof DenseInstance) {
-            Instance tmp = instance.minus(currentMiddle).divide(currentRange).multiply(normalRange).plus(normalMiddle);
+            Instance tmp = instance.minus(currentMiddle).divide(currentRange).multiply(normalRange).add(normalMiddle);
             instance.clear();
             instance.putAll(tmp);
 

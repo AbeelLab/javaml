@@ -37,7 +37,7 @@ public class AbstractMeanClassifier extends AbstractClassifier {
                 mean.put(i.classValue(), i);
                 count.put(i.classValue(), 1);
             } else {
-                mean.put(i.classValue(), mean.get(i.classValue()).plus(i));
+                mean.put(i.classValue(), mean.get(i.classValue()).add(i));
                 count.put(i.classValue(), count.get(i.classValue()) + 1);
             }
         }

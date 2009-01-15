@@ -33,7 +33,7 @@ public interface Instance extends Map<Integer, Double>, Iterable<Double>, Serial
     /**
      * Returns the number of attributes this instance has.
      * 
-     * @return
+     * @return number of attributes
      */
     public int noAttributes();
 
@@ -48,8 +48,7 @@ public interface Instance extends Map<Integer, Double>, Iterable<Double>, Serial
      * 
      * This method does not modify this instance, but returns the result.
      * 
-     * @param the
-     *            result of the subtraction
+     * @return result of the subtraction
      */
     public Instance minus(Instance min);
 
@@ -57,25 +56,72 @@ public interface Instance extends Map<Integer, Double>, Iterable<Double>, Serial
     public SortedSet<Integer> keySet();
 
     /**
-     * Subtract an scalar from this instance and returns the results.
+     * Subtract a scalar from this instance and returns the results.
      * 
      * This method does not modify this instance, but returns the result.
      * 
-     * @param the
-     *            result of the subtraction
+     * @return result of the subtraction
      */
     public Instance minus(double value);
 
-    public Instance plus(Instance max);
+    /**
+     * Add an instance to this instance and returns the results.
+     * 
+     * This method does not modify this instance, but returns the result.
+     * 
+     * @return result of the addition
+     */
+    public Instance add(Instance max);
 
+    /**
+     * Divide each value of this instance by a scalar value and returns the
+     * results.
+     * 
+     * This method does not modify this instance, but returns the result.
+     * 
+     * @return result of the division
+     */
     public Instance divide(double value);
 
+    /**
+     * Divide each value in this instance with the corresponding value of the
+     * other instance and returns the results.
+     * 
+     * This method does not modify this instance, but returns the result.
+     * 
+     * @return result of the division
+     */
     public Instance divide(Instance currentRange);
 
-    public Instance plus(double value);
+    /**
+     * Add a scalar value to this instance and returns the results.
+     * 
+     * This method does not modify this instance, but returns the result.
+     * 
+     * @param value
+     *            value to add
+     * @return result of the addition
+     */
+    public Instance add(double value);
 
+    /**
+     * Multiply each value of this instance with a scalar value and return the
+     * result.
+     * 
+     * @param value
+     *            scalar to multiply with
+     * @return result of multiplication
+     */
     public Instance multiply(double value);
 
+    /**
+     * Multiply each value in this instance with the corresponding value in
+     * provide instance.
+     * 
+     * @param value
+     *            instance to multiply with
+     * @return result of multiplication.
+     */
     public Instance multiply(Instance value);
 
     /**
@@ -89,7 +135,7 @@ public interface Instance extends Map<Integer, Double>, Iterable<Double>, Serial
     /**
      * Take square root of all attributes.
      * 
-     * @return instance with a the square root for all attributes
+     * @return square root of attribute values
      */
     public Instance sqrt();
 

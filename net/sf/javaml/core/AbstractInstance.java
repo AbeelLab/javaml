@@ -157,7 +157,7 @@ public abstract class AbstractInstance implements Instance {
     }
 
     @Override
-    public Instance plus(double min) {
+    public Instance add(double min) {
         Instance out = new DenseInstance(new double[this.noAttributes()]);
         for (int i = 0; i < this.noAttributes(); i++) {
             out.put(i, this.get(i) + min);
@@ -166,7 +166,7 @@ public abstract class AbstractInstance implements Instance {
     }
 
     @Override
-    public Instance plus(Instance min) {
+    public Instance add(Instance min) {
         Instance out = new DenseInstance(new double[this.noAttributes()]);
         for (int i = 0; i < this.noAttributes(); i++) {
             out.put(i, this.get(i) + min.get(i));
