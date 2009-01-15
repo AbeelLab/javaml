@@ -30,18 +30,35 @@ public class DenseInstance extends AbstractInstance implements Instance {
 
     private static final long serialVersionUID = 3284511291715269081L;
 
+    /* Holds values */
     private double[] attributes;
 
-    /* classValue will be set to null */
+    /**
+     * Creates a new instance with the provide value for the attributes. The
+     * class label will be set to null.
+     * 
+     * @param att
+     *            the value of the instance
+     */
     public DenseInstance(double[] att) {
         this(att, null);
     }
 
+    /**
+     * Creates a new instance with the provided attribute values and the
+     * provided class label.
+     * 
+     * @param att
+     *            the attribute values
+     * @param classValue
+     *            the class label
+     */
     public DenseInstance(double[] att, Object classValue) {
         super(classValue);
         this.attributes = att.clone();
     }
 
+    /* Hide argumentless constructor */
     private DenseInstance() {
     }
 
