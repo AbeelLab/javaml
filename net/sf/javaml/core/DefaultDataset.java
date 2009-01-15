@@ -31,10 +31,20 @@ public class DefaultDataset extends Vector<Instance> implements Dataset {
 
     private int maxAttributes = 0;
 
+    /**
+     * 
+     * Creates a data set that contains the provided instances
+     * 
+     * @param coll
+     *            collection with instances
+     */
     public DefaultDataset(Collection<Instance> coll) {
         this.addAll(coll);
     }
 
+    /**
+     * Creates an empty data set.
+     */
     public DefaultDataset() {
         // nothing to do.
     }
