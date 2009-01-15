@@ -21,15 +21,18 @@ Java-ML in a nutshell:
 2. How to get started
 =====================
 When you are reading this, you most probably already downloaded the library. 
-To use it, include the javaml-<version>.jar in your classpath.
+To use it, include the javaml-<version>.jar in your classpath, as well as the 
+jars that are available in lib/.  
 
 How to get started, code samples, tutorials on various tasks can be found
 at http://java-ml.sourceforge.net
 
 3. Requirements
 ===============
-The library is coded for Java 1.6+ so you will need a JDK that is at least
-version 1.6+
+Version for JDK 1.5 and 1.6 are available. The source is originally written for 
+1.6, and backported for each release to 1.5.
+
+Version 1.5 is available since release 0.1.3
 
 4. Contact
 ==========
