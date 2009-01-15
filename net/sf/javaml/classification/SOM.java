@@ -18,8 +18,9 @@ import net.sf.javaml.distance.EuclideanDistance;
 /**
  * Classifier based on the Self-organized map clustering.
  * 
- * @author Thomas Abeel
+ * * @author Thomas Abeel
  * 
+ * @see net.sf.javaml.clustering.SOM
  */
 public class SOM extends AbstractClassifier {
 
@@ -27,6 +28,27 @@ public class SOM extends AbstractClassifier {
 
     private net.sf.javaml.clustering.SOM som;
 
+    /**
+     * 
+     * Create a new self-organizing map with the provided parameters.
+     * 
+     * @param xdim
+     *            number of dimension on x-axis
+     * @param ydim
+     *            number of dimension on y-axis
+     * @param grid
+     *            type of grid
+     * @param iterations
+     *            number of iterations
+     * @param learningRate
+     *            learning rate of the algorithm
+     * @param initialRadius
+     *            initial radius
+     * @param learning
+     *            type of learning to use
+     * @param nbf
+     *            neighborhood function
+     */
     public SOM(int xdim, int ydim, GridType grid, int iterations, double learningRate, int initialRadius,
             LearningType learning, NeighbourhoodFunction nbf) {
         som = new net.sf.javaml.clustering.SOM(xdim, ydim, grid, iterations, learningRate, initialRadius, learning, nbf);
