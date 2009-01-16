@@ -1,12 +1,22 @@
-- Add news on SF project
-- Add news on Java-ML website
-- Upload and add API docs to Java-ML website
-- Upload new source code
+- create pdf documentation
+
+for trunk:
+	- Build project
+	- include pdf documentation
+	- Upload and publish files on SF
+	- tag source code in SVN
+
 forearch branch{
 	- merge with trunk
 	- Build project
+	- include pdf documentation
 	- Upload and publish files on SF
 	- tag source code in SVN
 }
+for trunk:
+	- Upload and add API docs to Java-ML website
+	- Upload new source code
+
+- Add news on SF project
+- Add news on Java-ML website
 - modify download latest link on Java-ML website
-- upload and publish PDF version of the documentation
