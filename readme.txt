@@ -42,8 +42,8 @@ Required libraries:
 
 Optional libraries:
 - Weka: if you like to use algorithms from Weka. Weka 3.6.0 is included in the distribution
-- JUnit: if you want to run the unit tests. JUnit 3.4.1 is included in the distribution.
-Unit tests are only available from the SVN!
+- JUnit: if you want to run the unit tests. As the unit tests are only available from the SVN 
+we did not include a version of JUnit with the distribution
 
 5. Contact
 ==========
