@@ -94,34 +94,34 @@ public class TestFilter {
     private double vary(double i, double j) {
         return i + j * Math.random();
     }
-    @Test
-    public void testSparseSU() throws IOException {
-        Dataset data = FileHandler.loadSparseDataset(new File("devtools/data/smallsparse.tsv"), 0, "\t", ":");
+//    @Test
+//    public void testSparseSU() throws IOException {
+//        Dataset data = FileHandler.loadSparseDataset(new File("devtools/data/smallsparse.tsv"), 0, "\t", ":");
+//
+//        SymmetricalUncertainty su = new SymmetricalUncertainty();
+//
+//        su.build(data);
+//
+//        System.out.println("SU\tRELIEF\tGR");
+//        System.out.println(su.score(0));
+//        System.out.println(su.score(1));
+//        System.out.println(su.score(2));
+//
+//    }
 
-        SymmetricalUncertainty su = new SymmetricalUncertainty();
-
-        su.build(data);
-
-        System.out.println("SU\tRELIEF\tGR");
-        System.out.println(su.score(0));
-        System.out.println(su.score(1));
-        System.out.println(su.score(2));
-
-    }
-
-    @Test
-    public void testSparseGR() throws IOException {
-        Dataset data = FileHandler.loadSparseDataset(new File("devtools/data/smallsparse.tsv"), 0, "\t", ":");
-
-        GainRatio gr = new GainRatio();
-
-        gr.build(data);
-        System.out.println("SU\tRELIEF\tGR");
-        System.out.println(gr.score(0));
-        System.out.println(gr.score(1));
-        System.out.println(gr.score(2));
-
-    }
+//    @Test
+//    public void testSparseGR() throws IOException {
+//        Dataset data = FileHandler.loadSparseDataset(new File("devtools/data/smallsparse.tsv"), 0, "\t", ":");
+//
+//        GainRatio gr = new GainRatio();
+//
+//        gr.build(data);
+//        System.out.println("SU\tRELIEF\tGR");
+//        System.out.println(gr.score(0));
+//        System.out.println(gr.score(1));
+//        System.out.println(gr.score(2));
+//
+//    }
 
     @Test
     public void testSparseRELIEF() throws IOException {
