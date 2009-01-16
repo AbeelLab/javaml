@@ -5,7 +5,7 @@
 	<!-- set global properties for this build -->
 	<property name="src" location="." />
 	<property name="build" location="build" />
-	<property name="version" value="0.1.3" />
+	<property name="version" value="0.1.4" />
 
 	<property name="dist" location="javaml-${version}" />
 
@@ -40,6 +40,13 @@
 	<fileset dir="${src}">
 		<include name="*.txt" />
 	</fileset>
+	
+</copy>
+	
+<copy todir="${dist}/pdfdoc">
+	<fileset dir="devtools">
+		<include name="*.pdf" />
+	</fileset>
 </copy>
 <copy file="lib/commons-math-1.1.jar" todir="${dist}/lib/" />
 <copy file="lib/ajt-1.20.jar" todir="${dist}/lib/" />
@@ -71,6 +78,7 @@
 <!-- Create the distribution directory -->
 <mkdir dir="${dist}" />
 <mkdir dir="${dist}/lib" />
+<mkdir dir="${dist}/pdfdoc" />	
 <!-- Put everything in ${build} into the javaml-${version}.jar file -->
 <jar jarfile="${dist}/javaml-${version}.jar" basedir="${build}" />
 
