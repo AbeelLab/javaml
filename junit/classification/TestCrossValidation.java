@@ -7,15 +7,15 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
-import org.junit.Assert;
-import org.junit.Test;
-
 import net.sf.javaml.classification.Classifier;
-import net.sf.javaml.classification.KNearestNeighbors;
 import net.sf.javaml.classification.evaluation.CrossValidation;
 import net.sf.javaml.classification.evaluation.PerformanceMeasure;
+import net.sf.javaml.classification.tree.RandomForest;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.tools.data.FileHandler;
+
+import org.junit.Assert;
+import org.junit.Test;
 
 public class TestCrossValidation {
 	@Test
@@ -32,7 +32,7 @@ public class TestCrossValidation {
 		}
 		Assert.assertNotNull(data);
 		/* Construct KNN classifier */
-		Classifier knn = new KNearestNeighbors(5);
+		Classifier knn = new RandomForest(10);
 		/* Construct new cross validation instance with the KNN classifier */
 		CrossValidation cv = new CrossValidation(knn);
 		/* Perform 5-fold cross-validation on the data set */
