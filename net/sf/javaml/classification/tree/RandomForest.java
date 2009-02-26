@@ -35,7 +35,7 @@ public class RandomForest implements Classifier {
     private Random rg;
 
     public RandomForest(int treeCount){
-        
+        this(treeCount,false,1,new Random(System.currentTimeMillis()));
     }
     
     public RandomForest(int treeCount, boolean calculateOutOfBagErrorEstimate, int numAttributes, Random rg) {
