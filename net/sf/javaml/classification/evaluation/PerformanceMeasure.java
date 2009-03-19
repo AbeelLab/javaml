@@ -170,6 +170,11 @@ public class PerformanceMeasure {
     }
 
     public double getBCR() {
+        if (tn == 0 && fp == 0)
+            return tp / (tp + fn);
+        if (tp == 0 && fn == 0)
+            return tn / (tn + fp);
+
         return 0.5 * (tp / (tp + fn) + tn / (tn + fp));
     }
 
