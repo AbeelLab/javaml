@@ -11,9 +11,9 @@ import net.sf.javaml.clustering.SOM.GridType;
 import net.sf.javaml.clustering.SOM.LearningType;
 import net.sf.javaml.clustering.SOM.NeighbourhoodFunction;
 import net.sf.javaml.core.Dataset;
-import net.sf.javaml.core.DatasetTools;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.distance.EuclideanDistance;
+import net.sf.javaml.tools.DatasetTools;
 
 /**
  * Classifier based on the Self-organized map clustering.

@@ -5,9 +5,9 @@ package net.sf.javaml.filter.missingvalue;
 
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.core.InstanceTools;
 import net.sf.javaml.distance.EuclideanDistance;
 import net.sf.javaml.filter.DatasetFilter;
+import net.sf.javaml.tools.InstanceTools;
 import net.sf.javaml.utils.ArrayUtils;
 
 /**

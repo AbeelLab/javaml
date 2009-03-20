@@ -4,9 +4,9 @@
 package net.sf.javaml.distance;
 
 import net.sf.javaml.core.Dataset;
-import net.sf.javaml.core.DatasetTools;
 import net.sf.javaml.core.DenseInstance;
 import net.sf.javaml.core.Instance;
+import net.sf.javaml.tools.DatasetTools;
 
 /**
  * A normalized version of the Euclidean distance. This distance measure is

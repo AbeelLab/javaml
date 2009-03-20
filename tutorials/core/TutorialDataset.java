@@ -8,7 +8,7 @@ import java.util.SortedSet;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.DefaultDataset;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.core.InstanceTools;
+import net.sf.javaml.tools.InstanceTools;
 
 import org.junit.Assert;
 
@@ -16,7 +16,7 @@ import org.junit.Assert;
  * This tutorial show how to create a {@link net.sf.javaml.core.Dataset} from a
  * collection of instances. This tutorial assumes you know how to create an
  * {@link net.sf.javaml.core.Instance}. To create instances for this tutorial
- * we will use a method from {@link net.sf.javaml.core.InstanceTools} to create
+ * we will use a method from {@link net.sf.javaml.tools.InstanceTools} to create
  * random instances.
  * 
  * In this tutorial we will create a number of instances and group them in a
@@ -30,7 +30,7 @@ import org.junit.Assert;
  * @see net.sf.javaml.core.Instance
  * @see net.sf.javaml.core.Dataset
  * @see net.sf.javaml.core.DefaultDataset
- * @see net.sf.javaml.core.InstanceTools
+ * @see net.sf.javaml.tools.InstanceTools
  * 
  * @version %SVN.REVISION%
  * 

@@ -4,10 +4,10 @@
 package net.sf.javaml.filter.normalize;
 
 import net.sf.javaml.core.Dataset;
-import net.sf.javaml.core.DatasetTools;
 import net.sf.javaml.core.DefaultDataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.filter.AbstractFilter;
+import net.sf.javaml.tools.DatasetTools;
 
 /**
  * This filter will normalize the data set with mean 0 and standard deviation 1

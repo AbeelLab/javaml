@@ -4,11 +4,11 @@
 package net.sf.javaml.clustering.evaluation;
 
 import net.sf.javaml.core.Dataset;
-import net.sf.javaml.core.DatasetTools;
 import net.sf.javaml.core.DefaultDataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.distance.CosineSimilarity;
 import net.sf.javaml.distance.DistanceMeasure;
+import net.sf.javaml.tools.DatasetTools;
 
 /**
  * E_1 from the Zhao 2001 paper 

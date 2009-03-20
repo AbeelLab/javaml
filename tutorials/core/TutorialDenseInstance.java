@@ -20,7 +20,7 @@ import net.sf.javaml.core.Instance;
  * 
  * @see net.sf.javaml.core.Instance
  * @see net.sf.javaml.core.DenseInstance
- * @see net.sf.javaml.core.InstanceTools
+ * @see net.sf.javaml.tools.InstanceTools
  * 
  * @version %SVN.REVISION%
  * 

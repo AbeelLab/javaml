@@ -1,9 +1,12 @@
 /**
  * %SVN.HEADER%
  */
-package net.sf.javaml.core;
+package net.sf.javaml.tools;
 
 import java.util.Random;
+
+import net.sf.javaml.core.DenseInstance;
+import net.sf.javaml.core.Instance;
 
 /**
  * Provides utility methods for manipulating, creating and modifying instances.

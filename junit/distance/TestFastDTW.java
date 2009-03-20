@@ -4,10 +4,10 @@
 package junit.distance;
 
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.core.InstanceTools;
 import net.sf.javaml.distance.fastdtw.Abstraction;
 import net.sf.javaml.distance.fastdtw.Band;
 import net.sf.javaml.distance.fastdtw.FastDTW;
+import net.sf.javaml.tools.InstanceTools;
 
 import org.junit.Test;
 

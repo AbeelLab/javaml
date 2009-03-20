@@ -4,11 +4,11 @@
 package net.sf.javaml.filter.discretize;
 
 import net.sf.javaml.core.Dataset;
-import net.sf.javaml.core.DatasetTools;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.exception.TrainingRequiredException;
 import net.sf.javaml.filter.AbstractFilter;
 import net.sf.javaml.filter.instance.FloorValueFilter;
+import net.sf.javaml.tools.DatasetTools;
 
 /**
  * A filter that discretizes a range of numeric attributes in the data set into

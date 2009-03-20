@@ -8,10 +8,10 @@ import java.util.Map;
 
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.core.InstanceTools;
 import net.sf.javaml.core.kdtree.KDTree;
 import net.sf.javaml.core.kdtree.KeyDuplicateException;
 import net.sf.javaml.core.kdtree.KeySizeException;
+import net.sf.javaml.tools.InstanceTools;
 
 /**
  * Implementation of the K nearest neighbor (KNN) classification algorithm with

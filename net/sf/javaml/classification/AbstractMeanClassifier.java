@@ -29,7 +29,7 @@ public class AbstractMeanClassifier extends AbstractClassifier {
 
     @Override
     public void buildClassifier(Dataset data) {
-        super.build(data);
+        super.buildClassifier(data);
         mean = new HashMap<Object, Instance>();
         HashMap<Object, Integer> count = new HashMap<Object, Integer>();
         for (Instance i : data) {

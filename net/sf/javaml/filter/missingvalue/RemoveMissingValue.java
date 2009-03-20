@@ -7,8 +7,8 @@ import java.util.Vector;
 
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.core.InstanceTools;
 import net.sf.javaml.filter.DatasetFilter;
+import net.sf.javaml.tools.InstanceTools;
 
 /**
  * Removes all instances that have missing values.

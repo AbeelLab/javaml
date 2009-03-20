@@ -6,12 +6,12 @@ package net.sf.javaml.clustering;
 import java.util.Random;
 
 import net.sf.javaml.core.Dataset;
-import net.sf.javaml.core.DatasetTools;
 import net.sf.javaml.core.DefaultDataset;
 import net.sf.javaml.core.DenseInstance;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.distance.DistanceMeasure;
 import net.sf.javaml.distance.EuclideanDistance;
+import net.sf.javaml.tools.DatasetTools;
 
 /**
  * Implements the K-means algorithms as described by Mac Queen in 1967.

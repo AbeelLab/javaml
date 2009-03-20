@@ -8,9 +8,9 @@ import java.io.IOException;
 import java.util.Random;
 
 import net.sf.javaml.core.Dataset;
-import net.sf.javaml.core.DatasetTools;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.filter.discretize.EqualWidthBinning;
+import net.sf.javaml.tools.DatasetTools;
 import net.sf.javaml.tools.data.FileHandler;
 
 import org.junit.Assert;

@@ -6,8 +6,8 @@ package net.sf.javaml.featureselection.ensemble;
 import java.util.Random;
 
 import net.sf.javaml.core.Dataset;
-import net.sf.javaml.core.DatasetTools;
 import net.sf.javaml.featureselection.FeatureRanking;
+import net.sf.javaml.tools.DatasetTools;
 import net.sf.javaml.utils.ArrayUtils;
 
 /**

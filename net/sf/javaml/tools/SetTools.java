@@ -1,7 +1,7 @@
 /**
  * %SVN.HEADER%
  */
-package net.sf.javaml.core;
+package net.sf.javaml.tools;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -12,7 +12,7 @@ import java.util.Set;
  * @author Thomas Abeel
  * 
  */
-public class Sets {
+public class SetTools {
     /**
      * Returns the union of the two sets provided as arguments.
      * 

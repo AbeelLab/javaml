@@ -12,9 +12,9 @@ import net.sf.javaml.classification.AbstractClassifier;
 import net.sf.javaml.classification.Classifier;
 import net.sf.javaml.classification.evaluation.PerformanceMeasure;
 import net.sf.javaml.core.Dataset;
-import net.sf.javaml.core.DatasetTools;
 import net.sf.javaml.core.DefaultDataset;
 import net.sf.javaml.core.Instance;
+import net.sf.javaml.tools.DatasetTools;
 
 /**
  * Bagging meta learner. This implementation can also calculate the out-of-bag

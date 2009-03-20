@@ -6,11 +6,11 @@ package net.sf.javaml.clustering;
 import java.util.Random;
 
 import net.sf.javaml.core.Dataset;
-import net.sf.javaml.core.DatasetTools;
 import net.sf.javaml.core.DefaultDataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.distance.DistanceMeasure;
 import net.sf.javaml.distance.EuclideanDistance;
+import net.sf.javaml.tools.DatasetTools;
 
 /**
  * Implementation of the K-medoids algorithm

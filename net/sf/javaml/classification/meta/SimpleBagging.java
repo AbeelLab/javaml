@@ -10,8 +10,8 @@ import java.util.Random;
 import net.sf.javaml.classification.AbstractClassifier;
 import net.sf.javaml.classification.Classifier;
 import net.sf.javaml.core.Dataset;
-import net.sf.javaml.core.DatasetTools;
 import net.sf.javaml.core.Instance;
+import net.sf.javaml.tools.DatasetTools;
 
 /**
  * Bootstrap aggregating (Bagging) meta learner. This is the most basic

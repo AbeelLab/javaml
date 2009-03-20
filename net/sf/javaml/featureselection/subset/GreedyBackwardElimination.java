@@ -7,10 +7,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.sf.javaml.core.Dataset;
-import net.sf.javaml.core.DatasetTools;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.distance.DistanceMeasure;
 import net.sf.javaml.featureselection.FeatureSubsetSelection;
+import net.sf.javaml.tools.DatasetTools;
 
 /**
  * Provides an implementation of the backward greedy attribute subset

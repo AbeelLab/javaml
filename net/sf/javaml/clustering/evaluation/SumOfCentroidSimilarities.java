@@ -4,10 +4,10 @@
 package net.sf.javaml.clustering.evaluation;
 
 import net.sf.javaml.core.Dataset;
-import net.sf.javaml.core.DatasetTools;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.distance.CosineSimilarity;
 import net.sf.javaml.distance.DistanceMeasure;
+import net.sf.javaml.tools.DatasetTools;
 
 /**
  * TODO uitleg I_2 from Zhao 2001

@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.Vector;
 
 import net.sf.javaml.core.Dataset;
-import net.sf.javaml.core.DatasetTools;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.featureselection.FeatureScoring;
 import net.sf.javaml.filter.AbstractFilter;
 import net.sf.javaml.filter.discretize.EqualWidthBinning;
+import net.sf.javaml.tools.DatasetTools;
 import net.sf.javaml.utils.ContingencyTables;
 
 /**

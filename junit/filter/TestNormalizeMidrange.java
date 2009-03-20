@@ -8,9 +8,9 @@ import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.DefaultDataset;
 import net.sf.javaml.core.DenseInstance;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.core.InstanceTools;
 import net.sf.javaml.filter.DatasetFilter;
 import net.sf.javaml.filter.normalize.NormalizeMidrange;
+import net.sf.javaml.tools.InstanceTools;
 
 import org.junit.Test;
 

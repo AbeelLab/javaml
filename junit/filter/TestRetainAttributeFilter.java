@@ -8,8 +8,8 @@ import java.io.IOException;
 
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.core.InstanceTools;
 import net.sf.javaml.filter.RetainAttributes;
+import net.sf.javaml.tools.InstanceTools;
 import net.sf.javaml.tools.data.FileHandler;
 
 import org.junit.Assert;
