@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Random;
 
+import libsvm.SelfOptimizingLinearLibSVM;
 import net.sf.javaml.classification.evaluation.CrossValidation;
 import net.sf.javaml.classification.evaluation.PerformanceMeasure;
 import net.sf.javaml.core.Dataset;
@@ -18,7 +19,7 @@ import net.sf.javaml.tools.data.FileHandler;
 import org.junit.Assert;
 import org.junit.Test;
 
-import external.libsvm.SelfOptimizingLinearLibSVM;
+
 
 public class TestSelfOptimizingLinearLibSVM {
 

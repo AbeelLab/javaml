@@ -9,13 +9,14 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import libsvm.LibSVM;
+
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.tools.data.FileHandler;
 
 import org.junit.Test;
 
-import external.libsvm.LibSVM;
 
 public class TestLibSVM {
 

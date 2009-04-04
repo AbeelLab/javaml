@@ -5,11 +5,13 @@ package tutorials.classification;
 
 import java.io.File;
 
+import libsvm.LibSVM;
+
 import net.sf.javaml.classification.Classifier;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.tools.data.FileHandler;
-import external.libsvm.LibSVM;
+
 
 /**
  * This tutorial show how to use a the LibSVM classifier.

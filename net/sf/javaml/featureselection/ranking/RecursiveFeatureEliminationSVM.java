@@ -6,12 +6,14 @@ package net.sf.javaml.featureselection.ranking;
 import java.util.HashSet;
 import java.util.Set;
 
+import libsvm.LibSVM;
+import libsvm.SelfOptimizingLinearLibSVM;
+
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.featureselection.FeatureRanking;
 import net.sf.javaml.filter.RemoveAttributes;
 import net.sf.javaml.utils.ArrayUtils;
-import external.libsvm.LibSVM;
-import external.libsvm.SelfOptimizingLinearLibSVM;
+
 
 /**
  * Implements the recursive feature elimination procedure for linear support
@@ -97,7 +99,7 @@ public class RecursiveFeatureEliminationSVM implements FeatureRanking {
                 svm = new SelfOptimizingLinearLibSVM(-4, 4, internalFolds);
             else {
                 svm = new LibSVM();
-                svm.setC(1);
+                svm.getParameters().C=1;
             }
             svm.buildClassifier(training);
             double[] weights = svm.getWeights();

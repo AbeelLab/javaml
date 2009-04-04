@@ -38,12 +38,17 @@ Version 1.5 is available since release 0.1.3
 ===============
 Required libraries:
 - Apache Commons Math: use in some algorithms, version 1.1 is included
+
 - Abeel Java Toolkit: used in some classes, version 1.20 is included
 
 Optional libraries:
 - Weka: if you like to use algorithms from Weka. Weka 3.6.0 is included in the distribution
+
+- libsvm: if you like to use the libsvm algoriths. libSVM 2.89 is included in this distribution
+
 - JUnit: if you want to run the unit tests. As the unit tests are only available from the SVN 
-we did not include a version of JUnit with the distribution
+we did not include a version of JUnit with the distribution. The tests have been written for the 
+JUnit 4 platform and may not function for JUnit 3 or earlier
 
 5. Contact
 ==========

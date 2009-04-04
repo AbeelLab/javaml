@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 import junit.framework.Assert;
+import libsvm.LibSVM;
 
 import net.sf.javaml.classification.evaluation.CrossValidation;
 import net.sf.javaml.core.Dataset;
@@ -14,7 +15,6 @@ import net.sf.javaml.tools.data.ARFFHandler;
 
 import org.junit.Test;
 
-import external.libsvm.LibSVM;
 
 public class TestARFFHandler {
 
