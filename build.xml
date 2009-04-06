@@ -5,13 +5,9 @@
 	<!-- set global properties for this build -->
 	<property name="src" location="." />
 	<property name="build" location="build" />
-	<property name="version" value="0.1.5-rc1" />
+	<property name="version" value="0.1.5-rc2" />
 
 	<property name="dist" location="javaml-${version}" />
-
-
-
-
 
 	<target name="javadoc">
 		<replaceregexp flags="g" match="Thomas Abeel" replace="Thomas Abeel (&lt;a href=&quot;mailto:thomas@abeel.be&quot;&gt;thomas@abeel.be&lt;&#47;a&gt;)">
@@ -19,7 +15,7 @@
 				<include name="**/*.java" />
 			</fileset>
 		</replaceregexp>
-		<javadoc verbose="false" classpath="lib/weka.jar:lib/ajt-1.20.jar:lib/commons-math-1.1.jar:lib/junit-4.3.1.jar" packagenames="external.*,tutorials.*,net.sf.javaml.*" sourcepath="${build}/src" defaultexcludes="yes" destdir="${dist}/doc" author="true" version="true" use="true" windowtitle="Java Machine Learning Library ${version}">
+		<javadoc verbose="false" classpath="lib/weka.jar:lib/ajt-1.20.jar:lib/commons-math-1.2.jar:lib/Jama-1.0.2.jar:lib/libsvm.jar" packagenames="external.*,tutorials.*,net.sf.javaml.*" sourcepath="${build}/src" defaultexcludes="yes" destdir="${dist}/doc" author="true" version="true" use="true" windowtitle="Java Machine Learning Library ${version}">
 			<doctitle>
 				<![CDATA[<h1>Java Machine Learning Library ${version}</h1>]]>
 			</doctitle>		
@@ -48,9 +44,11 @@
 		<include name="*.pdf" />
 	</fileset>
 </copy>
-<copy file="lib/commons-math-1.1.jar" todir="${dist}/lib/" />
-<copy file="lib/ajt-1.20.jar" todir="${dist}/lib/" />
-<copy file="lib/weka.jar" todir="${dist}/lib/" />
+<copy todir="${dist}/lib/" >
+	<fileset dir="lib/" >
+		<include name="*.jar" />
+	</fileset>
+</copy>
 
 <zip destfile="${dist}.zip" basedir="${dist}" />
 <tar tarfile="${dist}.tar" basedir="${dist}" excludes="${dist}.zip" />
@@ -71,7 +69,13 @@
 
 <target name="compile" depends="init" description="compile the source ">
 <!-- Compile the java code from ${src} into ${build} -->
-<javac debug="true" debuglevel="lines,vars,source" source="1.6" target="1.6" classpath="lib/ajt-1.20.jar:lib/junit-4.3.1.jar:lib/commons-math-1.1.jar:lib/weka.jar" srcdir="${src}" destdir="${build}" excludes="devtools/**,junit/**,tutorials/**" />
+<javac debug="true" debuglevel="lines,vars,source" source="1.6" target="1.6" srcdir="${src}" destdir="${build}" excludes="devtools/**,junit/**,tutorials/**" >
+	<classpath>	
+		<fileset dir="lib/">
+			<include name="*.jar" />
+		</fileset>
+	</classpath>
+</javac>
 </target>
 
 <target name="dist" depends="compile" description="generate the distribution">
