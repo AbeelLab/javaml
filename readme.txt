@@ -32,20 +32,32 @@ at http://java-ml.sourceforge.net
 Version for JDK 1.5 and 1.6 are available. The source is originally written for 
 1.6, and backported for each release to 1.5.
 
-Version 1.5 is available since release 0.1.3
+A version for JDK 1.5 is available since release 0.1.3
 
 4. Dependencies
 ===============
 Required libraries:
-- Apache Commons Math: use in some algorithms, version 1.1 is included
+- Apache Commons Math: used in some algorithms, version 1.2 is included
+	Apache Commons Math is distributed under Apache License 2.0
+	http://commons.apache.org/math/
 
 - Abeel Java Toolkit: used in some classes, version 1.20 is included
-
+	AJT is distributed under GNU GPL 2 or later
+	http://sourceforge.net/projects/ajt/
+	
+- Jama: used in some algorithms, version 1.0.2 is included
+	Jama is distributed as public domain software 
+	http://math.nist.gov/javanumerics/jama/
+	
 Optional libraries:
 - Weka: if you like to use algorithms from Weka. Weka 3.6.0 is included in the distribution
+	Weka is distributed under GNU GPL 2 or later
+	http://www.cs.waikato.ac.nz/ml/weka/
 
 - libsvm: if you like to use the libsvm algoriths. libSVM 2.89 is included in this distribution
-
+	libSVM is distributed under the modified BSD license
+	http://www.csie.ntu.edu.tw/~cjlin/libsvm/
+	
 - JUnit: if you want to run the unit tests. As the unit tests are only available from the SVN 
 we did not include a version of JUnit with the distribution. The tests have been written for the 
 JUnit 4 platform and may not function for JUnit 3 or earlier
