@@ -50,8 +50,14 @@
 	</fileset>
 </copy>
 
-<zip destfile="${dist}.zip" basedir="${dist}" />
-<tar tarfile="${dist}.tar" basedir="${dist}" excludes="${dist}.zip" />
+<zip destfile="${dist}.zip" >
+	 <zipfileset dir="${dist}" prefix="javaml-${version}"/>
+</zip>
+	
+	
+<tar tarfile="${dist}.tar" >
+	 <tarfileset dir="${dist}" prefix="javaml-${version}" />
+</tar>
 <gzip zipfile="${dist}.tar.gz" src="${dist}.tar" />
 <delete file="${dist}.tar" />
 <!--<delete failonerror="false" dir="${dist}" />-->
