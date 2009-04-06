@@ -3,8 +3,9 @@
  */
 package net.sf.javaml.distance;
 
-import gov.nist.math.jama.Matrix;
+
 import net.sf.javaml.core.Instance;
+import Jama.Matrix;
 
 public class MahalanobisDistance extends AbstractDistance {
 

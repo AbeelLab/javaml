@@ -4,7 +4,7 @@
 package net.sf.javaml.utils;
 
 import nz.ac.waikato.cs.weka.Utils;
-import gov.nist.math.jama.Matrix;
+import Jama.Matrix;
 
 /*
  *    This program is free software; you can redistribute it and/or modify
