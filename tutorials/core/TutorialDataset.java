@@ -10,8 +10,6 @@ import net.sf.javaml.core.DefaultDataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.tools.InstanceTools;
 
-import org.junit.Assert;
-
 /**
  * This tutorial show how to create a {@link net.sf.javaml.core.Dataset} from a
  * collection of instances. This tutorial assumes you know how to create an
@@ -24,7 +22,6 @@ import org.junit.Assert;
  * 
  * Basically a data set is a collection of instances.
  * 
- * {@jmlSource}
  * 
  * @see CreatingAnInstance
  * @see net.sf.javaml.core.Instance
@@ -50,11 +47,6 @@ public class TutorialDataset {
         }
         /* Retrieve all class values that are ever used in the data set */
         SortedSet<Object> classValues = data.classes();
-        
-
-        Assert.assertEquals(data.noAttributes(), 25);
-        Assert.assertEquals(data.size(), 10);
-        Assert.assertEquals(classValues.size(), 0);
-
-    }
+        System.out.println(classValues);
+   }	
 }
