@@ -252,7 +252,7 @@ public class SparseInstance extends AbstractInstance implements Instance {
         out.data.putAll(this.data);
         out.defaultValue = this.defaultValue;
         out.noAttributes = this.noAttributes;
-        setClassValue(this.classValue());
+        out.setClassValue(this.classValue());
         return out;
 
     }
