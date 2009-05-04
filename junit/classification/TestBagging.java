@@ -25,8 +25,7 @@ public class TestBagging {
 		for (int i = 0; i < zeros.length; i++) {
 			zeros[i] = new ZeroR();
 		}
-		Dataset data = FileHandler.loadDataset(new File(
-				"devtools/data/colon.csv.gz"), 0, ",");
+		 Dataset data = FileHandler.loadDataset(new File("devtools/data/iris.data"), 4, ",");
 		Bagging bagger = new Bagging(zeros, new NormalBootstrapping(), 0);
 		bagger.buildClassifier(data);
 		Map<Object, PerformanceMeasure> pm = EvaluateDataset.testDataset(
