@@ -4,144 +4,103 @@
 package net.sf.javaml.classification.meta;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Random;
 
 import net.sf.javaml.classification.AbstractClassifier;
 import net.sf.javaml.classification.Classifier;
-import net.sf.javaml.classification.evaluation.PerformanceMeasure;
 import net.sf.javaml.core.Dataset;
-import net.sf.javaml.core.DefaultDataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.tools.DatasetTools;
+import net.sf.javaml.tools.sampling.SamplingMethod;
+import be.abeel.util.Pair;
 
 /**
  * Bagging meta learner. This implementation can also calculate the out-of-bag
  * error estimate while training at very little extra cost.
  * 
- * {@jmlSource}
  * 
  * @author Thomas Abeel
  * 
  */
 public class Bagging extends AbstractClassifier {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 5571842927861670307L;
+	private static final long serialVersionUID = 5571842927861670307L;
 
-    private Classifier[] classifiers;
+	private Classifier[] classifiers;
 
-    // private int numClasses;
+	private Dataset dataReference = null;
 
-    private Dataset dataReference = null;
+	private SamplingMethod samplingMethod;
 
-    private Random rg;
+	private long seed;
 
-    public Bagging(Classifier[] classifiers, Random rg) {
-        this.classifiers = classifiers;
-        this.rg = rg;
-    }
+	/**
+	 * Please use the 3 argument constructor.
+	 * 
+	 * @param classifiers
+	 * @param rg
+	 */
+	@Deprecated
+	public Bagging(Classifier[] classifiers, Random rg) {
+		this.classifiers = classifiers;
+		this.seed = rg.nextLong();
+	}
 
-    private boolean calculateOutOfBagErrorEstimate = false;
+	public Bagging(Classifier[] classifiers, SamplingMethod s, long seed) {
+		this.classifiers = classifiers;
+		this.seed = seed;
+		this.samplingMethod = s;
+	}
 
-    private Object positiveClass = 1;
+	private boolean calculateOutOfBagErrorEstimate = false;
 
-    public void setCalculateOutOfBagErrorEstimate(boolean b) {
-        this.calculateOutOfBagErrorEstimate = b;
-    }
+	public void setCalculateOutOfBagErrorEstimate(boolean b) {
+		this.calculateOutOfBagErrorEstimate = b;
+	}
 
-    /**
-     * Sets which class should be considered the positive class for the out of
-     * bag error estimate.
-     * 
-     * @param i
-     */
-    public void setPositiveClass(Object i) {
-        this.positiveClass = i;
-    }
+	private double outOfBagErrorEstimate;
 
-    private PerformanceMeasure outOfBagEstimate;
+	public double getOutOfBagErrorEstimate() {
+		return outOfBagErrorEstimate;
+	}
 
-    public PerformanceMeasure getOutOfBagEstimate() {
-        return outOfBagEstimate;
-    }
+	public void buildClassifier(Dataset data) {
+		this.dataReference = data;
+		int t = 0, f = 0;
+		for (int i = 0; i < classifiers.length; i++) {
+			Pair<Dataset, Dataset>sample = DatasetTools.sample(data, samplingMethod, data
+					.size(), seed++);
+			classifiers[i].buildClassifier(sample.x());
+			if (calculateOutOfBagErrorEstimate) {
+				for (Instance inst : sample.y()) {
+					Object predClass = classifiers[i].classify(inst);
+					if (predClass.equals(inst.classValue())) {
+						t++;
+					} else {
+						f++;
+					}
+				}
+			}
 
-    public void buildClassifier(Dataset data) {
-        // this.numClasses = data.classes().size();
-        this.dataReference = data;
-        int tp = 0, fp = 0, tn = 0, fn = 0;
-        for (int i = 0; i < classifiers.length; i++) {
-            Dataset sample = DatasetTools.bootstrap(data, data.size(), rg);
-            classifiers[i].buildClassifier(sample);
-            if (calculateOutOfBagErrorEstimate) {
-                Dataset outOfBag = getInverse(data, sample);
-                for (Instance inst : outOfBag) {
-                    Object predClass = classifiers[i].classify(inst);
-                    if (predClass == positiveClass) {
-                        if (inst.classValue().equals(positiveClass))
-                            tp++;
-                        else
-                            fp++;
-                    } else {
-                        if (inst.classValue().equals(positiveClass))
-                            fn++;
-                        else
-                            tn++;
-                    }
-                }
-            }
+		}
+		outOfBagErrorEstimate = t / (t + f);
 
-        }
-        outOfBagEstimate = new PerformanceMeasure(tp, tn, fp, fn);
+	}
 
-    }
+	@Override
+	public Map<Object, Double> classDistribution(Instance instance) {
+		Map<Object, Double> membership = new HashMap<Object, Double>();
+		for (Object o : dataReference.classes())
+			membership.put(o, 0.0);
+		for (int i = 0; i < classifiers.length; i++) {
+			Object prediction = classifiers[i].classify(instance);
+			membership.put(prediction, membership.get(prediction)
+					+ (1.0 / classifiers.length));// [classifiers[i].classifyInstance(instance)]++;
+		}
+		// for (int i = 0; i < this.numClasses; i++)
+		// membership[i] /= classifiers.length;
+		return membership;
 
-    /*
-     * Get the inverse of the sample set.
-     */
-    public static Dataset getInverse(Dataset data, Dataset sample) {
-        HashSet<Instance> tmpD = new HashSet<Instance>();
-        for (Instance i : data) {
-            tmpD.add(i);
-        }
-        for (Instance i : sample) {
-            tmpD.remove(i);
-        }
-        Dataset out = new DefaultDataset();
-        for (Instance i : tmpD)
-            out.add(i);
-        return out;
-    }
-
-    // public int classifyInstance(Instance instance) {
-    // double[] membership = this.distributionForInstance(instance);
-    // double max = membership[0];
-    // int index = 0;
-    //
-    // for (int i = 1; i < membership.length; i++) {
-    // if (membership[i] > max) {
-    // max = membership[i];
-    // index = 1;
-    // }
-    // }
-    // return index;
-    // }
-
-    @Override
-    public Map<Object, Double> classDistribution(Instance instance) {
-        Map<Object, Double> membership = new HashMap<Object, Double>();
-        for (Object o : dataReference.classes())
-            membership.put(o, 0.0);
-        for (int i = 0; i < classifiers.length; i++) {
-            Object prediction = classifiers[i].classify(instance);
-            membership.put(prediction, membership.get(prediction) + (1.0 / classifiers.length));// [classifiers[i].classifyInstance(instance)]++;
-        }
-        // for (int i = 0; i < this.numClasses; i++)
-        // membership[i] /= classifiers.length;
-        return membership;
-
-    }
+	}
 }

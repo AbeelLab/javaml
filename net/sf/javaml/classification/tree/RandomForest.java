@@ -45,8 +45,8 @@ public class RandomForest implements Classifier {
         this.numAttributes = numAttributes;
     }
 
-    public PerformanceMeasure getOutOfBagErrorEstimate() {
-        return bagger.getOutOfBagEstimate();
+    public double getOutOfBagErrorEstimate() {
+        return bagger.getOutOfBagErrorEstimate();
     }
 
     public void buildClassifier(Dataset data) {
