@@ -389,4 +389,19 @@ public class ArrayUtils {
        for(int i=0;i<values.length;i++)
            values[i]=-values[i];
     }
+
+	public static void reverse(int[] ranking) {
+		for(int i=0;i<ranking.length/2;i++){
+			int tmp=ranking[i];
+			ranking[i]=ranking[ranking.length-1-i];
+			ranking[ranking.length-1-i]=tmp;
+		}
+	}
+	public static void reverse(double[] ranking) {
+		for(int i=0;i<ranking.length/2;i++){
+			double tmp=ranking[i];
+			ranking[i]=ranking[ranking.length-1-i];
+			ranking[ranking.length-1-i]=tmp;
+		}
+	}
 }
