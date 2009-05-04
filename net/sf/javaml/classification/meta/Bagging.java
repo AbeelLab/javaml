@@ -81,10 +81,12 @@ public class Bagging extends AbstractClassifier {
 						f++;
 					}
 				}
+				outOfBagErrorEstimate = t / (t + f);
+				
 			}
-
+			
 		}
-		outOfBagErrorEstimate = t / (t + f);
+		
 
 	}
 
