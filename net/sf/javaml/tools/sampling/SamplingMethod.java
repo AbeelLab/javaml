@@ -1,7 +1,9 @@
+/**
+ * %SVN.HEADER%
+ */
 package net.sf.javaml.tools.sampling;
 
 import java.util.List;
-import java.util.Random;
 
 /**
  * Defines sampling methods to select a subset of a set integers. The original
