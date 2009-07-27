@@ -39,7 +39,7 @@ public class DensityBasedSpatialClustering extends AbstractDensityBasedClusterin
     private int clusterID;
 
     /**
-     * Creates a density based clusterer with default parameters. Epsilon = 0.6,
+     * Creates a density based clusterer with default parameters. Epsilon = 0.1,
      * minpoints = 6 and a normalized version of the euclidean distance.
      */
     public DensityBasedSpatialClustering() {
