@@ -4,6 +4,7 @@
 package net.sf.javaml.tools.weka;
 
 import net.sf.javaml.core.Dataset;
+import net.sf.javaml.core.DefaultDataset;
 import net.sf.javaml.core.DenseInstance;
 import weka.core.Instance;
 import weka.core.Instances;
@@ -20,8 +21,11 @@ import weka.core.SparseInstance;
  */
 public class FromWekaUtils {
 	private Dataset data;
+	private Instances wData;
 
 	public FromWekaUtils(Instances wData) {
+		data=new DefaultDataset();
+		this.wData=wData;
 		for (int i = 0; i < wData.numInstances(); i++) {
 			Instance wInst = wData.instance(i);
 			data.add(instanceFromWeka(wInst));
@@ -55,9 +59,9 @@ public class FromWekaUtils {
 			out = new DenseInstance(vals);
 
 		}
-
+		
 		if (!inst.classIsMissing()) {
-			out.setClassValue(inst.classValue());
+			out.setClassValue(wData.classAttribute().value((int)inst.classValue()));
 		}
 		return out;
 	}
