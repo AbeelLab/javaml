@@ -13,7 +13,7 @@ import weka.core.SparseInstance;
 import weka.core.Instances;
 
 /**
- * Provides utility methods to convert data to and from the WEKA format.
+ * Provides utility methods to convert data to the WEKA format.
  * 
  * 
  * {@jmlSource}
