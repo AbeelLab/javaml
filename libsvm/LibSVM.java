@@ -19,7 +19,7 @@ import net.sf.javaml.core.Instance;
  * http://www.csie.ntu.edu.tw/&tilde;cjlin/libsvm
  * </pre>
  * 
- * @author Thomas
+ * @author Thomas Abeel
  * 
  */
 public class LibSVM extends AbstractClassifier {
@@ -33,7 +33,7 @@ public class LibSVM extends AbstractClassifier {
 		param = new svm_parameter();
 		// default values
 		param.svm_type = svm_parameter.C_SVC;
-		param.C=1;
+		param.C = 1;
 		param.kernel_type = svm_parameter.LINEAR;
 		param.degree = 1;
 		param.gamma = 0; // 1/k
@@ -153,8 +153,24 @@ public class LibSVM extends AbstractClassifier {
 		return weights;
 	}
 
-	@Override
-	public Object classify(Instance instance) {
+	public double[] rawDecisionValues(Instance i){
+		return svm_predict_raw(model,convert(i));
+	}
+	/* Method to get raw decision values */
+	private double[] svm_predict_raw(svm_model model, svm_node[] x) {
+		if (model.param.svm_type == svm_parameter.ONE_CLASS || model.param.svm_type == svm_parameter.EPSILON_SVR || model.param.svm_type == svm_parameter.NU_SVR) {
+			double[] res = new double[1];
+			svm.svm_predict_values(model, x, res);
+			return res;
+		} else {
+			int nr_class = model.nr_class;
+			double[] dec_values = new double[nr_class * (nr_class - 1) / 2];
+			svm.svm_predict_values(model, x, dec_values);
+			return dec_values;
+		}
+	}
+
+	private svm_node[] convert(Instance instance){
 		svm_node[] x = new svm_node[instance.noAttributes()];
 		// TODO implement sparseness
 		for (int i = 0; i < instance.noAttributes(); i++) {
@@ -162,6 +178,11 @@ public class LibSVM extends AbstractClassifier {
 			x[i].index = i;
 			x[i].value = instance.value(i);
 		}
+		return x;
+	}
+	@Override
+	public Object classify(Instance instance) {
+		svm_node[] x = convert(instance);
 		double d = svm.svm_predict(model, x);
 
 		return data.classValue((int) d);
