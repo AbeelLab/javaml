@@ -18,11 +18,7 @@ import net.sf.javaml.distance.DistanceMeasure;
 /**
  * Provides a standard data set implementation.
  * 
- * {@jmlSource}
- * 
  * @see Dataset
- * 
- * @version %SVN.REVISION%
  * 
  * @author Thomas Abeel
  * 
