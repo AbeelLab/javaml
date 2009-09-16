@@ -213,7 +213,7 @@ public class FileHandler {
      * @throws IOException
      *             when something went wrong during the export
      */
-    public static void exportDataset(Dataset data, File outFile, boolean compress) throws IOException {
+    public static void exportDataset(Dataset data, File outFile, boolean compress, String sep) throws IOException {
         PrintWriter out;
         if (compress)
             out = new GZIPPrintWriter(outFile);
@@ -221,20 +221,20 @@ public class FileHandler {
             out = new PrintWriter(outFile);
         for (Instance inst : data) {
             if (inst.classValue() != null)
-                out.print(inst.classValue() + "\t");
-            out.println(string(inst));
+                out.print(inst.classValue() +sep);
+            out.println(string(inst,sep));
         }
 
         out.close();
 
     }
 
-    private static String string(Instance inst) {
+    private static String string(Instance inst,String sep) {
         StringBuffer out = new StringBuffer();
         if (inst instanceof SparseInstance) {
             for (Integer index : inst.keySet()) {
                 if (out.length() != 0)
-                    out.append("\t" + index + ":" + inst.value(index));
+                    out.append(sep+ index + ":" + inst.value(index));
                 else
                     out.append(index + ":" + inst.value(index));
 
@@ -242,7 +242,7 @@ public class FileHandler {
         } else {
             out.append(inst.value(0));
             for (int i = 1; i < inst.noAttributes(); i++)
-                out.append("\t" + inst.value(i));
+                out.append(sep + inst.value(i));
 
         }
 
@@ -269,5 +269,10 @@ public class FileHandler {
         exportDataset(data, file, false);
 
     }
+
+	public static void exportDataset(Dataset data, File file, boolean b) throws IOException {
+		exportDataset(data, file, b,"\t");
+		
+	}
 
 }
