@@ -110,9 +110,12 @@ public class LibSVM extends AbstractClassifier {
 				prob[i][j] = model.SV[i][j].value;
 			}
 		}
-		double w_list[][][] = new double[model.nr_class][model.nr_class - 1][model.SV[0].length];
+		assert model.SV!=null;
+		assert model.SV.length>0;
+		int len=model.SV.length>0?model.SV[0].length:0;
+		double w_list[][][] = new double[model.nr_class][model.nr_class - 1][len];
 
-		for (int i = 0; i < model.SV[0].length; ++i) {
+		for (int i = 0; i < len; ++i) {
 			for (int j = 0; j < model.nr_class - 1; ++j) {
 				int index = 0;
 				int end = 0;
@@ -129,10 +132,10 @@ public class LibSVM extends AbstractClassifier {
 			}
 		}
 
-		weights = new double[model.SV[0].length];
+		weights = new double[len];
 		for (int i = 0; i < model.nr_class - 1; ++i) {
 			for (int j = i + 1, k = i; j < model.nr_class; ++j, ++k) {
-				for (int m = 0; m < model.SV[0].length; ++m) {
+				for (int m = 0; m < len; ++m) {
 					weights[m] = (w_list[i][k][m] + w_list[j][i][m]);
 
 				}
