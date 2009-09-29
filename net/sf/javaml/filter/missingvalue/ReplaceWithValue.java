@@ -7,9 +7,8 @@ import net.sf.javaml.core.Instance;
 import net.sf.javaml.filter.AbstractFilter;
 
 /**
- * Replaces all missing values with a fixed value.
+ * Replaces all Double.NaN and Double.Infinity values with a fixed value.
  * 
- * {@jmlSource}
  * 
  * @author Thomas Abeel
  * 
@@ -24,7 +23,7 @@ public class ReplaceWithValue extends AbstractFilter {
 
     public void filter(Instance inst) {
         for (int i = 0; i < inst.noAttributes(); i++) {
-            if (Double.isNaN(inst.value(i)))
+            if (Double.isNaN(inst.value(i))||Double.isInfinite(inst.value(i)))
                 inst.put(i, d);
 
         }
