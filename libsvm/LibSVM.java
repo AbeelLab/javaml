@@ -102,6 +102,8 @@ public class LibSVM extends AbstractClassifier {
 
 		model = svm.svm_train(p, param);
 
+		//FIXME calculating weights for sparse data does not work...
+		
 		double[][] coef = model.sv_coef;
 
 		double[][] prob = new double[model.SV.length][data.noAttributes()];
