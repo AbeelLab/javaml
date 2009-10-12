@@ -12,8 +12,8 @@ import net.sf.javaml.classification.evaluation.EvaluateDataset;
 import net.sf.javaml.classification.evaluation.PerformanceMeasure;
 import net.sf.javaml.classification.meta.Bagging;
 import net.sf.javaml.core.Dataset;
+import net.sf.javaml.sampling.Sampling;
 import net.sf.javaml.tools.data.FileHandler;
-import net.sf.javaml.tools.sampling.Sampling;
 
 import org.junit.Test;
 

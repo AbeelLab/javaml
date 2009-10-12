@@ -11,7 +11,7 @@ import net.sf.javaml.classification.AbstractClassifier;
 import net.sf.javaml.classification.Classifier;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.tools.sampling.Sampling;
+import net.sf.javaml.sampling.Sampling;
 import be.abeel.util.Pair;
 
 /**

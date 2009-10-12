@@ -1,7 +1,7 @@
 /**
  * %SVN.HEADER%
  */
-package net.sf.javaml.tools.sampling;
+package net.sf.javaml.sampling;
 
 import java.util.ArrayList;
 import java.util.List;
