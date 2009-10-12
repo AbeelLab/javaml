@@ -7,15 +7,15 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
-import org.junit.Test;
-
 import net.sf.javaml.classification.ZeroR;
 import net.sf.javaml.classification.evaluation.EvaluateDataset;
 import net.sf.javaml.classification.evaluation.PerformanceMeasure;
 import net.sf.javaml.classification.meta.Bagging;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.tools.data.FileHandler;
-import net.sf.javaml.tools.sampling.NormalBootstrapping;
+import net.sf.javaml.tools.sampling.Sampling;
+
+import org.junit.Test;
 
 public class TestBagging {
 
@@ -26,7 +26,7 @@ public class TestBagging {
 			zeros[i] = new ZeroR();
 		}
 		 Dataset data = FileHandler.loadDataset(new File("devtools/data/iris.data"), 4, ",");
-		Bagging bagger = new Bagging(zeros, new NormalBootstrapping(), 0);
+		Bagging bagger = new Bagging(zeros,Sampling.NormalBootstrapping, 0);
 		bagger.buildClassifier(data);
 		Map<Object, PerformanceMeasure> pm = EvaluateDataset.testDataset(
 				bagger, data);

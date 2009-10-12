@@ -9,7 +9,7 @@ import java.util.List;
  * Defines sampling methods to select a subset of a set integers. The original
  * set may contain duplicates and the output set may contain duplicates.
  * 
- * @author Thomas
+ * @author Thomas Abeel
  * 
  */
 public abstract class SamplingMethod {
@@ -24,7 +24,7 @@ public abstract class SamplingMethod {
 	 *            the set to sample from
 	 * @return the selected of integers
 	 */
-	public List<Integer> sample(List<Integer> set) {
+	List<Integer> sample(List<Integer> set) {
 		return sample(set, set.size());
 	}
 
@@ -38,7 +38,7 @@ public abstract class SamplingMethod {
 	 *            the number of items that should be in the returned sample
 	 * @return the selected set of integers
 	 */
-	public List<Integer> sample(List<Integer> set, int size) {
+	List<Integer> sample(List<Integer> set, int size) {
 		return sample(set, size, System.currentTimeMillis());
 	}
 
@@ -54,7 +54,7 @@ public abstract class SamplingMethod {
 	 *            the seed used for the random generator
 	 * @return the selected set of integers
 	 */
-	public abstract List<Integer> sample(List<Integer> set, int size, long seed);
+	abstract List<Integer> sample(List<Integer> set, int size, long seed);
 
 	
 }

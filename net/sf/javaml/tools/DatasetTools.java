@@ -3,7 +3,6 @@
  */
 package net.sf.javaml.tools;
 
-import java.util.List;
 import java.util.Random;
 
 import net.sf.javaml.core.Dataset;
@@ -11,11 +10,8 @@ import net.sf.javaml.core.DefaultDataset;
 import net.sf.javaml.core.DenseInstance;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.SparseInstance;
-import net.sf.javaml.tools.sampling.SamplingMethod;
 
 import org.apache.commons.math.stat.StatUtils;
-
-import be.abeel.util.Pair;
 
 /**
  * This class provides utility methods on data sets.
@@ -215,33 +211,5 @@ final public class DatasetTools {
 		return out;
 	}
 
-	/**
-	 * 
-	 * @param inputData
-	 * @param s
-	 * @param size
-	 * @return
-	 */
-	public static Pair<Dataset, Dataset> sample(Dataset inputData,
-			SamplingMethod s, int size, long seed) {
-		List<Integer> ixs = ListTools.incfill(inputData.size());
-		List<Integer> sampledIxs = s.sample(ixs, size, seed);
-		/* Make ixs contain the out of sample indices */
-		ixs.removeAll(sampledIxs);
-		Dataset in = new DefaultDataset();
-		Dataset out = new DefaultDataset();
-		for (int i : sampledIxs)
-			in.add(inputData.get(i).copy());
-		for (int i : ixs)
-			out.add(inputData.get(i).copy());
-		return new Pair<Dataset, Dataset>(in,out);
-
-	}
-
-	public static Pair<Dataset, Dataset> sample(Dataset inputData,
-			SamplingMethod s, int size) {
-		return sample(inputData, s, size, System.currentTimeMillis());
-
-	}
 
 }

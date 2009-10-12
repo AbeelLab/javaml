@@ -11,8 +11,7 @@ import net.sf.javaml.classification.AbstractClassifier;
 import net.sf.javaml.classification.Classifier;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.tools.DatasetTools;
-import net.sf.javaml.tools.sampling.SamplingMethod;
+import net.sf.javaml.tools.sampling.Sampling;
 import be.abeel.util.Pair;
 
 /**
@@ -31,7 +30,7 @@ public class Bagging extends AbstractClassifier {
 
 	private Dataset dataReference = null;
 
-	private SamplingMethod samplingMethod;
+	private Sampling samplingMethod;
 
 	private long seed;
 
@@ -47,7 +46,7 @@ public class Bagging extends AbstractClassifier {
 		this.seed = rg.nextLong();
 	}
 
-	public Bagging(Classifier[] classifiers, SamplingMethod s, long seed) {
+	public Bagging(Classifier[] classifiers, Sampling s, long seed) {
 		this.classifiers = classifiers;
 		this.seed = seed;
 		this.samplingMethod = s;
@@ -69,7 +68,7 @@ public class Bagging extends AbstractClassifier {
 		this.dataReference = data;
 		int t = 0, f = 0;
 		for (int i = 0; i < classifiers.length; i++) {
-			Pair<Dataset, Dataset>sample = DatasetTools.sample(data, samplingMethod, data
+			Pair<Dataset, Dataset>sample = samplingMethod.sample(data,data
 					.size(), seed++);
 			classifiers[i].buildClassifier(sample.x());
 			if (calculateOutOfBagErrorEstimate) {

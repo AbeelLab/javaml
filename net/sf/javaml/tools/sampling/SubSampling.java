@@ -15,10 +15,10 @@ import java.util.Random;
  * @author Thomas
  * 
  */
-public class SubSampling extends SamplingMethod {
+class SubSampling extends SamplingMethod {
 
 	@Override
-	public List<Integer> sample(List<Integer> set, int size, long seed) {
+	List<Integer> sample(List<Integer> set, int size, long seed) {
 		Random rg = new Random(seed);
 		List<Integer> out = new ArrayList<Integer>();
 		out.addAll(set);

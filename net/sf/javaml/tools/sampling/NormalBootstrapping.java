@@ -11,13 +11,13 @@ import java.util.Random;
  * Implements normal bootstrapping. This amounts to subsampling with
  * replacement.
  * 
- * @author Thomas
+ * @author Thomas Abeel
  * 
  */
-public class NormalBootstrapping extends SamplingMethod {
+class NormalBootstrapping extends SamplingMethod {
 
 	@Override
-	public List<Integer> sample(List<Integer> set, int size, long seed) {
+	List<Integer> sample(List<Integer> set, int size, long seed) {
 		Random rg = new Random(seed);
 		List<Integer> out = new ArrayList<Integer>();
 		while (out.size() < size) {
