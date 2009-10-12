@@ -49,7 +49,7 @@ public class ConsistencyIndex extends AbstractDistance {
         for (int i = 0; i < b.noAttributes(); i++)
             set2.add((int) b.value(i));
 
-        double k = set1.size();
+        double k = Math.max(set1.size(),set2.size());
         /* exceptional cases */
         if (k == 0 || k == n)
             return 0;
