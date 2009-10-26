@@ -1,3 +1,6 @@
+/**
+ * %SVN.HEADER%
+ */
 package junit.libsvm;
 
 import java.io.File;
@@ -13,7 +16,11 @@ import net.sf.javaml.core.Instance;
 import net.sf.javaml.tools.data.FileHandler;
 
 import org.junit.Test;
-
+/**
+ * 
+ * @author Thomas Abeel
+ *
+ */
 public class TestLibSVM {
 
 	@Test
