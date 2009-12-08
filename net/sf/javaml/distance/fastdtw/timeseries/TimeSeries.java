@@ -297,7 +297,7 @@ public class TimeSeries {
 		if (labels.size() != values.size() + 1)
 			throw new InternalError("ERROR:  The TimeSeriesPoint: " + values
 					+ " contains the wrong number of values. " + "expected:  "
-					+ labels.size() + ", " + "found: " + values.size());
+					+ labels.size() + ", " + "found: " + (values.size()+1));
 		if (time >= ((Double) timeReadings.get(0)).doubleValue()) {
 			throw new InternalError(
 					"ERROR:  The point being inserted into the beginning of the time series does not have the correct time sequence. ");
