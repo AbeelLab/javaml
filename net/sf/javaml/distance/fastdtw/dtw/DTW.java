@@ -235,9 +235,10 @@ public class DTW {
         if (vector1.length != vector2.length)
             throw new InternalError("ERROR:  cannot calculate the distance between vectors of different sizes.");
         double sqSum = 0.0D;
-        for (int x = 0; x < vector1.length; x++)
-            sqSum += Math.pow(vector1[x] - vector2[x], 2D);
-
-        return Math.pow(Math.sqrt(sqSum), 2D);
+        for (int x = 0; x < vector1.length; x++){
+        	double diff=vector1[x]-vector2[x];
+            sqSum+=diff*diff;
+        }
+        return Math.sqrt(sqSum);
     }
 }
