@@ -1,3 +1,6 @@
+/**
+ * %SVN.HEADER%
+ */
 package junit.tools;
 
 import junit.framework.Assert;
