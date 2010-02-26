@@ -97,6 +97,7 @@ public class LibSVM extends AbstractClassifier {
 
 	@Override
 	public void buildClassifier(Dataset data) {
+		super.buildClassifier(data);
 		this.data = data;
 		svm_problem p = transformDataset(data);
 
