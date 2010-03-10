@@ -7,7 +7,7 @@ import java.util.Set;
 
 import net.sf.javaml.core.Instance;
 
-public class RemoveAttributes extends AbstractFilter {
+public class RemoveAttributes implements InstanceFilter{
 
     private Set<Integer> indices;
 
@@ -27,4 +27,5 @@ public class RemoveAttributes extends AbstractFilter {
         instance.removeAttributes(indices);
     }
 
+    
 }
