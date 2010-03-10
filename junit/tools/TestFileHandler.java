@@ -4,20 +4,17 @@
 package junit.tools;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.StringTokenizer;
 
-import libsvm.LibSVM;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.DefaultDataset;
-import net.sf.javaml.core.Instance;
 import net.sf.javaml.tools.data.FileHandler;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import be.abeel.util.LineIterator;
+import be.abeel.io.LineIterator;
 
 public class TestFileHandler {
 
@@ -35,7 +32,7 @@ public class TestFileHandler {
 
 	@Test
 	public void testReadSparseX() {
-		try {
+		
 			Dataset data = new DefaultDataset();
 
 			for (String line : new LineIterator("devtools/data/testsparse.txt")) {
@@ -62,9 +59,7 @@ public class TestFileHandler {
 				// line = reader.readLine();
 			}
 			Assert.assertEquals(52, data.noAttributes());
-		} catch (IOException e) {
-			Assert.fail();
-		}
+		
 
 	}
 }

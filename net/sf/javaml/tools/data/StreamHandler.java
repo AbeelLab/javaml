@@ -10,8 +10,8 @@ import net.sf.javaml.core.DefaultDataset;
 import net.sf.javaml.core.DenseInstance;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.SparseInstance;
-import be.abeel.util.ColumnIterator;
-import be.abeel.util.LineIterator;
+import be.abeel.io.ColumnIterator;
+import be.abeel.io.LineIterator;
 
 public class StreamHandler {
 	public static Dataset loadSparse(Reader in, int classIndex, String attSep, String indexSep) {

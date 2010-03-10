@@ -14,7 +14,7 @@ import net.sf.javaml.featureselection.FeatureScoring;
 import net.sf.javaml.tools.DatasetTools;
 import net.sf.javaml.utils.ArrayUtils;
 import net.sf.javaml.utils.MathUtils;
-import be.abeel.util.Copier;
+import be.abeel.io.Copier;
 
 /**
  * Random Forest based attribute evaluation.
@@ -28,8 +28,6 @@ import be.abeel.util.Copier;
  * 
  * We can use the differences in importance to rank the features or use the
  * differences to give an importance measure to all attributes
- * 
- * {@jmlSource}
  * 
  * @version %SVN.VERSION%
  * 

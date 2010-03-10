@@ -6,11 +6,10 @@ package net.sf.javaml.tools.data;
 import java.io.File;
 import java.io.FileNotFoundException;
 
-import be.abeel.util.LineIterator;
-
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.DefaultDataset;
 import net.sf.javaml.core.DenseInstance;
+import be.abeel.io.LineIterator;
 
 /**
  * Provides method to load data from ARFF formatted files.

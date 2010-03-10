@@ -41,7 +41,7 @@ Required libraries:
 	Apache Commons Math is distributed under Apache License 2.0
 	http://commons.apache.org/math/
 
-- Abeel Java Toolkit: used in some classes, version 1.20 is included
+- Abeel Java Toolkit: used in some classes, version 2.2 is included
 	AJT is distributed under GNU GPL 2 or later
 	http://sourceforge.net/projects/ajt/
 	

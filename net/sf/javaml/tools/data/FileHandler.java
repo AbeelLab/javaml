@@ -14,7 +14,7 @@ import java.util.zip.ZipInputStream;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.SparseInstance;
-import be.abeel.util.GZIPPrintWriter;
+import be.abeel.io.GZIPPrintWriter;
 
 /**
  * A class to load data sets from file and write them back.
