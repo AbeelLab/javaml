@@ -8,8 +8,9 @@ import java.util.Set;
 
 import libsvm.LibSVM;
 import libsvm.SelfOptimizingLinearLibSVM;
-
 import net.sf.javaml.core.Dataset;
+import net.sf.javaml.core.DefaultDataset;
+import net.sf.javaml.core.Instance;
 import net.sf.javaml.featureselection.FeatureRanking;
 import net.sf.javaml.filter.RemoveAttributes;
 import net.sf.javaml.utils.ArrayUtils;
@@ -27,7 +28,6 @@ import net.sf.javaml.utils.ArrayUtils;
  * 
  * The C-parameter of the internal SVM can be optimized or can be fixed.
  * 
- * {@jmlSource}
  * 
  * @version %SVN.VERSION%
  * 
@@ -130,7 +130,12 @@ public class RecursiveFeatureEliminationSVM implements FeatureRanking {
                 removedAttributes[trueIndices[i]] = true;
             }
             RemoveAttributes filter = new RemoveAttributes(toRemove);
-            filter.filter(data);
+            Dataset filtered=new DefaultDataset();
+            for(Instance i:data){
+            	filter.filter(i);
+            	filtered.add(i);
+            }
+            data=filtered;
         }
         int index = 0;
         if (data.noAttributes() == 1) {
