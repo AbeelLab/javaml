@@ -115,7 +115,8 @@ public class TimeSeries {
 				if ((line = br.readLine()) == null)
 					break;
 				if (line.length() > 0) {
-					st = new StringTokenizer(line, ",");
+					st = new StringTokenizer(line, String
+							.valueOf(delimiter));
 					ArrayList<Double> currentLineValues = new ArrayList<Double>();
 					for (int currentCol = 0; st.hasMoreTokens(); currentCol++) {
 						String currentToken = st.nextToken();
