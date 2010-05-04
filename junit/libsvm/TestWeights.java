@@ -1,3 +1,6 @@
+/**
+ * %SVN.HEADER%
+ */
 package junit.libsvm;
 
 import java.io.File;
