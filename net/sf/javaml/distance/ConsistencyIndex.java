@@ -40,7 +40,7 @@ public class ConsistencyIndex extends AbstractDistance {
 
     @Override
     public double measure(Instance a, Instance b) {
-        HashSet<Integer> set1 = new HashSet<Integer>();
+    	HashSet<Integer> set1 = new HashSet<Integer>();
         HashSet<Integer> set2 = new HashSet<Integer>();
 
         for (int i = 0; i < a.noAttributes(); i++)
@@ -48,7 +48,8 @@ public class ConsistencyIndex extends AbstractDistance {
 
         for (int i = 0; i < b.noAttributes(); i++)
             set2.add((int) b.value(i));
-
+        
+             
         double k = Math.max(set1.size(),set2.size());
         /* exceptional cases */
         if (k == 0 || k == n)
@@ -57,6 +58,7 @@ public class ConsistencyIndex extends AbstractDistance {
         /* normal calculation */
         set1.retainAll(set2);
         double r = set1.size(); //
+              
         return (r * n - k * k) / (k * (n - k));
     }
 }
