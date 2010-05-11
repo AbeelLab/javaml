@@ -23,7 +23,17 @@ import net.sf.javaml.core.Instance;
  * 
  */
 public class LibSVM extends AbstractClassifier {
-
+	
+	public static svm_print_interface svm_print_console = null;
+	public static svm_print_interface svm_print_null = new svm_print_interface() {
+		public void print(String s) {
+		}
+	};
+	/* By default console output is turned off. */
+	static{
+		svm.svm_set_print_string_function(svm_print_null);
+	}
+	
 	private static final long serialVersionUID = -8901871714620581945L;
 
 	/**
@@ -95,6 +105,21 @@ public class LibSVM extends AbstractClassifier {
 		this.param = param;
 	}
 
+	
+
+	/**
+	 * Set the print interface that will be used for training.
+	 * print a print interface. If <code>LibSVM.svm_print_console</code> is
+	 * provided then output will be printed to standard out. If
+	 * <code>LibSVM.svm_print_null</code> is provided then no output will be
+	 * printed.
+	 * 
+	 * By default this the printmode is set to <code>LibSVM.svm_print_null</code>
+	 */
+	public static void setPrintInterface(svm_print_interface print) {
+		svm.svm_set_print_string_function(print);
+	}
+
 	@Override
 	public void buildClassifier(Dataset data) {
 		super.buildClassifier(data);
@@ -102,13 +127,12 @@ public class LibSVM extends AbstractClassifier {
 		svm_problem p = transformDataset(data);
 
 		model = svm.svm_train(p, param);
-		
+	
 		double[][] coef = model.sv_coef;
 
-		
-		assert model.SV!=null;
-		assert model.SV.length>0;
-		
+		assert model.SV != null;
+		assert model.SV.length > 0;
+
 		double[][] prob = new double[model.SV.length][data.noAttributes()];
 		for (int i = 0; i < model.SV.length; i++) {
 			for (int j = 0; j < data.noAttributes(); j++) {
@@ -121,8 +145,8 @@ public class LibSVM extends AbstractClassifier {
 			}
 		}
 
-		
-		double w_list[][][] = new double[model.nr_class][model.nr_class - 1][data.noAttributes()];
+		double w_list[][][] = new double[model.nr_class][model.nr_class - 1][data
+				.noAttributes()];
 
 		for (int i = 0; i < data.noAttributes(); ++i) {
 			for (int j = 0; j < model.nr_class - 1; ++j) {
@@ -151,7 +175,6 @@ public class LibSVM extends AbstractClassifier {
 			}
 		}
 
-
 	}
 
 	private double[] weights;
@@ -166,12 +189,15 @@ public class LibSVM extends AbstractClassifier {
 		return weights;
 	}
 
-	public double[] rawDecisionValues(Instance i){
-		return svm_predict_raw(model,convert(i));
+	public double[] rawDecisionValues(Instance i) {
+		return svm_predict_raw(model, convert(i));
 	}
+
 	/* Method to get raw decision values */
 	private double[] svm_predict_raw(svm_model model, svm_node[] x) {
-		if (model.param.svm_type == svm_parameter.ONE_CLASS || model.param.svm_type == svm_parameter.EPSILON_SVR || model.param.svm_type == svm_parameter.NU_SVR) {
+		if (model.param.svm_type == svm_parameter.ONE_CLASS
+				|| model.param.svm_type == svm_parameter.EPSILON_SVR
+				|| model.param.svm_type == svm_parameter.NU_SVR) {
 			double[] res = new double[1];
 			svm.svm_predict_values(model, x, res);
 			return res;
@@ -183,7 +209,7 @@ public class LibSVM extends AbstractClassifier {
 		}
 	}
 
-	private svm_node[] convert(Instance instance){
+	private svm_node[] convert(Instance instance) {
 		svm_node[] x = new svm_node[instance.noAttributes()];
 		// TODO implement sparseness
 		for (int i = 0; i < instance.noAttributes(); i++) {
@@ -193,12 +219,19 @@ public class LibSVM extends AbstractClassifier {
 		}
 		return x;
 	}
+
 	@Override
 	public Object classify(Instance instance) {
 		svm_node[] x = convert(instance);
 		double d = svm.svm_predict(model, x);
 
 		return data.classValue((int) d);
+	}
+
+	public int[] getLabels() {
+		int res[] = new int[model.nr_class];
+		svm.svm_get_labels(model, res);
+		return res;
 	}
 
 }
