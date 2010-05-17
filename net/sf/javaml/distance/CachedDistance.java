@@ -6,7 +6,7 @@ package net.sf.javaml.distance;
 import java.util.HashMap;
 
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.core.Pair;
+import be.abeel.util.Pair;
 
 /**
  * This class implements a wrapper around other distance measure to cache

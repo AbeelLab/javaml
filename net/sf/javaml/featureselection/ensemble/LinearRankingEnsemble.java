@@ -6,8 +6,8 @@ package net.sf.javaml.featureselection.ensemble;
 import java.util.Random;
 
 import net.sf.javaml.core.Dataset;
+import net.sf.javaml.core.DefaultDataset;
 import net.sf.javaml.featureselection.FeatureRanking;
-import net.sf.javaml.tools.DatasetTools;
 import net.sf.javaml.utils.ArrayUtils;
 
 /**
@@ -23,71 +23,73 @@ import net.sf.javaml.utils.ArrayUtils;
  * 
  */
 public class LinearRankingEnsemble implements FeatureRanking {
-    /* Feature rankers */
-    private FeatureRanking[] aes;
+	/* Feature rankers */
+	private FeatureRanking[] aes;
 
-    /* Random generator for bootstraps */
-    private Random rg;
+	/* Random generator for bootstraps */
+	private Random rg;
 
-    /**
-     * Creates a ranking ensemble with the provided single feature rankers.
-     * 
-     * @param aes
-     *            array of feature rankers
-     */
-    public LinearRankingEnsemble(FeatureRanking[] aes) {
-        this(aes, new Random(System.currentTimeMillis()));
-    }
+	/**
+	 * Creates a ranking ensemble with the provided single feature rankers.
+	 * 
+	 * @param aes
+	 *            array of feature rankers
+	 */
+	public LinearRankingEnsemble(FeatureRanking[] aes) {
+		this(aes, new Random(System.currentTimeMillis()));
+	}
 
-    /**
-     * Creates a ranking ensemble with the provided single feature rankers and a
-     * specified random generator used for the generation of bootstraps.
-     * 
-     * @param aes
-     *            array of feature rankers
-     * @param rg
-     *            random generator to create bootstraps
-     */
-    public LinearRankingEnsemble(FeatureRanking[] aes, Random rg) {
-        this.aes = aes;
-        this.rg = rg;
-    }
+	/**
+	 * Creates a ranking ensemble with the provided single feature rankers and a
+	 * specified random generator used for the generation of bootstraps.
+	 * 
+	 * @param aes
+	 *            array of feature rankers
+	 * @param rg
+	 *            random generator to create bootstraps
+	 */
+	public LinearRankingEnsemble(FeatureRanking[] aes, Random rg) {
+		this.aes = aes;
+		this.rg = rg;
+	}
 
-    private int[] ranking;
+	private int[] ranking;
 
-    @Override
-    public void build(Dataset data) {
-        int numAtt = data.noAttributes();
-        double[] sum = new double[numAtt];
-        for (FeatureRanking ae : aes) {
-            ae.build(DatasetTools.bootstrap(data, (int) (data.size() * 0.9 + 1), rg));
-            for (int i = 0; i < numAtt; i++)
-                sum[i] += ae.rank(i);
-        }
-        toRank(sum);
+	@Override
+	public void build(Dataset data) {
+		int numAtt = data.noAttributes();
+		double[] sum = new double[numAtt];
+		for (FeatureRanking ae : aes) {
+			Dataset bootstrapData = new DefaultDataset();
+			while (bootstrapData.size() < data.size()) {
+				int random = rg.nextInt(data.size());
+				bootstrapData.add(data.get(random));
+			}
+			Dataset copy = bootstrapData.copy();
+			ae.build(copy);
+			for (int i = 0; i < numAtt; i++)
+				sum[i] += ae.rank(i);
+		}
+		toRank(sum);
 
-    }
+	}
 
-    private void toRank(double[] sum) {
-        // int[]r= ArrayUtils.sort(ranking);
-        int[] order = ArrayUtils.sort(sum);
-        ranking = new int[order.length];
-        // som[i] bevat de som van alle ranks die attribuut i gehaald heeft
-        //
-        // lage values zijn beter
-        for (int i = 0; i < order.length; i++) {
-            ranking[order[i]] = i;
-        }
-    }
+	private void toRank(double[] sum) {
+		int[] order = ArrayUtils.sort(sum);
+		ranking = new int[order.length];
+		for (int i = 0; i < order.length; i++) {
+			ranking[order[i]] = i;
+		}
+	}
 
-    @Override
-    public int rank(int attIndex) {
-        return ranking[attIndex];
-    }
+	@Override
+	public int rank(int attIndex) {
+		return ranking[attIndex];
+	}
 
-    @Override
-    public int noAttributes() {
-        return ranking.length;
-    }
+	@Override
+	public int noAttributes() {
+		return ranking.length;
+	}
 
 }

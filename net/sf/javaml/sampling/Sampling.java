@@ -9,7 +9,6 @@ import java.util.List;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.DefaultDataset;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.filter.ClassRetainFilter;
 import net.sf.javaml.tools.ListTools;
 import be.abeel.util.Pair;
 
@@ -36,14 +35,14 @@ public enum Sampling {
 	 * Stratified sub sampling
 	 */
 	StratifiedSubsampling,
-	
+
 	/**
 	 * Stratified bootstrapping
 	 */
 	StratifiedNormalBootstrapping;
 
 	/**
-	 * 
+	 * Convenience method to subsample a data set.
 	 * 
 	 * @param inputData
 	 * @param s
@@ -94,8 +93,7 @@ public enum Sampling {
 	 * @param seed
 	 * @return
 	 */
-	private List<Integer> regular(SamplingMethod s, Dataset data, int size,
-			long seed) {
+	private List<Integer> regular(SamplingMethod s, Dataset data, int size, long seed) {
 		List<Integer> ixs = ListTools.incfill(data.size());
 		return s.sample(ixs, size, seed);
 	}
@@ -107,8 +105,7 @@ public enum Sampling {
 	 * @param seed
 	 * @return
 	 */
-	private List<Integer> stratified(SamplingMethod s, Dataset data, int size,
-			long seed) {
+	private List<Integer> stratified(SamplingMethod s, Dataset data, int size, long seed) {
 		List<Integer> sampled = new ArrayList<Integer>();
 		for (Object o : data.classes()) {
 			List<Integer> ixs = new ArrayList<Integer>();
@@ -119,8 +116,7 @@ public enum Sampling {
 				index++;
 			}
 			double fraction = ixs.size() / (double) data.size();
-			sampled.addAll(s
-					.sample(ixs, (int) Math.ceil(fraction * size), seed));
+			sampled.addAll(s.sample(ixs, (int) Math.ceil(fraction * size), seed));
 
 		}
 		return sampled;
