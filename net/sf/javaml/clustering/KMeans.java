@@ -110,7 +110,10 @@ public class KMeans implements Clusterer {
     }
 
     /**
-     * XXX add doc
+     * Execute the KMeans clustering algorithm on the data set that is provided.
+     * 
+     * @param data data set to cluster
+     * @param clusters as an array of Datasets. Each Dataset represents a cluster.
      */
     public Dataset[] cluster(Dataset data) {
         if (data.size() == 0)
@@ -126,12 +129,13 @@ public class KMeans implements Clusterer {
         this.centroids = new Instance[numberOfClusters];
         int instanceLength = data.instance(0).noAttributes();
         for (int j = 0; j < numberOfClusters; j++) {
-            double[] randomInstance = new double[instanceLength];
-            for (int i = 0; i < instanceLength; i++) {
-                double dist = Math.abs(max.value(i) - min.value(i));
-                randomInstance[i] = (float) (min.value(i) + rg.nextDouble() * dist);
-
-            }
+//            double[] randomInstance = new double[instanceLength];
+//            for (int i = 0; i < instanceLength; i++) {
+//                double dist = Math.abs(max.value(i) - min.value(i));
+//                randomInstance[i] = (float) (min.value(i) + rg.nextDouble() * dist);
+//
+//            }
+        	double[] randomInstance = DatasetTools.getRandomInstance(data, rg);
             this.centroids[j] = new DenseInstance(randomInstance);
         }
 

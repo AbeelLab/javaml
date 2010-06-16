@@ -211,5 +211,71 @@ final public class DatasetTools {
 		return out;
 	}
 
+	/**
+	 * Finds the double[][] array where the first index reflects the attributes
+	 * and the second index the minimum (index 0) and maximum (index 1) of the
+	 * attributes.
+	 * 
+	 * @param data
+	 *            data set to compute this array for
+	 * 
+	 * @return a two-dimensional array with the minimum and maximum values per
+	 *         attribute
+	 */
+	private static double[][] getMinMax(Dataset data) {
+		final int noAttributes = data.get(0).noAttributes();
+		final int noInstances = data.size();
+		final int MIN_INDEX = 0;
+		final int MAX_INDEX = 1;
+
+		// second index contains min and max -> therefore size = 2
+		double[][] ret = new double[noAttributes][2];
+
+		// reset min and max indices to Double.MAX_VALUE and Double.MIN_VALUE
+		// resp;
+		for (int a = 0; a < noAttributes; a++) {
+			ret[a][MIN_INDEX] = Double.MAX_VALUE;
+			ret[a][MAX_INDEX] = Double.MIN_VALUE;
+		}
+
+		// find min and max for each attribute
+		double attrVal;
+		Instance instance = null;
+		for (int i = 0; i < noInstances; i++) { // for each instance
+			instance = data.get(i);
+			for (int a = 0; a < noAttributes; a++) { // for each attribute
+				attrVal = instance.value(a);
+				if (attrVal < ret[a][MIN_INDEX])
+					ret[a][MIN_INDEX] = attrVal;
+				if (attrVal > ret[a][MAX_INDEX])
+					ret[a][MAX_INDEX] = attrVal;
+
+			}
+		}
+		return ret;
+	}
+
+	/**
+	 * Creates a random instance using the
+	 * {@link DatasetTools#getMinMax(Dataset)} method. The random instance is
+	 * created by choosing a random value for each attribute (which is between
+	 * the min and max value of the attribute).
+	 * 
+	 * @param data
+	 *            the data set
+	 * @return a random instance
+	 */
+	public static double[] getRandomInstance(Dataset data, Random r) {
+		final int MIN_INDEX = 0;
+		final int MAX_INDEX = 1;
+		double[][] minMax = getMinMax(data);
+		final int noAttributes = minMax.length;
+		double[] ret = new double[noAttributes];
+		for (int a = 0; a < noAttributes; a++) {
+			ret[a] = minMax[a][MIN_INDEX] + (minMax[a][MAX_INDEX] - minMax[a][MIN_INDEX]) * r.nextDouble();
+		}
+		return ret;
+	}
+
 
 }
