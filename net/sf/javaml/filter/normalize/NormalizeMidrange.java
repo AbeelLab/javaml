@@ -91,6 +91,8 @@ public class NormalizeMidrange extends AbstractFilter {
                         * normalRange + normalMiddle);
             }
         }
+        new ReplaceValueFilter(Double.NEGATIVE_INFINITY, normalMiddle).filter(instance);
+        new ReplaceValueFilter(Double.POSITIVE_INFINITY, normalMiddle).filter(instance);
         new ReplaceValueFilter(Double.NaN, normalMiddle).filter(instance);
     }
 
