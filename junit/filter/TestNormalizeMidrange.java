@@ -16,6 +16,24 @@ import org.junit.Test;
 
 public class TestNormalizeMidrange {
 
+	@Test
+	public void test3748533(){
+		
+		
+		Dataset data=new DefaultDataset();
+		for(int i=0;i<100;i++){
+			Instance rgA=InstanceTools.randomInstance(5);
+			rgA.put(0, 0.6);
+			data.add(rgA);
+		}
+		Instance rgB=InstanceTools.randomInstance(5);
+		
+		NormalizeMidrange nmr=new NormalizeMidrange(0.5,1);
+		nmr.build(data);
+		nmr.filter(rgB);
+		Assert.assertFalse("Value should not be infinite",Double.isInfinite(rgB.get(0)));
+		System.out.println(	rgB);
+	}
     @Test
     public void testNaNWhenAllSameValues() {
         Dataset data = new DefaultDataset();
