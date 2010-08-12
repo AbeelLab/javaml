@@ -23,7 +23,11 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import be.abeel.util.TimeInterval;
-
+/**
+ * 
+ * @author Thomas Abeel
+ *
+ */
 public class TestKNN {
 
 	@Test (expected=TrainingRequiredException.class)
@@ -33,6 +37,29 @@ public class TestKNN {
 		knn.classDistribution(InstanceTools.randomInstance(5));
 		
 	}
+	
+	@Test
+	public void testSingleClass2() {
+		try {
+			Dataset data = new DefaultDataset();
+			for (int i = 0; i < 10; i++) {
+				Instance is = InstanceTools.randomInstance(5);
+				is.setClassValue("class");
+				data.add(is);
+			}
+			KNearestNeighbors knn = new KNearestNeighbors(1);
+			knn.buildClassifier(data);
+			Map<Object, Double> distr = knn.classDistribution(InstanceTools.randomInstance(5));
+			System.out.println(distr);
+			Assert.assertFalse(Double.isNaN(distr.get("class")));
+			
+			
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+			Assert.fail();
+		}
+	}
+	
 	
 	@Test
 	public void testSingleClass(){
