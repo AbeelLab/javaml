@@ -9,6 +9,7 @@ import java.util.Set;
 
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
+import net.sf.javaml.core.exception.TrainingRequiredException;
 import net.sf.javaml.distance.DistanceMeasure;
 import net.sf.javaml.distance.EuclideanDistance;
 
@@ -58,6 +59,8 @@ public class KNearestNeighbors extends AbstractClassifier {
 
     @Override
     public Map<Object, Double> classDistribution(Instance instance) {
+    	if(training==null)
+    		throw new TrainingRequiredException();
         /* Get nearest neighbors */
         Set<Instance> neighbors = training.kNearest(k, instance, dm);
         /* Build distribution map */
