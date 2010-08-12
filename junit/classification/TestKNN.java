@@ -13,7 +13,10 @@ import net.sf.javaml.classification.KNearestNeighbors;
 import net.sf.javaml.classification.evaluation.CrossValidation;
 import net.sf.javaml.classification.evaluation.PerformanceMeasure;
 import net.sf.javaml.core.Dataset;
+import net.sf.javaml.core.DefaultDataset;
 import net.sf.javaml.core.Instance;
+import net.sf.javaml.core.exception.TrainingRequiredException;
+import net.sf.javaml.tools.InstanceTools;
 import net.sf.javaml.tools.data.FileHandler;
 
 import org.junit.Assert;
@@ -23,6 +26,27 @@ import be.abeel.util.TimeInterval;
 
 public class TestKNN {
 
+	@Test (expected=TrainingRequiredException.class)
+	public void testNoTraining(){
+		
+		KNearestNeighbors knn=new KNearestNeighbors(1);
+		knn.classDistribution(InstanceTools.randomInstance(5));
+		
+	}
+	
+	@Test
+	public void testSingleClass(){
+		Dataset data=new DefaultDataset();
+		for(int i=0;i<10;i++){
+			Instance is=InstanceTools.randomInstance(5);
+			is.setClassValue("class");
+		}
+		KNearestNeighbors knn=new KNearestNeighbors(1);
+		knn.buildClassifier(data);
+		Map<Object,Double>distr=knn.classDistribution(InstanceTools.randomInstance(5));
+		System.out.println(distr);
+	}
+	
     @Test
     public void testKNNIris() {
         try {
