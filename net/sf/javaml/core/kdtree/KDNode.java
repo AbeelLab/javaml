@@ -22,7 +22,7 @@ class KDNode {
     protected boolean deleted;
 
     // Method ins translated from 352.ins.c of Gonnet & Baeza-Yates
-    protected static KDNode ins(HPoint key, Object val, KDNode t, int lev, int K) throws KeyDuplicateException {
+    protected static KDNode ins(HPoint key, Object val, KDNode t, int lev, int K)  {
 
         if (t == null) {
             t = new KDNode(key, val);
