@@ -13,22 +13,33 @@ package net.sf.javaml.distance;
  * @see net.sf.javaml.distance.AbstractSimilarity
  * @see net.sf.javaml.distance.AbstractDistance
  * 
- * {@jmlSource}
- * 
- * @version %SVN.VERSION%
  * 
  * @author Thomas Abeel
  * 
  */
 public abstract class AbstractCorrelation implements DistanceMeasure {
 
-    /**
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -2504319617417736626L;
 
+	/**
+	 * Comparisons for correlation measures are done with the absolute value of
+	 * the real values
+	 */
 	public boolean compare(double x, double y) {
-        return Math.abs(x) > Math.abs(y);
-    }
+		return Math.abs(x) > Math.abs(y);
+	}
+
+	@Override
+	public double getMinValue() {
+		return 1;
+	}
+
+	@Override
+	public double getMaxValue() {
+		return 0;
+	}
 
 }

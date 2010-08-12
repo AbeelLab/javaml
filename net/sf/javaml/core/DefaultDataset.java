@@ -136,13 +136,13 @@ public class DefaultDataset extends Vector<Instance> implements Dataset {
     @Override
     public Set<Instance> kNearest(int k, Instance inst, DistanceMeasure dm) {
         Map<Instance, Double> closest = new HashMap<Instance, Double>();
-        double max = Double.POSITIVE_INFINITY;
+        double max = dm.getMaxValue();
         for (Instance tmp : this) {
             double d = dm.measure(inst, tmp);
             if (dm.compare(d, max) && !inst.equals(tmp)) {
                 closest.put(tmp, d);
                 if (closest.size() > k)
-                    max = removeFarthest(closest);
+                    max = removeFarthest(closest,dm);
             }
 
         }
@@ -153,15 +153,18 @@ public class DefaultDataset extends Vector<Instance> implements Dataset {
      * Removes the element from the vector that is farthest from the supplied
      * element.
      */
-    private double removeFarthest(Map<Instance, Double> vector) {
+    private double removeFarthest(Map<Instance, Double> vector,DistanceMeasure dm) {
         Instance tmp = null;// ; = vector.get(0);
-        double max = 0;
+        double max = dm.getMinValue();
+        //System.out.println("minvalue:"+max);
         for (Instance inst : vector.keySet()) {
             double d = vector.get(inst);
-            if (d > max) {
+            
+            if (dm.compare(max,d)) {
                 max = d;
                 tmp = inst;
             }
+           // System.out.println("d="+d+"\t"+max);
         }
         vector.remove(tmp);
         return max;

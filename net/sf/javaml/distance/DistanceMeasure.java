@@ -17,13 +17,11 @@ import net.sf.javaml.core.Instance;
  * Some distance measures are normalized, i.e. in the interval [0,1], but this
  * is not required by the interface.
  * 
- * {@jmlSource}
  * 
  * @see net.sf.javaml.distance.AbstractDistance
  * @see net.sf.javaml.distance.AbstractSimilarity
  * @see net.sf.javaml.distance.AbstractCorrelation
  * 
- * @version %SVN.VERSION%
  * 
  * @author Thomas Abeel
  * 
@@ -38,12 +36,11 @@ public interface DistanceMeasure extends Serializable {
 	 *            the second instance
 	 * @return the distance between the two instances
 	 */
-    public double measure(Instance x, Instance y);
-
+	public double measure(Instance x, Instance y);
 
 	/**
 	 * Returns whether the first distance, similarity or correlation is better
-	 * than the second distance, similarity or correlation. 
+	 * than the second distance, similarity or correlation.
 	 * 
 	 * Both values should be calculated using the same measure.
 	 * 
@@ -59,5 +56,26 @@ public interface DistanceMeasure extends Serializable {
 	 *         other cases.
 	 */
 	public boolean compare(double x, double y);
-   
+
+	/**
+	 * Returns the value that this distance metric produces for the lowest
+	 * distance or highest similarity. This is mainly useful to initialize
+	 * variables to be used in comparisons with the compare method of this
+	 * class.
+	 * 
+	 * 
+	 * 
+	 * @return minimum possible value of the distance metric
+	 */
+	public double getMinValue();
+
+	/**
+	 * Returns the value that this distance metric produces for the highest
+	 * distance or lowest similarity. This is
+	 * mainly useful to initialize variables to be used in comparisons with the
+	 * compare method of this class.
+	 * 
+	 * @return maximum possible value of the distance metric
+	 */
+	public double getMaxValue();
 }

@@ -12,9 +12,6 @@ package net.sf.javaml.distance;
  * @see net.sf.javaml.distance.AbstractDistance
  * @see net.sf.javaml.distance.AbstractCorrelation
  * 
- * {@jmlSource}
- * 
- * @version %SVN.VERSION%
  * 
  * @author Thomas Abeel
  * 
@@ -30,4 +27,13 @@ public abstract class AbstractSimilarity implements DistanceMeasure {
         return x > y;
     }
 
+	@Override
+	public double getMinValue()	{
+	  return 1;
+	}
+	
+	@Override
+	public double getMaxValue()	{
+	  return 0;
+	}
 }

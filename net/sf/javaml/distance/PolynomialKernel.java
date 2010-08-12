@@ -42,7 +42,14 @@ public class PolynomialKernel implements DistanceMeasure {
     public boolean compare(double x, double y) {
         throw new UnsupportedOperationException("Not implemented");
     }
-
+    @Override
+    public double getMinValue() {
+      throw new UnsupportedOperationException("Not implemented");
+    }
+    @Override
+    public double getMaxValue() {
+      throw new UnsupportedOperationException("Not implemented");
+    }
    
 
 }
