@@ -5,19 +5,16 @@ package net.sf.javaml.classification.meta;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 import net.sf.javaml.classification.AbstractClassifier;
 import net.sf.javaml.classification.Classifier;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
-import net.sf.javaml.tools.DatasetTools;
+import net.sf.javaml.sampling.Sampling;
 
 /**
  * Bootstrap aggregating (Bagging) meta learner. This is the most basic
  * implementation of Bagging.
- * 
- * {@jmlSource}
  * 
  * @author Thomas Abeel
  * 
@@ -28,15 +25,8 @@ public class SimpleBagging extends AbstractClassifier {
 
     private Classifier[] classifiers;
 
-    private Random rg;
-
     public SimpleBagging(Classifier[] classifiers){
-        this(classifiers,new Random(System.currentTimeMillis()));
-    }
-    
-    public SimpleBagging(Classifier[] classifiers, Random rg) {
         this.classifiers = classifiers;
-        this.rg = rg;
     }
 
     /* Reference to the training data */
@@ -46,7 +36,7 @@ public class SimpleBagging extends AbstractClassifier {
     public void buildClassifier(Dataset data) {
         this.reference = data;
         for (int i = 0; i < classifiers.length; i++) {
-            Dataset sample = DatasetTools.bootstrap(data, data.size(), rg);
+            Dataset sample = Sampling.NormalBootstrapping.sample(data).x();
             classifiers[i].buildClassifier(sample);
         }
     }
