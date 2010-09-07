@@ -30,10 +30,10 @@ public class LibSVM extends AbstractClassifier {
 		}
 	};
 	/* By default console output is turned off. */
-	static{
+	static {
 		svm.svm_set_print_string_function(svm_print_null);
 	}
-	
+
 	private static final long serialVersionUID = -8901871714620581945L;
 
 	/**
@@ -144,35 +144,39 @@ public class LibSVM extends AbstractClassifier {
 				prob[i][model.SV[i][j].index] = model.SV[i][j].value;
 			}
 		}
+		/* Weights are only available for linear SVMs */
+		if (param.svm_type == svm_parameter.C_SVC) {
+			double w_list[][][] = new double[model.nr_class][model.nr_class - 1][data
+					.noAttributes()];
 
-		double w_list[][][] = new double[model.nr_class][model.nr_class - 1][data
-				.noAttributes()];
-
-		for (int i = 0; i < data.noAttributes(); ++i) {
-			for (int j = 0; j < model.nr_class - 1; ++j) {
-				int index = 0;
-				int end = 0;
-				double acc;
-				for (int k = 0; k < model.nr_class; ++k) {
-					acc = 0.0;
-					index += (k == 0) ? 0 : model.nSV[k - 1];
-					end = index + model.nSV[k];
-					for (int m = index; m < end; ++m) {
-						acc += coef[j][m] * prob[m][i];
+			for (int i = 0; i < data.noAttributes(); ++i) {
+				for (int j = 0; j < model.nr_class - 1; ++j) {
+					int index = 0;
+					int end = 0;
+					double acc;
+					for (int k = 0; k < model.nr_class; ++k) {
+						acc = 0.0;
+						index += (k == 0) ? 0 : model.nSV[k - 1];
+						end = index + model.nSV[k];
+						for (int m = index; m < end; ++m) {
+							acc += coef[j][m] * prob[m][i];
+						}
+						w_list[k][j][i] = acc;
 					}
-					w_list[k][j][i] = acc;
 				}
 			}
-		}
 
-		weights = new double[data.noAttributes()];
-		for (int i = 0; i < model.nr_class - 1; ++i) {
-			for (int j = i + 1, k = i; j < model.nr_class; ++j, ++k) {
-				for (int m = 0; m < data.noAttributes(); ++m) {
-					weights[m] = (w_list[i][k][m] + w_list[j][i][m]);
+			weights = new double[data.noAttributes()];
+			for (int i = 0; i < model.nr_class - 1; ++i) {
+				for (int j = i + 1, k = i; j < model.nr_class; ++j, ++k) {
+					for (int m = 0; m < data.noAttributes(); ++m) {
+						weights[m] = (w_list[i][k][m] + w_list[j][i][m]);
 
+					}
 				}
 			}
+		} else {
+			weights = null;
 		}
 
 	}
@@ -224,8 +228,8 @@ public class LibSVM extends AbstractClassifier {
 	public Object classify(Instance instance) {
 		svm_node[] x = convert(instance);
 		double d = svm.svm_predict(model, x);
-
-		return data.classValue((int) d);
+		Object out = data.classValue((int) d);
+		return out;
 	}
 
 	public int[] getLabels() {
