@@ -30,7 +30,7 @@ public class Bagging extends AbstractClassifier {
 
 	private Dataset dataReference = null;
 
-	private Sampling samplingMethod;
+	private Sampling samplingMethod=Sampling.NormalBootstrapping;
 
 	private long seed;
 
