@@ -4,6 +4,7 @@
 package net.sf.javaml.featureselection.ranking;
 
 import net.sf.javaml.core.Dataset;
+import net.sf.javaml.core.exception.TrainingRequiredException;
 import net.sf.javaml.featureselection.FeatureRanking;
 import net.sf.javaml.featureselection.FeatureScoring;
 import net.sf.javaml.utils.ArrayUtils;
@@ -11,16 +12,13 @@ import net.sf.javaml.utils.ArrayUtils;
 /**
  * Creates an attribute ranking from an attribute evaluation technique.
  * 
- * {@jmlSource}
- * 
- * @version %SVN.VERSION%
  * 
  * @author Thomas Abeel
  * 
  */
 public class RankingFromScoring implements FeatureRanking {
 
-    private int[] ranking;
+    private int[] ranking=null;
 
     private FeatureScoring ae;
 
@@ -43,12 +41,15 @@ public class RankingFromScoring implements FeatureRanking {
     }
 
     public int rank(int attIndex) {
-
+    	if(ranking==null)
+    		throw new TrainingRequiredException();
         return ranking[attIndex];
     }
 
     @Override
     public int noAttributes() {
+    	if(ranking==null)
+    		throw new TrainingRequiredException();
        return ranking.length;
         
     }
