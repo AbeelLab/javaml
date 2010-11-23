@@ -15,9 +15,6 @@ import net.sf.javaml.core.Instance;
  * <code>filterDataset</code> method applies the filter separately to each
  * instance.
  * 
- * {@jmlSource}
- * 
- * @version %SVN.REVISION%
  * 
  * @author Thomas Abeel
  */
