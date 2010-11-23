@@ -17,12 +17,9 @@ import java.util.Vector;
  * indices to values. Attributes for which the value is not set return a default
  * value.
  * 
- * {@jmlSource}
- * 
  * @see Dataset
  * @see Instance
  * 
- * @version %SVN.REVISION%
  * 
  * @author Thomas Abeel
  * 

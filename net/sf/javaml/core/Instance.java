@@ -11,11 +11,11 @@ import java.util.SortedSet;
 /**
  * The interface for instances in a data set.
  * 
- * {@jmlSource}
  * 
  * @see Dataset
+ * @see DenseInstnace
+ * @see SparseInstance
  * 
- * @version %SVN.REVISION%
  * 
  * @author Thomas Abeel
  * 
