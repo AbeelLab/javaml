@@ -58,6 +58,7 @@ public class LinearRankingEnsemble implements FeatureRanking {
 	@Override
 	public void build(Dataset data) {
 		int numAtt = data.noAttributes();
+		/* [i] contains the sum of ranks of feature i */
 		double[] sum = new double[numAtt];
 		for (FeatureRanking ae : aes) {
 			Dataset bootstrapData = new DefaultDataset();
