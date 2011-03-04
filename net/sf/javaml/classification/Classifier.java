@@ -38,7 +38,7 @@ public interface Classifier extends Serializable {
 
     /**
      * Generate the membership distribution for this instance using this
-     * classifier.
+     * classifier. All values should be in the interval [0,1]
      * 
      * Note: The returned map may not contain a value for all classes that were
      * present in the data set used for training. If the map does not contain a
