@@ -143,8 +143,9 @@ final public class DatasetTools {
 	 */
 	public static Instance average(Dataset data) {
 		double[] tmpOut = new double[data.noAttributes()];
-		double sum=0;
+		
 		for (int i = 0; i < data.noAttributes(); i++) {
+			double sum=0;
 			for (int j = 0; j < data.size(); j++) {
 				sum+= data.get(j).value(i);
 			}
