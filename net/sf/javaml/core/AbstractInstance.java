@@ -37,7 +37,7 @@ public abstract class AbstractInstance implements Instance {
 
         @Override
         public boolean hasNext() {
-            return index < noAttributes() - 1;
+            return index < noAttributes();
         }
 
         @Override
