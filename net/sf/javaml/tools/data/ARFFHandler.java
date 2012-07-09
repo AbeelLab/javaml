@@ -79,7 +79,7 @@ public class ARFFHandler {
                         } catch (NumberFormatException e) {
                             val = Double.NaN;
                         }
-                        if (i > classIndex)
+                        if (classIndex!=-1 && i > classIndex)
                             values[i - 1] = val;
                         else
                             values[i] = val;
