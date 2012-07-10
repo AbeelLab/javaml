@@ -55,11 +55,7 @@
 </zip>
 	
 	
-<tar tarfile="${dist}.tar" >
-	 <tarfileset dir="${dist}" prefix="javaml-${version}" />
-</tar>
-<gzip zipfile="${dist}.tar.gz" src="${dist}.tar" />
-<delete file="${dist}.tar" />
+
 <!--<delete failonerror="false" dir="${dist}" />-->
 </target>
 
