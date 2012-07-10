@@ -13,7 +13,7 @@ import net.sf.javaml.core.Instance;
  * When applying a filter to a data set it may modify the instances in the
  * data set, and can alter the content of the data set.
  * 
- * {@jmlSource}
+ * 
  * 
  * @see Instance
  * @see Dataset

@@ -15,7 +15,7 @@ import weka.core.Instances;
 /**
  * Provides a bridge between Java-ML and the clustering algorithms in WEKA.
  * 
- * {@jmlSource}
+ * 
  * 
  * @version %SVN.REVISION%
  * 

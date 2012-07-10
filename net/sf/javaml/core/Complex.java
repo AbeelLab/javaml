@@ -6,7 +6,7 @@ package net.sf.javaml.core;
 /**
  * Implements a mutable Complex number.
  * 
- * {@jmlSource}
+ * 
  * 
  * @see ComplexInstance
  * 

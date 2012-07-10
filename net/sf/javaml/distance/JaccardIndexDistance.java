@@ -28,7 +28,7 @@ import net.sf.javaml.core.Instance;
  * Where n1 and n2 are the numbers of elements in sets S1 and S2, respectively,
  * and n12 is the number that is in both sets (section).
  * 
- * {@jmlSource}
+ * 
  * 
  * @version %SVN.VERSION%
  * 

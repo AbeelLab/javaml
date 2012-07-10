@@ -8,7 +8,7 @@ import java.util.Iterator;
 /**
  * Implementation of some standard methods for instances.
  * 
- * {@jmlSource}
+ * 
  * 
  * @see Instance
  * 

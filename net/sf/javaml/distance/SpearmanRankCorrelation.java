@@ -10,7 +10,7 @@ import net.sf.javaml.core.Instance;
  * position 0 of the instance should be the rank of attribute 0. And so on and so forth.
  * 
  * 
- * {@jmlSource}
+ * 
  * 
  * 
  * @version %SVN.REVISION%

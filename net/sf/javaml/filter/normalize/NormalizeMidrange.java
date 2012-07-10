@@ -31,7 +31,7 @@ import net.sf.javaml.tools.DatasetTools;
  * 
  * The default is normalization in the interval [-1,1].
  * 
- * {@jmlSource}
+ * 
  * 
  * @see InstanceFilter
  * @see DatasetFilter

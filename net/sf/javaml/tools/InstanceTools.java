@@ -11,7 +11,7 @@ import net.sf.javaml.core.Instance;
 /**
  * Provides utility methods for manipulating, creating and modifying instances.
  * 
- * {@jmlSource}
+ * 
  * 
  * @see Instance
  * @see SimpleInstance

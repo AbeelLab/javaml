@@ -9,7 +9,7 @@ package net.sf.javaml.featureselection;
  * interesting for removing attributes with little information to make your
  * algorithms run faster.
  * 
- * {@jmlSource}
+ * 
  * 
  * @version %SVN.VERSION%
  * 

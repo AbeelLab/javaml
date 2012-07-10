@@ -13,7 +13,7 @@ import net.sf.javaml.core.Instance;
  * When applying a filter to an instance it may modify the instance and will
  * return the modified version of the instance.
  * 
- * {@jmlSource}
+ * 
  * 
  * @see Instance
  * @see Dataset

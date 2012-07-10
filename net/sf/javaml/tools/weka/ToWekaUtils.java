@@ -16,7 +16,7 @@ import weka.core.Instances;
  * Provides utility methods to convert data to the WEKA format.
  * 
  * 
- * {@jmlSource}
+ * 
  * 
  * @version %SVN.REVISION%
  * 

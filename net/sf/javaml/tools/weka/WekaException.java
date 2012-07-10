@@ -7,7 +7,7 @@ package net.sf.javaml.tools.weka;
  * This exception should be thrown when something went wrong with calls to the
  * WEKA library.
  * 
- * {@jmlSource}
+ * 
  * 
  * @version %SVN.REVISION%
  * 

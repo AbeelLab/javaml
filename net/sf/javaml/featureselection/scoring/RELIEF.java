@@ -18,7 +18,7 @@ import net.sf.javaml.filter.normalize.NormalizeMidrange;
  * This implementation is extended to include more neighbors in calculating the
  * weights of the features.
  * 
- * {@jmlSource}
+ * 
  * 
  * @version %SVN.VERSION%
  * 

@@ -17,7 +17,7 @@ import net.sf.javaml.utils.ContingencyTables;
 /**
  * Implements the Symmetrical Uncertainty (SU) evaluation method for attributes.
  * 
- * {@jmlSource}
+ * 
  * 
  * @version %SVN.VERSION%
  * 

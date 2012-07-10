@@ -16,7 +16,7 @@ import net.sf.javaml.utils.ContingencyTables;
 /**
  * Implements the Gain Ratio evaluation method for attributes.
  * 
- * {@jmlSource}
+ * 
  * 
  * @version %SVN.VERSION%
  * 

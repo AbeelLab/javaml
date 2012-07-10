@@ -16,7 +16,7 @@ import java.util.TreeSet;
  * Implementation of a dense instance. A dense instance is a wrapper around a
  * double array that provides a value for each attribute index.
  * 
- * {@jmlSource}
+ * 
  * 
  * @see Dataset
  * @see Instance

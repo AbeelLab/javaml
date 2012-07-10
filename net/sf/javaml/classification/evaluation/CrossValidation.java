@@ -16,7 +16,7 @@ import net.sf.javaml.core.Instance;
  * Implementation of the cross-validation evaluation technique.
  * 
  * 
- * {@jmlSource}
+ * 
  * 
  * @version %SVN.VERSION%
  * 

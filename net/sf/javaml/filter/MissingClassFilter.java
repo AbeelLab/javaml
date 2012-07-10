@@ -11,7 +11,7 @@ import net.sf.javaml.core.Instance;
 /**
  * Filters all instances from a data set that have their class value not set
  * 
- * {@jmlSource}
+ * 
  * 
  * 
  * @version %SVN.REVISION%

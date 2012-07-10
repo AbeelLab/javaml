@@ -9,7 +9,7 @@ package net.sf.javaml.featureselection;
  * values in the ranking means that the attribute is less informative or is
  * worth less.
  * 
- * {@jmlSource}
+ * 
  * 
  * 
  * @version %SVN.VERSION%

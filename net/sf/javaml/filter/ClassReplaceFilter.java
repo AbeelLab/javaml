@@ -8,7 +8,7 @@ import net.sf.javaml.core.Instance;
 /**
  * Replaces a certain class value with another one.
  * 
- * {@jmlSource}
+ * 
  * 
  * 
  * @version %SVN.REVISION%

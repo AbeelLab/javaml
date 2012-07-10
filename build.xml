@@ -5,7 +5,7 @@
 	<!-- set global properties for this build -->
 	<property name="src" location="." />
 	<property name="build" location="build" />
-	<property name="version" value="0.1.6" />
+	<property name="version" value="0.1.7" />
 
 	<property name="dist" location="javaml-${version}" />
 
@@ -15,12 +15,12 @@
 				<include name="**/*.java" />
 			</fileset>
 		</replaceregexp>
-		<javadoc verbose="false" classpath="lib/weka.jar:lib/ajt-2.5.jar:lib/commons-math-1.2.jar:lib/Jama-1.0.2.jar:lib/libsvm.jar" packagenames="external.*,tutorials.*,net.sf.javaml.*,libsvm.*" sourcepath="${build}/src" defaultexcludes="yes" destdir="${dist}/doc" author="true" version="true" use="true" windowtitle="Java Machine Learning Library ${version}">
+		<javadoc verbose="false" classpath="lib/weka.jar:lib/ajt-2.9.jar:lib/commons-math-1.2.jar:lib/Jama-1.0.2.jar:lib/libsvm.jar" packagenames="external.*,tutorials.*,net.sf.javaml.*,libsvm.*" sourcepath="${build}/src" defaultexcludes="yes" destdir="${dist}/doc" author="true" version="true" use="true" windowtitle="Java Machine Learning Library ${version}">
 			<doctitle>
 				<![CDATA[<h1>Java Machine Learning Library ${version}</h1>]]>
 			</doctitle>		
 		<bottom>
-			<![CDATA[<i>Copyright &#169; 2006-2010 - <a target="_blank" href="http://www.abeel.be/">Thomas Abeel</a> - All Rights Reserved.</i>]]>
+			<![CDATA[<i>Copyright &#169; 2006-2012 - <a target="_blank" href="http://www.abeel.be/">Thomas Abeel</a> - All Rights Reserved.</i>]]>
 			<![CDATA[<a href="http://sourceforge.net"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=179204&amp;type=1" width="88" height="31" border="0" alt="SourceForge.netLogo" /></a>]]>
 		</bottom>
 	
@@ -75,7 +75,7 @@
 
 <target name="compile" depends="init" description="compile the source ">
 <!-- Compile the java code from ${src} into ${build} -->
-<javac debug="true" debuglevel="lines,vars,source" source="1.6" target="1.6" srcdir="${src}" destdir="${build}" excludes="devtools/**,junit/**,tutorials/**" >
+<javac encoding="iso-8859-1" debug="true" debuglevel="lines,vars,source" source="1.6" target="1.6" srcdir="${src}" destdir="${build}" excludes="devtools/**,junit/**,tutorials/**" >
 	<classpath>	
 		<fileset dir="lib/">
 			<include name="*.jar" />
@@ -131,7 +131,7 @@
 * along with the Java Machine Learning Library; if not, write to the Free Software${line.separator}
 * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA${line.separator}
 * ${line.separator}
-* Copyright (c) 2006-2010, Thomas Abeel${line.separator}
+* Copyright (c) 2006-2012, Thomas Abeel${line.separator}
 * ${line.separator}
 * Project: http://java-ml.sourceforge.net/${line.separator}
 * ">

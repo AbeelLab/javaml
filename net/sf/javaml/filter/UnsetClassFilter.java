@@ -10,7 +10,7 @@ import net.sf.javaml.core.Instance;
  * Filter to remove class information from a data set or instance.
  * 
  * 
- * {@jmlSource}
+ * 
  * 
  * @version %SVN.REVISION%
  * 

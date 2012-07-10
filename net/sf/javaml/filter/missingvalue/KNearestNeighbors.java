@@ -18,7 +18,7 @@ import net.sf.javaml.utils.ArrayUtils;
  * neighbors also have the same missing attributes, it is impossible to replace
  * the original value.
  * 
- * {@jmlSource}
+ * 
  * 
  * @author Thomas Abeel
  * 

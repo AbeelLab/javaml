@@ -13,7 +13,7 @@ import net.sf.javaml.distance.DistanceMeasure;
 /**
  * Interface for a data set.
  * 
- * {@jmlSource}
+ * 
  * 
  * @version %SVN.REVISION%
  * 

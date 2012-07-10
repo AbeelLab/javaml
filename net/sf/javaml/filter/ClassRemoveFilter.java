@@ -11,7 +11,7 @@ import net.sf.javaml.core.Instance;
 /**
  * Removes all instances from a data set that have a specific class value
  * 
- * {@jmlSource}
+ * 
  * 
  * 
  * @version %SVN.REVISION%
