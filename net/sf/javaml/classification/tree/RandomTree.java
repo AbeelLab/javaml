@@ -87,7 +87,7 @@ public class RandomTree implements Classifier {
                 splitAttributes.add(i);
 
             while (splitAttributes.size() / (iterationCount * iterationCount) > noSplitAttributes) {
-                splitAttributes.remove(rg.nextInt(splitAttributes.size()));
+            	splitAttributes.remove(rg.nextInt(splitAttributes.size()));
             }
 
             /* calculate mean for each class */
