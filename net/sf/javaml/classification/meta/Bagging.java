@@ -43,6 +43,8 @@ public class Bagging extends AbstractClassifier {
 	@Deprecated
 	public Bagging(Classifier[] classifiers, Random rg) {
 		this.classifiers = classifiers;
+		if(rg==null)
+			rg=new Random();
 		this.seed = rg.nextLong();
 	}
 
