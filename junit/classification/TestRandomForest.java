@@ -25,14 +25,43 @@ import org.junit.Test;
 import be.abeel.util.TimeInterval;
 
 public class TestRandomForest {
+
+	@Test
+	public void testRF2() {
+		try {
+			System.out.println("Running tests on the Iris data set...");
+
+			Dataset data = FileHandler.loadDataset(new File("devtools/data/iris.data"), 4, ",");
+
+			RandomForest forest = new RandomForest(100, false, 3, null);
+			crossValidate(forest, data);
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail();
+		}
+	}
+
+	private void crossValidate(Classifier classifier, Dataset data) {
+
+		Dataset datasets[];
+		/*
+		 * Outter map: actual class, predictions Inner map: predicted class,
+		 * count
+		 */
+		Map<Object, Map<Object, Integer>> confusionMatrix;
+
+		datasets = data.folds(2, new Random());
+		classifier.buildClassifier(datasets[0]);
+
+		// TODO build confusion matrix
+	}
+
 	@Test
 	public void testRF() {
 		try {
 			Classifier classifier = new RandomForest(10);
-			Dataset data = FileHandler.loadDataset(new File(
-					"devtools/data/iris.data"), 4, ",");
-			Dataset[] folds = data.folds(10, new Random(System
-					.currentTimeMillis()));
+			Dataset data = FileHandler.loadDataset(new File("devtools/data/iris.data"), 4, ",");
+			Dataset[] folds = data.folds(10, new Random(System.currentTimeMillis()));
 			Map<Object, PerformanceMeasure> out = new HashMap<Object, PerformanceMeasure>();
 			for (Object o : data.classes()) {
 				out.put(o, new PerformanceMeasure());
@@ -45,11 +74,11 @@ public class TestRandomForest {
 						training.addAll(folds[j]);
 
 				}
-				
+
 				classifier.buildClassifier(training);
 
 				for (Instance instance : validation) {
-				
+
 					Object prediction = classifier.classify(instance);
 					Assert.assertNotNull(prediction);
 					if (instance.classValue().equals(prediction)) {// prediction
@@ -93,13 +122,11 @@ public class TestRandomForest {
 	public void testRF2Performance() {
 		long seed = System.currentTimeMillis();
 		try {
-			Dataset data = FileHandler.loadDataset(new File(
-					"devtools/data/colon.csv.gz"), 0, ",");
+			Dataset data = FileHandler.loadDataset(new File("devtools/data/colon.csv.gz"), 0, ",");
 			System.out.println("Loader: " + data.classes());
 			RandomForest rf2 = new RandomForest(10, false, 20, new Random(seed));
 			CrossValidation cv = new CrossValidation(rf2);
-			Map<Object, PerformanceMeasure> p = cv.crossValidation(data, 5,
-					new Random(10));
+			Map<Object, PerformanceMeasure> p = cv.crossValidation(data, 5, new Random(10));
 			System.out.println("RF2:" + p);
 			System.out.println("RF2:--" + p.get("0").getAccuracy());
 
@@ -119,8 +146,7 @@ public class TestRandomForest {
 
 		try {
 			/* Load a data set */
-			Dataset data = FileHandler.loadDataset(new File(
-					"devtools/data/iris.data"), 4, ",");
+			Dataset data = FileHandler.loadDataset(new File("devtools/data/iris.data"), 4, ",");
 			/*
 			 * Contruct a RF classifier that uses 5 neighbors to make a
 			 * decision.
@@ -132,8 +158,7 @@ public class TestRandomForest {
 			 * Load a data set, this can be a different one, but we will use the
 			 * same one.
 			 */
-			Dataset dataForClassification = FileHandler.loadDataset(new File(
-					"devtools/data/iris.data"), 4, ",");
+			Dataset dataForClassification = FileHandler.loadDataset(new File("devtools/data/iris.data"), 4, ",");
 			/* Counters for correct and wrong predictions. */
 			int correct = 0, wrong = 0;
 			/* Classify all instances and check with the correct class values */
@@ -162,8 +187,7 @@ public class TestRandomForest {
 
 		try {
 			/* Load a data set */
-			Dataset data = FileHandler.loadDataset(new File(
-					"devtools/data/iris.data"), 4, ",");
+			Dataset data = FileHandler.loadDataset(new File("devtools/data/iris.data"), 4, ",");
 			/*
 			 * Contruct a RF classifier.
 			 */
@@ -174,8 +198,7 @@ public class TestRandomForest {
 			 * Load a data set, this can be a different one, but we will use the
 			 * same one.
 			 */
-			Dataset dataForClassification = FileHandler.loadDataset(new File(
-					"devtools/data/iris.data"), 4, ",");
+			Dataset dataForClassification = FileHandler.loadDataset(new File("devtools/data/iris.data"), 4, ",");
 			/* Counters for correct and wrong predictions. */
 			int correct = 0, wrong = 0;
 			/* Classify all instances and check with the correct class values */
@@ -209,13 +232,11 @@ public class TestRandomForest {
 	public void testRFPerformance() {
 		long seed = System.currentTimeMillis();
 		try {
-			Dataset data = FileHandler.loadDataset(new File(
-					"devtools/data/colon.csv.gz"), 0, ",");
+			Dataset data = FileHandler.loadDataset(new File("devtools/data/colon.csv.gz"), 0, ",");
 			System.out.println("Loader: " + data.classes());
 			RandomForest rf2 = new RandomForest(10, false, 20, new Random(seed));
 			CrossValidation cv = new CrossValidation(rf2);
-			Map<Object, PerformanceMeasure> p = cv.crossValidation(data, 5,
-					new Random(10));
+			Map<Object, PerformanceMeasure> p = cv.crossValidation(data, 5, new Random(10));
 			System.out.println("Performance: " + p);
 			System.out.println("Accuracy: " + p.get("0").getAccuracy());
 
