@@ -25,6 +25,17 @@ import org.junit.Test;
 import be.abeel.util.TimeInterval;
 
 public class TestRandomForest {
+	@Test
+	public void testRF3() {
+		try {
+			Dataset data = FileHandler.loadDataset(new File("devtools/data/iris.data"), 4, ",");
+			Classifier rf = new RandomForest(10);
+			rf.buildClassifier(data);
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail();
+		}
+	}
 
 	@Test
 	public void testRF2() {
