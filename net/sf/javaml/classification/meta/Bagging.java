@@ -48,6 +48,9 @@ public class Bagging extends AbstractClassifier {
 		this.seed = rg.nextLong();
 	}
 
+	public Bagging(Classifier[] classifiers,Sampling s){
+		this(classifiers,s,System.currentTimeMillis());
+	}
 	public Bagging(Classifier[] classifiers, Sampling s, long seed) {
 		this.classifiers = classifiers;
 		this.seed = seed;
