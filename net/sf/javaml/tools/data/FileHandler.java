@@ -15,6 +15,7 @@ import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.core.SparseInstance;
 import be.abeel.io.GZIPPrintWriter;
+import be.abeel.io.UnicodeReader;
 
 /**
  * A class to load data sets from file and write them back.
@@ -102,10 +103,10 @@ public class FileHandler extends StreamHandler{
      */
     public static Dataset loadDataset(File f, int classIndex, String separator) throws IOException {
         if (f.getName().endsWith("gz"))
-            return load(new InputStreamReader(new GZIPInputStream(new FileInputStream(f))), classIndex, separator);
+            return load(new UnicodeReader(new GZIPInputStream(new FileInputStream(f))), classIndex, separator);
         if (f.getName().endsWith("zip"))
-            return load(new InputStreamReader(new ZipInputStream(new FileInputStream(f))), classIndex, separator);
-        return load(new InputStreamReader(new FileInputStream(f)), classIndex, separator);
+            return load(new UnicodeReader(new ZipInputStream(new FileInputStream(f))), classIndex, separator);
+        return load(new UnicodeReader(new FileInputStream(f)), classIndex, separator);
 
     }
 
