@@ -29,10 +29,7 @@ at http://java-ml.sourceforge.net
 
 3. Requirements
 ===============
-Version for JDK 1.5 and 1.6 are available. The source is originally written for 
-1.6, and backported for each release to 1.5.
-
-A version for JDK 1.5 is available since release 0.1.3
+Java 6
 
 4. Dependencies
 ===============
@@ -41,8 +38,8 @@ Required libraries:
 	Apache Commons Math is distributed under Apache License 2.0
 	http://commons.apache.org/math/
 
-- Abeel Java Toolkit: used in some classes, version 2.2 is included
-	AJT is distributed under GNU GPL 2 or later
+- Abeel Java Toolkit: used in some classes, version 2.9 is included
+	AJT is distributed under GNU LGPL 2 or later
 	http://sourceforge.net/projects/ajt/
 	
 - Jama: used in some algorithms, version 1.0.2 is included
