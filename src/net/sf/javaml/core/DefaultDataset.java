@@ -207,7 +207,7 @@ public class DefaultDataset extends Vector<Instance> implements Dataset {
     public int noAttributes() {
         if (this.size() == 0)
             return 0;
-        return maxAttributes;
+        return get(0).noAttributes();
     }
 
     @Override
