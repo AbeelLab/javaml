@@ -5,7 +5,7 @@
 	<!-- set global properties for this build -->
 	<property name="src" location="src/" />
 	<property name="build" location="build" />
-	<property name="version" value="0.1.7" />
+	<property name="version" value="0.1.8" />
 
 	<property name="dist" location="javaml-${version}" />
 
@@ -15,7 +15,7 @@
 				<include name="**/*.java" />
 			</fileset>
 		</replaceregexp>
-		<javadoc verbose="false" classpath="lib/weka.jar:lib/ajt-2.9.jar:lib/commons-math-1.2.jar:lib/Jama-1.0.2.jar:lib/libsvm.jar" packagenames="external.*,tutorials.*,net.sf.javaml.*,libsvm.*" sourcepath="${build}/src" defaultexcludes="yes" destdir="${dist}/doc" author="true" version="true" use="true" windowtitle="Java Machine Learning Library ${version}">
+		<javadoc verbose="false" classpath="lib/weka.jar:lib/ajt-2.11.jar:lib/commons-math-1.2.jar:lib/Jama-1.0.2.jar:lib/libsvm.jar" packagenames="external.*,tutorials.*,net.sf.javaml.*,libsvm.*" sourcepath="${build}/src" defaultexcludes="yes" destdir="${dist}/doc" author="true" version="true" use="true" windowtitle="Java Machine Learning Library ${version}">
 			<doctitle>
 				<![CDATA[<h1>Java Machine Learning Library ${version}</h1>]]>
 			</doctitle>		
