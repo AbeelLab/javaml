@@ -3,6 +3,7 @@
  */
 package net.sf.javaml.core;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -23,7 +24,7 @@ import net.sf.javaml.distance.DistanceMeasure;
  * @author Thomas Abeel
  * 
  */
-public class DefaultDataset extends Vector<Instance> implements Dataset {
+public class DefaultDataset extends ArrayList<Instance> implements Dataset {
 
     private int maxAttributes = 0;
 
@@ -92,23 +93,23 @@ public class DefaultDataset extends Vector<Instance> implements Dataset {
         super.add(index, e);
     }
 
-    @Override
-    public synchronized void addElement(Instance e) {
-        check(e);
-        super.addElement(e);
-    }
-
-    @Override
-    public synchronized void insertElementAt(Instance e, int index) {
-        check(e);
-        super.insertElementAt(e, index);
-    }
-
-    @Override
-    public synchronized void setElementAt(Instance e, int index) {
-        check(e);
-        super.setElementAt(e, index);
-    }
+//    @Override
+//    public synchronized void addElement(Instance e) {
+//        check(e);
+//        super.addElement(e);
+//    }
+//
+//    @Override
+//    public synchronized void insertElementAt(Instance e, int index) {
+//        check(e);
+//        super.insertElementAt(e, index);
+//    }
+//
+//    @Override
+//    public synchronized void setElementAt(Instance e, int index) {
+//        check(e);
+//        super.setElementAt(e, index);
+//    }
 
     @Override
     public Instance instance(int index) {
