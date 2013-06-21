@@ -3,6 +3,8 @@ The Java Machine Learning Library readme documentation.
 This document covers the very basic documentation of the library. 
 
 The Java Machine Learning Library is licensed under GNU-GPL.
+-- Thomas, May 18, 2013: Work is under way to split the GPL code from the core which 
+-- I will relicense under a less restrictive license. 
 
 More elaborate documentation can be found on the web site
 http://java-ml.sourceforge.net/
