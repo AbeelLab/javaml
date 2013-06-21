@@ -60,6 +60,7 @@ public class LinearRankingEnsemble implements FeatureRanking {
 		int numAtt = data.noAttributes();
 		/* [i] contains the sum of ranks of feature i */
 		double[] sum = new double[numAtt];
+
 		for (FeatureRanking ae : aes) {
 			Dataset bootstrapData = new DefaultDataset();
 			while (bootstrapData.size() < data.size()) {
@@ -73,6 +74,21 @@ public class LinearRankingEnsemble implements FeatureRanking {
 		}
 		toRank(sum);
 
+	}
+
+	/**
+	 * Returns the rank distribution for attribute i
+	 * 
+	 * @param idx
+	 *            attribute index to find the distribution for
+	 */
+	public int[] distribution(int idx) {
+		int[] distr = new int[aes.length];
+		for(int i=0;i<aes.length;i++){
+			distr[i]=aes[i].rank(idx);
+		}
+		return distr;
+		
 	}
 
 	private void toRank(double[] sum) {
