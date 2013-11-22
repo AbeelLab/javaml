@@ -40,8 +40,8 @@ public class TutorialClusterEvaluation {
         Dataset[] clusters3 = km3.cluster(data);
         Dataset[] clusters4 = km4.cluster(data);
 
-        ClusterEvaluation aic = new AICScore();
-        ClusterEvaluation bic = new BICScore();
+        ClusterEvaluation aic = new AICScore(3);
+        ClusterEvaluation bic = new BICScore(3);
         ClusterEvaluation sse = new SumOfSquaredErrors();
 
         double aicScore3 = aic.score(clusters3);

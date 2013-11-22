@@ -15,9 +15,13 @@ import net.sf.javaml.utils.*;
  */
 public class AICScore implements ClusterEvaluation {
 
+	private double k=1;
+	public AICScore(int numberOfFreeParameters){
+		this.k=numberOfFreeParameters;
+	}
+	
 	public double score(Dataset[] clusters) {
-		// number of free parameters K
-		double k = 1;
+	
 		LogLikelihoodFunction likelihood = new LogLikelihoodFunction();
 		// loglikelihood log(L)
 		double l = likelihood.loglikelihoodsum(clusters);

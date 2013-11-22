@@ -16,9 +16,14 @@ import net.sf.javaml.utils.LogLikelihoodFunction;
 
 public class BICScore implements ClusterEvaluation {
 
+	// number of free parameters K
+	private double k=1;
+	public BICScore(int numberOfFreeParameters){
+		this.k=numberOfFreeParameters;
+	}
 	public double score(Dataset[] clusters) {
-		// number of free parameters K
-		double k = 1;
+	
+		
 		// sampelsize N
 		double datasize = 0;
 
