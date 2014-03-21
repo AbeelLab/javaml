@@ -8,6 +8,7 @@ import java.util.SortedSet;
 import net.sf.javaml.classification.AbstractClassifier;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.Instance;
+import net.sf.javaml.core.exception.TrainingRequiredException;
 
 /**
  * Wrapper for the libSVM library by Chih-Chung Chang and Chih-Jen Lin. This
@@ -23,7 +24,7 @@ import net.sf.javaml.core.Instance;
  * 
  */
 public class LibSVM extends AbstractClassifier {
-	
+
 	public static svm_print_interface svm_print_console = null;
 	public static svm_print_interface svm_print_null = new svm_print_interface() {
 		public void print(String s) {
@@ -105,16 +106,15 @@ public class LibSVM extends AbstractClassifier {
 		this.param = param;
 	}
 
-	
-
 	/**
-	 * Set the print interface that will be used for training.
-	 * print a print interface. If <code>LibSVM.svm_print_console</code> is
-	 * provided then output will be printed to standard out. If
+	 * Set the print interface that will be used for training. print a print
+	 * interface. If <code>LibSVM.svm_print_console</code> is provided then
+	 * output will be printed to standard out. If
 	 * <code>LibSVM.svm_print_null</code> is provided then no output will be
 	 * printed.
 	 * 
-	 * By default this the printmode is set to <code>LibSVM.svm_print_null</code>
+	 * By default this the printmode is set to
+	 * <code>LibSVM.svm_print_null</code>
 	 */
 	public static void setPrintInterface(svm_print_interface print) {
 		svm.svm_set_print_string_function(print);
@@ -127,7 +127,7 @@ public class LibSVM extends AbstractClassifier {
 		svm_problem p = transformDataset(data);
 
 		model = svm.svm_train(p, param);
-	
+
 		double[][] coef = model.sv_coef;
 
 		assert model.SV != null;
@@ -230,6 +230,17 @@ public class LibSVM extends AbstractClassifier {
 		double d = svm.svm_predict(model, x);
 		Object out = data.classValue((int) d);
 		return out;
+	}
+
+	public double[] probability(Instance instance) {
+		if (param.probability == 1) {
+			svm_node[] x = convert(instance);
+			double[] classProb = new double[2];
+			double d = svm.svm_predict_probability(model, x, classProb);
+			return classProb;
+		} else
+			throw new TrainingRequiredException(
+					"You need to set svm.param.probability = 1 during training");
 	}
 
 	public int[] getLabels() {
