@@ -25,7 +25,7 @@ public class NearestMeanClassifier extends AbstractMeanClassifier {
         double min = Double.POSITIVE_INFINITY;
         Object pred = null;
         for (Object o : mean.keySet()) {
-            double d = dist.calculateDistance(mean.get(o), instance);
+            double d = dist.measure(mean.get(o), instance);
             if (d < min) {
                 min = d;
                 pred = o;
