@@ -32,13 +32,14 @@ public class NormalizedEuclideanDistance extends EuclideanDistance {
         this.data = data;
     }
 
+    @Override
     public double measure(Instance i, Instance j) {
         Instance min = DatasetTools.minAttributes(data);
         Instance max = DatasetTools.maxAttributes(data);
 
         Instance normI = normalizeMidrange(0.5, 1, min, max, i);
         Instance normJ = normalizeMidrange(0.5, 1, min, max, j);
-        return super.calculateDistance(normI, normJ) / Math.sqrt(i.noAttributes());
+        return super.measure(normI, normJ) / Math.sqrt(i.noAttributes());
 
     }
 
