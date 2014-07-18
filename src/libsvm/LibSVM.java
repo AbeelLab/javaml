@@ -69,7 +69,7 @@ public class LibSVM extends AbstractClassifier {
 		return param;
 	}
 
-	private static svm_problem transformDataset(Dataset data) {
+	private static svm_problem transformDataset(Dataset data, boolean regression) {
 		svm_problem p = new svm_problem();
 		p.l = data.size();
 		p.y = new double[data.size()];
@@ -77,7 +77,10 @@ public class LibSVM extends AbstractClassifier {
 		int tmpIndex = 0;
 		for (int j = 0; j < data.size(); j++) {
 			Instance tmp = data.instance(j);
-			p.y[tmpIndex] = data.classIndex(tmp.classValue());
+			if (regression)
+				p.y[tmpIndex] = Double.parseDouble(tmp.classValue().toString());
+			else
+				p.y[tmpIndex] = data.classIndex(tmp.classValue());
 			p.x[tmpIndex] = new svm_node[tmp.keySet().size()];
 			int i = 0;
 			SortedSet<Integer> tmpSet = tmp.keySet();
@@ -124,7 +127,13 @@ public class LibSVM extends AbstractClassifier {
 	public void buildClassifier(Dataset data) {
 		super.buildClassifier(data);
 		this.data = data;
-		svm_problem p = transformDataset(data);
+
+		svm_problem p = null;
+		if (param.svm_type == svm_parameter.EPSILON_SVR) {
+			System.out.println("Using regression transformation");
+			p = transformDataset(data, true);
+		} else
+			p = transformDataset(data, false);
 
 		model = svm.svm_train(p, param);
 
@@ -231,6 +240,15 @@ public class LibSVM extends AbstractClassifier {
 		Object out = data.classValue((int) d);
 		return out;
 	}
+	
+	
+	// public double regress(Instance instance){
+	// svm_node[] x = convert(instance);
+	// svm.svm
+	// double d = svm.svm_predict_values(model, x);
+	// svm.svm
+	// return d;
+	// }
 
 	public double[] probability(Instance instance) {
 		if (param.probability == 1) {
