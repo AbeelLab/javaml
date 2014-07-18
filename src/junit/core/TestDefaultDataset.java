@@ -23,10 +23,27 @@ public class TestDefaultDataset {
 		for (int i = 0; i < 5; i++)
 			data.add(InstanceTools.randomInstance(1));
 		Instance five = new DenseInstance(new double[] { 0.5 });
-		Assert.assertEquals(data.kNearest(1, five, new EuclideanDistance()), data.kNearest(1, five,
-				new NormalizedEuclideanSimilarity(data)));
-		Assert.assertEquals(data.kNearest(2, five, new EuclideanDistance()), data.kNearest(2, five,
-				new NormalizedEuclideanSimilarity(data)));
+		Assert.assertTrue(data.kNearest(1, five, new EuclideanDistance())
+				.size() == 1);
+		Assert.assertTrue(data.kNearest(2, five, new EuclideanDistance())
+				.size() == 2);
+		Assert.assertEquals(data.kNearest(1, five, new EuclideanDistance()),
+				data.kNearest(1, five, new NormalizedEuclideanSimilarity(data)));
+		Assert.assertEquals(data.kNearest(2, five, new EuclideanDistance()),
+				data.kNearest(2, five, new NormalizedEuclideanSimilarity(data)));
+	}
+
+	@Test
+	public void testKnearestMissingValues() {
+		DefaultDataset data = new DefaultDataset();
+		for (int i = 0; i < 5; i++)
+			data.add(InstanceTools.randomInstance(1));
+		data.get(0).put(0, Double.NaN);
+
+		// Instance five = new DenseInstance(new double[] { 0.5 });
+		Assert.assertEquals(1,
+				data.kNearest(1, data.get(0), new EuclideanDistance()).size());
+
 	}
 
 	@Test
