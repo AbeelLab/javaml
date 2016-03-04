@@ -1,0 +1,148 @@
+<project name="Java Machine Learning Library" default="build" basedir=".">
+	<description>
+        The Java Machine Learning Library build file.
+    </description>
+	<!-- set global properties for this build -->
+	<property name="src" location="src/" />
+	<property name="build" location="build" />
+	<property name="version" value="0.1.9-dev" />
+
+	<property name="dist" location="javaml-${version}" />
+
+	<target name="javadoc">
+		<replaceregexp flags="g" match="Thomas Abeel" replace="Thomas Abeel (&lt;a href=&quot;mailto:thomas@abeel.be&quot;&gt;thomas@abeel.be&lt;&#47;a&gt;)">
+			<fileset dir="${build}/src">
+				<include name="**/*.java" />
+			</fileset>
+		</replaceregexp>
+		<javadoc verbose="false" classpath="lib/weka.jar:lib/ajt-2.11.jar:lib/commons-math-1.2.jar:lib/Jama-1.0.2.jar:lib/libsvm.jar" packagenames="external.*,tutorials.*,net.sf.javaml.*,libsvm.*" sourcepath="${build}/src" defaultexcludes="yes" destdir="${dist}/doc" author="true" version="true" use="true" windowtitle="Java Machine Learning Library ${version}">
+			<doctitle>
+				<![CDATA[<h1>Java Machine Learning Library ${version}</h1>]]>
+			</doctitle>		
+		<bottom>
+			<![CDATA[<i>Copyright &#169; 2006-2014 - <a target="_blank" href="http://www.abeel.be/">Thomas Abeel</a> - All Rights Reserved.</i>]]>
+			<![CDATA[<a href="http://sourceforge.net"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=179204&amp;type=1" width="88" height="31" border="0" alt="SourceForge.netLogo" /></a>]]>
+		</bottom>
+	
+</javadoc>
+</target>
+
+
+
+
+<target name="build" depends="dist,javadoc">
+<delete dir="${build}" />
+<copy todir="${dist}">
+	<fileset dir="${src}">
+		<include name="*.txt" />
+	</fileset>
+	
+</copy>
+	
+<copy todir="${dist}/pdfdoc">
+	<fileset dir="devtools">
+		<include name="*.pdf" />
+	</fileset>
+</copy>
+<copy todir="${dist}/lib/" >
+	<fileset dir="lib/" >
+		<include name="*.jar" />
+	</fileset>
+</copy>
+
+<zip destfile="${dist}.zip" >
+	 <zipfileset dir="${dist}" prefix="javaml-${version}"/>
+</zip>
+	
+	
+
+<!--<delete failonerror="false" dir="${dist}" />-->
+</target>
+
+
+<target name="init" depends="clean">
+<!-- Create the time stamp -->
+<tstamp>
+	<format property="TODAY_LOCAL" pattern="yyyy-MM-dd" />
+</tstamp>
+<!-- Create the build directory structure used by compile -->
+<mkdir dir="${build}" />
+</target>
+
+<target name="compile" depends="init" description="compile the source ">
+<!-- Compile the java code from ${src} into ${build} -->
+<javac encoding="iso-8859-1" debug="true" debuglevel="lines,vars,source" source="1.6" target="1.6" srcdir="${src}" destdir="${build}" excludes="devtools/**,junit/**,tutorials/**" >
+	<classpath>	
+		<fileset dir="lib/">
+			<include name="*.jar" />
+		</fileset>
+	</classpath>
+</javac>
+</target>
+
+<target name="dist" depends="compile" description="generate the distribution">
+<!-- Create the distribution directory -->
+<mkdir dir="${dist}" />
+<mkdir dir="${dist}/lib" />
+<mkdir dir="${dist}/pdfdoc" />	
+<!-- Put everything in ${build} into the javaml-${version}.jar file -->
+<jar jarfile="${dist}/javaml-${version}.jar" basedir="${build}" />
+
+<!-- Copy source files and pack them into the javaml-${version}-src.jar -->
+<mkdir dir="${build}/src" />
+<copy todir="${build}/src">
+	<fileset dir="${src}">
+		<include name="**/*.java" />
+		<exclude name="junit/**" />
+		<exclude name="devtools/**" />
+		<include name="**/*.html" />
+	</fileset>
+</copy>
+<!-- Replace the SVN.REVISION tag with the current SVN revision number -->
+<echo message="Replacing revision number" />
+<replaceregexp match="%SVN.REVISION%" replace="${version}">
+	<fileset dir="${build}/src">
+		<include name="**/*.java" />
+	</fileset>
+</replaceregexp>
+<!--Replace with emailaddress -->
+<echo message="Replacing mail" />
+
+
+<!--Replace the SVN.HEADER tag with the entire header -->
+<echo message="Replacing headers" />
+<replaceregexp match="%SVN.HEADER%" replace="This file is part of the Java Machine Learning Library${line.separator}
+* ${line.separator}
+* The Java Machine Learning Library is free software; you can redistribute it and/or modify${line.separator}
+* it under the terms of the GNU General Public License as published by${line.separator}
+* the Free Software Foundation; either version 2 of the License, or${line.separator}
+* (at your option) any later version.${line.separator}
+* ${line.separator}
+* The Java Machine Learning Library is distributed in the hope that it will be useful,${line.separator}
+* but WITHOUT ANY WARRANTY; without even the implied warranty of${line.separator}
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the${line.separator}
+* GNU General Public License for more details.${line.separator}
+* ${line.separator}
+* You should have received a copy of the GNU General Public License${line.separator}
+* along with the Java Machine Learning Library; if not, write to the Free Software${line.separator}
+* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA${line.separator}
+* ${line.separator}
+* Copyright (c) 2006-2014, Thomas Abeel${line.separator}
+* ${line.separator}
+* Project: http://java-ml.sourceforge.net/${line.separator}
+* ">
+	<fileset dir="${build}/src">
+		<include name="**/*.java" />
+	</fileset>
+</replaceregexp>
+
+	
+<zip destfile="${dist}/javaml-${version}-src.zip" basedir="${build}/src" />
+</target>
+
+<target name="clean" description="clean up">
+<!-- Delete the ${build} and ${dist} directory trees -->
+<delete failonerror="false" dir="${build}" />
+<delete failonerror="false" dir="${dist}" />
+</target>
+</project>
