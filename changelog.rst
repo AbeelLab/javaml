@@ -1,4 +1,9 @@
 
+2016/03/03 
+==========
+Little has changed, but there are some experimental builds for 0.1.9
+Moved to github.com
+
 Update June 2013
 ===============
 Java-ML has moved from SVN to Git hosting to foster better collaboration
