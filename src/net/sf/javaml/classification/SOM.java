@@ -89,7 +89,7 @@ public class SOM extends AbstractClassifier {
         for (int i = 0; i < centroids.length; i++) {
             double d = ed.measure(centroids[i], inst);
             if (d < min) {
-                d = min;
+                min = d;
                 index = i;
             }
         }
