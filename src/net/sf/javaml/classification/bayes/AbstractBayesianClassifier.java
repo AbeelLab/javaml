@@ -52,7 +52,7 @@ public class AbstractBayesianClassifier extends AbstractClassifier {
 	/* mapping int to String */
 	protected Object[] classes;
 	/* mapping String to Integer */
-	protected HashMap<String, Integer> Classname2IndexCCountermap;
+	protected HashMap<Object, Integer> Classname2IndexCCountermap;
 	/* initial capacity of hashmaps to avoid resizing */
 	protected int initialCap;
 
@@ -73,7 +73,7 @@ public class AbstractBayesianClassifier extends AbstractClassifier {
 		this.laplace = lap;
 		this.log = log;
 		this.sparse = sparse;
-		Classname2IndexCCountermap = new HashMap<String, Integer>();
+		Classname2IndexCCountermap = new HashMap<Object, Integer>();
 	}
 
 	/**
@@ -93,9 +93,8 @@ public class AbstractBayesianClassifier extends AbstractClassifier {
 
 		int cnt = 0;
 		for (Object o : trainingData.classes()) {
-			String classname = o.toString();
-			Classname2IndexCCountermap.put(classname, cnt);
-			classes[cnt] = classname;
+			Classname2IndexCCountermap.put(o, cnt);
+			classes[cnt] = o;
 			cnt++;
 		}
 
@@ -367,7 +366,7 @@ public class AbstractBayesianClassifier extends AbstractClassifier {
 		return classes;
 	}
 
-	public HashMap<String, Integer> getClassesRevMap() {
+	public HashMap<Object, Integer> getClassesRevMap() {
 		return Classname2IndexCCountermap;
 	}
 
