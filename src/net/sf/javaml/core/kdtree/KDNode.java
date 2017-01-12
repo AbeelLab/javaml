@@ -6,11 +6,12 @@
  */
 package net.sf.javaml.core.kdtree;
 
+import java.io.Serializable;
 import java.util.Vector;
 
 // K-D Tree node class
 
-class KDNode {
+class KDNode implements Serializable {
 
     // these are seen by KDTree
     protected HPoint k;

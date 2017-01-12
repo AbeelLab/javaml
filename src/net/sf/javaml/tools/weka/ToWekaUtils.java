@@ -3,6 +3,7 @@
  */
 package net.sf.javaml.tools.weka;
 
+import java.io.Serializable;
 import java.util.Vector;
 
 import net.sf.javaml.core.Dataset;
@@ -23,7 +24,7 @@ import weka.core.Instances;
  * @author Thomas Abeel
  * 
  */
-public class ToWekaUtils {
+public class ToWekaUtils implements Serializable{
     private Instances wData;
 
     private boolean classSet;

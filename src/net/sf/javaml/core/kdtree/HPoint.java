@@ -6,9 +6,11 @@
  */
 package net.sf.javaml.core.kdtree;
 
+import java.io.Serializable;
+
 // Hyper-Point class supporting KDTree class
 
-class HPoint {
+class HPoint implements Serializable{
 
     protected double[] coord;
 

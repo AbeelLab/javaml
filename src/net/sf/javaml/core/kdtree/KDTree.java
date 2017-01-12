@@ -6,6 +6,7 @@
  */
 package net.sf.javaml.core.kdtree;
 
+import java.io.Serializable;
 import java.util.Vector;
 
 /**
@@ -28,7 +29,7 @@ import java.util.Vector;
  * @version %I%, %G%
  * @since JDK1.2
  */
-public class KDTree {
+public class KDTree implements Serializable{
 
 	// K = number of dimensions
 	private int m_K;
