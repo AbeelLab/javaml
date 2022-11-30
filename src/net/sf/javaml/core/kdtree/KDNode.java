@@ -7,6 +7,8 @@
 package net.sf.javaml.core.kdtree;
 
 import java.io.Serializable;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Vector;
 
 // K-D Tree node class
@@ -23,29 +25,23 @@ class KDNode implements Serializable {
     protected boolean deleted;
 
     // Method ins translated from 352.ins.c of Gonnet & Baeza-Yates
-    protected static KDNode ins(HPoint key, Object val, KDNode t, int lev, int K)  {
+    protected static KDNode ins(HPoint key, Object val, KDNode t, int lev, int K, boolean[] isUpdate) {
 
         if (t == null) {
             t = new KDNode(key, val);
         }
 
         else if (key.equals(t.k)) {
-
-            // "re-insert"
-            if (t.deleted) {
-                t.deleted = false;
-                t.v = val;
-            }
-
-            // else {
-            // throw new KeyDuplicateException();
-            // }
+            // "re-insert" or update
+            isUpdate[0] = !t.deleted;
+            t.deleted = false;
+            t.v = val;
         }
 
         else if (key.coord[lev] > t.k.coord[lev]) {
-            t.right = ins(key, val, t.right, (lev + 1) % K, K);
+            t.right = ins(key, val, t.right, (lev + 1) % K, K, isUpdate);
         } else {
-            t.left = ins(key, val, t.left, (lev + 1) % K, K);
+            t.left = ins(key, val, t.left, (lev + 1) % K, K, isUpdate);
         }
 
         return t;
@@ -208,6 +204,19 @@ class KDNode implements Serializable {
             nearest = kd;
             dist_sqd = pivot_to_target;
         }
+    }
+
+    // Get all data points in a map
+    protected Map<double[], Object> recursiveMap() {
+        Map<double[], Object> map = new LinkedHashMap<double[], Object>();
+        if (!deleted) {
+            map.put(k.coord, v);
+        }
+
+        if (left != null) map.putAll(left.recursiveMap());
+        if (right != null) map.putAll(right.recursiveMap());
+
+        return map;
     }
 
     // constructor is used only by class; other methods are static
