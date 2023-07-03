@@ -30,7 +30,8 @@ To use it, include the javaml-<version>.jar in your classpath, as well as the
 jars that are available in lib/.  
 
 How to get started, code samples, tutorials on various tasks can be found
-at http://java-ml.sourceforge.net
+in the old_documentation.zip package.
+
 
 3. Requirements
 ===============
