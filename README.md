@@ -9,8 +9,7 @@ updates:
 -- 2016/03/03 moved to github.com 
 -- Still working to split GPL code from the core which will be less restrictive, I appreciate pull requests
 
-More elaborate documentation can be found on the web site
-http://java-ml.sourceforge.net/
+More elaborate documentation can be found in the old_documentation.zip package.
 
 1. Overview
 =============
